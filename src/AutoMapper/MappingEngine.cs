@@ -27,9 +27,9 @@ namespace AutoMapper
         private static readonly IExpressionBinder[] Binders =
         {
             new NullableExpressionBinder(),
-            new AssignableExpressionBinder(),
             new EnumerableExpressionBinder(),
             new MappedTypeExpressionBinder(),
+            new AssignableExpressionBinder(),
             new StringExpressionBinder()
         };
 
