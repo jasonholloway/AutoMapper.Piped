@@ -30,7 +30,6 @@ namespace AutoMapper
             new AssignableExpressionBinder(),
             new EnumerableExpressionBinder(),
             new MappedTypeExpressionBinder(),
-            new CustomProjectionExpressionBinder(),
             new StringExpressionBinder()
         };
 
@@ -266,15 +265,15 @@ namespace AutoMapper
         public LambdaExpression CreateMapExpression(ExpressionRequest request, Internal.IDictionary<ExpressionRequest, int> typePairCount)
         {
             // this is the input parameter of this expression with name <variableName>
-            ParameterExpression instanceParameter = Expression.Parameter(request.SourceType, "dto");
-
+            var instanceParameter = Expression.Parameter(request.SourceType, "source");
+            
             var total = CreateMapExpression(request, instanceParameter, typePairCount);
 
             return Expression.Lambda(total, instanceParameter);
         }
 
         public Expression CreateMapExpression(ExpressionRequest request,
-            Expression instanceParameter, Internal.IDictionary<ExpressionRequest, int> typePairCount)
+            Expression sourceExpression, Internal.IDictionary<ExpressionRequest, int> typePairCount)
         {
             var typeMap = ConfigurationProvider.ResolveTypeMap(request.SourceType,
                 request.DestinationType);
@@ -288,11 +287,21 @@ namespace AutoMapper
                 throw new InvalidOperationException(message);
             }
 
-            var bindings = CreateMemberBindings(request, typeMap, instanceParameter, typePairCount);
+            if (typeMap.CustomProjection != null)
+            {
+                var paramVisitor = new SelectiveParameterReplacer(
+                                                typeMap.CustomProjection.Parameters.Single(),
+                                                sourceExpression);
 
-            var parameterReplacer = new ParameterReplacementVisitor(instanceParameter);
+                return paramVisitor.Visit(typeMap.CustomProjection.Body);
+            }
+
+
+            var bindings = CreateMemberBindings(request, typeMap, sourceExpression, typePairCount);
+
+            var parameterReplacer = new ParameterReplacementVisitor(sourceExpression);
             var visitor = new NewFinderVisitor();
-            var constructorExpression = typeMap.DestinationConstructorExpression(instanceParameter);
+            var constructorExpression = typeMap.DestinationConstructorExpression(sourceExpression);
             visitor.Visit(parameterReplacer.Visit(constructorExpression));
 
             var expression = Expression.MemberInit(
@@ -301,6 +310,26 @@ namespace AutoMapper
                 );
             return expression;
         }
+
+        class SelectiveParameterReplacer : ExpressionVisitor
+        {
+            ParameterExpression _oldParam;
+            Expression _newExpression;
+
+            public SelectiveParameterReplacer(ParameterExpression oldParam, Expression newExpression)
+            {
+                _oldParam = oldParam;
+                _newExpression = newExpression;
+            }
+
+            protected override Expression VisitParameter(ParameterExpression node)
+            {
+                return node == _oldParam
+                        ? _newExpression
+                        : node;
+            }
+        }
+
 
         private class NewFinderVisitor : ExpressionVisitor
         {
