@@ -19,6 +19,7 @@ namespace Materialize
 
         public ReifierSource() {
             _rules = new IReifyRule[] {
+                new EdmCompatibleProjectionRule(this),
                 new ProjectionRule(this),
                 new PropertyMapRule(this),
                 new DirectRule()

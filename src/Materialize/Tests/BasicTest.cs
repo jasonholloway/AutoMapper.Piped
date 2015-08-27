@@ -28,7 +28,13 @@ namespace Materialize.Tests
                 var dogModels = ctx.Dogs.MaterializeAs<DogModel>();
                 dogModels.ShouldNotBeEmpty();
 
-                throw new NotImplementedException();
+                dogModels.Zip(
+                        ctx.Dogs,
+                        (m, d) => new {
+                            DogModel = m,
+                            Dog = d
+                        }).All(t => t.Dog.Name == t.DogModel.Name)
+                            .ShouldBeTrue();
             }
         }
 

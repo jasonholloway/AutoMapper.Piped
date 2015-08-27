@@ -7,20 +7,24 @@ using System.Reflection;
 
 namespace Materialize.Rules
 {
-    class ProjectionRule : IReifyRule
+    class EdmCompatibleProjectionRule : IReifyRule
     {
         ReifierSource _source;
 
-        public ProjectionRule(ReifierSource source) {
+        public EdmCompatibleProjectionRule(ReifierSource source) {
             _source = source;
         }
-
+        
         public IReifierFactory BuildFactoryIfApplicable(ReifySpec spec) 
-        {
+        {            
             var typeMap = Mapper.FindTypeMapFor(spec.SourceType, spec.DestType);
 
             if(typeMap != null && typeMap.CustomProjection != null) {
-                var facType = typeof(ProjectionReifierFactory<,>).MakeGenericType(spec.SourceType, spec.DestType);
+                //test if projection compatible with EF - spec should say something about queryprovider in perfect world.
+                //...
+                return null;
+
+                var facType = typeof(EdmCompProjectionReifierFactory<,>).MakeGenericType(spec.SourceType, spec.DestType);
                 return (IReifierFactory)Activator.CreateInstance(facType, typeMap);
             }
 
@@ -29,13 +33,13 @@ namespace Materialize.Rules
     }
     
 
-    class ProjectionReifierFactory<TOrig, TDest>
+    class EdmCompProjectionReifierFactory<TOrig, TDest>
         : ReifierFactory<TOrig, TDest>
     {
         LambdaExpression _exProject;
         DataType _dataType;
 
-        public ProjectionReifierFactory(TypeMap typeMap) 
+        public EdmCompProjectionReifierFactory(TypeMap typeMap) 
         {           
             _exProject = typeMap.CustomProjection;
 
@@ -70,42 +74,19 @@ namespace Materialize.Rules
 
         
         public override IReifier<TOrig, TDest> CreateReifier(ReifyContext ctx) {
-            return new ProjectionReifier<TOrig, TDest>(ctx, _dataType);
+            return new EdmCompProjectionReifier<TOrig, TDest>(ctx, _dataType);
         }
     }
 
+    
 
-    struct DataType
-    {
-        public readonly Type Type;
-        public readonly DataFieldMap[] FieldMaps;
-
-        public DataType(Type type, DataFieldMap[] fieldMaps) {
-            Type = type;
-            FieldMaps = fieldMaps;
-        }
-    }
-
-    struct DataFieldMap
-    {
-        public readonly FieldInfo Field;
-        public readonly MemberInfo SourceMember;
-
-        public DataFieldMap(FieldInfo field, MemberInfo sourceMember) {
-            Field = field;
-            SourceMember = sourceMember;
-        }
-    }
-
-
-
-    class ProjectionReifier<TOrig, TDest>
+    class EdmCompProjectionReifier<TOrig, TDest>
         : IReifier<TOrig, TDest>
     {
         ReifyContext _ctx;
         DataType _dataType;
 
-        public ProjectionReifier(ReifyContext ctx, DataType dataType) {
+        public EdmCompProjectionReifier(ReifyContext ctx, DataType dataType) {
             _ctx = ctx;
             _dataType = dataType;
         }
@@ -121,7 +102,7 @@ namespace Materialize.Rules
             return _dataType.FieldMaps
                             .Select(f => Expression.Bind(
                                                     f.Field,
-                                                    Expression.MakeMemberAccess(exSource, f.SourceMember)) //need to delegate to other reifiers...
+                                                    Expression.MakeMemberAccess(exSource, f.SourceMember))
                             ).ToArray();
         }
 

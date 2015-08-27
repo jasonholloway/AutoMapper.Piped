@@ -29,7 +29,7 @@ namespace Materialize
             //...
 
 
-            throw new NotImplementedException();
+            return data.Cast<TDest>();
 
 
 
