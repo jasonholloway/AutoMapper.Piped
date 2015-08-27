@@ -10,26 +10,38 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using AutoMapper.QueryableExtensions;
 
 namespace Materialize.Tests
 {
     public class BasicTests
     {        
         [Fact]
-        public void Basic() {
+        public void BasicPropertyMapping() {
             Mapper.Initialize(x => {
-                x.CreateMap<Dog, Person>();
+                x.CreateMap<Dog, DogModel>();
             });
 
             using(var ctx = new Context()) {
                 ctx.Dogs.ShouldNotBeEmpty();
-
-                var people = ctx.Dogs.MaterializeAs<Person>();
-                people.ShouldNotBeEmpty();
+                
+                var dogModels = ctx.Dogs.MaterializeAs<DogModel>();
+                dogModels.ShouldNotBeEmpty();
 
                 throw new NotImplementedException();
             }
         }
+
+
+        [Fact]
+        public void CanMapToContextEntites() {
+            //this is special case: needs to be treated like custom projection behind the scenes
+            //...
+
+            throw new NotImplementedException();
+        }
+
+
 
     }
 }

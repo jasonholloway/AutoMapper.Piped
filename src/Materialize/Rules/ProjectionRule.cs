@@ -53,11 +53,11 @@ namespace Materialize.Rules
             _ctx = ctx;
         }
 
-        public Expression VisitExpression(Expression exOrig) {
-            return exOrig;
+        public Expression Map(Expression exSource) {
+            return exSource;
         }
 
-        public object VisitFetchedNode(object orig) {
+        public object Finalize(object orig) {
             return orig;
         }
     }

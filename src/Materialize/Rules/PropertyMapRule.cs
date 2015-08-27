@@ -60,7 +60,7 @@ namespace Materialize.Rules
 
 
     class PropertyMapReifier<TOrig, TDest>
-        : IReifier<TOrig, TDest>
+        : ReifierBase<TOrig, TDest>
     {
         ReifyContext _ctx;
         PropSpec[] _propSpecs;
@@ -70,7 +70,41 @@ namespace Materialize.Rules
             _propSpecs = propSpecs;
         }
 
-        public Expression VisitExpression(Expression exOrig) {
+
+        protected override Expression MapSingle(Expression exSource) 
+        {
+            return Expression.MemberInit(
+                                Expression.New(typeof(TDest).GetConstructors().First()),
+                                _propSpecs.Select(
+                                            spec => {   //these returned expressions should be pre-built in above factory...
+                                                var sourceMember = spec.Map.SourceMember;
+                                                var destMember = spec.Map.DestinationProperty.MemberInfo;
+                                                var subReifier = spec.ReifierFactory.CreateReifier(_ctx);
+
+                                                var exInput = Expression.MakeMemberAccess(
+                                                                                    exSource,
+                                                                                    sourceMember);
+
+                                                var exMappedInput = subReifier.Map(exInput);
+
+                                                return Expression.Bind(
+                                                                    destMember, 
+                                                                    exMappedInput);
+                                            }).ToArray()
+                                );
+
+        }
+
+                
+        protected override TDest FinalizeSingle(object obj) {
+            throw new NotImplementedException();
+        }
+
+
+        //exSource will always be singular, framed nicely by our feeder
+        //exSource will in most cases be replaced with a select statement or conversion function
+        //the singular/multiple problem in the output also needs to be patted together by the base class
+        public Expression _Map(Expression exSource) {
             //what will the input of the expression be?
             //...
 
@@ -86,7 +120,21 @@ namespace Materialize.Rules
 
             //and yet we need to project only what is made available to us by the preceding expression.
             //so we can't project solely by crawling types and properties.
-                                  
+            
+            //if any child nodes need special projection, then all parent nodes need this too (i think??)
+            
+            
+            //it's up to the parent to pose the problem correctly to its child reifiers, ie each reifier
+            //should be given a standard form of source expression. The parent has to deal with select statements
+            //and/or enumerations. In fact, the fed source should always be singular.
+
+            //This behaviour can be generalised by making it a function of a common base class.
+
+            //reiteration: parent shouldn't crawl typesystem, but fed expression, which will of course
+            //implicate the type system, but also limits it. First port of call: the source exp.
+
+            //At the very top, a ReifierRunner, that packages the problem nicely, and thereafter delegates
+            //to ReifierSource's banks.
 
 
 
@@ -101,7 +149,7 @@ namespace Materialize.Rules
                                 );
         }
 
-        public object VisitFetchedNode(object orig) {
+        public object Finalize(object orig) {
             throw new NotImplementedException();
         }
     }

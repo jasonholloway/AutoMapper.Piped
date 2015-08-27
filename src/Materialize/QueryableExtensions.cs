@@ -20,6 +20,20 @@ namespace Materialize
 
             var reifier = ReifierSource.Default.GetReifier(tOrig, tDest);
 
+            var exNew = reifier.Map(qyOrig.Expression);
+            var qyNew = qyOrig.Provider.CreateQuery(exNew);
+            
+            var data = ((IEnumerable)qyNew).Cast<object>().ToArray();
+
+            //now treat data tree
+            //...
+
+
+            throw new NotImplementedException();
+
+
+
+
 
             //strategy ideas:
             // if typemap exists with projection
@@ -89,7 +103,7 @@ namespace Materialize
             //now alter exp to select to temp type
             var exParam = Expression.Parameter(tOrig);
 
-            var exNew = Expression.Call(
+            exNew = Expression.Call(
                                     typeof(Queryable),
                                     "Select",
                                     new[] { tOrig, tTemp },
@@ -107,7 +121,7 @@ namespace Materialize
                                                 )
                                     );
 
-            var qyNew = qyOrig.Provider.CreateQuery(exNew);
+            qyNew = qyOrig.Provider.CreateQuery(exNew);
 
 
             //////////////////////////////////////////////////////////////
