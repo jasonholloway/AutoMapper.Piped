@@ -73,6 +73,16 @@ namespace Materialize.Tests
         }
 
 
+        [Fact]
+        public void InjectsEdmFriendlyProjections() {
+            throw new NotImplementedException();
+        }
+        
+
+        [Fact]
+        public void ReturnsIMaterializableAndDoesntFetchTillMaterialized() {
+            throw new NotImplementedException();
+        }
 
     }
 }

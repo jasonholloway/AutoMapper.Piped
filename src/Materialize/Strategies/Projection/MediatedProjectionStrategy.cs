@@ -35,8 +35,9 @@ namespace Materialize.Strategies.Projection
 
             _dataType = BuildDataType(sourceProps);
 
+                       
 
-            var reifierType = typeof(Reifier<>).MakeGenericType(_dataType.Type);
+            var reifierType = typeof(Reifier<>).MakeGenericType(typeof(TOrig), typeof(TDest), _dataType.Type);
             
             _fnCreateReifier = Expression.Lambda<Func<IReifier<TOrig, TDest>>>( //will opt out of this for ios
                                             Expression.New(
@@ -174,15 +175,27 @@ namespace Materialize.Strategies.Projection
 
 
             protected override TDest ReformSingle(TMed source) {
+                
+                //reform all our input streams (that is, each field of our mediate type)
 
-                //nuthin to do, mostly
-                //but don't we need to delegate downwards?
+                //use them to feed our projection, which will be executed here
 
-                //ie crawl down our tree
-                //...
+                //This is obvs horrible implementation...
 
+                var dest = (TDest)Activator.CreateInstance<TDest>();
+                
+                //now bind reformed input streams to dest object
+                
+                //but if projection opaquely requires entire original as parameter, then 
+                //we shouldn't use mediating type. Should just return original type?
+                //Nah, cos our input streams may be transformed. Basically, just fall back on
+                //property mapping behaviour, where mediation is used if children dictate it,
+                //but otherwise just return plain type. 
 
-                throw new NotImplementedException();
+                //When projection just leaves plain type in place, however, there will be no
+                //propmaps or owt. Definitely distinct strategies here.
+
+                return dest;
             }
         }
 
