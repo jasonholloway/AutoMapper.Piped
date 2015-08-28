@@ -2,6 +2,6 @@
 {
     interface IReifyRule
     {
-        IReifyStrategy ResolveStrategy(ReifySpec spec);
+        IReifyStrategy DeduceStrategy(ReifySpec spec);
     }
 }

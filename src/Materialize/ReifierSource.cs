@@ -43,7 +43,7 @@ namespace Materialize
 
         IReifyStrategy ResolveStrategy(ReifySpec spec) {            
             foreach(var rule in _rules) {
-                var fac = rule.ResolveStrategy(spec);
+                var fac = rule.DeduceStrategy(spec);
                 if(fac != null) return fac;
             }
 

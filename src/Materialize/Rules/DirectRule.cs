@@ -5,7 +5,8 @@ namespace Materialize.Rules
 {
     class DirectRule : IReifyRule
     {        
-        public IReifyStrategy ResolveStrategy(ReifySpec spec) {
+        public IReifyStrategy DeduceStrategy(ReifySpec spec) 
+        {
             if(spec.SourceType == spec.DestType) {
                 var strategyType = typeof(DirectStrategy<,>).MakeGenericType(spec.SourceType, spec.DestType);
                 return (IReifyStrategy)Activator.CreateInstance(strategyType);
@@ -19,9 +20,10 @@ namespace Materialize.Rules
     class DirectStrategy<TOrig, TDest>
         : ReifierStrategy<TOrig, TDest>
     {
-        //build up important info here, to feed to reifier instances; factories will be cached
-        //...
-
+        public override bool UsesIntermediateType {
+            get { return false; }
+        }
+        
         public override IReifier<TOrig, TDest> CreateReifier(ReifyContext ctx) {
             return new DirectReifier<TOrig, TDest>(ctx);
         }

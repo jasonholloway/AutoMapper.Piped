@@ -15,7 +15,7 @@ namespace Materialize.Rules
             _source = source;
         }
         
-        public IReifyStrategy ResolveStrategy(ReifySpec spec) 
+        public IReifyStrategy DeduceStrategy(ReifySpec spec) 
         {            
             var typeMap = Mapper.FindTypeMapFor(spec.SourceType, spec.DestType);
 

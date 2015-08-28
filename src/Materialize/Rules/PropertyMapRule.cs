@@ -6,10 +6,6 @@ using System.Reflection;
 
 namespace Materialize.Rules
 {
-
-    //PropertyMapRule should return DirectPropMapReifierFactory or IndirectPropMapReifierFactory
-
-
     class PropertyMapRule : IReifyRule
     {
         ReifierSource _source;
@@ -18,104 +14,143 @@ namespace Materialize.Rules
             _source = source;
         }
 
-        public IReifyStrategy ResolveStrategy(ReifySpec spec) 
+        public IReifyStrategy DeduceStrategy(ReifySpec spec) 
         {
             var typeMap = Mapper.FindTypeMapFor(spec.SourceType, spec.DestType);
 
-            if(typeMap != null && typeMap.CustomProjection == null) {
+            if(typeMap != null
+                && typeMap.CustomProjection == null
+                && typeMap.CustomMapper == null) 
+                { 
+                    var propSpecs = typeMap.GetPropertyMaps()
+                                                .Select(map => PropMap2PropSpec(map))
+                                                .ToArray();
 
-                //iterate thru propmaps, finding child rules for each
-                //then compare the types these rules would return in the project phase
-                //...
+                    var stratType = propSpecs.Any(s => s.Strategy.UsesIntermediateType)
+                                        ? typeof(IndirectPropertyMapStrategy<,>)
+                                        : typeof(DirectPropertyMapStrategy<,>);
 
-
-                var strategyType = typeof(PropertyMapStrategy<,>).MakeGenericType(spec.SourceType, spec.DestType);
-                return (IReifyStrategy)Activator.CreateInstance(strategyType, typeMap, _source);
-            }
+                    return (IReifyStrategy)Activator.CreateInstance(
+                                                        stratType.MakeGenericType(spec.SourceType, spec.DestType),
+                                                        typeMap,
+                                                        propSpecs);
+                }
 
             return null;
+        }
+        
+        PropSpec PropMap2PropSpec(PropertyMap map) 
+        {
+            var strategy = _source.GetStrategy(
+                                    ((PropertyInfo)map.SourceMember).PropertyType,
+                                    map.DestinationPropertyType);
+
+            return new PropSpec(map, strategy);
+        }        
+    }
+    
+
+    struct PropSpec
+    {
+        public readonly PropertyMap PropMap;
+        public readonly IReifyStrategy Strategy;
+
+        public PropSpec(PropertyMap propMap, IReifyStrategy strategy) {
+            PropMap = propMap;
+            Strategy = strategy;
         }
     }
     
 
-    class PropertyMapStrategy<TOrig, TDest>
+
+    class DirectPropertyMapStrategy<TOrig, TDest>
         : ReifierStrategy<TOrig, TDest>
     {
         PropSpec[] _propSpecs;
 
-        public PropertyMapStrategy(TypeMap typeMap, ReifierSource source) 
-        {
-            _propSpecs = typeMap.GetPropertyMaps()
-                                    .Select(map => new PropSpec(map, 
-                                                            source.GetStrategy(((PropertyInfo)map.SourceMember).PropertyType, map.DestinationPropertyType)))
-                                    .ToArray();                 
-        }
-
-        public override IReifier<TOrig, TDest> CreateReifier(ReifyContext ctx) {
-            return new PropertyMapReifier<TOrig, TDest>(ctx, _propSpecs);
-        }
-    }
-
-
-    struct PropSpec
-    {
-        public readonly PropertyMap Map;
-        public readonly IReifyStrategy ReifierFactory; 
-
-        public PropSpec(PropertyMap map, IReifyStrategy factory) {
-            Map = map;
-            ReifierFactory = factory;
-        }
-    }
-
-
-    class PropertyMapReifier<TOrig, TDest>
-        : ReifierBase<TOrig, TDest>
-    {
-        ReifyContext _ctx;
-        PropSpec[] _propSpecs;
-
-        public PropertyMapReifier(ReifyContext ctx, PropSpec[] propSpecs) {
-            _ctx = ctx;
+        public DirectPropertyMapStrategy(TypeMap typeMap, PropSpec[] propSpecs) { 
             _propSpecs = propSpecs;
         }
 
+        public override bool UsesIntermediateType {
+            get { return false; }
+        }
 
-        MemberBinding[] BuildBindings(Expression exSource) {
-            return _propSpecs.Select(
-                        spec => {
-                            var sourceMember = spec.Map.SourceMember;
-                            var destMember = spec.Map.DestinationProperty.MemberInfo;
-                            var subReifier = spec.ReifierFactory.CreateReifier(_ctx);
-
-                            var exInput = Expression.MakeMemberAccess(
-                                                                exSource,
-                                                                sourceMember);
-
-                            var exMappedInput = subReifier.Map(exInput);
-
-                            return Expression.Bind(
-                                                destMember,
-                                                exMappedInput);
-                        }).ToArray();
+        public override IReifier<TOrig, TDest> CreateReifier(ReifyContext ctx) {
+            return new Reifier(ctx, _propSpecs);
         }
 
 
-        protected override Expression MapSingle(Expression exSource) 
-        {            
-            return Expression.MemberInit( //should handle custom ctors etc.
-                                Expression.New(typeof(TDest).GetConstructors().First()),
-                                BuildBindings(exSource)
-                                );
+
+        class Reifier : ReifierBase<TOrig, TDest>
+        {
+            ReifyContext _ctx;
+            PropSpec[] _propSpecs;
+
+            public Reifier(ReifyContext ctx, PropSpec[] propSpecs) {
+                _ctx = ctx;
+                _propSpecs = propSpecs;
+            }
+
+
+            MemberBinding[] BuildBindings(Expression exSource) {
+                return _propSpecs.Select(
+                            spec => {
+                                var sourceMember = spec.PropMap.SourceMember;
+                                var destMember = spec.PropMap.DestinationProperty.MemberInfo;
+                                var subReifier = spec.Strategy.CreateReifier(_ctx);
+
+                                var exInput = Expression.MakeMemberAccess(
+                                                                    exSource,
+                                                                    sourceMember);
+
+                                var exMappedInput = subReifier.Map(exInput);
+
+                                return Expression.Bind(
+                                                    destMember,
+                                                    exMappedInput);
+                            }).ToArray();
+            }
+
+
+            protected override Expression MapSingle(Expression exSource) {
+                return Expression.MemberInit( //should handle custom ctors etc.
+                                    Expression.New(typeof(TDest).GetConstructors().First()),
+                                    BuildBindings(exSource)
+                                    );
+            }
+
+
+            protected override TDest ReformSingle(object obj) {
+                throw new NotImplementedException();
+            }
+
         }
 
-                
-        protected override TDest ReformSingle(object obj) {
-            throw new NotImplementedException();
-        }
 
     }
 
+
+
+    class IndirectPropertyMapStrategy<TOrig, TDest>
+        : ReifierStrategy<TOrig, TDest>
+    {
+        TypeMap _typeMap;
+        PropSpec[] _propSpecs;
+
+        public IndirectPropertyMapStrategy(TypeMap typeMap, PropSpec[] propSpecs) {
+            _typeMap = typeMap;
+            _propSpecs = propSpecs;
+        }
+
+        public override bool UsesIntermediateType {
+            get { return true; }
+        }
+
+        public override IReifier<TOrig, TDest> CreateReifier(ReifyContext ctx) {
+            throw new NotImplementedException();
+        }
+    }
 
 
 }
