@@ -1,10 +1,10 @@
-﻿using Materialize.Rules;
+﻿using Materialize.Strategies.Projection;
+using Materialize.Strategies.PropertyMapping;
+using Materialize.Strategies.Direct;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Materialize
 {
@@ -17,23 +17,22 @@ namespace Materialize
 
         IReifyRule[] _rules;
 
+
         public ReifierSource() {
             _rules = new IReifyRule[] {
-                new EdmCompatibleProjectionRule(this),
                 new ProjectionRule(this),
                 new PropertyMapRule(this),
                 new DirectRule()
             };
         }
+        
                 
         public IReifier GetReifier(Type tOrig, Type tDest) 
         {
-            var factory = GetStrategy(tOrig, tDest);
-
-            var ctx = new ReifyContext();
-
-            return factory.CreateReifier(ctx);
+            var strategy = GetStrategy(tOrig, tDest);            
+            return strategy.CreateReifier(new ReifyContext());
         }
+
 
         public IReifyStrategy GetStrategy(Type tOrig, Type tDest) {
             var spec = new ReifySpec(tOrig, tDest);

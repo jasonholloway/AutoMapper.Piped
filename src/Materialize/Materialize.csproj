@@ -68,6 +68,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IReifyStrategy.cs" />
+    <Compile Include="Strategies\Projection\ProjectionStrategy.cs" />
+    <Compile Include="Strategies\PropertyMapping\DirectPropMapStrategy.cs" />
+    <Compile Include="Strategies\PropertyMapping\IndirectPropMapStrategy.cs" />
+    <Compile Include="Strategies\PropertyMapping\PropMapSpec.cs" />
     <Compile Include="QueryableExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IReifier.cs" />
@@ -75,11 +79,12 @@
     <Compile Include="ReifyContext.cs" />
     <Compile Include="ReifySpec.cs" />
     <Compile Include="ReifySpecEqualityComparer.cs" />
-    <Compile Include="Rules\EdmCompatibleProjectionRule.cs" />
-    <Compile Include="Rules\PropertyMapRule.cs" />
-    <Compile Include="Rules\ProjectionRule.cs" />
-    <Compile Include="Rules\DirectRule.cs" />
+    <Compile Include="Strategies\Projection\EdmCompatibleProjectionRule.cs" />
+    <Compile Include="Strategies\PropertyMapping\PropertyMapRule.cs" />
+    <Compile Include="Strategies\Projection\ProjectionRule.cs" />
+    <Compile Include="Strategies\Direct\DirectRule.cs" />
     <Compile Include="IReifyRule.cs" />
+    <Compile Include="Strategies\Direct\DirectStrategy.cs" />
     <Compile Include="Tests\BasicTest.cs" />
     <Compile Include="Tests\Database.cs" />
     <Compile Include="Tests\Model.cs" />

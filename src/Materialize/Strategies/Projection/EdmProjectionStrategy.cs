@@ -5,42 +5,15 @@ using System.Linq.Expressions;
 using JH.DynaType;
 using System.Reflection;
 
-namespace Materialize.Rules
+namespace Materialize.Strategies.Projection
 {
-    class EdmCompatibleProjectionRule : IReifyRule
-    {
-        ReifierSource _source;
-
-        public EdmCompatibleProjectionRule(ReifierSource source) {
-            _source = source;
-        }
-        
-        public IReifyStrategy DeduceStrategy(ReifySpec spec) 
-        {            
-            var typeMap = Mapper.FindTypeMapFor(spec.SourceType, spec.DestType);
-
-            if(typeMap != null && typeMap.CustomProjection != null) {
-                //test if projection compatible with EF - spec should say something about queryprovider in perfect world.
-                //and if non-problematic, just weave projection into expression as traditionally done
-                //...
-                return null;
-
-                var strategyType = typeof(EdmCompProjectionStrategy<,>).MakeGenericType(spec.SourceType, spec.DestType);
-                return (IReifyStrategy)Activator.CreateInstance(strategyType, typeMap);
-            }
-
-            return null;
-        }
-    }
-    
-
-    class EdmCompProjectionStrategy<TOrig, TDest>
+    class EdmProjectionStrategy<TOrig, TDest>
         : ReifierStrategy<TOrig, TDest>
     {
         LambdaExpression _exProject;
         DataType _dataType;
 
-        public EdmCompProjectionStrategy(TypeMap typeMap) 
+        public EdmProjectionStrategy(TypeMap typeMap) 
         {           
             _exProject = typeMap.CustomProjection;
 
@@ -55,6 +28,12 @@ namespace Materialize.Rules
 
             _dataType = BuildDataType(sourceProps);
         }
+
+
+        public override bool UsesIntermediateType {
+            get { throw new NotImplementedException(); }
+        }
+
 
         DataType BuildDataType(MemberInfo[] sourceMembers) 
         {
