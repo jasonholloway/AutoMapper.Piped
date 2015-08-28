@@ -67,7 +67,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IReifierFactory.cs" />
+    <Compile Include="IReifyStrategy.cs" />
     <Compile Include="QueryableExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IReifier.cs" />
@@ -75,6 +75,7 @@
     <Compile Include="ReifyContext.cs" />
     <Compile Include="ReifySpec.cs" />
     <Compile Include="ReifySpecEqualityComparer.cs" />
+    <Compile Include="Rules\EdmCompatibleProjectionRule.cs" />
     <Compile Include="Rules\PropertyMapRule.cs" />
     <Compile Include="Rules\ProjectionRule.cs" />
     <Compile Include="Rules\DirectRule.cs" />

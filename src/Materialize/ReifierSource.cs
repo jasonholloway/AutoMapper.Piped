@@ -12,8 +12,8 @@ namespace Materialize
     {
         public static readonly ReifierSource Default = new ReifierSource();
 
-        ConcurrentDictionary<ReifySpec, IReifierFactory> _dFacs
-            = new ConcurrentDictionary<ReifySpec, IReifierFactory>(ReifySpecEqualityComparer.Default);
+        ConcurrentDictionary<ReifySpec, IReifyStrategy> _dFacs
+            = new ConcurrentDictionary<ReifySpec, IReifyStrategy>(ReifySpecEqualityComparer.Default);
 
         IReifyRule[] _rules;
 
@@ -28,22 +28,22 @@ namespace Materialize
                 
         public IReifier GetReifier(Type tOrig, Type tDest) 
         {
-            var factory = GetReifierFactory(tOrig, tDest);
+            var factory = GetStrategy(tOrig, tDest);
 
             var ctx = new ReifyContext();
 
             return factory.CreateReifier(ctx);
         }
 
-        public IReifierFactory GetReifierFactory(Type tOrig, Type tDest) {
+        public IReifyStrategy GetStrategy(Type tOrig, Type tDest) {
             var spec = new ReifySpec(tOrig, tDest);
-            return _dFacs.GetOrAdd(spec, s => BuildReifierFactory(s));
+            return _dFacs.GetOrAdd(spec, s => ResolveStrategy(s));
         }
 
 
-        IReifierFactory BuildReifierFactory(ReifySpec spec) {            
+        IReifyStrategy ResolveStrategy(ReifySpec spec) {            
             foreach(var rule in _rules) {
-                var fac = rule.BuildFactoryIfApplicable(spec);
+                var fac = rule.ResolveStrategy(spec);
                 if(fac != null) return fac;
             }
 

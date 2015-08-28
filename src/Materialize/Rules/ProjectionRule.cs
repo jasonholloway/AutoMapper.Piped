@@ -15,13 +15,13 @@ namespace Materialize.Rules
             _source = source;
         }
 
-        public IReifierFactory BuildFactoryIfApplicable(ReifySpec spec) 
+        public IReifyStrategy ResolveStrategy(ReifySpec spec) 
         {
             var typeMap = Mapper.FindTypeMapFor(spec.SourceType, spec.DestType);
 
             if(typeMap != null && typeMap.CustomProjection != null) {
-                var facType = typeof(ProjectionReifierFactory<,>).MakeGenericType(spec.SourceType, spec.DestType);
-                return (IReifierFactory)Activator.CreateInstance(facType, typeMap);
+                var strategyType = typeof(ProjectionStrategy<,>).MakeGenericType(spec.SourceType, spec.DestType);
+                return (IReifyStrategy)Activator.CreateInstance(strategyType, typeMap);
             }
 
             return null;
@@ -29,13 +29,13 @@ namespace Materialize.Rules
     }
     
 
-    class ProjectionReifierFactory<TOrig, TDest>
-        : ReifierFactory<TOrig, TDest>
+    class ProjectionStrategy<TOrig, TDest>
+        : ReifierStrategy<TOrig, TDest>
     {
         LambdaExpression _exProject;
         DataType _dataType;
 
-        public ProjectionReifierFactory(TypeMap typeMap) 
+        public ProjectionStrategy(TypeMap typeMap) 
         {           
             _exProject = typeMap.CustomProjection;
 
@@ -100,7 +100,7 @@ namespace Materialize.Rules
 
 
     class ProjectionReifier<TOrig, TDest>
-        : IReifier<TOrig, TDest>
+        : ReifierBase<TOrig, TDest>
     {
         ReifyContext _ctx;
         DataType _dataType;
@@ -110,7 +110,7 @@ namespace Materialize.Rules
             _dataType = dataType;
         }
 
-        public Expression Map(Expression exSource) {
+        protected override Expression MapSingle(Expression exSource) {
             return Expression.MemberInit(
                                 Expression.New(_dataType.Type),
                                 BuildBindings(exSource)
@@ -170,6 +170,8 @@ namespace Materialize.Rules
 
 
 
+
+
             //Seems then that splitting rules horizontally makes no sense: different rules share too many behaviours.
             //Need behaviours as set of components, built up through analysis of probelm at hand.
 
@@ -191,9 +193,9 @@ namespace Materialize.Rules
 
 
         }
+        
 
-
-        public object Finalize(object orig) {
+        protected override TDest ReformSingle(object orig) {
             throw new NotImplementedException();
         }
     }

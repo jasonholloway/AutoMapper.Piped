@@ -1,23 +1,23 @@
 ﻿namespace Materialize
 {
-    interface IReifierFactory
+    interface IReifyStrategy
     {
         IReifier CreateReifier(ReifyContext ctx);
     }
 
-    interface IReifierFactory<TOrig, TDest>
-        : IReifierFactory
+    interface IReifierStrategy<TOrig, TDest>
+        : IReifyStrategy
     {
         new IReifier<TOrig, TDest> CreateReifier(ReifyContext ctx);
     }
 
 
-    abstract class ReifierFactory<TOrig, TDest>
-        : IReifierFactory<TOrig, TDest>
+    abstract class ReifierStrategy<TOrig, TDest>
+        : IReifierStrategy<TOrig, TDest>
     {
         public abstract IReifier<TOrig, TDest> CreateReifier(ReifyContext ctx);
 
-        IReifier IReifierFactory.CreateReifier(ReifyContext ctx) {
+        IReifier IReifyStrategy.CreateReifier(ReifyContext ctx) {
             return CreateReifier(ctx);
         }
     }

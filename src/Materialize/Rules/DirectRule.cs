@@ -5,10 +5,10 @@ namespace Materialize.Rules
 {
     class DirectRule : IReifyRule
     {        
-        public IReifierFactory BuildFactoryIfApplicable(ReifySpec spec) {
+        public IReifyStrategy ResolveStrategy(ReifySpec spec) {
             if(spec.SourceType == spec.DestType) {
-                var facType = typeof(DirectFactory<,>).MakeGenericType(spec.SourceType, spec.DestType);
-                return (IReifierFactory)Activator.CreateInstance(facType);
+                var strategyType = typeof(DirectStrategy<,>).MakeGenericType(spec.SourceType, spec.DestType);
+                return (IReifyStrategy)Activator.CreateInstance(strategyType);
             }
 
             return null;
@@ -16,8 +16,8 @@ namespace Materialize.Rules
     }
     
 
-    class DirectFactory<TOrig, TDest>
-        : ReifierFactory<TOrig, TDest>
+    class DirectStrategy<TOrig, TDest>
+        : ReifierStrategy<TOrig, TDest>
     {
         //build up important info here, to feed to reifier instances; factories will be cached
         //...
@@ -41,7 +41,7 @@ namespace Materialize.Rules
             return exOrig;
         }
 
-        public object Finalize(object orig) {
+        public object Reform(object orig) {
             return orig;
         }
     }

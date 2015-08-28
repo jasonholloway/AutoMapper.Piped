@@ -7,7 +7,7 @@ namespace Materialize
     interface IReifier
     {
         Expression Map(Expression exSource);
-        object Finalize(object orig);
+        object Reform(object orig);
     }
 
     interface IReifier<TOrig, TDest>
@@ -53,14 +53,14 @@ namespace Materialize
 
 
 
-        public object Finalize(object obj) {
+        public object Reform(object obj) {
 
             //need to pull similar trick as above: frame problem nicely for derivations
 
             throw new NotImplementedException();
         }
 
-        protected abstract TDest FinalizeSingle(object obj);
+        protected abstract TDest ReformSingle(object obj);
     }
 
 

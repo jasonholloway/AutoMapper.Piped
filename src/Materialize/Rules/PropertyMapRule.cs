@@ -6,6 +6,10 @@ using System.Reflection;
 
 namespace Materialize.Rules
 {
+
+    //PropertyMapRule should return DirectPropMapReifierFactory or IndirectPropMapReifierFactory
+
+
     class PropertyMapRule : IReifyRule
     {
         ReifierSource _source;
@@ -14,13 +18,19 @@ namespace Materialize.Rules
             _source = source;
         }
 
-        public IReifierFactory BuildFactoryIfApplicable(ReifySpec spec) 
+        public IReifyStrategy ResolveStrategy(ReifySpec spec) 
         {
             var typeMap = Mapper.FindTypeMapFor(spec.SourceType, spec.DestType);
 
             if(typeMap != null && typeMap.CustomProjection == null) {
-                var facType = typeof(PropertyMapReifierFactory<,>).MakeGenericType(spec.SourceType, spec.DestType);
-                return (IReifierFactory)Activator.CreateInstance(facType, typeMap, _source);
+
+                //iterate thru propmaps, finding child rules for each
+                //then compare the types these rules would return in the project phase
+                //...
+
+
+                var strategyType = typeof(PropertyMapStrategy<,>).MakeGenericType(spec.SourceType, spec.DestType);
+                return (IReifyStrategy)Activator.CreateInstance(strategyType, typeMap, _source);
             }
 
             return null;
@@ -28,16 +38,16 @@ namespace Materialize.Rules
     }
     
 
-    class PropertyMapReifierFactory<TOrig, TDest>
-        : ReifierFactory<TOrig, TDest>
+    class PropertyMapStrategy<TOrig, TDest>
+        : ReifierStrategy<TOrig, TDest>
     {
         PropSpec[] _propSpecs;
 
-        public PropertyMapReifierFactory(TypeMap typeMap, ReifierSource source) 
+        public PropertyMapStrategy(TypeMap typeMap, ReifierSource source) 
         {
             _propSpecs = typeMap.GetPropertyMaps()
                                     .Select(map => new PropSpec(map, 
-                                                            source.GetReifierFactory(((PropertyInfo)map.SourceMember).PropertyType, map.DestinationPropertyType)))
+                                                            source.GetStrategy(((PropertyInfo)map.SourceMember).PropertyType, map.DestinationPropertyType)))
                                     .ToArray();                 
         }
 
@@ -50,9 +60,9 @@ namespace Materialize.Rules
     struct PropSpec
     {
         public readonly PropertyMap Map;
-        public readonly IReifierFactory ReifierFactory; 
+        public readonly IReifyStrategy ReifierFactory; 
 
-        public PropSpec(PropertyMap map, IReifierFactory factory) {
+        public PropSpec(PropertyMap map, IReifyStrategy factory) {
             Map = map;
             ReifierFactory = factory;
         }
@@ -100,7 +110,7 @@ namespace Materialize.Rules
         }
 
                 
-        protected override TDest FinalizeSingle(object obj) {
+        protected override TDest ReformSingle(object obj) {
             throw new NotImplementedException();
         }
 

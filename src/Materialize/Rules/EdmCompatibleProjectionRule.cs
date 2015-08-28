@@ -15,7 +15,7 @@ namespace Materialize.Rules
             _source = source;
         }
         
-        public IReifierFactory BuildFactoryIfApplicable(ReifySpec spec) 
+        public IReifyStrategy ResolveStrategy(ReifySpec spec) 
         {            
             var typeMap = Mapper.FindTypeMapFor(spec.SourceType, spec.DestType);
 
@@ -25,8 +25,8 @@ namespace Materialize.Rules
                 //...
                 return null;
 
-                var facType = typeof(EdmCompProjectionReifierFactory<,>).MakeGenericType(spec.SourceType, spec.DestType);
-                return (IReifierFactory)Activator.CreateInstance(facType, typeMap);
+                var strategyType = typeof(EdmCompProjectionStrategy<,>).MakeGenericType(spec.SourceType, spec.DestType);
+                return (IReifyStrategy)Activator.CreateInstance(strategyType, typeMap);
             }
 
             return null;
@@ -34,13 +34,13 @@ namespace Materialize.Rules
     }
     
 
-    class EdmCompProjectionReifierFactory<TOrig, TDest>
-        : ReifierFactory<TOrig, TDest>
+    class EdmCompProjectionStrategy<TOrig, TDest>
+        : ReifierStrategy<TOrig, TDest>
     {
         LambdaExpression _exProject;
         DataType _dataType;
 
-        public EdmCompProjectionReifierFactory(TypeMap typeMap) 
+        public EdmCompProjectionStrategy(TypeMap typeMap) 
         {           
             _exProject = typeMap.CustomProjection;
 
@@ -108,7 +108,7 @@ namespace Materialize.Rules
         }
 
 
-        public object Finalize(object orig) {
+        public object Reform(object orig) {
             throw new NotImplementedException();
         }
     }

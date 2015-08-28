@@ -2,6 +2,6 @@
 {
     interface IReifyRule
     {
-        IReifierFactory BuildFactoryIfApplicable(ReifySpec spec);
+        IReifyStrategy ResolveStrategy(ReifySpec spec);
     }
 }
