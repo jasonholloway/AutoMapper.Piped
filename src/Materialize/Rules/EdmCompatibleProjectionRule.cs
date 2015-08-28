@@ -21,6 +21,7 @@ namespace Materialize.Rules
 
             if(typeMap != null && typeMap.CustomProjection != null) {
                 //test if projection compatible with EF - spec should say something about queryprovider in perfect world.
+                //and if non-problematic, just weave projection into expression as traditionally done
                 //...
                 return null;
 
