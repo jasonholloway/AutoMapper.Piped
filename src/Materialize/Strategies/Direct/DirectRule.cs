@@ -3,13 +3,19 @@ using System.Linq.Expressions;
 
 namespace Materialize.Strategies.Direct
 {
-    class DirectRule : IReifyRule
+    class DirectRule : ReifyRuleBase
     {        
-        public IReifyStrategy DeduceStrategy(ReifySpec spec) 
+        public override IReifyStrategy DeduceStrategy(ReifyContext ctx) 
         {
-            if(spec.SourceType == spec.DestType) {
-                var strategyType = typeof(DirectStrategy<,>).MakeGenericType(spec.SourceType, spec.DestType);
-                return (IReifyStrategy)Activator.CreateInstance(strategyType);
+            var spec = ctx.Spec;
+
+            if(spec.SourceType == spec.DestType) 
+            {
+                return base.CreateStrategy(
+                                    typeof(DirectStrategy<,>),
+                                    spec.SourceType,
+                                    spec.DestType,
+                                    ctx);
             }
 
             return null;

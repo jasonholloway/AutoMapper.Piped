@@ -11,9 +11,11 @@ namespace Materialize.Strategies.PropertyMapping
     class SimplePropMapStrategy<TOrig, TDest>
         : ReifierStrategy<TOrig, TDest>
     {
+        ReifyContext _ctx;
         PropMapSpec[] _propSpecs;
 
-        public SimplePropMapStrategy(TypeMap typeMap, PropMapSpec[] propSpecs) {
+        public SimplePropMapStrategy(ReifyContext ctx, TypeMap typeMap, PropMapSpec[] propSpecs) {
+            _ctx = ctx;
             _propSpecs = propSpecs;
         }
 
@@ -21,8 +23,8 @@ namespace Materialize.Strategies.PropertyMapping
             get { return false; }
         }
 
-        public override IReifier<TOrig, TDest> CreateReifier(ReifyContext ctx) {
-            return new Reifier(ctx, _propSpecs);
+        public override IReifier<TOrig, TDest> CreateReifier() {
+            return new Reifier(_ctx, _propSpecs);
         }
 
 
@@ -43,7 +45,7 @@ namespace Materialize.Strategies.PropertyMapping
                             spec => {
                                 var sourceMember = spec.PropMap.SourceMember;
                                 var destMember = spec.PropMap.DestinationProperty.MemberInfo;
-                                var subReifier = spec.Strategy.CreateReifier(_ctx);
+                                var subReifier = spec.Strategy.CreateReifier();
 
                                 var exInput = Expression.MakeMemberAccess(
                                                                     exSource,
@@ -66,7 +68,7 @@ namespace Materialize.Strategies.PropertyMapping
             }
 
 
-            protected override TDest ReformSingle(object obj) {
+            protected override TDest ReformSingle(TDest obj) {
                 throw new NotImplementedException();
             }
 

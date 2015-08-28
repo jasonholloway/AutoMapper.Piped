@@ -10,11 +10,13 @@ namespace Materialize.Strategies.Projection
     class EdmProjectionStrategy<TOrig, TDest>
         : ReifierStrategy<TOrig, TDest>
     {
+        ReifyContext _ctx;
         LambdaExpression _exProject;
         DataType _dataType;
 
-        public EdmProjectionStrategy(TypeMap typeMap) 
-        {           
+        public EdmProjectionStrategy(ReifyContext ctx, TypeMap typeMap) 
+        {
+            _ctx = ctx;
             _exProject = typeMap.CustomProjection;
 
             //is projection fit for EDM constraints?
@@ -31,7 +33,7 @@ namespace Materialize.Strategies.Projection
 
 
         public override bool UsesIntermediateType {
-            get { throw new NotImplementedException(); }
+            get { return false; }
         }
 
 
@@ -53,8 +55,8 @@ namespace Materialize.Strategies.Projection
         }
 
         
-        public override IReifier<TOrig, TDest> CreateReifier(ReifyContext ctx) {
-            return new EdmCompProjectionReifier<TOrig, TDest>(ctx, _dataType);
+        public override IReifier<TOrig, TDest> CreateReifier() {
+            return new EdmCompProjectionReifier<TOrig, TDest>(_ctx, _dataType);
         }
     }
 

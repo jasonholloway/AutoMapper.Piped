@@ -7,30 +7,28 @@ using System.Reflection;
 
 namespace Materialize.Strategies.Projection
 {
-    class ProjectionRule : IReifyRule
-    {
-        ReifierSource _source;
-
-        public ProjectionRule(ReifierSource source) {
-            _source = source;
-        }
-
-        public IReifyStrategy DeduceStrategy(ReifySpec spec) 
+    class ProjectionRule : ReifyRuleBase
+    {        
+        public override IReifyStrategy DeduceStrategy(ReifyContext ctx) 
         {
-            var typeMap = Mapper.FindTypeMapFor(spec.SourceType, spec.DestType);
+            var spec = ctx.Spec;
+            var typeMap = ctx.TypeMap;
 
             if(typeMap != null && typeMap.CustomProjection != null) 
             {
                 //test for edm compatibility of projection
                 //...
-                
+
                 //can we deduce needed member values?
                 //...
 
-                
 
-                var strategyType = typeof(MediatedProjectionStrategy<,>).MakeGenericType(spec.SourceType, spec.DestType);
-                return (IReifyStrategy)Activator.CreateInstance(strategyType, typeMap);
+                return base.CreateStrategy(
+                                typeof(MediatedProjectionStrategy<,>),
+                                spec.SourceType,
+                                spec.DestType,
+                                ctx,
+                                typeMap);
             }
 
             return null;

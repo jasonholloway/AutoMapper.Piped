@@ -17,7 +17,7 @@ namespace Materialize.Tests
     public class BasicTests
     {        
         [Fact]
-        public void BasicPropertyMapping() {
+        public void ShallowPropertyMapping() {
             Mapper.Initialize(x => {
                 x.CreateMap<Dog, DogModel>();
             });
@@ -37,6 +37,31 @@ namespace Materialize.Tests
                             .ShouldBeTrue();
             }
         }
+
+
+        [Fact]
+        public void ShallowProjection() {
+            Mapper.Initialize(x => {
+                x.CreateMap<Dog, DogModel>()
+                    .ProjectUsing(d => new DogModel() { Name = d.Name.ToUpper() });
+            });
+
+            using(var ctx = new Context()) {
+                var dogModels = ctx.Dogs.MaterializeAs<DogModel>();
+                dogModels.ShouldNotBeEmpty();
+
+                dogModels.Zip(
+                            ctx.Dogs,
+                            (m, d) => new {
+                                Model = m,
+                                Dog = d
+                            }).All(t => t.Dog.Name.ToUpper() == t.Model.Name)
+                                .ShouldBeTrue();
+            }
+        }
+
+
+
 
 
         [Fact]

@@ -10,16 +10,22 @@ namespace Materialize.Strategies.Direct
     class DirectStrategy<TOrig, TDest>
         : ReifierStrategy<TOrig, TDest>
     {
+        ReifyContext _ctx;
+
+        public DirectStrategy(ReifyContext ctx) {
+            _ctx = ctx;
+        }
+
         public override bool UsesIntermediateType {
             get { return false; }
         }
 
-        public override IReifier<TOrig, TDest> CreateReifier(ReifyContext ctx) {
-            return new Reifier(ctx);
+        public override IReifier<TOrig, TDest> CreateReifier() {
+            return new Reifier(_ctx);
         }
 
 
-        class Reifier : IReifier<TOrig, TDest>
+        class Reifier : ReifierBase<TOrig, TDest>
         {
             ReifyContext _ctx;
 
@@ -27,11 +33,11 @@ namespace Materialize.Strategies.Direct
                 _ctx = ctx;
             }
 
-            public Expression Map(Expression exOrig) {
+            protected override Expression MapSingle(Expression exOrig) {
                 return exOrig;
             }
 
-            public object Reform(object orig) {
+            protected override TDest ReformSingle(TDest orig) {
                 return orig;
             }
         }

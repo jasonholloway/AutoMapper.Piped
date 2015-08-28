@@ -20,8 +20,8 @@ namespace Materialize
 
         public ReifierSource() {
             _rules = new IReifyRule[] {
-                new ProjectionRule(this),
-                new PropertyMapRule(this),
+                new ProjectionRule(),
+                new PropertyMapRule(),
                 new DirectRule()
             };
         }
@@ -30,19 +30,23 @@ namespace Materialize
         public IReifier GetReifier(Type tOrig, Type tDest) 
         {
             var strategy = GetStrategy(tOrig, tDest);            
-            return strategy.CreateReifier(new ReifyContext());
+            return strategy.CreateReifier();
         }
 
 
-        public IReifyStrategy GetStrategy(Type tOrig, Type tDest) {
-            var spec = new ReifySpec(tOrig, tDest);
-            return _dFacs.GetOrAdd(spec, s => ResolveStrategy(s));
+        public IReifyStrategy GetStrategy(Type tOrig, Type tDest) 
+        {
+            var ctx = new ReifyContext(
+                            this,
+                            new ReifySpec(tOrig, tDest));
+            
+            return _dFacs.GetOrAdd(ctx.Spec, _ => ResolveStrategy(ctx));
         }
 
 
-        IReifyStrategy ResolveStrategy(ReifySpec spec) {            
+        IReifyStrategy ResolveStrategy(ReifyContext ctx) {            
             foreach(var rule in _rules) {
-                var fac = rule.DeduceStrategy(spec);
+                var fac = rule.DeduceStrategy(ctx);
                 if(fac != null) return fac;
             }
 

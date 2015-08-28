@@ -13,11 +13,15 @@ namespace Materialize.Strategies.Projection
     class MediatedProjectionStrategy<TOrig, TDest>
         : ReifierStrategy<TOrig, TDest>
     {
+        ReifyContext _ctx;
         LambdaExpression _exProject;
         DataType _dataType;
+        Func<IReifier<TOrig, TDest>> _fnCreateReifier;
 
-        public MediatedProjectionStrategy(TypeMap typeMap) 
+        public MediatedProjectionStrategy(ReifyContext ctx, TypeMap typeMap) 
         {
+            _ctx = ctx;
+
             _exProject = typeMap.CustomProjection;
 
             //is projection fit for EDM constraints?
@@ -30,6 +34,17 @@ namespace Materialize.Strategies.Projection
             var sourceProps = typeof(TOrig).GetProperties();
 
             _dataType = BuildDataType(sourceProps);
+
+
+            var reifierType = typeof(Reifier<>).MakeGenericType(_dataType.Type);
+            
+            _fnCreateReifier = Expression.Lambda<Func<IReifier<TOrig, TDest>>>( //will opt out of this for ios
+                                            Expression.New(
+                                                        reifierType.GetConstructors().First(),
+                                                        Expression.Constant(_ctx),
+                                                        Expression.Constant(_dataType))
+                                            ).Compile();
+
         }
 
 
@@ -38,8 +53,8 @@ namespace Materialize.Strategies.Projection
         }
 
 
-        public override IReifier<TOrig, TDest> CreateReifier(ReifyContext ctx) {
-            return new Reifier(ctx, _dataType);
+        public override IReifier<TOrig, TDest> CreateReifier() {
+            return _fnCreateReifier();
         }
 
 
@@ -63,7 +78,7 @@ namespace Materialize.Strategies.Projection
 
 
 
-        class Reifier : ReifierBase<TOrig, TDest>
+        class Reifier<TMed> : ReifierBase<TOrig, TMed, TDest>
         {
             ReifyContext _ctx;
             DataType _dataType;
@@ -158,7 +173,15 @@ namespace Materialize.Strategies.Projection
             }
 
 
-            protected override TDest ReformSingle(object orig) {
+            protected override TDest ReformSingle(TMed source) {
+
+                //nuthin to do, mostly
+                //but don't we need to delegate downwards?
+
+                //ie crawl down our tree
+                //...
+
+
                 throw new NotImplementedException();
             }
         }

@@ -9,13 +9,13 @@ namespace Materialize
         //Type ReformType { get; }
 
         bool UsesIntermediateType { get; }
-        IReifier CreateReifier(ReifyContext ctx);
+        IReifier CreateReifier();
     }
 
     interface IReifierStrategy<TOrig, TDest>
         : IReifyStrategy
     {
-        new IReifier<TOrig, TDest> CreateReifier(ReifyContext ctx);
+        new IReifier<TOrig, TDest> CreateReifier();
     }
 
 
@@ -36,10 +36,10 @@ namespace Materialize
         
         public abstract bool UsesIntermediateType { get; }
 
-        public abstract IReifier<TOrig, TDest> CreateReifier(ReifyContext ctx);
+        public abstract IReifier<TOrig, TDest> CreateReifier();
 
-        IReifier IReifyStrategy.CreateReifier(ReifyContext ctx) {
-            return CreateReifier(ctx);
+        IReifier IReifyStrategy.CreateReifier() {
+            return CreateReifier();
         }
     }
     

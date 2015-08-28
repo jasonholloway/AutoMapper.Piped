@@ -5,44 +5,42 @@ using System.Reflection;
 
 namespace Materialize.Strategies.PropertyMapping
 {
-    class PropertyMapRule : IReifyRule
+    class PropertyMapRule : ReifyRuleBase
     {
-        ReifierSource _source;
-
-        public PropertyMapRule(ReifierSource source) {
-            _source = source;
-        }
-
-        public IReifyStrategy DeduceStrategy(ReifySpec spec) 
+        public override IReifyStrategy DeduceStrategy(ReifyContext ctx) 
         {
-            var typeMap = Mapper.FindTypeMapFor(spec.SourceType, spec.DestType);
+            var spec = ctx.Spec;
+            var typeMap = ctx.TypeMap;
 
             if(typeMap != null
                 && typeMap.CustomProjection == null
                 && typeMap.CustomMapper == null) 
                 { 
                     var propSpecs = typeMap.GetPropertyMaps()
-                                                .Select(map => PropMap2PropMapSpec(map))
+                                                .Select(map => PropMap2PropMapSpec(ctx, map))
                                                 .ToArray();
 
                     var stratType = propSpecs.Any(s => s.Strategy.UsesIntermediateType)
                                         ? typeof(MediatedPropMapStrategy<,>)
                                         : typeof(SimplePropMapStrategy<,>);
 
-                    return (IReifyStrategy)Activator.CreateInstance(
-                                                        stratType.MakeGenericType(spec.SourceType, spec.DestType),
-                                                        typeMap,
-                                                        propSpecs);
+                    return base.CreateStrategy(
+                                        stratType,
+                                        spec.SourceType,
+                                        spec.DestType,
+                                        ctx,
+                                        typeMap,
+                                        propSpecs);
                 }
 
             return null;
         }
         
-        PropMapSpec PropMap2PropMapSpec(PropertyMap map) 
+        PropMapSpec PropMap2PropMapSpec(ReifyContext ctx, PropertyMap map) 
         {
-            var strategy = _source.GetStrategy(
-                                    ((PropertyInfo)map.SourceMember).PropertyType,
-                                    map.DestinationPropertyType);
+            var strategy = ctx.Source.GetStrategy(
+                                        ((PropertyInfo)map.SourceMember).PropertyType,
+                                        map.DestinationPropertyType);
 
             return new PropMapSpec(map, strategy);
         }        

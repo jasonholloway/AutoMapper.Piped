@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -17,9 +19,18 @@ namespace Materialize
     }
 
 
+
+
+
     abstract class ReifierBase<TOrig, TDest>
+        : ReifierBase<TOrig, TDest, TDest>
+    { }
+
+
+    abstract class ReifierBase<TOrig, TMed, TDest>
         : IReifier<TOrig, TDest>
     {
+
         public Expression Map(Expression exSource) 
         {
             if(typeof(IQueryable).IsAssignableFrom(exSource.Type)) 
@@ -28,7 +39,7 @@ namespace Materialize
                 var exLambdaBody = MapSingle(exInParam);
 
                 var tIn = typeof(TOrig);
-                var tOut = exLambdaBody.Type;
+                var tOut = exLambdaBody.Type;   //should be changed to use TMed, rather than expression type
 
                 return Expression.Call(
                                 typeof(Queryable),
@@ -47,20 +58,22 @@ namespace Materialize
         }
 
         protected abstract Expression MapSingle(Expression exSource);
-
-
-
-
-
-
-        public object Reform(object obj) {
-
-            //need to pull similar trick as above: frame problem nicely for derivations
-
-            throw new NotImplementedException();
+        
+        
+        public object Reform(object obj) 
+        {
+            if(typeof(IEnumerable<TMed>).IsAssignableFrom(obj.GetType())) 
+            {
+                return ((IEnumerable<TMed>)obj)
+                            .Select(e => ReformSingle(e));
+            }
+            else {
+                return ReformSingle((TMed)obj);
+            }            
         }
 
-        protected abstract TDest ReformSingle(object obj);
+        protected abstract TDest ReformSingle(TMed obj);
+
     }
 
 
