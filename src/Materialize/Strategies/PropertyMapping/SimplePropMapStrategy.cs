@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Materialize.Strategies.PropertyMapping
 {
     class SimplePropMapStrategy<TOrig, TDest>
-        : ReifierStrategy<TOrig, TDest>
+        : ReifyStrategyBase<TOrig, TDest>
     {
         ReifyContext _ctx;
         PropMapSpec[] _propSpecs;
@@ -51,7 +51,7 @@ namespace Materialize.Strategies.PropertyMapping
                                                                     exSource,
                                                                     sourceMember);
 
-                                var exMappedInput = subReifier.Map(exInput);
+                                var exMappedInput = subReifier.Project(exInput);
 
                                 return Expression.Bind(
                                                     destMember,
@@ -60,7 +60,7 @@ namespace Materialize.Strategies.PropertyMapping
             }
 
 
-            protected override Expression MapSingle(Expression exSource) {
+            protected override Expression ProjectSingle(Expression exSource) {
                 return Expression.MemberInit( //should handle custom ctors etc.
                                     Expression.New(typeof(TDest).GetConstructors().First()),
                                     BuildBindings(exSource)
@@ -68,8 +68,8 @@ namespace Materialize.Strategies.PropertyMapping
             }
 
 
-            protected override TDest ReformSingle(TDest obj) {
-                throw new NotImplementedException();
+            protected override TDest TransformSingle(TDest obj) {
+                return obj;
             }
 
         }

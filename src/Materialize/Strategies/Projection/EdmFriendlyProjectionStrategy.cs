@@ -7,14 +7,14 @@ using System.Reflection;
 
 namespace Materialize.Strategies.Projection
 {
-    class EdmProjectionStrategy<TOrig, TDest>
-        : ReifierStrategy<TOrig, TDest>
+    class EdmFriendlyProjectionStrategy<TOrig, TDest>
+        : ReifyStrategyBase<TOrig, TDest>
     {
         ReifyContext _ctx;
         LambdaExpression _exProject;
         DataType _dataType;
 
-        public EdmProjectionStrategy(ReifyContext ctx, TypeMap typeMap) 
+        public EdmFriendlyProjectionStrategy(ReifyContext ctx, TypeMap typeMap) 
         {
             _ctx = ctx;
             _exProject = typeMap.CustomProjection;
@@ -73,7 +73,7 @@ namespace Materialize.Strategies.Projection
             _dataType = dataType;
         }
 
-        public Expression Map(Expression exSource) {
+        public Expression Project(Expression exSource) {
             return Expression.MemberInit(
                                 Expression.New(_dataType.Type),
                                 BuildBindings(exSource)
@@ -89,7 +89,7 @@ namespace Materialize.Strategies.Projection
         }
 
 
-        public object Reform(object orig) {
+        public object Transform(object orig) {
             throw new NotImplementedException();
         }
     }

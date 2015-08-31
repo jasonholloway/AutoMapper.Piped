@@ -68,7 +68,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IReifyStrategy.cs" />
-    <Compile Include="Strategies\Projection\MediatedProjectionStrategy.cs" />
+    <Compile Include="Strategies\InputSpec.cs" />
+    <Compile Include="Strategies\InputSpecSource.cs" />
+    <Compile Include="Strategies\Projection\FullFetchAndProjectStrategy.cs" />
+    <Compile Include="Strategies\Projection\SelectiveFetchAndProjectStrategy.cs" />
     <Compile Include="Strategies\PropertyMapping\SimplePropMapStrategy.cs" />
     <Compile Include="Strategies\PropertyMapping\MediatedPropMapStrategy.cs" />
     <Compile Include="Strategies\PropertyMapping\PropMapSpec.cs" />
@@ -79,12 +82,13 @@
     <Compile Include="ReifyContext.cs" />
     <Compile Include="ReifySpec.cs" />
     <Compile Include="ReifySpecEqualityComparer.cs" />
-    <Compile Include="Strategies\Projection\EdmProjectionStrategy.cs" />
+    <Compile Include="Strategies\Projection\EdmFriendlyProjectionStrategy.cs" />
     <Compile Include="Strategies\PropertyMapping\PropertyMapRule.cs" />
     <Compile Include="Strategies\Projection\ProjectionRule.cs" />
     <Compile Include="Strategies\Direct\DirectRule.cs" />
     <Compile Include="IReifyRule.cs" />
     <Compile Include="Strategies\Direct\DirectStrategy.cs" />
+    <Compile Include="Strategies\ReifyStrategyBase.cs" />
     <Compile Include="Tests\BasicTest.cs" />
     <Compile Include="Tests\Database.cs" />
     <Compile Include="Tests\Model.cs" />

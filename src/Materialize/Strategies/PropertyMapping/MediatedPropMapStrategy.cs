@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 namespace Materialize.Strategies.PropertyMapping
 {
     class MediatedPropMapStrategy<TOrig, TDest>
-        : ReifierStrategy<TOrig, TDest>
+        : ReifyStrategyBase<TOrig, TDest>
     {
         ReifyContext _ctx;
         TypeMap _typeMap;
@@ -34,11 +34,11 @@ namespace Materialize.Strategies.PropertyMapping
 
         class Reifier<TMed> : ReifierBase<TOrig, TMed, TDest>
         {
-            protected override Expression MapSingle(Expression exSource) {
+            protected override Expression ProjectSingle(Expression exSource) {
                 throw new NotImplementedException();
             }
 
-            protected override TDest ReformSingle(TMed obj) {
+            protected override TDest TransformSingle(TMed obj) {
                 throw new NotImplementedException();
             }
         }

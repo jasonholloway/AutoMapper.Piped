@@ -20,13 +20,13 @@ namespace Materialize
 
             var reifier = ReifierSource.Default.GetReifier(tOrig, tDest);
 
-            var exNew = reifier.Map(qyOrig.Expression);
+            var exNew = reifier.Project(qyOrig.Expression);
             var qyNew = qyOrig.Provider.CreateQuery(exNew);
             
             //var data = ((IEnumerable)qyNew).Cast<object>().ToArray();
 
 
-            var reformed = reifier.Reform(qyNew);
+            var reformed = reifier.Transform(qyNew);
 
             return ((IEnumerable<TDest>)reformed);
         }

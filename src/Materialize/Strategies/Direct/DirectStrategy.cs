@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Materialize.Strategies.Direct
 {
     class DirectStrategy<TOrig, TDest>
-        : ReifierStrategy<TOrig, TDest>
+        : ReifyStrategyBase<TOrig, TDest>
     {
         ReifyContext _ctx;
 
@@ -33,11 +33,11 @@ namespace Materialize.Strategies.Direct
                 _ctx = ctx;
             }
 
-            protected override Expression MapSingle(Expression exOrig) {
+            protected override Expression ProjectSingle(Expression exOrig) {
                 return exOrig;
             }
 
-            protected override TDest ReformSingle(TDest orig) {
+            protected override TDest TransformSingle(TDest orig) {
                 return orig;
             }
         }

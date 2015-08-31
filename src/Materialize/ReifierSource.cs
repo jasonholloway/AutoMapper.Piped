@@ -5,6 +5,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using Materialize.Strategies;
 
 namespace Materialize
 {
@@ -12,10 +13,12 @@ namespace Materialize
     {
         public static readonly ReifierSource Default = new ReifierSource();
 
-        ConcurrentDictionary<ReifySpec, IReifyStrategy> _dFacs
+        ConcurrentDictionary<ReifySpec, IReifyStrategy> _dStrategies
             = new ConcurrentDictionary<ReifySpec, IReifyStrategy>(ReifySpecEqualityComparer.Default);
 
         IReifyRule[] _rules;
+
+        InputSpecSource _inputSpecSource = new InputSpecSource();
 
 
         public ReifierSource() {
@@ -38,9 +41,10 @@ namespace Materialize
         {
             var ctx = new ReifyContext(
                             this,
+                            _inputSpecSource,
                             new ReifySpec(tOrig, tDest));
             
-            return _dFacs.GetOrAdd(ctx.Spec, _ => ResolveStrategy(ctx));
+            return _dStrategies.GetOrAdd(ctx.Spec, _ => ResolveStrategy(ctx));
         }
 
 
@@ -52,6 +56,12 @@ namespace Materialize
 
             throw new InvalidOperationException();
         }
+
+
+        public void Reset() {
+            _dStrategies.Clear();
+        }
+
 
     }
 }

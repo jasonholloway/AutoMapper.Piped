@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Materialize.Strategies;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace Materialize
     class ReifyContext
     {
         public ReifierSource Source { get; private set; }
+        public InputSpecSource InputSpecs { get; private set; }
         public ReifySpec Spec { get; private set; }
 
         Lazy<TypeMap> _lzTypeMap;
@@ -19,8 +21,9 @@ namespace Materialize
         }
 
 
-        public ReifyContext(ReifierSource source, ReifySpec spec) {
+        public ReifyContext(ReifierSource source, InputSpecSource inputSpecs, ReifySpec spec) {
             Source = source;
+            InputSpecs = inputSpecs;
             Spec = spec;
 
             _lzTypeMap = new Lazy<TypeMap>(

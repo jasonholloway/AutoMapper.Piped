@@ -31,4 +31,24 @@ namespace Materialize.Tests
         public ICollection<Dog> Dogs { get; set; }
     }
 
+    
+    public class DogGroomer
+    {
+        [Key]
+        public int ID { get; set; }
+        public string Name { get; set; }
+    }
+
+
+    public class Contract
+    {
+        [Key]
+        public int ID { get; set; }
+        public Dog Dog { get; set; }
+        public DogGroomer Groomer { get; set; }
+        public decimal Fee { get; set; }
+    }
+
+
+
 }

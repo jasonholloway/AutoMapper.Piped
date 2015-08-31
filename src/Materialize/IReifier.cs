@@ -8,8 +8,8 @@ namespace Materialize
 {
     interface IReifier
     {
-        Expression Map(Expression exSource);
-        object Reform(object orig);
+        Expression Project(Expression exSource);
+        object Transform(object orig);
     }
 
     interface IReifier<TOrig, TDest>
@@ -31,12 +31,12 @@ namespace Materialize
         : IReifier<TOrig, TDest>
     {
 
-        public Expression Map(Expression exSource) 
+        public Expression Project(Expression exSource) 
         {
             if(typeof(IQueryable).IsAssignableFrom(exSource.Type)) 
             {
                 var exInParam = Expression.Parameter(typeof(TOrig));
-                var exLambdaBody = MapSingle(exInParam);
+                var exLambdaBody = ProjectSingle(exInParam);
 
                 var tIn = typeof(TOrig);
                 var tOut = exLambdaBody.Type;   //should be changed to use TMed, rather than expression type
@@ -53,26 +53,26 @@ namespace Materialize
                                 );
             }
             else {
-                return MapSingle(exSource);
+                return ProjectSingle(exSource);
             }
         }
 
-        protected abstract Expression MapSingle(Expression exSource);
+        protected abstract Expression ProjectSingle(Expression exSource);
         
         
-        public object Reform(object obj) 
+        public object Transform(object obj) 
         {
             if(typeof(IEnumerable<TMed>).IsAssignableFrom(obj.GetType())) 
             {
                 return ((IEnumerable<TMed>)obj)
-                            .Select(e => ReformSingle(e));
+                            .Select(e => TransformSingle(e));
             }
             else {
-                return ReformSingle((TMed)obj);
+                return TransformSingle((TMed)obj);
             }            
         }
 
-        protected abstract TDest ReformSingle(TMed obj);
+        protected abstract TDest TransformSingle(TMed obj);
 
     }
 

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using JH.DynaType;
 using System.Reflection;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace Materialize.Strategies.Projection
 {
@@ -16,19 +18,32 @@ namespace Materialize.Strategies.Projection
 
             if(typeMap != null && typeMap.CustomProjection != null) 
             {
-                //test for edm compatibility of projection
-                //...
+                //Projections DON'T cascade downwards - they project from the source type
+                //into a tuple and then thereafter transform.
 
-                //can we deduce needed member values?
-                //...
+                //PropertyMaps however most certainly do!
 
+                //So,
+
+                //is projection edm-compatible?
+                //  - then EdmFriendlyProjectionStrategy
+
+                //does projection only require certain aspects of source?
+                //  - then MediatedProjectionStrategy
+
+                //default
+                //  - FullProjectionStrategy
+
+                //for now just render FullFetchAndProjectStrategy - should cover all bases, functionally
 
                 return base.CreateStrategy(
-                                typeof(MediatedProjectionStrategy<,>),
+                                typeof(FullFetchAndProjectStrategy<,>),
                                 spec.SourceType,
                                 spec.DestType,
-                                ctx,
-                                typeMap);
+                                new object[] {
+                                    ctx,
+                                    typeMap
+                                });                
             }
 
             return null;
