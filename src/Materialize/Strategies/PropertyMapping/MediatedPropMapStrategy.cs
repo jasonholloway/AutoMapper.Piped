@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Materialize.Strategies.PropertyMapping
 {
@@ -13,32 +14,21 @@ namespace Materialize.Strategies.PropertyMapping
     {
         ReifyContext _ctx;
         TypeMap _typeMap;
-        PropStrategySpec[] _propSpecs;
+        ProjectedTypeInfo<PropMapStrategySpec> _projTypeInfo;
 
-        public MediatedPropMapStrategy(ReifyContext ctx, TypeMap typeMap, PropStrategySpec[] propSpecs) {
+        public MediatedPropMapStrategy(ReifyContext ctx, TypeMap typeMap, PropMapStrategySpec[] propMapSpecs) {
             _ctx = ctx;
             _typeMap = typeMap;
-            _propSpecs = propSpecs;
-
-
-            //need to create mediate type to project into
-
-
+            _projTypeInfo = ctx.ProjectedTypeBuilder.BuildType(propMapSpecs);
         }
-
-
+        
         public override Type ProjectedType {
-            get {
-                throw new NotImplementedException();
-            }
+            get { return _projTypeInfo.Type; }
         }
-               
-
-
-        public override IReifier<TOrig, TDest> CreateReifier() {
-            throw new NotImplementedException();
-
-            //var type = typeof(Reifier<>).MakeGenericType();
+        
+        public override IReifier<TOrig, TDest> CreateReifier() {            
+            var reifierType = typeof(Reifier<>).MakeGenericType(typeof(TOrig), typeof(TDest), _projTypeInfo.Type);
+            return (IReifier<TOrig, TDest>)Activator.CreateInstance(reifierType, _projTypeInfo);
         }
 
 
@@ -47,12 +37,61 @@ namespace Materialize.Strategies.PropertyMapping
 
         class Reifier<TMed> : ReifierBase<TOrig, TMed, TDest>
         {
-            protected override Expression ProjectSingle(Expression exSource) {
-                throw new NotImplementedException();
+            Type _projType;
+            MemberSpec[] _memberSpecs;            
+
+            struct MemberSpec
+            {
+                public readonly PropertyMap PropertyMap;
+                public readonly FieldInfo ProjectedField;
+                public readonly IReifier Reifier;
+
+                public MemberSpec(PropertyMap propMap, FieldInfo projField, IReifier reifier) {
+                    PropertyMap = propMap;
+                    ProjectedField = projField;
+                    Reifier = reifier;
+                }                 
             }
 
-            protected override TDest TransformSingle(TMed obj) {
-                throw new NotImplementedException();
+
+            public Reifier(ProjectedTypeInfo<PropMapStrategySpec> projTypeInfo) 
+            {
+                _projType = projTypeInfo.Type;
+
+                _memberSpecs = projTypeInfo.Members.Select(m => new MemberSpec(
+                                                                        m.Spec.PropMap,
+                                                                        m.ProjectedField,
+                                                                        m.Spec.Strategy.CreateReifier())
+                                                                        ).ToArray();
+            }
+            
+            protected override Expression ProjectSingle(Expression exSource) 
+            {
+                return Expression.MemberInit(
+                                        Expression.New(_projType),
+                                        _memberSpecs.Select(m => Expression.Bind(
+                                                                            m.ProjectedField,
+                                                                            m.Reifier.Project(
+                                                                                        Expression.MakeMemberAccess(exSource, m.PropertyMap.SourceMember))
+                                                                            )).ToArray());
+            }
+                        
+            protected override TDest TransformSingle(TMed obj) 
+            {
+                //should use more elegant compiled ctor + binders
+                //...
+
+                var dest = Activator.CreateInstance<TDest>();
+
+                foreach(var memberSpec in _memberSpecs) {
+                    var memberValue = memberSpec.ProjectedField.GetValue(obj);
+
+                    var transformedValue = memberSpec.Reifier.Transform(memberValue);
+                    
+                    memberSpec.PropertyMap.DestinationProperty.SetValue(dest, transformedValue);
+                }
+
+                return dest;
             }
         }
     }

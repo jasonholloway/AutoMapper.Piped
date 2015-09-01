@@ -31,6 +31,7 @@ namespace Materialize
                 {
                     Source = source;
                     InputSpecs = inputSpecs;
+                    ProjectedTypeBuilder = projTypeBuilder;
                     Spec = spec;
 
                     _lzTypeMap = new Lazy<TypeMap>(

@@ -12,11 +12,11 @@ namespace Materialize.Strategies.PropertyMapping
         : ReifyStrategyBase<TOrig, TDest>
     {
         ReifyContext _ctx;
-        MemberReifySpec[] _memberSpecs;
+        PropMapStrategySpec[] _propMapSpecs;
 
-        public SimplePropMapStrategy(ReifyContext ctx, TypeMap typeMap, MemberReifySpec[] memberSpecs) {
+        public SimplePropMapStrategy(ReifyContext ctx, TypeMap typeMap, PropMapStrategySpec[] propMapSpecs) {
             _ctx = ctx;
-            _memberSpecs = memberSpecs;
+            _propMapSpecs = propMapSpecs;
         }
 
 
@@ -26,7 +26,7 @@ namespace Materialize.Strategies.PropertyMapping
         
 
         public override IReifier<TOrig, TDest> CreateReifier() {
-            return new Reifier(_ctx, _propSpecs);
+            return new Reifier(_ctx, _propMapSpecs);
         }
 
 
@@ -34,9 +34,9 @@ namespace Materialize.Strategies.PropertyMapping
         class Reifier : ReifierBase<TOrig, TDest>
         {
             ReifyContext _ctx;
-            PropStrategySpec[] _propSpecs;
+            PropMapStrategySpec[] _propSpecs;
 
-            public Reifier(ReifyContext ctx, PropStrategySpec[] propSpecs) {
+            public Reifier(ReifyContext ctx, PropMapStrategySpec[] propSpecs) {
                 _ctx = ctx;
                 _propSpecs = propSpecs;
             }

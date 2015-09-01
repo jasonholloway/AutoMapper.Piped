@@ -17,10 +17,10 @@ namespace Materialize.Strategies.PropertyMapping
                 && typeMap.CustomProjection == null
                 && typeMap.CustomMapper == null) 
                 {
-                    var memberSpecs = CreateMemberReifySpecs(ctx, typeMap.GetPropertyMaps())
+                    var propMapSpecs = CreatePropMapSpecs(ctx, typeMap.GetPropertyMaps())
                                                             .ToArray();
                                 
-                    var strategyType = memberSpecs.Any(s => s.Strategy.UsesIntermediateType)
+                    var strategyType = propMapSpecs.Any(s => s.Strategy.UsesIntermediateType)
                                             ? typeof(MediatedPropMapStrategy<,>)
                                             : typeof(SimplePropMapStrategy<,>);
 
@@ -30,16 +30,16 @@ namespace Materialize.Strategies.PropertyMapping
                                         spec.DestType,
                                         ctx,
                                         typeMap,
-                                        memberSpecs);
+                                        propMapSpecs);
                 }
 
             return null;
         }
         
 
-        IEnumerable<MemberReifySpec> CreateMemberReifySpecs(ReifyContext ctx, IEnumerable<PropertyMap> propMaps) {
-            return propMaps.Select(m => new MemberReifySpec(
-                                                m.SourceMember, 
+        IEnumerable<PropMapStrategySpec> CreatePropMapSpecs(ReifyContext ctx, IEnumerable<PropertyMap> propMaps) {
+            return propMaps.Select(m => new PropMapStrategySpec(
+                                                m, 
                                                 DeduceStrategyForPropMap(ctx, m)));
         }
 

@@ -11,14 +11,14 @@ namespace Materialize.Strategies
 {
     class InputSpecSource
     {
-        public InputSpec[] GetAllInputsFrom(Type sourceType) 
-        {
-            var typeInfo = GetTypeInfo(sourceType);
+        //public InputSpec[] GetAllInputsFrom(Type sourceType) 
+        //{
+        //    var typeInfo = GetTypeInfo(sourceType);
 
-            return typeInfo.PublicReadAccessors
-                            .Select(a => new InputSpec(a))
-                            .ToArray();
-        }
+        //    return typeInfo.PublicReadAccessors
+        //                    .Select(a => new InputSpec(a))
+        //                    .ToArray();
+        //}
 
 
 

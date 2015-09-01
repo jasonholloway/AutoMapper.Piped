@@ -68,14 +68,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IReifyStrategy.cs" />
+    <Compile Include="Strategies\ProjectedMemberInfo.cs" />
+    <Compile Include="Strategies\ProjectedTypeBuilder.cs" />
     <Compile Include="Strategies\TypeSpec.cs" />
-    <Compile Include="Strategies\InputSpec.cs" />
     <Compile Include="Strategies\InputSpecSource.cs" />
-    <Compile Include="Strategies\Projection\FullFetchAndProjectStrategy.cs" />
-    <Compile Include="Strategies\Projection\SelectiveFetchAndProjectStrategy.cs" />
+    <Compile Include="Strategies\CustomMapping\FullFetchAndMapStrategy.cs" />
+    <Compile Include="Strategies\CustomMapping\SelectiveFetchAndMapStrategy.cs" />
     <Compile Include="Strategies\PropertyMapping\SimplePropMapStrategy.cs" />
     <Compile Include="Strategies\PropertyMapping\MediatedPropMapStrategy.cs" />
-    <Compile Include="Strategies\PropertyMapping\PropStrategySpec.cs" />
+    <Compile Include="Strategies\PropertyMapping\PropMapStrategySpec.cs" />
     <Compile Include="QueryableExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IReifier.cs" />
@@ -83,9 +84,9 @@
     <Compile Include="ReifyContext.cs" />
     <Compile Include="ReifySpec.cs" />
     <Compile Include="ReifySpecEqualityComparer.cs" />
-    <Compile Include="Strategies\Projection\EdmFriendlyProjectStrategy.cs" />
+    <Compile Include="Strategies\CustomMapping\EdmFriendlyProjectStrategy.cs" />
     <Compile Include="Strategies\PropertyMapping\PropertyMapRule.cs" />
-    <Compile Include="Strategies\Projection\ProjectionRule.cs" />
+    <Compile Include="Strategies\CustomMapping\CustomMapRule.cs" />
     <Compile Include="Strategies\Direct\DirectRule.cs" />
     <Compile Include="IReifyRule.cs" />
     <Compile Include="Strategies\Direct\DirectStrategy.cs" />
