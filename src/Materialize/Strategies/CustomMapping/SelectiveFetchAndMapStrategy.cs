@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Materialize.Strategies.Projection
 {
-    class SelectiveFetchAndProjectStrategy<TOrig, TDest>
+    class SelectiveFetchAndMapStrategy<TOrig, TDest>
         : ReifyStrategyBase<TOrig, TDest>
     {
         ReifyContext _ctx;
@@ -18,11 +18,21 @@ namespace Materialize.Strategies.Projection
         DataType _dataType;
         Func<IReifier<TOrig, TDest>> _fnCreateReifier;
 
-        public SelectiveFetchAndProjectStrategy(ReifyContext ctx, TypeMap typeMap) 
+        public SelectiveFetchAndMapStrategy(ReifyContext ctx, TypeMap typeMap) 
         {
             //Need to figure out exactly what source properties we need to fuel projection
             //need to analyse expression: if only accessors appear as modulators of the param, then we're on.
             //This calls for a separate rule, I think.
+
+
+            //we always project using the relevant member values of our source object.
+
+            //in property-mapping, however, our input values are determined by projections of our child props.
+
+            //so, to specify the tuple we require, we need, first of all, a list of types, determined by propspecs.
+
+
+
 
 
 
@@ -55,8 +65,8 @@ namespace Materialize.Strategies.Projection
         }
 
 
-        public override bool UsesIntermediateType {
-            get { return true; }
+        public override Type ProjectedType {
+            get { return _dataType.Type; }
         }
 
 

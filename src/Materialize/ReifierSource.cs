@@ -19,11 +19,12 @@ namespace Materialize
         IReifyRule[] _rules;
 
         InputSpecSource _inputSpecSource = new InputSpecSource();
+        ProjectedTypeBuilder _projTypeBuilder = new ProjectedTypeBuilder();
 
 
         public ReifierSource() {
             _rules = new IReifyRule[] {
-                new ProjectionRule(),
+                new CustomMapRule(),
                 new PropertyMapRule(),
                 new DirectRule()
             };
@@ -42,6 +43,7 @@ namespace Materialize
             var ctx = new ReifyContext(
                             this,
                             _inputSpecSource,
+                            _projTypeBuilder,
                             new ReifySpec(tOrig, tDest));
             
             return _dStrategies.GetOrAdd(ctx.Spec, _ => ResolveStrategy(ctx));

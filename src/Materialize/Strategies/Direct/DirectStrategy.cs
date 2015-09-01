@@ -16,8 +16,8 @@ namespace Materialize.Strategies.Direct
             _ctx = ctx;
         }
 
-        public override bool UsesIntermediateType {
-            get { return false; }
+        public override Type ProjectedType {
+            get { return typeof(TDest); }
         }
 
         public override IReifier<TOrig, TDest> CreateReifier() {

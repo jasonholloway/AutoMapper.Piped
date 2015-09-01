@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Materialize.Strategies.PropertyMapping
 {
-    struct PropMapSpec
+    struct PropStrategySpec
     {
         public readonly PropertyMap PropMap;
         public readonly IReifyStrategy Strategy;
 
-        public PropMapSpec(PropertyMap propMap, IReifyStrategy strategy) {
+        public PropStrategySpec(PropertyMap propMap, IReifyStrategy strategy) {
             PropMap = propMap;
             Strategy = strategy;
         }

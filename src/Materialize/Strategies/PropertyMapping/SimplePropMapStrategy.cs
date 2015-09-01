@@ -12,16 +12,18 @@ namespace Materialize.Strategies.PropertyMapping
         : ReifyStrategyBase<TOrig, TDest>
     {
         ReifyContext _ctx;
-        PropMapSpec[] _propSpecs;
+        MemberReifySpec[] _memberSpecs;
 
-        public SimplePropMapStrategy(ReifyContext ctx, TypeMap typeMap, PropMapSpec[] propSpecs) {
+        public SimplePropMapStrategy(ReifyContext ctx, TypeMap typeMap, MemberReifySpec[] memberSpecs) {
             _ctx = ctx;
-            _propSpecs = propSpecs;
+            _memberSpecs = memberSpecs;
         }
 
-        public override bool UsesIntermediateType {
-            get { return false; }
+
+        public override Type ProjectedType {
+            get { return typeof(TDest); }
         }
+        
 
         public override IReifier<TOrig, TDest> CreateReifier() {
             return new Reifier(_ctx, _propSpecs);
@@ -32,9 +34,9 @@ namespace Materialize.Strategies.PropertyMapping
         class Reifier : ReifierBase<TOrig, TDest>
         {
             ReifyContext _ctx;
-            PropMapSpec[] _propSpecs;
+            PropStrategySpec[] _propSpecs;
 
-            public Reifier(ReifyContext ctx, PropMapSpec[] propSpecs) {
+            public Reifier(ReifyContext ctx, PropStrategySpec[] propSpecs) {
                 _ctx = ctx;
                 _propSpecs = propSpecs;
             }
@@ -45,7 +47,7 @@ namespace Materialize.Strategies.PropertyMapping
                             spec => {
                                 var sourceMember = spec.PropMap.SourceMember;
                                 var destMember = spec.PropMap.DestinationProperty.MemberInfo;
-                                var subReifier = spec.Strategy.CreateReifier();
+                                var subReifier = spec.Strategy.CreateReifier(); //this should be cached in strategy...
 
                                 var exInput = Expression.MakeMemberAccess(
                                                                     exSource,

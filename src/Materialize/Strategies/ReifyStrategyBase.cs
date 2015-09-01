@@ -9,19 +9,21 @@ namespace Materialize.Strategies
     abstract class ReifyStrategyBase<TOrig, TDest>
         : IReifyStrategy<TOrig, TDest>
     {
-        //public Type SourceType {
-        //    get { return typeof(TOrig); }
-        //}
+        public Type SourceType {
+            get { return typeof(TOrig); }
+        }
+        
+        public abstract Type ProjectedType { get; }
 
-        //public virtual Type ProjectType {
-        //    get { return typeof(TDest); }
-        //}
+        public Type TransformedType {
+            get { return typeof(TDest); }
+        }
+        
 
-        //public Type ReformType {
-        //    get { return typeof(TDest); }
-        //}
+        public bool UsesIntermediateType {  //?????????
+            get { return ProjectedType != TransformedType; }
+        }
 
-        public abstract bool UsesIntermediateType { get; }
 
         public abstract IReifier<TOrig, TDest> CreateReifier();
 

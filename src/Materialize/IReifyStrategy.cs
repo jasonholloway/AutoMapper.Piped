@@ -4,11 +4,12 @@ namespace Materialize
 {
     interface IReifyStrategy
     {
-        //Type SourceType { get; }
-        //Type ProjectType { get; }
-        //Type ReformType { get; }
+        Type SourceType { get; }
+        Type ProjectedType { get; }
+        Type TransformedType { get; }
 
         bool UsesIntermediateType { get; }
+
         IReifier CreateReifier();
     }
 

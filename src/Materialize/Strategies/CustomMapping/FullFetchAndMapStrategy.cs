@@ -10,28 +10,27 @@ using System.Threading.Tasks;
 
 namespace Materialize.Strategies.Projection
 {
-    class FullFetchAndProjectStrategy<TOrig, TDest>
+    class FullFetchAndMapStrategy<TOrig, TDest>
         : ReifyStrategyBase<TOrig, TDest>
     {
         ReifyContext _ctx;
-        Func<TOrig, TDest> _fnProject;
+        Func<TOrig, TDest> _fnMap;
         
-        public FullFetchAndProjectStrategy(ReifyContext ctx, TypeMap typeMap) 
+        public FullFetchAndMapStrategy(ReifyContext ctx, TypeMap typeMap) 
         {
             //no intermediate tuple: just return the full type, and project from it to the destination type, please
 
             _ctx = ctx;
-            _fnProject = (Func<TOrig, TDest>)typeMap.CustomProjection.Compile();
+            _fnMap = (Func<TOrig, TDest>)typeMap.CustomProjection.Compile();
         }
 
-
-        public override bool UsesIntermediateType {
-            get { return false; }
+        public override Type ProjectedType {
+            get { return typeof(TOrig); }
         }
 
 
         public override IReifier<TOrig, TDest> CreateReifier() {
-            return new Reifier(_ctx, _fnProject);
+            return new Reifier(_ctx, _fnMap);
         }
 
         

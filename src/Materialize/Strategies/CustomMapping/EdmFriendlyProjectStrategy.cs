@@ -7,14 +7,14 @@ using System.Reflection;
 
 namespace Materialize.Strategies.Projection
 {
-    class EdmFriendlyProjectionStrategy<TOrig, TDest>
+    class EdmFriendlyProjectStrategy<TOrig, TDest>
         : ReifyStrategyBase<TOrig, TDest>
     {
         ReifyContext _ctx;
         LambdaExpression _exProject;
         DataType _dataType;
 
-        public EdmFriendlyProjectionStrategy(ReifyContext ctx, TypeMap typeMap) 
+        public EdmFriendlyProjectStrategy(ReifyContext ctx, TypeMap typeMap) 
         {
             _ctx = ctx;
             _exProject = typeMap.CustomProjection;
@@ -31,9 +31,8 @@ namespace Materialize.Strategies.Projection
             _dataType = BuildDataType(sourceProps);
         }
 
-
-        public override bool UsesIntermediateType {
-            get { return false; }
+        public override Type ProjectedType {
+            get { return typeof(TDest); }
         }
 
 

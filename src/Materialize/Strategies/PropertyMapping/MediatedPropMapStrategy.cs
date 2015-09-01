@@ -13,23 +13,36 @@ namespace Materialize.Strategies.PropertyMapping
     {
         ReifyContext _ctx;
         TypeMap _typeMap;
-        PropMapSpec[] _propSpecs;
+        PropStrategySpec[] _propSpecs;
 
-        public MediatedPropMapStrategy(ReifyContext ctx, TypeMap typeMap, PropMapSpec[] propSpecs) {
+        public MediatedPropMapStrategy(ReifyContext ctx, TypeMap typeMap, PropStrategySpec[] propSpecs) {
             _ctx = ctx;
             _typeMap = typeMap;
             _propSpecs = propSpecs;
+
+
+            //need to create mediate type to project into
+
+
         }
 
-        public override bool UsesIntermediateType {
-            get { return true; }
+
+        public override Type ProjectedType {
+            get {
+                throw new NotImplementedException();
+            }
         }
+               
+
 
         public override IReifier<TOrig, TDest> CreateReifier() {
             throw new NotImplementedException();
 
             //var type = typeof(Reifier<>).MakeGenericType();
         }
+
+
+
 
 
         class Reifier<TMed> : ReifierBase<TOrig, TMed, TDest>

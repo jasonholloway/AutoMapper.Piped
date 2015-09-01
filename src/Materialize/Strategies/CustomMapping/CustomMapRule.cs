@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace Materialize.Strategies.Projection
 {
-    class ProjectionRule : ReifyRuleBase
+    class CustomMapRule : ReifyRuleBase
     {        
         public override IReifyStrategy DeduceStrategy(ReifyContext ctx) 
         {
@@ -37,7 +37,7 @@ namespace Materialize.Strategies.Projection
                 //for now just render FullFetchAndProjectStrategy - should cover all bases, functionally
 
                 return base.CreateStrategy(
-                                typeof(FullFetchAndProjectStrategy<,>),
+                                typeof(FullFetchAndMapStrategy<,>),
                                 spec.SourceType,
                                 spec.DestType,
                                 new object[] {

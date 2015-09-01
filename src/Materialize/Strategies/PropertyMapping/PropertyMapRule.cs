@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -15,35 +16,40 @@ namespace Materialize.Strategies.PropertyMapping
             if(typeMap != null
                 && typeMap.CustomProjection == null
                 && typeMap.CustomMapper == null) 
-                { 
-                    var propSpecs = typeMap.GetPropertyMaps()
-                                                .Select(map => PropMap2PropMapSpec(ctx, map))
-                                                .ToArray();
-
-                    var stratType = propSpecs.Any(s => s.Strategy.UsesIntermediateType)
-                                        ? typeof(MediatedPropMapStrategy<,>)
-                                        : typeof(SimplePropMapStrategy<,>);
+                {
+                    var memberSpecs = CreateMemberReifySpecs(ctx, typeMap.GetPropertyMaps())
+                                                            .ToArray();
+                                
+                    var strategyType = memberSpecs.Any(s => s.Strategy.UsesIntermediateType)
+                                            ? typeof(MediatedPropMapStrategy<,>)
+                                            : typeof(SimplePropMapStrategy<,>);
 
                     return base.CreateStrategy(
-                                        stratType,
+                                        strategyType,
                                         spec.SourceType,
                                         spec.DestType,
                                         ctx,
                                         typeMap,
-                                        propSpecs);
+                                        memberSpecs);
                 }
 
             return null;
         }
         
-        PropMapSpec PropMap2PropMapSpec(ReifyContext ctx, PropertyMap map) 
-        {
-            var strategy = ctx.Source.GetStrategy(
-                                        ((PropertyInfo)map.SourceMember).PropertyType,
-                                        map.DestinationPropertyType);
 
-            return new PropMapSpec(map, strategy);
-        }        
+        IEnumerable<MemberReifySpec> CreateMemberReifySpecs(ReifyContext ctx, IEnumerable<PropertyMap> propMaps) {
+            return propMaps.Select(m => new MemberReifySpec(
+                                                m.SourceMember, 
+                                                DeduceStrategyForPropMap(ctx, m)));
+        }
+
+        IReifyStrategy DeduceStrategyForPropMap(ReifyContext ctx, PropertyMap map) {
+            return ctx.Source.GetStrategy(
+                                    ((PropertyInfo)map.SourceMember).PropertyType,
+                                    map.DestinationPropertyType
+                                    );
+        }
+        
     }
     
 

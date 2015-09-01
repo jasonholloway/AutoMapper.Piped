@@ -102,7 +102,7 @@ namespace Materialize.Tests
         }
 
         [Fact]
-        public void SimplePropertyMapsCascadeToProjections() 
+        public void PropertyMapsCascadeToProjections() 
         {
             //Doesn't work yet cos SimplePropertyMapper used even though inputs have been projected
             //MediatedPropertyMapper needs to step in, to project to tuple.
