@@ -10,12 +10,16 @@ using System.Threading.Tasks;
 namespace Materialize.Tests.Infrastructure
 {
 
-    public static class SnoopedQueryableExtensions
+    public static class QueryableSnoopingExtensions
     {
-        public static IQueryable<TElem> Snoop<TElem>(this IQueryable<TElem> qyInner, Action<Expression> fnOnExecute) {
+        public static IQueryable<TElem> Snoop<TElem>(
+            this IQueryable<TElem> qyInner, 
+            Action<Expression> fnOnExecute) 
+        {
             var prov = new SnoopingQueryProvider(qyInner.Provider, fnOnExecute);
             return prov.CreateQuery<TElem>(qyInner.Expression);
-        }
+        }              
+        
     }
     
 

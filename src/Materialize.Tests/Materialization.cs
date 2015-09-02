@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Materialize.Tests
 {
-    class BasicMaterializeTests : TestClassBase
+    class MaterializationTests : TestClassBase
     {        
         [Fact]
         public void ShallowPropertyMapping() 
@@ -178,21 +178,19 @@ namespace Materialize.Tests
             fetchCount.ShouldEqual(1);
         }
 
+        
+
+
+
+
+
+
 
         [Fact]
         public void MaterializablesAreThreadSafe() {
-            throw new NotImplementedException();
-        }
+            //lock on fetching, and on any decisions made on fetch status
+            //...
 
-
-        [Fact]
-        public void OnlyValuesNeededForProjectionAreFetched() {
-            throw new NotImplementedException();
-        }
-
-
-        [Fact]
-        public void EdmFriendlyProjectionsDoneByServer() {
             throw new NotImplementedException();
         }
 
@@ -209,13 +207,6 @@ namespace Materialize.Tests
         }
         
                 
-        [Fact]
-        public void CanMapToContextEntites() {
-            //this is special case: needs to be treated like custom projection behind the scenes
-            //...
-
-            throw new NotImplementedException();
-        }
 
         [Fact]
         public void WorksWithNonGenericCollections() {

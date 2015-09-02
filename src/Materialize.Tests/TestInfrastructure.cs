@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Materialize.Tests
 {
-    public class TestInfrastructureTests
+    class TestInfrastructureTests
     {        
         [Fact]
         public void CanSnoopObjectQueries() {
