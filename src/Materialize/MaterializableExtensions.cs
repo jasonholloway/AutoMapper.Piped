@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,13 +9,25 @@ namespace Materialize
 {
     public static class MaterializableExtensions
     {
-        public static TDest First<TDest>(this IMaterializable<TDest> @this) {
-            //if fetched, just return first of enumeration
+        public static TDest First<TDest>(this IMaterializable<TDest> @this) 
+        {
+            var mat = (Materializable)@this;
 
-            //otherwise get fresh materialization with modified expression
-            //and execute here and now
+            if(mat.IsMaterialized) {
+                return ((IEnumerable<TDest>)mat).First();
+            }
+            else {                 
+                var newMat = mat.CloneWithModifiedQuery(ex => {
+                    return Expression.Call(
+                                        typeof(Queryable),
+                                        "First",
+                                        new[] { mat.OrigType },
+                                        ex              //THIS WON'T WORK COS NOT QUERYABLE!!!!!! - would have to access via Execute.
+                                        );              //which requires a special Materializable
+                });
 
-            throw new NotImplementedException();
+                return ((IEnumerable<TDest>)newMat).Single();
+            }
         }
 
         public static TDest FirstOrDefault<TDest>(this IMaterializable<TDest> @this) {
