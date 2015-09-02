@@ -9,17 +9,15 @@ using Xunit;
 
 namespace Materialize.Tests
 {
-    public class BasicMaterializeTests
+    class BasicMaterializeTests : TestClassBase
     {        
         [Fact]
         public void ShallowPropertyMapping() 
         {
-            ReifierSource.Default.Reset(); //This should somehow be triggered by Mapper.Initialize!
-
-            Mapper.Initialize(x => {
+            base.Initialize(x => {
                 x.CreateMap<Dog, DogModel>();
             });
-
+            
             using(var ctx = new Context()) {
                 ctx.Dogs.ShouldNotBeEmpty();
                 
@@ -39,10 +37,8 @@ namespace Materialize.Tests
 
         [Fact]
         public void ShallowProjection() 
-        {
-            ReifierSource.Default.Reset(); //This should somehow be triggered by Mapper.Initialize!
-
-            Mapper.Initialize(x => {
+        {            
+            base.Initialize(x => {
                 x.CreateMap<Dog, DogModel>()
                     .ProjectUsing(d => new DogModel() { Name = d.Name.ToUpper() });
             });
@@ -69,9 +65,7 @@ namespace Materialize.Tests
         [Fact]
         public void SimplePropertyMapsCascade() 
         {
-            ReifierSource.Default.Reset(); //This should somehow be triggered by Mapper.Initialize!
-
-            Mapper.Initialize(x => {
+            base.Initialize(x => {
                 x.CreateMap<Dog, DogAndOwnerModel>();
                 x.CreateMap<Person, PersonModel>();
             });
@@ -98,11 +92,9 @@ namespace Materialize.Tests
         
 
         [Fact]
-        public void PropertyMapsCascadeToProjections() 
+        public void PropertyMapsAccommodateMemberProjections() 
         {
-            ReifierSource.Default.Reset();
-
-            Mapper.Initialize(x => {
+            base.Initialize(x => {
                 x.CreateMap<Dog, DogModel>();
 
                 x.CreateMap<DogGroomer, DogGroomerModel>();
@@ -138,14 +130,52 @@ namespace Materialize.Tests
 
 
         [Fact]
-        public void ReturnsIMaterializableAndDoesntFetchTillMaterialized() {
-            throw new NotImplementedException();
+        public void FetchesOnlyWhenEnumerated() 
+        {
+            base.Initialize(x => {
+                x.CreateMap<int, float>()
+                    .ProjectUsing(i => i);
+            });
+
+            bool fetched = false;
+
+            var materializable = Enumerable.Range(0, 100)
+                                    .AsQueryable()
+                                    .Snoop(_ => fetched = true)
+                                    .MaterializeAs<float>();
+
+            fetched.ShouldBeFalse();
+
+            var result = materializable.AsEnumerable();
+
+            fetched.ShouldBeFalse();
+
+            result.Count();
+
+            fetched.ShouldBeTrue();
         }
 
 
         [Fact]
-        public void MaterializablesOnlyFetchAndTransformOnce() {
-            throw new NotImplementedException();
+        public void MaterializablesFetchOnceOnly() 
+        {
+            base.Initialize(x => {
+                x.CreateMap<int, float>()
+                    .ProjectUsing(i => i);
+            });
+
+            int fetchCount = 0;
+
+            var materializable = Enumerable.Range(0, 100)
+                                    .AsQueryable()
+                                    .Snoop(_ => fetchCount++)
+                                    .MaterializeAs<float>();
+
+            for(int i = 0; i < 10; i++) {
+                materializable.Count();
+            }
+
+            fetchCount.ShouldEqual(1);
         }
 
 
