@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace Materialize.Strategies.Projection
 {
-    class FullFetchAndMapStrategy<TOrig, TDest>
+    class FullFetchAndTransformStrategy<TOrig, TDest>
         : ReifyStrategyBase<TOrig, TDest>
     {
         ReifyContext _ctx;
         Func<TOrig, TDest> _fnMap;
         
-        public FullFetchAndMapStrategy(ReifyContext ctx, TypeMap typeMap) 
+        public FullFetchAndTransformStrategy(ReifyContext ctx, TypeMap typeMap) 
         {
             //no intermediate tuple: just return the full type, and project from it to the destination type, please
 

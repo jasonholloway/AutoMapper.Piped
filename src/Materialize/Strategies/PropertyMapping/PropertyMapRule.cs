@@ -37,8 +37,8 @@ namespace Materialize.Strategies.PropertyMapping
         }
         
 
-        IEnumerable<PropMapStrategySpec> CreatePropMapSpecs(ReifyContext ctx, IEnumerable<PropertyMap> propMaps) {
-            return propMaps.Select(m => new PropMapStrategySpec(
+        IEnumerable<PropMapSpec> CreatePropMapSpecs(ReifyContext ctx, IEnumerable<PropertyMap> propMaps) {
+            return propMaps.Select(m => new PropMapSpec(
                                                 m, 
                                                 DeduceStrategyForPropMap(ctx, m)));
         }

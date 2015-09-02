@@ -14,7 +14,7 @@ using AutoMapper.QueryableExtensions;
 
 namespace Materialize.Tests
 {
-    public class BasicTests
+    public class BasicMaterializeTests
     {        
         [Fact]
         public void ShallowPropertyMapping() 
@@ -97,18 +97,25 @@ namespace Materialize.Tests
                                 Model = m
                             })
                             .All(t => t.Dog.Owner.Name == t.Model.Owner.Name)
-                                .ShouldBeTrue();
+                            .ShouldBeTrue();
             }
         }
 
         [Fact]
+        public void SimpleSnoopingTest() {
+            var qy = Enumerable.Range(0, 100)
+                                .AsQueryable()
+                                .Snoop(_ => { })
+                                .ToArray();
+
+            qy.Length.ShouldEqual(100);
+        }
+
+
+        [Fact]
         public void PropertyMapsCascadeToProjections() 
         {
-            //Doesn't work yet cos SimplePropertyMapper used even though inputs have been projected
-            //MediatedPropertyMapper needs to step in, to project to tuple.
-            //...
-
-            ReifierSource.Default.Reset(); //This should somehow be triggered by Mapper.Initialize!
+            ReifierSource.Default.Reset();
 
             Mapper.Initialize(x => {
                 x.CreateMap<Dog, DogModel>();
@@ -126,9 +133,12 @@ namespace Materialize.Tests
                                     .Include(c => c.Dog)
                                     .Include(c => c.Groomer);
 
-                var contracts = qyContracts.ToArray();
-
+                var contracts = qyContracts
+                                        .Snoop(_ => { })
+                                        .ToArray();
+                
                 var contractModels = qyContracts
+                                        .Snoop(e => System.Diagnostics.Debug.Write(e.ToString()))
                                         .MaterializeAs<ContractModel>()
                                         .ToArray();
                                 
@@ -138,8 +148,16 @@ namespace Materialize.Tests
                                 Model = m
                             })
                             .All(t => t.Contract.Fee == t.Model.Fee.Amount)
-                                .ShouldBeTrue();
+                            .ShouldBeTrue();
+
             }
+        }
+
+
+
+        [Fact]
+        public void ReturnsIMaterializableAndDoesntFetchTillMaterialized() {
+            throw new NotImplementedException();
         }
 
 
@@ -175,12 +193,16 @@ namespace Materialize.Tests
             throw new NotImplementedException();
         }
 
-
-
         [Fact]
-        public void ReturnsIMaterializableAndDoesntFetchTillMaterialized() {
+        public void WorksWithNonGenericCollections() {
             throw new NotImplementedException();
         }
+
+        [Fact]
+        public void WorksWithNonGenericQueryables() {
+            throw new NotImplementedException();
+        }
+
 
     }
 }

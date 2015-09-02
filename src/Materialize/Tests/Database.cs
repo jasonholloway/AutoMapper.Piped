@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace Materialize.Tests
     class Context : DbContext
     {
         public Context() {
-            Database.SetInitializer<Context>(new DatabaseInitializer());
+            Database.SetInitializer(new DatabaseInitializer());
         }
 
         public DbSet<Dog> Dogs { get; set; }

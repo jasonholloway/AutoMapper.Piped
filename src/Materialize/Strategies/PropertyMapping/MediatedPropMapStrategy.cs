@@ -14,9 +14,9 @@ namespace Materialize.Strategies.PropertyMapping
     {
         ReifyContext _ctx;
         TypeMap _typeMap;
-        ProjectedTypeInfo<PropMapStrategySpec> _projTypeInfo;
+        ProjectedTypeInfo<PropMapSpec> _projTypeInfo;
 
-        public MediatedPropMapStrategy(ReifyContext ctx, TypeMap typeMap, PropMapStrategySpec[] propMapSpecs) {
+        public MediatedPropMapStrategy(ReifyContext ctx, TypeMap typeMap, PropMapSpec[] propMapSpecs) {
             _ctx = ctx;
             _typeMap = typeMap;
             _projTypeInfo = ctx.ProjectedTypeBuilder.BuildType(propMapSpecs);
@@ -38,27 +38,13 @@ namespace Materialize.Strategies.PropertyMapping
         class Reifier<TMed> : ReifierBase<TOrig, TMed, TDest>
         {
             Type _projType;
-            MemberSpec[] _memberSpecs;            
-
-            struct MemberSpec
-            {
-                public readonly PropertyMap PropertyMap;
-                public readonly FieldInfo ProjectedField;
-                public readonly IReifier Reifier;
-
-                public MemberSpec(PropertyMap propMap, FieldInfo projField, IReifier reifier) {
-                    PropertyMap = propMap;
-                    ProjectedField = projField;
-                    Reifier = reifier;
-                }                 
-            }
-
-
-            public Reifier(ProjectedTypeInfo<PropMapStrategySpec> projTypeInfo) 
+            MemberReifySpec[] _memberSpecs;            
+            
+            public Reifier(ProjectedTypeInfo<PropMapSpec> projTypeInfo) 
             {
                 _projType = projTypeInfo.Type;
 
-                _memberSpecs = projTypeInfo.Members.Select(m => new MemberSpec(
+                _memberSpecs = projTypeInfo.Members.Select(m => new MemberReifySpec(
                                                                         m.Spec.PropMap,
                                                                         m.ProjectedField,
                                                                         m.Spec.Strategy.CreateReifier())
@@ -70,15 +56,15 @@ namespace Materialize.Strategies.PropertyMapping
                 return Expression.MemberInit(
                                         Expression.New(_projType),
                                         _memberSpecs.Select(m => Expression.Bind(
-                                                                            m.ProjectedField,
-                                                                            m.Reifier.Project(
-                                                                                        Expression.MakeMemberAccess(exSource, m.PropertyMap.SourceMember))
-                                                                            )).ToArray());
+                                                                        m.ProjectedField,
+                                                                        m.Reifier.Project(
+                                                                                    Expression.MakeMemberAccess(exSource, m.PropertyMap.SourceMember))
+                                                                        )).ToArray());
             }
                         
             protected override TDest TransformSingle(TMed obj) 
             {
-                //should use more elegant compiled ctor + binders
+                //should use more elegant per-strategy-compiled ctor + binders
                 //...
 
                 var dest = Activator.CreateInstance<TDest>();
@@ -93,6 +79,20 @@ namespace Materialize.Strategies.PropertyMapping
 
                 return dest;
             }
+
+            struct MemberReifySpec
+            {
+                public readonly PropertyMap PropertyMap;
+                public readonly FieldInfo ProjectedField;
+                public readonly IReifier Reifier;
+
+                public MemberReifySpec(PropertyMap propMap, FieldInfo projField, IReifier reifier) {
+                    PropertyMap = propMap;
+                    ProjectedField = projField;
+                    Reifier = reifier;
+                }
+            }
+
         }
     }
 

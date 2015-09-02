@@ -37,7 +37,7 @@ namespace Materialize.Strategies.Projection
                 //for now just render FullFetchAndProjectStrategy - should cover all bases, functionally
 
                 return base.CreateStrategy(
-                                typeof(FullFetchAndMapStrategy<,>),
+                                typeof(FullFetchAndTransformStrategy<,>),
                                 spec.SourceType,
                                 spec.DestType,
                                 new object[] {

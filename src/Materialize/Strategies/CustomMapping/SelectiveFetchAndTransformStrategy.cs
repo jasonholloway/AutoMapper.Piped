@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Materialize.Strategies.Projection
 {
-    class SelectiveFetchAndMapStrategy<TOrig, TDest>
+    class SelectiveFetchAndTransformStrategy<TOrig, TDest>
         : ReifyStrategyBase<TOrig, TDest>
     {
         ReifyContext _ctx;
@@ -18,7 +18,7 @@ namespace Materialize.Strategies.Projection
         DataType _dataType;
         Func<IReifier<TOrig, TDest>> _fnCreateReifier;
 
-        public SelectiveFetchAndMapStrategy(ReifyContext ctx, TypeMap typeMap) 
+        public SelectiveFetchAndTransformStrategy(ReifyContext ctx, TypeMap typeMap) 
         {
             //Need to figure out exactly what source properties we need to fuel projection
             //need to analyse expression: if only accessors appear as modulators of the param, then we're on.
