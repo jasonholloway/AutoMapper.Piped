@@ -4,15 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F8A1B543-0B7F-40AA-907D-775CDB36CE7F}</ProjectGuid>
+    <ProjectGuid>{6B34A021-11BD-4244-8032-5FE8CABA8EB2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Materialize</RootNamespace>
-    <AssemblyName>Materialize</AssemblyName>
+    <RootNamespace>Materialize.Tests</RootNamespace>
+    <AssemblyName>Materialize.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -33,54 +31,59 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DynaType, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DynaType.1.13\lib\40\DynaType.dll</HintPath>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Fixie, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Fixie.1.0.0.3\lib\net45\Fixie.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FizzWare.NBuilder, Version=3.0.1.0, Culture=neutral, PublicKeyToken=5651b03e12e42c12, processorArchitecture=MSIL">
+      <HintPath>..\packages\NBuilder.3.0.1.1\lib\FizzWare.NBuilder.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IMaterializable.cs" />
-    <Compile Include="IReifyStrategy.cs" />
-    <Compile Include="Materializable.cs" />
-    <Compile Include="MaterializableExtensions.cs" />
-    <Compile Include="Strategies\ProjectedMemberInfo.cs" />
-    <Compile Include="Strategies\ProjectedTypeBuilder.cs" />
-    <Compile Include="Strategies\TypeSpec.cs" />
-    <Compile Include="Strategies\InputSpecSource.cs" />
-    <Compile Include="Strategies\CustomMapping\FullFetchAndTransformStrategy.cs" />
-    <Compile Include="Strategies\CustomMapping\SelectiveFetchAndTransformStrategy.cs" />
-    <Compile Include="Strategies\PropertyMapping\SimplePropMapStrategy.cs" />
-    <Compile Include="Strategies\PropertyMapping\MediatedPropMapStrategy.cs" />
-    <Compile Include="Strategies\PropertyMapping\PropMapSpec.cs" />
-    <Compile Include="QueryableExtensions.cs" />
+    <Compile Include="BasicMaterializeTests.cs" />
+    <Compile Include="Database.cs" />
+    <Compile Include="Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="IReifier.cs" />
-    <Compile Include="ReifierSource.cs" />
-    <Compile Include="ReifyContext.cs" />
-    <Compile Include="ReifySpec.cs" />
-    <Compile Include="ReifySpecEqualityComparer.cs" />
-    <Compile Include="Strategies\CustomMapping\EdmFriendlyProjectStrategy.cs" />
-    <Compile Include="Strategies\PropertyMapping\PropertyMapRule.cs" />
-    <Compile Include="Strategies\CustomMapping\CustomMapRule.cs" />
-    <Compile Include="Strategies\Direct\DirectRule.cs" />
-    <Compile Include="IReifyRule.cs" />
-    <Compile Include="Strategies\Direct\DirectStrategy.cs" />
-    <Compile Include="Strategies\ReifyStrategyBase.cs" />
+    <Compile Include="QuerySnooping.cs" />
+    <Compile Include="TestInfrastructureTests.cs" />
+    <Compile Include="ViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AutoMapper.Net4\AutoMapper.Net4.csproj">
       <Project>{8c955148-fa96-4f0d-880d-abb6770f54e9}</Project>
       <Name>AutoMapper.Net4</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Materialize\Materialize.csproj">
+      <Project>{f8a1b543-0b7f-40aa-907d-775cdb36ce7f}</Project>
+      <Name>Materialize</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitTests\UnitTests.Net4.csproj">
+      <Project>{002075c5-6517-4794-bc99-9b17b9e884e7}</Project>
+      <Name>UnitTests.Net4</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

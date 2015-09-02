@@ -1,16 +1,11 @@
 ﻿using AutoMapper;
-using FizzWare.NBuilder;
+using Materialize.Tests.Infrastructure;
+using Materialize.Tests.Model;
 using Should;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
-using AutoMapper.QueryableExtensions;
 
 namespace Materialize.Tests
 {
@@ -100,17 +95,7 @@ namespace Materialize.Tests
                             .ShouldBeTrue();
             }
         }
-
-        [Fact]
-        public void SimpleSnoopingTest() {
-            var qy = Enumerable.Range(0, 100)
-                                .AsQueryable()
-                                .Snoop(_ => { })
-                                .ToArray();
-
-            qy.Length.ShouldEqual(100);
-        }
-
+        
 
         [Fact]
         public void PropertyMapsCascadeToProjections() 
@@ -134,11 +119,9 @@ namespace Materialize.Tests
                                     .Include(c => c.Groomer);
 
                 var contracts = qyContracts
-                                        .Snoop(_ => { })
                                         .ToArray();
-                
+
                 var contractModels = qyContracts
-                                        .Snoop(e => System.Diagnostics.Debug.Write(e.ToString()))
                                         .MaterializeAs<ContractModel>()
                                         .ToArray();
                                 
@@ -149,7 +132,6 @@ namespace Materialize.Tests
                             })
                             .All(t => t.Contract.Fee == t.Model.Fee.Amount)
                             .ShouldBeTrue();
-
             }
         }
 
@@ -157,6 +139,18 @@ namespace Materialize.Tests
 
         [Fact]
         public void ReturnsIMaterializableAndDoesntFetchTillMaterialized() {
+            throw new NotImplementedException();
+        }
+
+
+        [Fact]
+        public void MaterializablesOnlyFetchAndTransformOnce() {
+            throw new NotImplementedException();
+        }
+
+
+        [Fact]
+        public void MaterializablesAreThreadSafe() {
             throw new NotImplementedException();
         }
 

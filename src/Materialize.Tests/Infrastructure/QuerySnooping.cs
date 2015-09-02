@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Materialize.Tests
+namespace Materialize.Tests.Infrastructure
 {
 
     public static class SnoopedQueryableExtensions

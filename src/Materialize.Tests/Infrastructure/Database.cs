@@ -1,4 +1,5 @@
 ﻿using FizzWare.NBuilder;
+using Materialize.Tests.Model;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Materialize.Tests
+namespace Materialize.Tests.Infrastructure
 {
 
     class Context : DbContext

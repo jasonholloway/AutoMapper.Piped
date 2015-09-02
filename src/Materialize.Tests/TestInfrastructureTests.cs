@@ -1,18 +1,8 @@
-﻿using AutoMapper;
-using FizzWare.NBuilder;
+﻿using Materialize.Tests.Infrastructure;
 using Should;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-using AutoMapper.QueryableExtensions;
-using System.Diagnostics;
 using System.Linq.Expressions;
+using Xunit;
 
 namespace Materialize.Tests
 {

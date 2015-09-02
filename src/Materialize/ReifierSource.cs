@@ -9,7 +9,7 @@ using Materialize.Strategies;
 
 namespace Materialize
 {
-    class ReifierSource
+    internal class ReifierSource
     {
         public static readonly ReifierSource Default = new ReifierSource();
 

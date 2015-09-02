@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Materialize.Tests
+namespace Materialize.Tests.Model
 {
     public class Dog
     {
