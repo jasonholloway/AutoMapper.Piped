@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Materialize
 {
-    class Materializable
-    {
+    static class Materializable 
+    {  
         public static IMaterializable<TDest> Create<TDest>(IQueryable qyOrig) 
         {            
             var tOrig = qyOrig.ElementType;
@@ -22,16 +22,29 @@ namespace Materialize
                                                                     .MakeGenericType(tOrig, tProj, tDest),
                                                         qyOrig,
                                                         rootStrategy);
-        }
+        }        
     }
  
 
-    class Materializable<TOrig, TProj, TDest> : IMaterializable<TDest>
+
+    internal interface ISnoopableMaterializable
+    {
+        event EventHandler<IEnumerable> Fetched;
+        event EventHandler<IEnumerable> Transformed;
+    }
+
+
+
+    class Materializable<TOrig, TProj, TDest> 
+        : IMaterializable<TDest>, ISnoopableMaterializable
     {
         IQueryable<TOrig> _qyOrig;
         IReifyStrategy<TOrig, TDest> _rootStrategy;
         Lazy<IEnumerable<TDest>> _lzMaterialized;
-        
+
+        public event EventHandler<IEnumerable> Fetched;
+        public event EventHandler<IEnumerable> Transformed;
+
 
         public Materializable(
                 IQueryable<TOrig> qyOrig, 
@@ -62,7 +75,16 @@ namespace Materialize
 
             var enProjected = (IEnumerable<TProj>)_qyOrig.Provider.CreateQuery(projectedExpression);
 
+            if(Fetched != null) {
+                Fetched(this, enProjected);
+            }
+
+
             var enTransformed = (IEnumerable<TDest>)reifier.Transform(enProjected);
+
+            if(Transformed != null) {
+                Transformed(this, enTransformed);
+            }
 
             return enTransformed;
         }

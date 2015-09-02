@@ -9,8 +9,11 @@ namespace Materialize
     public static class MaterializableExtensions
     {
         public static TDest First<TDest>(this IMaterializable<TDest> @this) {
-            var subject = (Materializable<TDest, TDest, TDest>)@this;
-            
+            //if fetched, just return first of enumeration
+
+            //otherwise get fresh materialization with modified expression
+            //and execute here and now
+
             throw new NotImplementedException();
         }
 
