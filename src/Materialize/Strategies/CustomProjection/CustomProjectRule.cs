@@ -7,9 +7,10 @@ using System.Reflection;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace Materialize.Strategies.Projection
+namespace Materialize.Strategies.CustomProjection
 {
-    class CustomMapRule : RuleBase
+    class CustomProjectRule 
+        : RuleBase
     {        
         public override IStrategy DeduceStrategy(Context ctx) 
         {
@@ -35,6 +36,8 @@ namespace Materialize.Strategies.Projection
                 //  - FullProjectionStrategy
 
                 //for now just render FullFetchAndProjectStrategy - should cover all bases, functionally
+                
+
 
                 return base.CreateStrategy(
                                 typeof(FullFetchAndTransformStrategy<,>),
@@ -49,8 +52,11 @@ namespace Materialize.Strategies.Projection
             return null;
         }
     }
-    
 
+
+
+    //***************************************************
+    //below should be tidied up
 
     struct DataType
     {

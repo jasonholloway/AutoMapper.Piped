@@ -43,6 +43,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IMaterializable.cs" />
+    <Compile Include="QueryRegimes\MinimalQueryRegime.cs" />
+    <Compile Include="QueryRegimes\EFQueryRegime.cs" />
+    <Compile Include="QueryRegimes\IQueryRegime.cs" />
+    <Compile Include="QueryRegimes\QueryRegimeSource.cs" />
     <Compile Include="Strategies\IStrategy.cs" />
     <Compile Include="Projection\IProjectedMemberSpec.cs" />
     <Compile Include="Projection\ProjectedTypeInfo.cs" />
@@ -56,8 +60,8 @@
     <Compile Include="Strategies\ContextFactory.cs" />
     <Compile Include="Obsolete\TypeSpec.cs" />
     <Compile Include="Obsolete\InputSpecSource.cs" />
-    <Compile Include="Strategies\CustomMapping\FullFetchAndTransformStrategy.cs" />
-    <Compile Include="Strategies\CustomMapping\SelectiveFetchAndTransformStrategy.cs" />
+    <Compile Include="Strategies\CustomProjection\FullFetchAndTransformStrategy.cs" />
+    <Compile Include="Strategies\CustomProjection\SelectiveFetchAndTransformStrategy.cs" />
     <Compile Include="Strategies\PropertyMapping\SimplePropMapStrategy.cs" />
     <Compile Include="Strategies\PropertyMapping\MediatedPropMapStrategy.cs" />
     <Compile Include="Strategies\PropertyMapping\PropMapSpec.cs" />
@@ -67,9 +71,9 @@
     <Compile Include="Strategies\StrategySource.cs" />
     <Compile Include="Strategies\Context.cs" />
     <Compile Include="TypeVector.cs" />
-    <Compile Include="Strategies\CustomMapping\EdmFriendlyProjectStrategy.cs" />
+    <Compile Include="Strategies\CustomProjection\ServerFriendlyProjectStrategy.cs" />
     <Compile Include="Strategies\PropertyMapping\PropertyMapRule.cs" />
-    <Compile Include="Strategies\CustomMapping\CustomMapRule.cs" />
+    <Compile Include="Strategies\CustomProjection\CustomProjectRule.cs" />
     <Compile Include="Strategies\Direct\DirectRule.cs" />
     <Compile Include="Strategies\IRule.cs" />
     <Compile Include="Strategies\Direct\DirectStrategy.cs" />
@@ -85,7 +89,9 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="todo.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

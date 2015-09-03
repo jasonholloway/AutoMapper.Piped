@@ -13,6 +13,9 @@ namespace Materialize.Reifiables
         {            
             var tOrig = qyOrig.ElementType;
 
+            //Regime -> TypeVector -> Context -> Strategy
+            //...
+
             var rootStrategy = StrategySource.Default.GetStrategy(tOrig, tDest);
 
             var tProj = rootStrategy.ProjectedType;
@@ -26,8 +29,27 @@ namespace Materialize.Reifiables
     }
 
 
-    class ReifiableSeries<TOrig, TProj, TDest>
+    abstract class ReifiableSeries<TDest> 
         : ReifiableSeries, IMaterializable<TDest>
+    {
+        public IQueryable<TDest> AsQueryable() {
+            throw new NotImplementedException();
+        }
+        
+        public IEnumerator<TDest> GetEnumerator() {
+            return ((IEnumerable<TDest>)Result).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() {
+            return GetEnumerator();
+        }
+
+    }
+
+
+
+    class ReifiableSeries<TOrig, TProj, TDest>
+        : ReifiableSeries<TDest>
     {
         readonly IQueryable<TOrig> _qyOrig;
         readonly IStrategy<TOrig, TDest> _rootStrategy;
@@ -50,11 +72,7 @@ namespace Materialize.Reifiables
         public override object Result {
             get { return _lzReified.Value; }
         }
-
-        //public IStrategy RootStrategy {
-        //    get { return _rootStrategy; }
-        //}
-
+        
         public override Type OrigType {
             get { return typeof(TOrig); }
         }
@@ -67,8 +85,7 @@ namespace Materialize.Reifiables
             get { return typeof(TDest); }
         }
 
-
-
+             
         
         ///////////////////////////////////////////////////////////////////////////////
         //BELOW IS MESS!!!!!!!!!!!!!!!
@@ -115,53 +132,6 @@ namespace Materialize.Reifiables
                 return transformed;
             }
         }
-
-
-        //public TDest ReifySingle(Func<Expression, Expression> fnModifyExp) 
-        //{
-        //    var reifier = _rootStrategy.CreateReifier();
-
-        //    var projExp = reifier.Project(_qyOrig.Expression);
-        //    var modProjExp = fnModifyExp(projExp);
-
-        //    var fetched = _qyOrig.Provider.Execute<TProj>(modProjExp);
-        //    OnFetched(new[] { fetched });
-
-        //    var transformed = (TDest)reifier.Transform(fetched);
-        //    OnTransformed(new[] { transformed });
-
-        //    return transformed;
-        //}
-
-
-        //public IEnumerable<TDest> ReifySeries(Func<Expression, Expression> fnModifyExp) 
-        //{
-        //    var reifier = _rootStrategy.CreateReifier();
-
-        //    var projectedExpression = reifier.Project(_qyOrig.Expression);
-
-        //    if(fnModifyExp != null) {
-        //        projectedExpression = fnModifyExp(projectedExpression);
-        //    }
-
-        //    var enProjected = (IEnumerable<TProj>)_qyOrig.Provider.CreateQuery(projectedExpression);
-        //    OnFetched(enProjected);
-
-        //    var enTransformed = (IEnumerable<TDest>)reifier.Transform(enProjected);
-        //    OnTransformed(enTransformed);
-
-        //    return enTransformed;
-        //}
         
-
-
-        public IEnumerator<TDest> GetEnumerator() {
-            return _lzReified.Value.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() {
-            return GetEnumerator();
-        }
-
     }
 }

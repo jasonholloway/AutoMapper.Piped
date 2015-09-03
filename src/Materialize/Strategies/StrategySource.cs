@@ -1,4 +1,4 @@
-﻿using Materialize.Strategies.Projection;
+﻿using Materialize.Strategies.CustomProjection;
 using Materialize.Strategies.PropertyMapping;
 using Materialize.Strategies.Direct;
 using System;
@@ -25,7 +25,7 @@ namespace Materialize.Strategies
 
         public StrategySource() {
             _rules = new IRule[] {
-                new CustomMapRule(),
+                new CustomProjectRule(),
                 new PropertyMapRule(),
                 new DirectRule()
             };

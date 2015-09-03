@@ -15,6 +15,7 @@ namespace Materialize.Strategies
         
         public Context CreateContext(Type tOrig, Type tDest) {
             return new Context(
+                            null,
                             new TypeVector(tOrig, tDest),
                             _strategySource, 
                             null, 

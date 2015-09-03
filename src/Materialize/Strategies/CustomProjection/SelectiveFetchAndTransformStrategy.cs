@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Materialize.Strategies.Projection
+namespace Materialize.Strategies.CustomProjection
 {
     class SelectiveFetchAndTransformStrategy<TOrig, TDest>
         : StrategyBase<TOrig, TDest>

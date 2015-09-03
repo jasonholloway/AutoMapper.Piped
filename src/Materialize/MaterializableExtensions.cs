@@ -10,8 +10,10 @@ namespace Materialize
     {
         public static TDest First<TDest>(this IMaterializable<TDest> @this) 
         {
-            var reifiable = (ReifiableSeries)@this;
+            var reifiable = (ReifiableSeries<TDest>)@this;
 
+            //return reifiable.AsQueryable().First();
+            
             if(reifiable.IsCompleted) {
                 return ((IEnumerable<TDest>)reifiable).First();
             }

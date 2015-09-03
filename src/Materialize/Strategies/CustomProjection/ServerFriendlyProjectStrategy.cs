@@ -5,16 +5,16 @@ using System.Linq.Expressions;
 using JH.DynaType;
 using System.Reflection;
 
-namespace Materialize.Strategies.Projection
+namespace Materialize.Strategies.CustomProjection
 {
-    class EdmFriendlyProjectStrategy<TOrig, TDest>
+    class ServerFriendlyProjectStrategy<TOrig, TDest>
         : StrategyBase<TOrig, TDest>
     {
         Context _ctx;
         LambdaExpression _exProject;
         DataType _dataType;
 
-        public EdmFriendlyProjectStrategy(Context ctx, TypeMap typeMap) 
+        public ServerFriendlyProjectStrategy(Context ctx, TypeMap typeMap) 
         {
             _ctx = ctx;
             _exProject = typeMap.CustomProjection;

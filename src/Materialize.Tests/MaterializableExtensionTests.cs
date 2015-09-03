@@ -31,6 +31,12 @@ namespace Materialize.Tests
             first.ShouldEqual(50F);
             fetchedItemsCount.ShouldEqual(1);
         }
+                
+        [Fact]
+        public void FirstThrowsFamiliarException() {
+            throw new NotImplementedException();
+        }
+
 
 
         [Fact]
@@ -43,6 +49,12 @@ namespace Materialize.Tests
         public void Single() {
             throw new NotImplementedException();
         }
+
+        [Fact]
+        public void SingleThrowsFamiliarException() {
+            throw new NotImplementedException();
+        }
+
 
         [Fact]
         public void SingleOrDefault() {
@@ -61,7 +73,6 @@ namespace Materialize.Tests
 
             var materializable = Enumerable.Range(0, 100)
                                     .AsQueryable()
-                                    .Skip(50)
                                     .MaterializeAs<float>()
                                     .Snoop(e => fetchedItemsCount += e.OfType<object>().Count());
 
@@ -69,6 +80,11 @@ namespace Materialize.Tests
 
             last.ShouldEqual(99F);
             fetchedItemsCount.ShouldEqual(1);
+        }
+
+        [Fact]
+        public void LastThrowsFamiliarException() {
+            throw new NotImplementedException();
         }
 
         [Fact]
@@ -84,6 +100,12 @@ namespace Materialize.Tests
 
         [Fact]
         public void Skip() {
+            throw new NotImplementedException();
+        }
+
+
+        [Fact]
+        public void Count() {
             throw new NotImplementedException();
         }
 
