@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Materialize.Strategies
 {
+    [Obsolete]
     struct TypeSpec
     {
         public readonly Type Type;
@@ -22,20 +23,21 @@ namespace Materialize.Strategies
 
 
 
-
+    [Obsolete]
     interface IMemberSpec
     {
         MemberInfo MemberInfo { get; }
         object Read(object tuple);
     }
     
+    [Obsolete]
     interface IMemberSpec<TType, TValue>
         : IMemberSpec
     {
         TValue Read(TType tuple);
     }
 
-
+    [Obsolete]
     struct MemberSpec<TType, TValue>
         : IMemberSpec<TType, TValue>
     {

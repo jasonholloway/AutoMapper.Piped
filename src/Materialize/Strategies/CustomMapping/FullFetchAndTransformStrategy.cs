@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 namespace Materialize.Strategies.Projection
 {
     class FullFetchAndTransformStrategy<TOrig, TDest>
-        : ReifyStrategyBase<TOrig, TDest>
+        : StrategyBase<TOrig, TDest>
     {
-        ReifyContext _ctx;
+        Context _ctx;
         Func<TOrig, TDest> _fnMap;
         
-        public FullFetchAndTransformStrategy(ReifyContext ctx, TypeMap typeMap) 
+        public FullFetchAndTransformStrategy(Context ctx, TypeMap typeMap) 
         {
             //no intermediate tuple: just return the full type, and project from it to the destination type, please
 
@@ -36,10 +36,10 @@ namespace Materialize.Strategies.Projection
         
         class Reifier : ReifierBase<TOrig, TOrig, TDest>
         {
-            ReifyContext _ctx;
+            Context _ctx;
             Func<TOrig, TDest> _fnProject;
 
-            public Reifier(ReifyContext ctx, Func<TOrig, TDest> fnProject) {
+            public Reifier(Context ctx, Func<TOrig, TDest> fnProject) {
                 _ctx = ctx;
                 _fnProject = fnProject;
             }

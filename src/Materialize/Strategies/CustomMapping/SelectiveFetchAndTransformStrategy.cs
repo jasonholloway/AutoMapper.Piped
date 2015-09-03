@@ -11,14 +11,14 @@ using System.Threading.Tasks;
 namespace Materialize.Strategies.Projection
 {
     class SelectiveFetchAndTransformStrategy<TOrig, TDest>
-        : ReifyStrategyBase<TOrig, TDest>
+        : StrategyBase<TOrig, TDest>
     {
-        ReifyContext _ctx;
+        Context _ctx;
         LambdaExpression _exProject;
         DataType _dataType;
         Func<IReifier<TOrig, TDest>> _fnCreateReifier;
 
-        public SelectiveFetchAndTransformStrategy(ReifyContext ctx, TypeMap typeMap) 
+        public SelectiveFetchAndTransformStrategy(Context ctx, TypeMap typeMap) 
         {
             //Need to figure out exactly what source properties we need to fuel projection
             //need to analyse expression: if only accessors appear as modulators of the param, then we're on.
@@ -97,10 +97,10 @@ namespace Materialize.Strategies.Projection
 
         class Reifier<TMed> : ReifierBase<TOrig, TMed, TDest>
         {
-            ReifyContext _ctx;
+            Context _ctx;
             DataType _dataType;
 
-            public Reifier(ReifyContext ctx, DataType dataType) {
+            public Reifier(Context ctx, DataType dataType) {
                 _ctx = ctx;
                 _dataType = dataType;
             }

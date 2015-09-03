@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Materialize.Reifiables;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Materialize
 {
@@ -11,13 +10,13 @@ namespace Materialize
     {
         public static TDest First<TDest>(this IMaterializable<TDest> @this) 
         {
-            var mat = (Materializable)@this;
+            var mat = (Reifiable)@this;
 
             if(mat.IsMaterialized) {
                 return ((IEnumerable<TDest>)mat).First();
             }
             else {                 
-                var newMat = mat.CloneWithModifiedQuery(ex => {
+                var newMat = mat.SpawnWithModifiedQuery(ex => {
                     return Expression.Call(
                                         typeof(Queryable),
                                         "First",
@@ -29,6 +28,7 @@ namespace Materialize
                 return ((IEnumerable<TDest>)newMat).Single();
             }
         }
+
 
         public static TDest FirstOrDefault<TDest>(this IMaterializable<TDest> @this) {
             throw new NotImplementedException();

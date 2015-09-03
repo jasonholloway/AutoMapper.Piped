@@ -9,11 +9,11 @@ using System.Collections.Generic;
 
 namespace Materialize.Strategies.Projection
 {
-    class CustomMapRule : ReifyRuleBase
+    class CustomMapRule : RuleBase
     {        
-        public override IReifyStrategy DeduceStrategy(ReifyContext ctx) 
+        public override IStrategy DeduceStrategy(Context ctx) 
         {
-            var spec = ctx.Spec;
+            var spec = ctx.TypeVector;
             var typeMap = ctx.TypeMap;
 
             if(typeMap != null && typeMap.CustomProjection != null) 

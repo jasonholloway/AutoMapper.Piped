@@ -2,21 +2,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Linq.Expressions;
 using System.Reflection;
+using Materialize.Projection;
 
 namespace Materialize.Strategies.PropertyMapping
 {
     class MediatedPropMapStrategy<TOrig, TDest>
-        : ReifyStrategyBase<TOrig, TDest>
+        : StrategyBase<TOrig, TDest>
     {
-        ReifyContext _ctx;
+        Context _ctx;
         TypeMap _typeMap;
         ProjectedTypeInfo<PropMapSpec> _projTypeInfo;
 
-        public MediatedPropMapStrategy(ReifyContext ctx, TypeMap typeMap, PropMapSpec[] propMapSpecs) {
+        public MediatedPropMapStrategy(Context ctx, TypeMap typeMap, PropMapSpec[] propMapSpecs) {
             _ctx = ctx;
             _typeMap = typeMap;
             _projTypeInfo = ctx.ProjectedTypeBuilder.BuildType(propMapSpecs);

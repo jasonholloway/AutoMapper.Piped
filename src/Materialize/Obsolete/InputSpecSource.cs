@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Materialize.Strategies
 {
+    [Obsolete]
     class InputSpecSource
     {
         //public InputSpec[] GetAllInputsFrom(Type sourceType) 

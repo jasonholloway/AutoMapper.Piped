@@ -8,13 +8,13 @@ using System.Reflection;
 namespace Materialize.Strategies.Projection
 {
     class EdmFriendlyProjectStrategy<TOrig, TDest>
-        : ReifyStrategyBase<TOrig, TDest>
+        : StrategyBase<TOrig, TDest>
     {
-        ReifyContext _ctx;
+        Context _ctx;
         LambdaExpression _exProject;
         DataType _dataType;
 
-        public EdmFriendlyProjectStrategy(ReifyContext ctx, TypeMap typeMap) 
+        public EdmFriendlyProjectStrategy(Context ctx, TypeMap typeMap) 
         {
             _ctx = ctx;
             _exProject = typeMap.CustomProjection;
@@ -64,10 +64,10 @@ namespace Materialize.Strategies.Projection
     class EdmCompProjectionReifier<TOrig, TDest>
         : IReifier<TOrig, TDest>
     {
-        ReifyContext _ctx;
+        Context _ctx;
         DataType _dataType;
 
-        public EdmCompProjectionReifier(ReifyContext ctx, DataType dataType) {
+        public EdmCompProjectionReifier(Context ctx, DataType dataType) {
             _ctx = ctx;
             _dataType = dataType;
         }

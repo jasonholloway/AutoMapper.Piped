@@ -3,11 +3,11 @@ using System.Linq.Expressions;
 
 namespace Materialize.Strategies.Direct
 {
-    class DirectRule : ReifyRuleBase
+    class DirectRule : RuleBase
     {        
-        public override IReifyStrategy DeduceStrategy(ReifyContext ctx) 
+        public override IStrategy DeduceStrategy(Context ctx) 
         {
-            var spec = ctx.Spec;
+            var spec = ctx.TypeVector;
 
             if(spec.SourceType == spec.DestType) 
             {

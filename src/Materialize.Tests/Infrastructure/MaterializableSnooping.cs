@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Materialize.Reifiables;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,14 +15,14 @@ namespace Materialize.Tests.Infrastructure
             Action<IEnumerable> fnOnFetched,
             Action<IEnumerable> fnOnTransformed = null)             
         {
-            var snoopable = (ISnoopableMaterializable)@this;
+            var mat = (Reifiable)@this;
 
             if(fnOnFetched != null) {
-                snoopable.Fetched += new EventHandler<IEnumerable>((o, e) => fnOnFetched(e));
+                mat.Fetched += new EventHandler<IEnumerable>((o, e) => fnOnFetched(e));
             }
 
             if(fnOnTransformed != null) {
-                snoopable.Transformed += new EventHandler<IEnumerable>((o, e) => fnOnTransformed(e));
+                mat.Transformed += new EventHandler<IEnumerable>((o, e) => fnOnTransformed(e));
             }
             
             return @this;

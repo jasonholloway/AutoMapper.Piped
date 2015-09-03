@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 namespace Materialize.Strategies.Direct
 {
     class DirectStrategy<TOrig, TDest>
-        : ReifyStrategyBase<TOrig, TDest>
+        : StrategyBase<TOrig, TDest>
     {
-        ReifyContext _ctx;
+        Context _ctx;
 
-        public DirectStrategy(ReifyContext ctx) {
+        public DirectStrategy(Context ctx) {
             _ctx = ctx;
         }
 
@@ -27,9 +27,9 @@ namespace Materialize.Strategies.Direct
 
         class Reifier : ReifierBase<TOrig, TDest>
         {
-            ReifyContext _ctx;
+            Context _ctx;
 
-            public Reifier(ReifyContext ctx) {
+            public Reifier(Context ctx) {
                 _ctx = ctx;
             }
 

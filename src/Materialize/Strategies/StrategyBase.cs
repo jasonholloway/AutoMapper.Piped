@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Materialize.Strategies
 {
-    abstract class ReifyStrategyBase<TOrig, TDest>
-        : IReifyStrategy<TOrig, TDest>
+    abstract class StrategyBase<TOrig, TDest>
+        : IStrategy<TOrig, TDest>
     {
         public Type SourceType {
             get { return typeof(TOrig); }
@@ -27,7 +27,7 @@ namespace Materialize.Strategies
 
         public abstract IReifier<TOrig, TDest> CreateReifier();
 
-        IReifier IReifyStrategy.CreateReifier() {
+        IReifier IStrategy.CreateReifier() {
             return CreateReifier();
         }
     }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Materialize.Strategies;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Materialize.Tests.Infrastructure
     {
 
         protected void Initialize(Action<IConfiguration> fnConfig) {
-            ReifierSource.Default.Reset();
+            StrategySource.Default.Reset();
             Mapper.Initialize(fnConfig);
         }
 

@@ -6,11 +6,11 @@ using System.Reflection;
 
 namespace Materialize.Strategies.PropertyMapping
 {
-    class PropertyMapRule : ReifyRuleBase
+    class PropertyMapRule : RuleBase
     {
-        public override IReifyStrategy DeduceStrategy(ReifyContext ctx) 
+        public override IStrategy DeduceStrategy(Context ctx) 
         {
-            var spec = ctx.Spec;
+            var spec = ctx.TypeVector;
             var typeMap = ctx.TypeMap;
 
             if(typeMap != null
@@ -37,17 +37,18 @@ namespace Materialize.Strategies.PropertyMapping
         }
         
 
-        IEnumerable<PropMapSpec> CreatePropMapSpecs(ReifyContext ctx, IEnumerable<PropertyMap> propMaps) {
-            return propMaps.Select(m => new PropMapSpec(
-                                                m, 
-                                                DeduceStrategyForPropMap(ctx, m)));
+        IEnumerable<PropMapSpec> CreatePropMapSpecs(Context ctx, IEnumerable<PropertyMap> propMaps) {
+            return propMaps.Select(propMap => new PropMapSpec(
+                                                        propMap, 
+                                                        DeduceStrategyForPropMap(ctx, propMap)));
         }
 
-        IReifyStrategy DeduceStrategyForPropMap(ReifyContext ctx, PropertyMap map) {
-            return ctx.Source.GetStrategy(
-                                    ((PropertyInfo)map.SourceMember).PropertyType,
-                                    map.DestinationPropertyType
-                                    );
+        IStrategy DeduceStrategyForPropMap(Context ctx, PropertyMap map) 
+        {
+            var tOrig = ((PropertyInfo)map.SourceMember).PropertyType;
+            var tDest = map.DestinationPropertyType;
+
+            return ctx.StrategySource.GetStrategy(tOrig, tDest);
         }
         
     }

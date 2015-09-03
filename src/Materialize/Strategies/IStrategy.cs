@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Materialize
+namespace Materialize.Strategies
 {
-    interface IReifyStrategy
+    interface IStrategy
     {
         Type SourceType { get; }
         Type ProjectedType { get; }
@@ -13,8 +13,8 @@ namespace Materialize
         IReifier CreateReifier();
     }
 
-    interface IReifyStrategy<TOrig, TDest>
-        : IReifyStrategy
+    interface IStrategy<TOrig, TDest>
+        : IStrategy
     {
         new IReifier<TOrig, TDest> CreateReifier();
     }

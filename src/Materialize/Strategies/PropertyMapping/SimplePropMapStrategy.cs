@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 namespace Materialize.Strategies.PropertyMapping
 {
     class SimplePropMapStrategy<TOrig, TDest>
-        : ReifyStrategyBase<TOrig, TDest>
+        : StrategyBase<TOrig, TDest>
     {
-        ReifyContext _ctx;
+        Context _ctx;
         PropMapSpec[] _propMapSpecs;
 
-        public SimplePropMapStrategy(ReifyContext ctx, TypeMap typeMap, PropMapSpec[] propMapSpecs) {
+        public SimplePropMapStrategy(Context ctx, TypeMap typeMap, PropMapSpec[] propMapSpecs) {
             _ctx = ctx;
             _propMapSpecs = propMapSpecs;
         }
@@ -33,10 +33,10 @@ namespace Materialize.Strategies.PropertyMapping
 
         class Reifier : ReifierBase<TOrig, TDest>
         {
-            ReifyContext _ctx;
+            Context _ctx;
             PropMapSpec[] _propSpecs;
 
-            public Reifier(ReifyContext ctx, PropMapSpec[] propSpecs) {
+            public Reifier(Context ctx, PropMapSpec[] propSpecs) {
                 _ctx = ctx;
                 _propSpecs = propSpecs;
             }
