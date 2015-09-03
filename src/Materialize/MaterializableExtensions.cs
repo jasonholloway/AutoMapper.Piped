@@ -10,30 +10,23 @@ namespace Materialize
     {
         public static TDest First<TDest>(this IMaterializable<TDest> @this) 
         {
-            var reifiable = (Reifiable)@this;
+            var reifiable = (ReifiableSeries)@this;
 
             if(reifiable.IsCompleted) {
                 return ((IEnumerable<TDest>)reifiable).First();
             }
             else {
-                //get original query out of parent
-                //and modify it, creating new reifiable
+                var reifiableSingle = ReifiableSingle.Create(
+                                                        reifiable,
+                                                        exp => {
+                                                            return Expression.Call(         //could be compiled...
+                                                                        typeof(Queryable),
+                                                                        "First",
+                                                                        new[] { reifiable.OrigType },
+                                                                        exp);
+                                                        });
 
-                
-
-                var newExp = Expression.Call(
-                                        typeof(Queryable),
-                                        "First",
-                                        new[] { reifiable.OrigType },
-                                        reifiable.QueryExpression
-                                        );
-
-                var newReifiable = ReifiableSingle.Create(
-                                                        null,
-                                                        newExp,
-                                                        typeof(TDest));
-
-                return newReifiable.Result;
+                return (TDest)reifiableSingle.Result;
             }
         }
 
@@ -52,8 +45,26 @@ namespace Materialize
         }
 
 
-        public static TDest Last<TDest>(this IMaterializable<TDest> @this) {
-            throw new NotImplementedException();
+        public static TDest Last<TDest>(this IMaterializable<TDest> @this) 
+        {
+            var reifiable = (ReifiableSeries)@this;
+
+            if(reifiable.IsCompleted) {
+                return ((IEnumerable<TDest>)reifiable).Last();
+            }
+            else {
+                var reifiableSingle = ReifiableSingle.Create(
+                                                        reifiable,
+                                                        exp => {
+                                                            return Expression.Call(         //could be compiled...
+                                                                        typeof(Queryable),
+                                                                        "Last",
+                                                                        new[] { reifiable.OrigType },
+                                                                        exp);
+                                                        });
+
+                return (TDest)reifiableSingle.Result;
+            }
         }
 
         public static TDest LastOrDefault<TDest>(this IMaterializable<TDest> @this) {

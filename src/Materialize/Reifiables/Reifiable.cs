@@ -12,9 +12,6 @@ namespace Materialize.Reifiables
         public abstract bool IsCompleted { get; }
         public abstract object Result { get; }
         
-        public abstract IQueryProvider QueryProvider { get; }
-        public abstract Expression QueryExpression { get; }
-
         public abstract Type OrigType { get; }
         public abstract Type ProjType { get; }
         public abstract Type DestType { get; }

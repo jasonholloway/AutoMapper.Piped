@@ -51,6 +51,9 @@ namespace Materialize.Reifiables
             get { return _lzReified.Value; }
         }
 
+        //public IStrategy RootStrategy {
+        //    get { return _rootStrategy; }
+        //}
 
         public override Type OrigType {
             get { return typeof(TOrig); }
@@ -64,29 +67,93 @@ namespace Materialize.Reifiables
             get { return typeof(TDest); }
         }
 
-        public override IQueryProvider QueryProvider {
-            get { return _qyOrig.Provider; }
-        }
 
-        public override Expression QueryExpression {
-            get { return _qyOrig.Expression; }
-        }
-                
+
+        
+        ///////////////////////////////////////////////////////////////////////////////
+        //BELOW IS MESS!!!!!!!!!!!!!!!
+          
+        //nasty interface below: should be more elegant way of doing this
+        //than arbitrarily exposing function as public.
+       
+        //how about if ReifiableSeries had internal-only IQueryable interface?
+        //users would still get IMaterializable, but this would delegate to IQueryable in a controlled manner
+        
+        //...
+
 
         IEnumerable<TDest> Reify() {
+            return (IEnumerable<TDest>)Reify(null);
+        }
+
+
+        public object Reify(Func<Expression, Expression> fnModifyExp) {
             var reifier = _rootStrategy.CreateReifier();
 
-            var projectedExpression = reifier.Project(_qyOrig.Expression);
+            var projExp = reifier.Project(_qyOrig.Expression);
 
-            var enProjected = (IEnumerable<TProj>)_qyOrig.Provider.CreateQuery(projectedExpression);
-            OnFetched(enProjected);
+            if(fnModifyExp != null) {
+                projExp = fnModifyExp(projExp);
+            }
 
-            var enTransformed = (IEnumerable<TDest>)reifier.Transform(enProjected);
-            OnTransformed(enTransformed);
+            if(typeof(IQueryable<TProj>).IsAssignableFrom(projExp.Type)) {
+                var enProjected = (IEnumerable<TProj>)_qyOrig.Provider.CreateQuery(projExp);
+                OnFetched(enProjected);
 
-            return enTransformed;
+                var enTransformed = (IEnumerable<TDest>)reifier.Transform(enProjected);
+                OnTransformed(enTransformed);
+
+                return enTransformed;
+            }
+            else {
+                var fetched = _qyOrig.Provider.Execute<TProj>(projExp);
+                OnFetched(new[] { fetched });
+
+                var transformed = (TDest)reifier.Transform(fetched);
+                OnTransformed(new[] { transformed });
+
+                return transformed;
+            }
         }
+
+
+        //public TDest ReifySingle(Func<Expression, Expression> fnModifyExp) 
+        //{
+        //    var reifier = _rootStrategy.CreateReifier();
+
+        //    var projExp = reifier.Project(_qyOrig.Expression);
+        //    var modProjExp = fnModifyExp(projExp);
+
+        //    var fetched = _qyOrig.Provider.Execute<TProj>(modProjExp);
+        //    OnFetched(new[] { fetched });
+
+        //    var transformed = (TDest)reifier.Transform(fetched);
+        //    OnTransformed(new[] { transformed });
+
+        //    return transformed;
+        //}
+
+
+        //public IEnumerable<TDest> ReifySeries(Func<Expression, Expression> fnModifyExp) 
+        //{
+        //    var reifier = _rootStrategy.CreateReifier();
+
+        //    var projectedExpression = reifier.Project(_qyOrig.Expression);
+
+        //    if(fnModifyExp != null) {
+        //        projectedExpression = fnModifyExp(projectedExpression);
+        //    }
+
+        //    var enProjected = (IEnumerable<TProj>)_qyOrig.Provider.CreateQuery(projectedExpression);
+        //    OnFetched(enProjected);
+
+        //    var enTransformed = (IEnumerable<TDest>)reifier.Transform(enProjected);
+        //    OnTransformed(enTransformed);
+
+        //    return enTransformed;
+        //}
         
+
 
         public IEnumerator<TDest> GetEnumerator() {
             return _lzReified.Value.GetEnumerator();

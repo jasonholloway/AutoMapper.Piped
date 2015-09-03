@@ -8,23 +8,15 @@ namespace Materialize.Reifiables
 {
     abstract class ReifiableSingle : Reifiable
     {
-        public static ReifiableSingle Create(IQueryProvider queryProv, Expression queryExp, Type tDest) 
+        public static ReifiableSingle Create(
+            ReifiableSeries series,
+            Func<Expression, Expression> fnModifyProjection) 
         {
-            //should cache all this by type vector - ie compiled ctor
-            //...
-
-            var tOrig = queryExp.Type;
-
-            var rootStrategy = StrategySource.Default.GetStrategy(tOrig, tDest);
-
-            var tProj = rootStrategy.ProjectedType;
-
-            return (ReifiableSingle)Activator.CreateInstance(
-                                                    typeof(ReifiableSingle<,,>).MakeGenericType(tOrig, tProj, tDest),
-                                                    queryProv,
-                                                    queryExp,
-                                                    rootStrategy
-                                                    );
+            return (ReifiableSingle)Activator.CreateInstance( //could be compiled...
+                                                typeof(ReifiableSingle<,,>)
+                                                        .MakeGenericType(series.OrigType, series.ProjType, series.DestType),
+                                                series,
+                                                fnModifyProjection);            
         } 
     }
 
@@ -32,19 +24,16 @@ namespace Materialize.Reifiables
     class ReifiableSingle<TOrig, TProj, TDest>
         : ReifiableSingle
     {
-        readonly IQueryable<TOrig> _qyOrig;
-        readonly Func<Expression, Expression> _fnModifyExp;
-        readonly IStrategy<TOrig, TDest> _rootStrategy;
-        readonly Lazy<TDest> _lzReified;
+        ReifiableSeries<TOrig, TProj, TDest> _parentSeries;        
+        Func<Expression, Expression> _fnModifyExp;
+        Lazy<TDest> _lzReified;
 
         public ReifiableSingle(
-            IQueryable<TOrig> qyOrig,
-            Func<Expression, Expression> fnModifyExp,
-            IStrategy<TOrig, TDest> rootStrategy) 
+            ReifiableSeries<TOrig, TProj, TDest> parentSeries,
+            Func<Expression, Expression> fnModifyExp) 
         {
-            _qyOrig = qyOrig;
+            _parentSeries = parentSeries;
             _fnModifyExp = fnModifyExp;
-            _rootStrategy = rootStrategy;
             _lzReified = new Lazy<TDest>(Reify);
         }
 
@@ -56,16 +45,7 @@ namespace Materialize.Reifiables
         public override object Result {
             get { return _lzReified.Value; }
         }
-
-
-        public override IQueryProvider QueryProvider {
-            get { return _queryProv; }
-        }
-
-        public override Expression QueryExpression {
-            get { return _queryExp; }
-        }
-
+                
 
         public override Type OrigType {
             get { return typeof(TOrig); }
@@ -78,24 +58,9 @@ namespace Materialize.Reifiables
         public override Type DestType {
             get { return typeof(TDest); }
         }
-
-
-
+        
         TDest Reify() {
-            var reifier = _rootStrategy.CreateReifier();
-
-            //NAH! We are more connected with previous expression than we like to think...
-
-            //As is, reifier will just select from whatever is in exp
-
-            //Exp needs to be in two: the spatial functions, which can be projected, then the determinant question at the end, reducing to scalar
-
-
-            var projExp = reifier.Project();
-
-
-
-            throw new NotImplementedException();
+            return (TDest)_parentSeries.Reify(_fnModifyExp);
         }
         
     }
