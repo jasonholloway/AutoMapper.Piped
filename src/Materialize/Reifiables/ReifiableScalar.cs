@@ -8,5 +8,7 @@ namespace Materialize.Materializables
 {
     class ReifiableScalar
     {
+        //primarily for Count()
+        //...
     }
 }

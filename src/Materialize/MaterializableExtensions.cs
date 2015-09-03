@@ -10,22 +10,30 @@ namespace Materialize
     {
         public static TDest First<TDest>(this IMaterializable<TDest> @this) 
         {
-            var mat = (Reifiable)@this;
+            var reifiable = (Reifiable)@this;
 
-            if(mat.IsMaterialized) {
-                return ((IEnumerable<TDest>)mat).First();
+            if(reifiable.IsCompleted) {
+                return ((IEnumerable<TDest>)reifiable).First();
             }
-            else {                 
-                var newMat = mat.SpawnWithModifiedQuery(ex => {
-                    return Expression.Call(
+            else {
+                //get original query out of parent
+                //and modify it, creating new reifiable
+
+                
+
+                var newExp = Expression.Call(
                                         typeof(Queryable),
                                         "First",
-                                        new[] { mat.OrigType },
-                                        ex              //THIS WON'T WORK COS NOT QUERYABLE!!!!!! - would have to access via Execute.
-                                        );              //which requires a special Materializable
-                });
+                                        new[] { reifiable.OrigType },
+                                        reifiable.QueryExpression
+                                        );
 
-                return ((IEnumerable<TDest>)newMat).Single();
+                var newReifiable = ReifiableSingle.Create(
+                                                        null,
+                                                        newExp,
+                                                        typeof(TDest));
+
+                return newReifiable.Result;
             }
         }
 
@@ -49,16 +57,6 @@ namespace Materialize
         }
 
         public static TDest LastOrDefault<TDest>(this IMaterializable<TDest> @this) {
-            throw new NotImplementedException();
-        }
-
-
-
-        public static IEnumerable<TDest> Take<TDest>(this IMaterializable<TDest> @this, int count) {
-            throw new NotImplementedException();
-        }
-
-        public static IEnumerable<TDest> Skip<TDest>(this IMaterializable<TDest> @this, int count) {
             throw new NotImplementedException();
         }
         

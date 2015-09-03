@@ -7,25 +7,48 @@ using System.Linq.Expressions;
 
 namespace Materialize.Reifiables
 {
-    internal class ReifiableSeries<TOrig, TProj, TDest>
-        : Reifiable, IMaterializable<TDest>
+    abstract class ReifiableSeries : Reifiable
+    {
+        public static ReifiableSeries Create(IQueryable qyOrig, Type tDest) 
+        {            
+            var tOrig = qyOrig.ElementType;
+
+            var rootStrategy = StrategySource.Default.GetStrategy(tOrig, tDest);
+
+            var tProj = rootStrategy.ProjectedType;
+
+            return (ReifiableSeries)Activator.CreateInstance(
+                                                typeof(ReifiableSeries<,,>)
+                                                            .MakeGenericType(tOrig, tProj, tDest),
+                                                qyOrig,
+                                                rootStrategy);
+        }
+    }
+
+
+    class ReifiableSeries<TOrig, TProj, TDest>
+        : ReifiableSeries, IMaterializable<TDest>
     {
         readonly IQueryable<TOrig> _qyOrig;
         readonly IStrategy<TOrig, TDest> _rootStrategy;
-        readonly Lazy<IEnumerable<TDest>> _lzMaterialized;
-
+        readonly Lazy<IEnumerable<TDest>> _lzReified;
 
         public ReifiableSeries(
                 IQueryable<TOrig> qyOrig,
-                IStrategy<TOrig, TDest> rootStrategy) {
+                IStrategy<TOrig, TDest> rootStrategy) 
+        {
             _qyOrig = qyOrig;
             _rootStrategy = rootStrategy;
-            _lzMaterialized = new Lazy<IEnumerable<TDest>>(Materialize);
+            _lzReified = new Lazy<IEnumerable<TDest>>(Reify);
         }
 
 
-        public override bool IsMaterialized {
-            get { return _lzMaterialized.IsValueCreated; }
+        public override bool IsCompleted {
+            get { return _lzReified.IsValueCreated; }
+        }
+
+        public override object Result {
+            get { return _lzReified.Value; }
         }
 
 
@@ -41,24 +64,16 @@ namespace Materialize.Reifiables
             get { return typeof(TDest); }
         }
 
-
-
-        public override Reifiable SpawnWithModifiedQuery(
-            Func<Expression, Expression> fnModifyExpression) 
-        {
-            var exNew = fnModifyExpression(_qyOrig.Expression);
-            var qyNew = _qyOrig.Provider.CreateQuery(exNew);
-
-            if(qyNew.ElementType != typeof(TOrig)) {
-                throw new InvalidOperationException("Modified query expression must be of same type as original!");
-            }
-
-            return new ReifiableSeries<TOrig, TProj, TDest>((IQueryable<TOrig>)qyNew, _rootStrategy);
+        public override IQueryProvider QueryProvider {
+            get { return _qyOrig.Provider; }
         }
 
+        public override Expression QueryExpression {
+            get { return _qyOrig.Expression; }
+        }
+                
 
-
-        IEnumerable<TDest> Materialize() {
+        IEnumerable<TDest> Reify() {
             var reifier = _rootStrategy.CreateReifier();
 
             var projectedExpression = reifier.Project(_qyOrig.Expression);
@@ -71,12 +86,10 @@ namespace Materialize.Reifiables
 
             return enTransformed;
         }
-
-
-
+        
 
         public IEnumerator<TDest> GetEnumerator() {
-            return _lzMaterialized.Value.GetEnumerator();
+            return _lzReified.Value.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator() {

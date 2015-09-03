@@ -9,19 +9,18 @@ namespace Materialize.Reifiables
 {   
     internal abstract class Reifiable
     {
-        //protected readonly object Sync;
+        public abstract bool IsCompleted { get; }
+        public abstract object Result { get; }
         
-        public event EventHandler<IEnumerable> Fetched;
-        public event EventHandler<IEnumerable> Transformed;
-        
+        public abstract IQueryProvider QueryProvider { get; }
+        public abstract Expression QueryExpression { get; }
+
         public abstract Type OrigType { get; }
         public abstract Type ProjType { get; }
         public abstract Type DestType { get; }
 
-        public abstract bool IsMaterialized { get; }
-
-        public abstract Reifiable SpawnWithModifiedQuery(Func<Expression, Expression> fnModifyExpression);
-
+        public event EventHandler<IEnumerable> Fetched;
+        public event EventHandler<IEnumerable> Transformed;
 
         protected void OnFetched(IEnumerable elems) {
             if(Fetched != null) {
@@ -33,30 +32,8 @@ namespace Materialize.Reifiables
             if(Transformed != null) {
                 Transformed(this, elems);
             }
-        }
-     
-
-        //-----------------------------------------------------------------------------
-
-
-        public static IMaterializable<TDest> Create<TDest>(IQueryable qyOrig) {
-            //should create singles too...
-            //...
-
-            var tOrig = qyOrig.ElementType;
-            var tDest = typeof(TDest);
-            
-            var rootStrategy = StrategySource.Default.GetStrategy(tOrig, tDest);
-
-            var tProj = rootStrategy.ProjectedType;
-
-            return (IMaterializable<TDest>)Activator.CreateInstance(
-                                                        typeof(ReifiableSeries<,,>)
-                                                                    .MakeGenericType(tOrig, tProj, tDest),
-                                                        qyOrig,
-                                                        rootStrategy);
-        }
-
+        }    
+        
     }
 
 

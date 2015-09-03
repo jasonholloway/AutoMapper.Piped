@@ -8,11 +8,9 @@ using System.Threading.Tasks;
 using Xunit;
 
 namespace Materialize.Tests
-{
-    
+{    
     class MaterializableExtensionTests : TestClassBase
     {
-
         [Fact]
         public void First() {
             base.Initialize(x => {
