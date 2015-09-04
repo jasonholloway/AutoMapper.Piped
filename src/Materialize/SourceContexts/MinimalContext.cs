@@ -5,9 +5,9 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Materialize.QueryRegimes
+namespace Materialize.SourceContexts
 {
-    class MinimalQueryRegime : IQueryRegime
+    class MinimalContext : ISourceContext
     {
         //back-up option - accepts only most basic operations
         //basically tells client to do everything
@@ -18,6 +18,10 @@ namespace Materialize.QueryRegimes
 
         public bool Accepts(Expression exp) {
             return false; //maybe should be more tolerant than this...
+
+            //this would forbid property mapper bindings...
+            //and also dest type ctors!
+            
         }
     }
 }

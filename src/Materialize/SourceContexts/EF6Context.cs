@@ -5,10 +5,13 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Materialize.QueryRegimes
+namespace Materialize.SourceContexts
 {
-    class EFQueryRegime : IQueryRegime
+    class EF6Context : ISourceContext
     {
+        //Can this be written without hard dependency on EF? Doubtful.
+        //Really need access to context metadata for EDM testing.
+
         public bool MatchesProvider(IQueryProvider provider) {
             //test if EF provider somehow
             throw new NotImplementedException();

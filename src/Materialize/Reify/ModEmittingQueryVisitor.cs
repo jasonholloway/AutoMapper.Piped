@@ -1,4 +1,5 @@
-﻿using Materialize.Reification.Mods;
+﻿using Materialize.Reify.Mods;
+using Materialize.Reify.Mods;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,35 +7,47 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Materialize.Reification
+namespace Materialize.Reify
 {
-    class ReifyNodeCollector : ExpressionVisitor
+    class ModEmittingQueryVisitor : ExpressionVisitor
     {
-        public IQueryable RootQueryable { get; private set; }
-        public IReifyNode RootReifyNode { get; private set; }
-        public Stack<IReifyNode> ReifyNodes { get; private set; }
+        IQueryable _rootQueryable;
+        Action<IMod> _fnModSink;
+
+
+        public ModEmittingQueryVisitor(
+            IQueryable rootQueryable, 
+            Action<IMod> fnModSink) 
+        {
+            _rootQueryable = rootQueryable;
+            _fnModSink = fnModSink;
+        }
         
 
-        public ReifyNodeCollector(
-            IQueryable rootQueryable, 
-            IReifyNode rootReifyNode) 
-        {
-            RootQueryable = rootQueryable;
-            RootReifyNode = rootReifyNode;
-            ReifyNodes = new Stack<IReifyNode>();
+        void Emit(IMod mod) {
+            _fnModSink(mod);
         }
 
 
         protected override Expression VisitConstant(ConstantExpression node) {
-            if(node.Value == RootQueryable) {
-                ReifyNodes.Push(RootReifyNode);
+            if(node.Value == _rootQueryable) {
+                //...
             }
 
             return base.VisitConstant(node);
         }
 
+
+
         protected override Expression VisitMethodCall(MethodCallExpression node) 
         {
+            Visit(node.Object);
+
+            foreach(var arg in node.Arguments) {
+                Visit(arg);
+            }
+
+
             string methodName = node.Method.DeclaringType.FullName + "." + node.Method.Name;
 
             switch(methodName) {
@@ -44,7 +57,9 @@ namespace Materialize.Reification
                 case "System.Linq.Queryable.LastOrDefault":
                 case "System.Linq.Queryable.Single":
                 case "System.Linq.Queryable.SingleOrDefault":
-                    ReifyNodes.Push(new SimpleUnaryMod(node.Method));
+                    Emit(new ImprovMod(
+                                exSrcQuery => Expression.Call(exSrcQuery, node.Method)
+                                ));
                     break;
 
                 default:
@@ -59,7 +74,6 @@ namespace Materialize.Reification
 
             }
 
-            Visit(node.Object);
             return null;
         }
 

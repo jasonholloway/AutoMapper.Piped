@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Materialize.QueryRegimes;
+using Materialize.SourceContexts;
 using Materialize.Projection;
 using Materialize.Strategies;
 using System;
@@ -12,7 +12,7 @@ namespace Materialize.Strategies
 {
     class Context
     {
-        public IQueryRegime QueryRegime { get; private set; }
+        public ISourceContext QueryRegime { get; private set; }
         public TypeVector TypeVector { get; private set; }
         public StrategySource StrategySource { get; private set; }
         public InputSpecSource InputSpecs { get; private set; }
@@ -25,7 +25,7 @@ namespace Materialize.Strategies
         }
 
         public Context(
-            IQueryRegime queryRegime,
+            ISourceContext queryRegime,
             TypeVector typeVector,
             StrategySource source, 
             InputSpecSource inputSpecs, 
