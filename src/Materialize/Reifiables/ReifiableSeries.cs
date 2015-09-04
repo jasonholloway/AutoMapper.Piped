@@ -30,12 +30,26 @@ namespace Materialize.Reifiables
 
 
     abstract class ReifiableSeries<TDest> 
-        : ReifiableSeries, IMaterializable<TDest>
+        : ReifiableSeries, IMaterializable<TDest>, IQueryProvider
     {
         public IQueryable<TDest> AsQueryable() {
-            throw new NotImplementedException();
+            return CreateQuery<TDest>(Expression.Call(
+                                                    Expression.Constant(this), 
+                                                    "AsQueryable", 
+                                                    null)); //should be compiled and cached...
         }
-        
+
+        #region IQueryProvider
+
+        public abstract IQueryable CreateQuery(Expression expression);
+        public abstract IQueryable<TElement> CreateQuery<TElement>(Expression expression);
+        public abstract object Execute(Expression expression);
+        public abstract TResult Execute<TResult>(Expression expression);
+
+        #endregion
+
+        #region IEnumerable
+
         public IEnumerator<TDest> GetEnumerator() {
             return ((IEnumerable<TDest>)Result).GetEnumerator();
         }
@@ -44,6 +58,7 @@ namespace Materialize.Reifiables
             return GetEnumerator();
         }
 
+        #endregion
     }
 
 
@@ -132,6 +147,139 @@ namespace Materialize.Reifiables
                 return transformed;
             }
         }
-        
+
+        #region IQueryProvider
+
+        public override IQueryable CreateQuery(Expression expression) {
+            //call generically-typed sibling via reflection
+            //...
+
+            throw new NotImplementedException();
+        }
+
+        public override IQueryable<TElement> CreateQuery<TElement>(Expression expression) {
+            var query = new ReifyQuery<TElement>(this, expression);
+            return query;
+        }
+
+        public override object Execute(Expression expression) {
+            //call generically-typed sibling via reflection
+            //...
+
+            throw new NotImplementedException();
+        }
+
+        public override TResult Execute<TResult>(Expression expression) 
+        {
+            //have to parse tree here...
+
+            //for each expression layer, we need a handler. A visitor is required!
+            //the operation order is to be inverted, however.
+            //and what will each handler do? append to source query, or add operations to transformation
+
+            //a Queryable.First call will append a first expression onto the source query, and nothing to the transformation
+            //the same with all the clauses I plan on handling
+
+            //but there should be infrastructure in place to append to either side.
+
+            //a where statement, for instance, with a fully transitive condition, should again only affect the source query.
+
+            //but a where statement that is fully intransitive, should modify the tranformed enumeration offered by previous layers
+
+            //all operations affect these two stacks. And the visitor that crawls the tree is to append to both as fits its intention.
+            
+            
+            
+                        
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
+
+
+
+
+    
+
+    class QueryVisitor : ExpressionVisitor
+    {
+        //need to reform tree into linear shape: from parameter at centre outwards
+        //and then clause-by-clause, we append to Reifiable
+
+
+        //visitor starts outside first; it creates a reifiable and pushes it to a stack
+        //then a ReifyExecutor enumerates through each ReifyNode, from the inside out,
+        //building its query and transformation stack.
+
+        //but what about result caches? This would live in the Reifiable outer, which would
+        //summon and run the executor internally, to traverse the ReifyNodes it itself had put in place.
+
+
+
+        public IReifiable Reifiable { get; private set; }
+
+        public QueryVisitor(IReifiable reifiable) {
+            Reifiable = reifiable;
+        }
+        
+        protected override Expression VisitParameter(ParameterExpression node) {
+            //...
+            return base.VisitParameter(node);
+        }
+
+        protected override Expression VisitMethodCall(MethodCallExpression node) 
+        {
+            //If Queryable.First, then set Reifiable prop to new ReifiableMod
+            //with appropriate modifications to expression and transformation stages
+
+            //this would obvs be better testing by method handle!
+
+            string methodName = node.Method.DeclaringType.FullName + "." + node.Method.Name;
+            
+            switch(methodName) {        
+                case "System.Linq.Queryable.First":
+
+                    Reifiable = new ReifiableMod(
+                                        Reifiable,
+                                        ex => ex,
+                                        null
+                                        );
+
+                    break;
+            }
+
+
+            return node;
+        }
+
+    }
+
+
+
+
+    class ReifyQuery<TElem> : IQueryable<TElem>
+    {
+        public IQueryProvider Provider { get; private set; }
+        public Expression Expression { get; private set; }
+        
+        public ReifyQuery(IQueryProvider prov, Expression exp) {
+            Provider = prov;
+            Expression = exp;
+        }
+        
+        public Type ElementType {
+            get { return typeof(TElem); }
+        }
+
+        public IEnumerator<TElem> GetEnumerator() {
+            return Provider.Execute<IEnumerable<TElem>>(Expression).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() {
+            return GetEnumerator();
+        }
+    }
+
+
 }
