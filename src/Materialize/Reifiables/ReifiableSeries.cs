@@ -216,6 +216,28 @@ namespace Materialize.Reifiables
         //summon and run the executor internally, to traverse the ReifyNodes it itself had put in place.
 
 
+        //So, every served query would have its own cache. It only needs to be executed once...
+        //Nah, IQueryable shouldn't cache itself. Though they usually do...
+
+        //But what of unary operations? Where's their cache? They don't need one, as they simply return
+        //an in-memory instance, that won't whither by itself.
+
+        //So queries should cache whatever they enumerate. Executions don't need it however.
+
+        //The central, monolithic Reifiable that straddles the border between client and server, 
+        //and itself serves queries, dreams up internally its map of ReifyNodes, which it then executes
+        //to fulfil its queries. All results are served by this mechanism. 
+
+        //Privately, it does its own projection, which consequent query-modifications only add to.
+        //If the transformation stack were itself expressed in expressions, then some rationalisation
+        //of the complementary stacks could perhaps be done. Client-side transformations could sometimes
+        //be shunted onto the server to minimise throughput.
+
+        //Reifiable then exposes IQueryable. No need to cater for IMaterializable at moment, which is really
+        //just an afterthought, a wrapper to expose only certain functions to the eventual user.
+
+        
+
 
         public IReifiable Reifiable { get; private set; }
 
