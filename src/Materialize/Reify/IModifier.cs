@@ -5,11 +5,11 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Materialize.Reify.Mods
+namespace Materialize.Reify
 {
-    interface IMod
+    interface IModifier
     {
-        Expression ModifySourceQuery(Expression exQuery); 
-        object ModifyReified(object reified);
+        Expression RewriteQuery(Expression exQuery); 
+        object TransformFetched(object fetched);
     }
 }

@@ -1,4 +1,4 @@
-﻿using Materialize.Strategies;
+﻿using Materialize.Reify.Mapping;
 using System;
 using System.Collections;
 using System.Collections.Generic;

@@ -1,4 +1,4 @@
-﻿using Materialize.Reifiables;
+﻿//using Materialize.Reifiables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,26 +10,8 @@ namespace Materialize
     {
         public static TDest First<TDest>(this IMaterializable<TDest> @this) 
         {
-            var reifiable = (ReifiableSeries<TDest>)@this;
-
-            //return reifiable.AsQueryable().First();
-            
-            if(reifiable.IsCompleted) {
-                return ((IEnumerable<TDest>)reifiable).First();
-            }
-            else {
-                var reifiableSingle = ReifiableSingle.Create(
-                                                        reifiable,
-                                                        exp => {
-                                                            return Expression.Call(         //could be compiled...
-                                                                        typeof(Queryable),
-                                                                        "First",
-                                                                        new[] { reifiable.OrigType },
-                                                                        exp);
-                                                        });
-
-                return (TDest)reifiableSingle.Result;
-            }
+            var queryable = ((Materializable<TDest>)@this).Queryable;
+            return queryable.First();
         }
 
 
@@ -49,24 +31,8 @@ namespace Materialize
 
         public static TDest Last<TDest>(this IMaterializable<TDest> @this) 
         {
-            var reifiable = (ReifiableSeries)@this;
-
-            if(reifiable.IsCompleted) {
-                return ((IEnumerable<TDest>)reifiable).Last();
-            }
-            else {
-                var reifiableSingle = ReifiableSingle.Create(
-                                                        reifiable,
-                                                        exp => {
-                                                            return Expression.Call(         //could be compiled...
-                                                                        typeof(Queryable),
-                                                                        "Last",
-                                                                        new[] { reifiable.OrigType },
-                                                                        exp);
-                                                        });
-
-                return (TDest)reifiableSingle.Result;
-            }
+            var queryable = ((Materializable<TDest>)@this).Queryable;
+            return queryable.Last();
         }
 
         public static TDest LastOrDefault<TDest>(this IMaterializable<TDest> @this) {

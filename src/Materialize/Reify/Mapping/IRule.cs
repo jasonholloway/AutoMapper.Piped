@@ -1,7 +1,7 @@
-﻿using Materialize.Strategies;
+﻿using Materialize.Reify.Mapping;
 using System;
 
-namespace Materialize.Strategies
+namespace Materialize.Reify.Mapping
 {
     interface IRule
     {

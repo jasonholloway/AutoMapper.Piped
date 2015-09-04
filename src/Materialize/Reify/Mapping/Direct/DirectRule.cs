@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace Materialize.Strategies.Direct
+namespace Materialize.Reify.Mapping.Direct
 {
     class DirectRule : RuleBase
     {        

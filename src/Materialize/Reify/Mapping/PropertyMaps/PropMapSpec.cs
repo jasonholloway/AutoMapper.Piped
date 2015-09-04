@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Materialize.Strategies.PropertyMapping
+namespace Materialize.Reify.Mapping.PropertyMaps
 {
     struct PropMapSpec : IProjectedMemberSpec
     {

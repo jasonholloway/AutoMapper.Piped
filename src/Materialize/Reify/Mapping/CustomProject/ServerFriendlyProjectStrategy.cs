@@ -4,8 +4,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using JH.DynaType;
 using System.Reflection;
+using Materialize.Reify.Mods;
 
-namespace Materialize.Strategies.CustomProjection
+namespace Materialize.Reify.Mapping.CustomProject
 {
     class ServerFriendlyProjectStrategy<TOrig, TDest>
         : StrategyBase<TOrig, TDest>
@@ -54,7 +55,7 @@ namespace Materialize.Strategies.CustomProjection
         }
 
         
-        public override IReifier<TOrig, TDest> CreateReifier() {
+        public override IModifier CreateModifier() {
             return new EdmCompProjectionReifier<TOrig, TDest>(_ctx, _dataType);
         }
     }
@@ -62,7 +63,7 @@ namespace Materialize.Strategies.CustomProjection
     
 
     class EdmCompProjectionReifier<TOrig, TDest>
-        : IReifier<TOrig, TDest>
+        : MapperBase<TOrig, TDest>
     {
         Context _ctx;
         DataType _dataType;
@@ -72,7 +73,8 @@ namespace Materialize.Strategies.CustomProjection
             _dataType = dataType;
         }
 
-        public Expression Project(Expression exSource) {
+        protected override Expression ProjectSingle(Expression exSource) 
+        {
             return Expression.MemberInit(
                                 Expression.New(_dataType.Type),
                                 BuildBindings(exSource)
@@ -87,10 +89,10 @@ namespace Materialize.Strategies.CustomProjection
                             ).ToArray();
         }
 
-
-        public object Transform(object orig) {
+        protected override TDest TransformSingle(TDest obj) {
             throw new NotImplementedException();
         }
+        
     }
 
 

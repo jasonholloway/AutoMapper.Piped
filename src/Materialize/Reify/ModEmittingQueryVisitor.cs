@@ -12,19 +12,19 @@ namespace Materialize.Reify
     class ModEmittingQueryVisitor : ExpressionVisitor
     {
         IQueryable _rootQueryable;
-        Action<IMod> _fnModSink;
+        Action<IModifier> _fnModSink;
 
 
         public ModEmittingQueryVisitor(
             IQueryable rootQueryable, 
-            Action<IMod> fnModSink) 
+            Action<IModifier> fnModSink) 
         {
             _rootQueryable = rootQueryable;
             _fnModSink = fnModSink;
         }
         
 
-        void Emit(IMod mod) {
+        void Emit(IModifier mod) {
             _fnModSink(mod);
         }
 

@@ -5,8 +5,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Materialize.Projection;
+using Materialize.Reify.Mods;
 
-namespace Materialize.Strategies.PropertyMapping
+namespace Materialize.Reify.Mapping.PropertyMaps
 {
     class MediatedPropMapStrategy<TOrig, TDest>
         : StrategyBase<TOrig, TDest>
@@ -25,28 +26,28 @@ namespace Materialize.Strategies.PropertyMapping
             get { return _projTypeInfo.Type; }
         }
         
-        public override IReifier<TOrig, TDest> CreateReifier() {            
-            var reifierType = typeof(Reifier<>).MakeGenericType(typeof(TOrig), typeof(TDest), _projTypeInfo.Type);
-            return (IReifier<TOrig, TDest>)Activator.CreateInstance(reifierType, _projTypeInfo);
+        public override IModifier CreateModifier() {            
+            var mapperType = typeof(Mapper<>).MakeGenericType(typeof(TOrig), typeof(TDest), _projTypeInfo.Type);
+            return (IModifier)Activator.CreateInstance(mapperType, _projTypeInfo);
         }
 
 
 
 
 
-        class Reifier<TMed> : ReifierBase<TOrig, TMed, TDest>
+        class Mapper<TMed> : MapperBase<TOrig, TMed, TDest>
         {
             Type _projType;
             MemberReifySpec[] _memberSpecs;            
             
-            public Reifier(ProjectedTypeInfo<PropMapSpec> projTypeInfo) 
+            public Mapper(ProjectedTypeInfo<PropMapSpec> projTypeInfo) 
             {
                 _projType = projTypeInfo.Type;
 
                 _memberSpecs = projTypeInfo.Members.Select(m => new MemberReifySpec(
                                                                         m.Spec.PropMap,
                                                                         m.ProjectedField,
-                                                                        m.Spec.Strategy.CreateReifier())
+                                                                        m.Spec.Strategy.CreateModifier())
                                                                         ).ToArray();
             }
             
@@ -56,7 +57,7 @@ namespace Materialize.Strategies.PropertyMapping
                                         Expression.New(_projType),
                                         _memberSpecs.Select(m => Expression.Bind(
                                                                         m.ProjectedField,
-                                                                        m.Reifier.Project(
+                                                                        m.Mapper.RewriteQuery(
                                                                                     Expression.MakeMemberAccess(exSource, m.PropertyMap.SourceMember))
                                                                         )).ToArray());
             }
@@ -71,7 +72,7 @@ namespace Materialize.Strategies.PropertyMapping
                 foreach(var memberSpec in _memberSpecs) {
                     var memberValue = memberSpec.ProjectedField.GetValue(obj);
 
-                    var transformedValue = memberSpec.Reifier.Transform(memberValue);
+                    var transformedValue = memberSpec.Mapper.TransformFetched(memberValue);
                     
                     memberSpec.PropertyMap.DestinationProperty.SetValue(dest, transformedValue);
                 }
@@ -83,12 +84,12 @@ namespace Materialize.Strategies.PropertyMapping
             {
                 public readonly PropertyMap PropertyMap;
                 public readonly FieldInfo ProjectedField;
-                public readonly IReifier Reifier;
+                public readonly IModifier Mapper;
 
-                public MemberReifySpec(PropertyMap propMap, FieldInfo projField, IReifier reifier) {
+                public MemberReifySpec(PropertyMap propMap, FieldInfo projField, IModifier mapper) {
                     PropertyMap = propMap;
                     ProjectedField = projField;
-                    Reifier = reifier;
+                    Mapper = mapper;
                 }
             }
 

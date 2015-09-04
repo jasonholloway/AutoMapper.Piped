@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Materialize.Reify.Mods;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Materialize.Strategies
+namespace Materialize.Reify.Mapping
 {
     abstract class StrategyBase<TOrig, TDest>
-        : IStrategy<TOrig, TDest>
+        : IStrategy //<TOrig, TDest>
     {
         public Type SourceType {
             get { return typeof(TOrig); }
@@ -25,11 +26,8 @@ namespace Materialize.Strategies
         }
 
 
-        public abstract IReifier<TOrig, TDest> CreateReifier();
-
-        IReifier IStrategy.CreateReifier() {
-            return CreateReifier();
-        }
+        public abstract IModifier CreateModifier();
+        
     }
 
 }

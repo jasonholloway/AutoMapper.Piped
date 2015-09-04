@@ -7,8 +7,9 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Materialize.Reify.Mods;
 
-namespace Materialize.Strategies.CustomProjection
+namespace Materialize.Reify.Mapping.CustomProject
 {
     class FullFetchAndTransformStrategy<TOrig, TDest>
         : StrategyBase<TOrig, TDest>
@@ -29,17 +30,17 @@ namespace Materialize.Strategies.CustomProjection
         }
 
 
-        public override IReifier<TOrig, TDest> CreateReifier() {
-            return new Reifier(_ctx, _fnMap);
+        public override IModifier CreateModifier() {
+            return new Mapper(_ctx, _fnMap);
         }
 
         
-        class Reifier : ReifierBase<TOrig, TOrig, TDest>
+        class Mapper : MapperBase<TOrig, TOrig, TDest>
         {
             Context _ctx;
             Func<TOrig, TDest> _fnProject;
 
-            public Reifier(Context ctx, Func<TOrig, TDest> fnProject) {
+            public Mapper(Context ctx, Func<TOrig, TDest> fnProject) {
                 _ctx = ctx;
                 _fnProject = fnProject;
             }

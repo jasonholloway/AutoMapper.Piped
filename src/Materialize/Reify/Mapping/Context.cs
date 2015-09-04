@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
 using Materialize.SourceContexts;
 using Materialize.Projection;
-using Materialize.Strategies;
+using Materialize.Reify.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Materialize.Strategies
+namespace Materialize.Reify.Mapping
 {
     class Context
     {

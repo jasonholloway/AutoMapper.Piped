@@ -10,25 +10,25 @@ namespace Materialize.Reify.Mods
 {
     class ImprovMod : ModBase
     {
-        Func<Expression, Expression> _fnModQuery;
-        Func<object, object> _fnModReified;
+        Func<Expression, Expression> _fnRewrite;
+        Func<object, object> _fnTransform;
 
         public ImprovMod(
-            Func<Expression, Expression> fnModQuery,
-            Func<object, object> fnModReified = null) 
+            Func<Expression, Expression> fnRewrite,
+            Func<object, object> fnTransform = null) 
         {
-            _fnModQuery = fnModQuery;
-            _fnModReified = fnModReified;
+            _fnRewrite = fnRewrite;
+            _fnTransform = fnTransform;
         }
 
-        public override Expression ModifySourceQuery(Expression exQuery) {
-            return _fnModQuery(exQuery);
+        public override Expression RewriteQuery(Expression exQuery) {
+            return _fnRewrite(exQuery);
         }
 
-        public override object ModifyReified(object reified) {
-            return _fnModReified != null
-                        ? _fnModReified(reified)
-                        : reified;
+        public override object TransformFetched(object fetched) {
+            return _fnTransform != null
+                        ? _fnTransform(fetched)
+                        : fetched;
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Materialize.Strategies
+namespace Materialize.Reify.Mapping
 {
     [Obsolete]
     struct TypeSpec

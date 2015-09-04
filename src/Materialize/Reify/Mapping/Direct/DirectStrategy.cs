@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Materialize.Reify.Mods;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Materialize.Strategies.Direct
+namespace Materialize.Reify.Mapping.Direct
 {
     class DirectStrategy<TOrig, TDest>
         : StrategyBase<TOrig, TDest>
@@ -20,16 +21,16 @@ namespace Materialize.Strategies.Direct
             get { return typeof(TDest); }
         }
 
-        public override IReifier<TOrig, TDest> CreateReifier() {
-            return new Reifier(_ctx);
+        public override IModifier CreateModifier() {
+            return new Mapper(_ctx);
         }
 
 
-        class Reifier : ReifierBase<TOrig, TDest>
+        class Mapper : MapperBase<TOrig, TDest>
         {
             Context _ctx;
 
-            public Reifier(Context ctx) {
+            public Mapper(Context ctx) {
                 _ctx = ctx;
             }
 

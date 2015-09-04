@@ -7,8 +7,9 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Materialize.Reify.Mods;
 
-namespace Materialize.Strategies.CustomProjection
+namespace Materialize.Reify.Mapping.CustomProject
 {
     class SelectiveFetchAndTransformStrategy<TOrig, TDest>
         : StrategyBase<TOrig, TDest>
@@ -16,7 +17,7 @@ namespace Materialize.Strategies.CustomProjection
         Context _ctx;
         LambdaExpression _exProject;
         DataType _dataType;
-        Func<IReifier<TOrig, TDest>> _fnCreateReifier;
+        Func<IModifier> _fnCreateModifier;
 
         public SelectiveFetchAndTransformStrategy(Context ctx, TypeMap typeMap) 
         {
@@ -55,12 +56,12 @@ namespace Materialize.Strategies.CustomProjection
 
             var reifierType = typeof(Reifier<>).MakeGenericType(typeof(TOrig), typeof(TDest), _dataType.Type);
             
-            _fnCreateReifier = Expression.Lambda<Func<IReifier<TOrig, TDest>>>( //will opt out of this for ios
-                                            Expression.New(
-                                                        reifierType.GetConstructors().First(),
-                                                        Expression.Constant(_ctx),
-                                                        Expression.Constant(_dataType))
-                                            ).Compile();
+            _fnCreateModifier = Expression.Lambda<Func<IModifier>>( //will opt out of this for ios
+                                                        Expression.New(
+                                                                    reifierType.GetConstructors().First(),
+                                                                    Expression.Constant(_ctx),
+                                                                    Expression.Constant(_dataType))
+                                                        ).Compile();
 
         }
 
@@ -70,8 +71,8 @@ namespace Materialize.Strategies.CustomProjection
         }
 
 
-        public override IReifier<TOrig, TDest> CreateReifier() {
-            return _fnCreateReifier();
+        public override IModifier CreateModifier() {
+            return _fnCreateModifier();
         }
 
 
@@ -95,7 +96,7 @@ namespace Materialize.Strategies.CustomProjection
 
 
 
-        class Reifier<TMed> : ReifierBase<TOrig, TMed, TDest>
+        class Reifier<TMed> : MapperBase<TOrig, TMed, TDest>
         {
             Context _ctx;
             DataType _dataType;

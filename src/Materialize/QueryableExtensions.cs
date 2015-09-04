@@ -1,4 +1,4 @@
-﻿using Materialize.Reifiables;
+﻿using Materialize.Reify;
 using System.Linq;
 
 namespace Materialize
@@ -7,8 +7,8 @@ namespace Materialize
     {        
         public static IMaterializable<TDest> MaterializeAs<TDest>(this IQueryable qyOrig) 
         {
-            return (IMaterializable<TDest>)ReifiableSeries.Create(qyOrig, typeof(TDest));      
+            var queryable = (IQueryable<TDest>)Reifiable.Create(qyOrig, typeof(TDest));
+            return new Materializable<TDest>(queryable);
         }
-
     }
 }

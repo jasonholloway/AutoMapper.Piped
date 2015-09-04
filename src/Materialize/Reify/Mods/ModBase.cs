@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Materialize.Reify.Mods
 {
-    abstract class ModBase : IMod
+    abstract class ModBase : IModifier
     {
-        public abstract Expression ModifySourceQuery(Expression exQuery);
-        public abstract object ModifyReified(object reified);
+        public abstract Expression RewriteQuery(Expression exQuery);
+        public abstract object TransformFetched(object fetched);
     }
 }

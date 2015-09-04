@@ -1,4 +1,4 @@
-﻿using Materialize.Strategies;
+﻿using Materialize.Reify.Mapping;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -67,12 +67,12 @@ namespace Materialize.Reifiables
         : ReifiableSeries<TDest>
     {
         readonly IQueryable<TOrig> _qyOrig;
-        readonly IStrategy<TOrig, TDest> _rootStrategy;
+        readonly IStrategy _rootStrategy;
         readonly Lazy<IEnumerable<TDest>> _lzReified;
 
         public ReifiableSeries(
                 IQueryable<TOrig> qyOrig,
-                IStrategy<TOrig, TDest> rootStrategy) 
+                IStrategy rootStrategy) 
         {
             _qyOrig = qyOrig;
             _rootStrategy = rootStrategy;
@@ -120,28 +120,28 @@ namespace Materialize.Reifiables
 
 
         public object Reify(Func<Expression, Expression> fnModifyExp) {
-            var reifier = _rootStrategy.CreateReifier();
+            var reifier = _rootStrategy.CreateModifier();
 
-            var projExp = reifier.Project(_qyOrig.Expression);
+            var exRewritten = reifier.RewriteQuery(_qyOrig.Expression);
 
             if(fnModifyExp != null) {
-                projExp = fnModifyExp(projExp);
+                exRewritten = fnModifyExp(exRewritten);
             }
 
-            if(typeof(IQueryable<TProj>).IsAssignableFrom(projExp.Type)) {
-                var enProjected = (IEnumerable<TProj>)_qyOrig.Provider.CreateQuery(projExp);
+            if(typeof(IQueryable<TProj>).IsAssignableFrom(exRewritten.Type)) {
+                var enProjected = (IEnumerable<TProj>)_qyOrig.Provider.CreateQuery(exRewritten);
                 OnFetched(enProjected);
 
-                var enTransformed = (IEnumerable<TDest>)reifier.Transform(enProjected);
+                var enTransformed = (IEnumerable<TDest>)reifier.TransformFetched(enProjected);
                 OnTransformed(enTransformed);
 
                 return enTransformed;
             }
             else {
-                var fetched = _qyOrig.Provider.Execute<TProj>(projExp);
+                var fetched = _qyOrig.Provider.Execute<TProj>(exRewritten);
                 OnFetched(new[] { fetched });
 
-                var transformed = (TDest)reifier.Transform(fetched);
+                var transformed = (TDest)reifier.TransformFetched(fetched);
                 OnTransformed(new[] { transformed });
 
                 return transformed;

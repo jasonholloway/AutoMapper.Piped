@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace Materialize.Strategies.CustomProjection
+namespace Materialize.Reify.Mapping.CustomProject
 {
     class CustomProjectRule 
         : RuleBase

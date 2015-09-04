@@ -1,37 +1,22 @@
-﻿using System;
+﻿using Materialize.Reify.Mods;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Materialize.Strategies
+namespace Materialize.Reify.Mapping
 {
-    interface IReifier
-    {
-        Expression Project(Expression exSource);
-        object Transform(object orig);
-    }
-
-    interface IReifier<TOrig, TDest>
-        : IReifier
-    {
-        //...
-    }
-
-
-
-
-
-    abstract class ReifierBase<TOrig, TDest>
-        : ReifierBase<TOrig, TDest, TDest>
+    abstract class MapperBase<TOrig, TDest>
+        : MapperBase<TOrig, TDest, TDest>
     { }
 
 
-    abstract class ReifierBase<TOrig, TMed, TDest>
-        : IReifier<TOrig, TDest>
+    abstract class MapperBase<TOrig, TMed, TDest>
+        : IModifier
     {
 
-        public Expression Project(Expression exSource) 
+        public Expression RewriteQuery(Expression exSource) 
         {
             if(typeof(IQueryable).IsAssignableFrom(exSource.Type)) 
             {
@@ -60,7 +45,7 @@ namespace Materialize.Strategies
         protected abstract Expression ProjectSingle(Expression exSource);
         
         
-        public object Transform(object obj) 
+        public object TransformFetched(object obj) 
         {
             if(typeof(IEnumerable<TMed>).IsAssignableFrom(obj.GetType())) 
             {
