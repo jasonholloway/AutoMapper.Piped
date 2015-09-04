@@ -47,6 +47,12 @@
     <Compile Include="QueryRegimes\EFQueryRegime.cs" />
     <Compile Include="QueryRegimes\IQueryRegime.cs" />
     <Compile Include="QueryRegimes\QueryRegimeSource.cs" />
+    <Compile Include="ReflectionHelper.cs" />
+    <Compile Include="Reification\IReifyNode.cs" />
+    <Compile Include="Reification\Mods\SimpleUnaryMod.cs" />
+    <Compile Include="Reification\Orchestrator.cs" />
+    <Compile Include="Reification\Reifier.cs" />
+    <Compile Include="Reification\ReifyNodeCollector.cs" />
     <Compile Include="Strategies\IStrategy.cs" />
     <Compile Include="Projection\IProjectedMemberSpec.cs" />
     <Compile Include="Projection\ProjectedTypeInfo.cs" />
