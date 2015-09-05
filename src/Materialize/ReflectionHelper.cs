@@ -10,7 +10,8 @@ namespace Materialize
 {
     static class ReflectionHelper
     {
-        public static MethodInfo GetMethod(Expression<Action> exAction) {
+        public static MethodInfo GetMethod(Expression<Action> exAction) 
+        {
             var exCall = exAction.Body as MethodCallExpression;
 
             if(exCall == null) {
@@ -19,6 +20,12 @@ namespace Materialize
 
             return exCall.Method;
         } 
+
+
+        public static MethodInfo GetGenericMethodDef(Expression<Action> exAction) 
+        {
+            return GetMethod(exAction).GetGenericMethodDefinition();
+        }
 
     }
 }

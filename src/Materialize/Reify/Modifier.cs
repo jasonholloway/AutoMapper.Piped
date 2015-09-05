@@ -8,27 +8,38 @@ using System.Threading.Tasks;
 
 namespace Materialize.Reify.Mods
 {
-    class ImprovMod : ModBase
+    class Modifier : IModifier
     {
+        IModifier _upstreamModifier;
         Func<Expression, Expression> _fnRewrite;
         Func<object, object> _fnTransform;
 
-        public ImprovMod(
+
+        public Modifier(
+            IModifier upstreamModifier,
             Func<Expression, Expression> fnRewrite,
             Func<object, object> fnTransform = null) 
         {
+            _upstreamModifier = upstreamModifier;
             _fnRewrite = fnRewrite;
             _fnTransform = fnTransform;
         }
 
-        public override Expression RewriteQuery(Expression exQuery) {
-            return _fnRewrite(exQuery);
+
+        public Expression RewriteQuery(Expression exQuery) 
+        {
+            var ex = _upstreamModifier.RewriteQuery(exQuery);
+            return _fnRewrite(ex);
         }
 
-        public override object TransformFetched(object fetched) {
+
+        public object TransformFetched(object fetched) 
+        {
+            var obj = _upstreamModifier.TransformFetched(fetched);
+
             return _fnTransform != null
-                        ? _fnTransform(fetched)
-                        : fetched;
+                        ? _fnTransform(obj)
+                        : obj;
         }
     }
 }

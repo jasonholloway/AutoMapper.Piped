@@ -7,8 +7,9 @@ namespace Materialize
     {        
         public static IMaterializable<TDest> MaterializeAs<TDest>(this IQueryable qyOrig) 
         {
-            var queryable = (IQueryable<TDest>)Reifiable.Create(qyOrig, typeof(TDest));
-            return new Materializable<TDest>(queryable);
+            return new Materializable<TDest>(
+                            Reifiable.Create(qyOrig, typeof(TDest))
+                            );
         }
     }
 }

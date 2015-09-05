@@ -14,7 +14,7 @@ namespace Materialize.Reify.Mapping
     {
         public ISourceContext QueryRegime { get; private set; }
         public TypeVector TypeVector { get; private set; }
-        public StrategySource StrategySource { get; private set; }
+        public StrategyProvider StrategySource { get; private set; }
         public InputSpecSource InputSpecs { get; private set; }
         public ProjectedTypeBuilder ProjectedTypeBuilder { get; private set; }
         
@@ -27,7 +27,7 @@ namespace Materialize.Reify.Mapping
         public Context(
             ISourceContext queryRegime,
             TypeVector typeVector,
-            StrategySource source, 
+            StrategyProvider source, 
             InputSpecSource inputSpecs, 
             ProjectedTypeBuilder projTypeBuilder) 
         {

@@ -43,7 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IMaterializable.cs" />
-    <Compile Include="Reify\ReifyExecutor.cs" />
+    <Compile Include="Materializable.cs" />
+    <Compile Include="Reify\ReifyQueryParser.cs" />
     <Compile Include="SourceContexts\EnumerableQueryContext.cs" />
     <Compile Include="SourceContexts\MinimalContext.cs" />
     <Compile Include="SourceContexts\EF6Context.cs" />
@@ -51,11 +52,9 @@
     <Compile Include="SourceContexts\SourceContextDetector.cs" />
     <Compile Include="ReflectionHelper.cs" />
     <Compile Include="Reify\IModifier.cs" />
-    <Compile Include="Reify\Mods\ImprovMod.cs" />
-    <Compile Include="Reify\Mods\ModBase.cs" />
+    <Compile Include="Reify\Modifier.cs" />
     <Compile Include="Reify\ReifyQuery.cs" />
-    <Compile Include="Reify\ReifyQueryProvider.cs" />
-    <Compile Include="Reify\ModEmittingQueryVisitor.cs" />
+    <Compile Include="Reify\Reifiable.cs" />
     <Compile Include="Reify\Mapping\IStrategy.cs" />
     <Compile Include="Projection\IProjectedMemberSpec.cs" />
     <Compile Include="Projection\ProjectedTypeInfo.cs" />
@@ -73,7 +72,7 @@
     <Compile Include="QueryableExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reify\Mapping\MapperBase.cs" />
-    <Compile Include="Reify\Mapping\StrategySource.cs" />
+    <Compile Include="Reify\Mapping\StrategyProvider.cs" />
     <Compile Include="Reify\Mapping\Context.cs" />
     <Compile Include="TypeVector.cs" />
     <Compile Include="Reify\Mapping\CustomProject\ServerFriendlyProjectStrategy.cs" />

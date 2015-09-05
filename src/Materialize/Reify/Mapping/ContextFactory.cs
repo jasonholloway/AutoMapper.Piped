@@ -10,7 +10,7 @@ namespace Materialize.Reify.Mapping
     {
         public static readonly ContextFactory Default = new ContextFactory();
 
-        StrategySource _strategySource = StrategySource.Default;
+        StrategyProvider _strategySource = StrategyProvider.Default;
         ProjectedTypeBuilder _projTypeBuilder = new ProjectedTypeBuilder();
         
         public Context CreateContext(Type tOrig, Type tDest) {
