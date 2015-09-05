@@ -1,6 +1,14 @@
 ﻿
 TO DO! ********************************************
 
+> Reifiable should somehow replace ReifyQuery.
+
+
+
+
+
+
+
 > Strategies should also be keyed by provider type
 	- although theres nothing to say these won't be proxied or something. In any case, they could unacceptably vary,
 		and defeat our cache.

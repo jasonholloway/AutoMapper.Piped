@@ -1,7 +1,8 @@
-﻿using Materialize.Reify.Mods;
+﻿using Materialize.Reify.Modifiers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -22,6 +23,8 @@ namespace Materialize.Reify.Mapping
             {
                 var exInParam = Expression.Parameter(typeof(TOrig));
                 var exLambdaBody = ProjectSingle(exInParam);
+
+                Debug.Assert(exLambdaBody.Type == typeof(TMed));
 
                 var tIn = typeof(TOrig);
                 var tOut = exLambdaBody.Type;   //should be changed to use TMed, rather than expression type

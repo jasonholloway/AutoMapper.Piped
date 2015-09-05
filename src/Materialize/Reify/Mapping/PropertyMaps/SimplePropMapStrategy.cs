@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Materialize.Reify.Mods;
+using Materialize.Reify.Modifiers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,17 +27,17 @@ namespace Materialize.Reify.Mapping.PropertyMaps
         
 
         public override IModifier CreateModifier() {
-            return new Reifier(_ctx, _propMapSpecs);
+            return new Mapper(_ctx, _propMapSpecs);
         }
 
 
 
-        class Reifier : MapperBase<TOrig, TDest>
+        class Mapper : MapperBase<TOrig, TDest>
         {
             Context _ctx;
             PropMapSpec[] _propSpecs;
 
-            public Reifier(Context ctx, PropMapSpec[] propSpecs) {
+            public Mapper(Context ctx, PropMapSpec[] propSpecs) {
                 _ctx = ctx;
                 _propSpecs = propSpecs;
             }
@@ -48,13 +48,13 @@ namespace Materialize.Reify.Mapping.PropertyMaps
                             spec => {
                                 var sourceMember = spec.PropMap.SourceMember;
                                 var destMember = spec.PropMap.DestinationProperty.MemberInfo;
-                                var subReifier = spec.Strategy.CreateModifier(); //this should be cached in strategy...
+                                var subMapper = spec.Strategy.CreateModifier(); //this should be cached in strategy...
 
                                 var exInput = Expression.MakeMemberAccess(
                                                                     exSource,
                                                                     sourceMember);
 
-                                var exMappedInput = subReifier.RewriteQuery(exInput);
+                                var exMappedInput = subMapper.RewriteQuery(exInput);
 
                                 return Expression.Bind(
                                                     destMember,

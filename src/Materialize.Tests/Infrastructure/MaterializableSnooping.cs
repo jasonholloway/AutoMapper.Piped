@@ -1,4 +1,4 @@
-﻿using Materialize.Reifiables;
+﻿using Materialize.Reify;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ namespace Materialize.Tests.Infrastructure
             Action<IEnumerable> fnOnFetched,
             Action<IEnumerable> fnOnTransformed = null)             
         {
-            var mat = (Reifiable)@this;
+            var mat = (Materializable)@this;
 
             if(fnOnFetched != null) {
                 mat.Fetched += new EventHandler<IEnumerable>((o, e) => fnOnFetched(e));

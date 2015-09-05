@@ -1,4 +1,4 @@
-﻿using Materialize.Reify.Mods;
+﻿using Materialize.Reify.Modifiers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,22 +13,30 @@ namespace Materialize.Reify
     {
         //minimally featured at mo: will only handle unary queryable methods and base constant.
 
-        Reifiable _baseReifiable;
+        Expression _baseExp;
         Func<IModifier> _fnBaseModifier;
 
-        public ReifyQueryParser(Reifiable baseReifiable, Func<IModifier> fnBaseModifier) {
-            _baseReifiable = baseReifiable;
+        public ReifyQueryParser(
+            Expression baseExp, 
+            Func<IModifier> fnBaseModifier) 
+        {
+            _baseExp = baseExp;
             _fnBaseModifier = fnBaseModifier;
         }
 
 
-        public IModifier Parse(Expression ex) {
+        public IModifier Parse(Expression ex) 
+        {
+            if(ex == _baseExp) {
+                return _fnBaseModifier();
+            }
+
             switch(ex.NodeType) {
                 case ExpressionType.Call:
                     return ParseCall((MethodCallExpression)ex);
 
-                case ExpressionType.Constant:
-                    return ParseConstant((ConstantExpression)ex);
+                //case ExpressionType.Constant:
+                //    return ParseConstant((ConstantExpression)ex);
 
                 default:
                     throw new InvalidOperationException("ReifyQueryParser doesn't like its input!");
@@ -59,10 +67,9 @@ namespace Materialize.Reify
                 {                   
                     var upstreamMod = Parse(ex.Arguments.First());
 
-                    return new Modifier(
-                                    upstreamMod,
-                                    e => Expression.Call(e, ex.Method)
-                                    );
+                    return new UnaryModifier(
+                                    upstreamMod, 
+                                    ex.Method.GetGenericMethodDefinition());
                 }
             }
             
@@ -71,14 +78,14 @@ namespace Materialize.Reify
 
 
 
-        IModifier ParseConstant(ConstantExpression ex) 
-        {
-            if(ex.Value == _baseReifiable) {
-                return _fnBaseModifier();
-            }
+        //IModifier ParseConstant(ConstantExpression ex) 
+        //{
+        //    if(ex.Value == _baseReifiable) {
+        //        return _fnBaseModifier();
+        //    }
 
-            throw new InvalidOperationException();
-        }
+        //    throw new InvalidOperationException();
+        //}
 
 
 

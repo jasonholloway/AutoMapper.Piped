@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Materialize.Reify.Mods;
+using Materialize.Reify.Modifiers;
 
 namespace Materialize.Reify.Mapping.CustomProject
 {

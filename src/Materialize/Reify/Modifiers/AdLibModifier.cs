@@ -6,16 +6,16 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Materialize.Reify.Mods
+namespace Materialize.Reify.Modifiers
 {
-    class Modifier : IModifier
+    class AdLibModifier : IModifier
     {
         IModifier _upstreamModifier;
         Func<Expression, Expression> _fnRewrite;
         Func<object, object> _fnTransform;
 
 
-        public Modifier(
+        public AdLibModifier(
             IModifier upstreamModifier,
             Func<Expression, Expression> fnRewrite,
             Func<object, object> fnTransform = null) 

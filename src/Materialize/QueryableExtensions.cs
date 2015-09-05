@@ -1,5 +1,6 @@
 ﻿using Materialize.Reify;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Materialize
 {
@@ -7,9 +8,9 @@ namespace Materialize
     {        
         public static IMaterializable<TDest> MaterializeAs<TDest>(this IQueryable qyOrig) 
         {
-            return new Materializable<TDest>(
-                            Reifiable.Create(qyOrig, typeof(TDest))
-                            );
+            var reifiable = Reifiable.Create<TDest>(qyOrig);
+                        
+            return new Materializable<TDest>(reifiable.ReifyQuery);                                       
         }
     }
 }

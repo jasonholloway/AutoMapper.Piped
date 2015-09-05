@@ -30,22 +30,25 @@ namespace Materialize
     class Materializable<TDest>
         : Materializable, IMaterializable<TDest>
     {
-        Reifiable _reifiable;
+        IQueryable<TDest> _query;
         
-        public Materializable(Reifiable reifiable) {
-            _reifiable = reifiable;
 
-            _reifiable.Fetched += new EventHandler<IEnumerable>((o, en) => OnFetched(en));
-            _reifiable.Transformed += new EventHandler<IEnumerable>((o, en) => OnTransformed(en));
+        public Materializable(IQueryable<TDest> query)
+        {
+            _query = query;
+
+            var reifiable = (Reifiable)_query.Provider;
+            reifiable.Fetched += new EventHandler<IEnumerable>((o, en) => OnFetched(en));
+            reifiable.Transformed += new EventHandler<IEnumerable>((o, en) => OnTransformed(en));
         }
 
 
-        public IQueryable<TDest> Queryable {
-            get { return (IQueryable<TDest>)_reifiable; }
+        public IQueryable<TDest> AsQueryable() {
+            return _query;
         }
 
         public IEnumerator<TDest> GetEnumerator() {
-            return Queryable.GetEnumerator();
+            return _query.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator() {

@@ -1,4 +1,4 @@
-﻿using Materialize.Reify.Mods;
+﻿using Materialize.Reify.Modifiers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
