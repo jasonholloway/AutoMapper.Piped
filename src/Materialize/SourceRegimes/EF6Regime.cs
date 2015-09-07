@@ -5,9 +5,9 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Materialize.SourceContexts
+namespace Materialize.SourceRegimes
 {
-    class EF6Context : ISourceContext
+    class EF6Regime : ISourceRegime
     {
         //Can this be written without hard dependency on EF? Doubtful.
         //Really need access to context metadata for EDM testing.
@@ -22,9 +22,9 @@ namespace Materialize.SourceContexts
 
             //No non-model member accesses!
 
-            //No ctors with parameters!
+            //No parameterised ctors!
 
-            //No projection to mapped model entities!
+            //No projection to mapped entities!
             
             throw new NotImplementedException();
         }

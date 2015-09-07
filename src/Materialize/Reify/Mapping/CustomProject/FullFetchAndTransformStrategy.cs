@@ -35,7 +35,7 @@ namespace Materialize.Reify.Mapping.CustomProject
         }
 
         
-        class Mapper : MapperBase<TOrig, TOrig, TDest>
+        class Mapper : MapperModifier<TOrig, TOrig, TDest>
         {
             Context _ctx;
             Func<TOrig, TDest> _fnProject;
@@ -45,7 +45,7 @@ namespace Materialize.Reify.Mapping.CustomProject
                 _fnProject = fnProject;
             }
 
-            protected override Expression ProjectSingle(Expression exSource) {
+            protected override Expression RewriteSingle(Expression exSource) {
                 return exSource;
             }
             

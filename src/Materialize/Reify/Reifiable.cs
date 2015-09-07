@@ -1,18 +1,15 @@
 ﻿using Materialize.Reify.Mapping;
-using Materialize.Reify.Modifiers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Materialize.Reify
 {
     //Reifiables are mostly QueryProviders, serving ReifyQueries
-    //As such, they orchestrate query-parsing, fetching and transformation, via a stack of modifiers
+    //As such, they orchestrate query-parsing, fetching and transformation, via a stack of modifiers.
 
 
     internal interface IReifiable : IQueryProvider
@@ -23,7 +20,7 @@ namespace Materialize.Reify
 
     internal interface IReifiable<TDest> : IReifiable
     {
-        IQueryable<TDest> ReifyQuery { get; }
+        IQueryable<TDest> BaseReifyQuery { get; }
     }
 
 
@@ -48,49 +45,36 @@ namespace Materialize.Reify
             if(Transformed != null) {
                 Transformed(this, elems);
             }
-        }
-        
-
-        //------------------------------------------------------
-
-        public static IReifiable<TDest> Create<TDest>(IQueryable qySource) 
-        {
-            var tOrig = qySource.ElementType;
-            var tDest = typeof(TDest);
-            
-            return (IReifiable<TDest>)Activator.CreateInstance(
-                                                    typeof(Reifiable<,>)
-                                                                .MakeGenericType(tOrig, tDest),
-                                                    qySource);
-        }
+        }        
     }
-
     
-
-
 
 
     class Reifiable<TSource, TDest> 
         : Reifiable, IReifiable<TDest>
     {
-        static MemberInfo _reifyQueryMember = typeof(Reifiable<TSource, TDest>)
+        static PropertyInfo _reifyQueryProp = typeof(Reifiable<TSource, TDest>)
                                                         .GetProperty("ReifyQuery");
 
-        Lazy<IStrategy> _lzMapStrategy;
+        Lazy<IMapStrategy> _lzMapStrategy;
 
         public IQueryable<TSource> SourceQuery { get; private set; }
-        public IQueryable<TDest> ReifyQuery { get; private set; }
+        public IQueryable<TDest> BaseReifyQuery { get; private set; }
 
 
-        public Reifiable(IQueryable<TSource> sourceQuery) 
+        public Reifiable(
+            IQueryable<TSource> sourceQuery, 
+            Func<IMapStrategy> fnMapStrategy) 
         {
             SourceQuery = sourceQuery;
 
-            ReifyQuery = CreateQuery<TDest>(
-                                Expression.MakeMemberAccess(Expression.Constant(this), _reifyQueryMember));
+            BaseReifyQuery = CreateQuery<TDest>(
+                                    Expression.MakeMemberAccess(
+                                                Expression.Constant(this), 
+                                                _reifyQueryProp)
+                                    );
 
-            _lzMapStrategy = new Lazy<IStrategy>(
-                                () => StrategyProvider.Default.GetStrategy(typeof(TSource), typeof(TDest)));            
+            _lzMapStrategy = new Lazy<IMapStrategy>(fnMapStrategy);
         }
         
 
@@ -111,8 +95,8 @@ namespace Materialize.Reify
         {            
             //parser creates modifier stack based on passed ReifyQuery expression
             var parser = new ReifyQueryParser(
-                                    ReifyQuery.Expression,
-                                    () => _lzMapStrategy.Value.CreateModifier());
+                                    BaseReifyQuery.Expression,
+                                    _lzMapStrategy.Value.CreateModifier());
 
             var modifier = parser.Parse(exReifyQuery);
                                                             

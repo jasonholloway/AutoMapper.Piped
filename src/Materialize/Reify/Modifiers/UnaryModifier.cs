@@ -38,7 +38,7 @@ namespace Materialize.Reify.Modifiers
                                 .Concat(ex.Type.GetInterfaces())
                                 .First(t => t.IsGenericType 
                                             && t.GetGenericTypeDefinition() == typeof(IQueryable<>));
-
+                        
             var tElem = tQueryable.GetGenericArguments().First();
 
             var mTypedUnary = _mUnaryGenDef.MakeGenericMethod(tElem);

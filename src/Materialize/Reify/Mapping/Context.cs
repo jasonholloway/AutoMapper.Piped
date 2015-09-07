@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Materialize.SourceContexts;
-using Materialize.Projection;
+using Materialize.SourceRegimes;
+using Materialize.ProjectionTypes;
 using Materialize.Reify.Mapping;
 using System;
 using System.Collections.Generic;
@@ -12,9 +12,9 @@ namespace Materialize.Reify.Mapping
 {
     class Context
     {
-        public ISourceContext QueryRegime { get; private set; }
+        public ISourceRegime QueryRegime { get; private set; }
         public TypeVector TypeVector { get; private set; }
-        public StrategyProvider StrategySource { get; private set; }
+        public MapStrategyProvider StrategySource { get; private set; }
         public InputSpecSource InputSpecs { get; private set; }
         public ProjectedTypeBuilder ProjectedTypeBuilder { get; private set; }
         
@@ -25,9 +25,9 @@ namespace Materialize.Reify.Mapping
         }
 
         public Context(
-            ISourceContext queryRegime,
+            ISourceRegime queryRegime,
             TypeVector typeVector,
-            StrategyProvider source, 
+            MapStrategyProvider source, 
             InputSpecSource inputSpecs, 
             ProjectedTypeBuilder projTypeBuilder) 
         {

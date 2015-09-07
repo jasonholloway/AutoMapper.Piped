@@ -8,12 +8,12 @@ using System.Linq.Expressions;
 
 namespace Materialize.Reify.Mapping
 {
-    abstract class MapperBase<TOrig, TDest>
-        : MapperBase<TOrig, TDest, TDest>
+    abstract class MapperModifier<TOrig, TDest>
+        : MapperModifier<TOrig, TDest, TDest>
     { }
 
 
-    abstract class MapperBase<TOrig, TMed, TDest>
+    abstract class MapperModifier<TOrig, TMed, TDest>
         : IModifier
     {
 
@@ -22,7 +22,7 @@ namespace Materialize.Reify.Mapping
             if(typeof(IQueryable).IsAssignableFrom(exSource.Type)) 
             {
                 var exInParam = Expression.Parameter(typeof(TOrig));
-                var exLambdaBody = ProjectSingle(exInParam);
+                var exLambdaBody = RewriteSingle(exInParam);
 
                 Debug.Assert(exLambdaBody.Type == typeof(TMed));
 
@@ -41,13 +41,14 @@ namespace Materialize.Reify.Mapping
                                 );
             }
             else {
-                return ProjectSingle(exSource);
+                return RewriteSingle(exSource);
             }
         }
 
-        protected abstract Expression ProjectSingle(Expression exSource);
+        protected abstract Expression RewriteSingle(Expression exSource);
         
         
+
         public object TransformFetched(object obj) 
         {
             if(typeof(IEnumerable<TMed>).IsAssignableFrom(obj.GetType())) 

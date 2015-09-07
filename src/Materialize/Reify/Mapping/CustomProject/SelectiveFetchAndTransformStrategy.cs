@@ -96,7 +96,7 @@ namespace Materialize.Reify.Mapping.CustomProject
 
 
 
-        class Reifier<TMed> : MapperBase<TOrig, TMed, TDest>
+        class Reifier<TMed> : MapperModifier<TOrig, TMed, TDest>
         {
             Context _ctx;
             DataType _dataType;
@@ -106,7 +106,7 @@ namespace Materialize.Reify.Mapping.CustomProject
                 _dataType = dataType;
             }
 
-            protected override Expression ProjectSingle(Expression exSource) {
+            protected override Expression RewriteSingle(Expression exSource) {
                 return Expression.MemberInit(
                                     Expression.New(_dataType.Type),
                                     BuildBindings(exSource)

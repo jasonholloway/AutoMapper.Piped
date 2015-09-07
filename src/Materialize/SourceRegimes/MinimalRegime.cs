@@ -5,9 +5,9 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Materialize.SourceContexts
+namespace Materialize.SourceRegimes
 {
-    class MinimalContext : ISourceContext
+    class MinimalRegime : ISourceRegime
     {
         //back-up option - accepts only most basic operations
         //basically tells client to do everything

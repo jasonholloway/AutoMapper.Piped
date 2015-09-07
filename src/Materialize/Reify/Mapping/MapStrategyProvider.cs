@@ -5,28 +5,28 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Materialize.Projection;
+using Materialize.ProjectionTypes;
 
 namespace Materialize.Reify.Mapping
 {
-    class StrategyProvider
+    class MapStrategyProvider
     {
-        public static readonly StrategyProvider Default = new StrategyProvider();
+        public static readonly MapStrategyProvider Default = new MapStrategyProvider();
 
-        ConcurrentDictionary<TypeVector, IStrategy> _dStrategies
-            = new ConcurrentDictionary<TypeVector, IStrategy>(TypeVectorEqualityComparer.Default);
+        ConcurrentDictionary<TypeVector, IMapStrategy> _dStrategies
+            = new ConcurrentDictionary<TypeVector, IMapStrategy>(TypeVectorEqualityComparer.Default);
 
         InputSpecSource _inputSpecSource = new InputSpecSource();
         ProjectedTypeBuilder _projTypeBuilder = new ProjectedTypeBuilder();
 
-        IRule[] _rules = new IRule[] {
+        IMapRule[] _rules = new IMapRule[] {
                             new CustomProjectRule(),
                             new PropertyMapRule(),
                             new DirectRule()
                         };
         
 
-        public IStrategy GetStrategy(Type tOrig, Type tDest) {
+        public IMapStrategy GetStrategy(Type tOrig, Type tDest) {
             var ctx = ContextFactory.Default.CreateContext(tOrig, tDest);
             
             return _dStrategies.GetOrAdd(
@@ -35,7 +35,7 @@ namespace Materialize.Reify.Mapping
         }
 
 
-        IStrategy PlanStrategy(Context ctx) {            
+        IMapStrategy PlanStrategy(Context ctx) {            
             foreach(var rule in _rules) {
                 var fac = rule.DeduceStrategy(ctx);
                 if(fac != null) return fac;

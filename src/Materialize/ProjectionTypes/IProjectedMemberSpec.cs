@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Materialize.Projection
+namespace Materialize.ProjectionTypes
 {
     interface IProjectedMemberSpec
     {

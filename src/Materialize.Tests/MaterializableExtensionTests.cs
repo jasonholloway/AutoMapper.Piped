@@ -15,7 +15,7 @@ namespace Materialize.Tests
         public void First() {
             base.Initialize(x => {
                 x.CreateMap<int, float>()
-                    .ProjectUsing(i => i);
+                    .ProjectUsing(i => 2F * i);
             });
 
             int fetchedItemsCount = 0;
@@ -28,7 +28,7 @@ namespace Materialize.Tests
 
             var first = materializable.First();
 
-            first.ShouldEqual(50F);
+            first.ShouldEqual(100F);
             fetchedItemsCount.ShouldEqual(1);
         }
                 
@@ -66,7 +66,7 @@ namespace Materialize.Tests
         public void Last() {
             base.Initialize(x => {
                 x.CreateMap<int, float>()
-                    .ProjectUsing(i => i);
+                    .ProjectUsing(i => 2F * i);
             });
 
             int fetchedItemsCount = 0;
@@ -78,7 +78,7 @@ namespace Materialize.Tests
 
             var last = materializable.Last();
 
-            last.ShouldEqual(99F);
+            last.ShouldEqual(198F);
             fetchedItemsCount.ShouldEqual(1);
         }
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Materialize.Projection;
+using Materialize.ProjectionTypes;
 using Materialize.Reify.Modifiers;
 
 namespace Materialize.Reify.Mapping.PropertyMaps
@@ -35,7 +35,7 @@ namespace Materialize.Reify.Mapping.PropertyMaps
 
 
 
-        class Mapper<TMed> : MapperBase<TOrig, TMed, TDest>
+        class Mapper<TMed> : MapperModifier<TOrig, TMed, TDest>
         {
             Type _projType;
             MemberReifySpec[] _memberSpecs;            
@@ -51,7 +51,7 @@ namespace Materialize.Reify.Mapping.PropertyMaps
                                                                         ).ToArray();
             }
             
-            protected override Expression ProjectSingle(Expression exSource) 
+            protected override Expression RewriteSingle(Expression exSource) 
             {
                 return Expression.MemberInit(
                                         Expression.New(_projType),

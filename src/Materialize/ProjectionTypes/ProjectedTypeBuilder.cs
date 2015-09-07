@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Materialize.Projection
+namespace Materialize.ProjectionTypes
 {
     class ProjectedTypeBuilder
     {

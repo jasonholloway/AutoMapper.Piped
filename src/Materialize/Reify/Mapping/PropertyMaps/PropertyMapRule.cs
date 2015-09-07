@@ -6,9 +6,9 @@ using System.Reflection;
 
 namespace Materialize.Reify.Mapping.PropertyMaps
 {
-    class PropertyMapRule : RuleBase
+    class PropertyMapRule : MapRuleBase
     {
-        public override IStrategy DeduceStrategy(Context ctx) 
+        public override IMapStrategy DeduceStrategy(Context ctx) 
         {
             var spec = ctx.TypeVector;
             var typeMap = ctx.TypeMap;
@@ -43,7 +43,7 @@ namespace Materialize.Reify.Mapping.PropertyMaps
                                                         DeduceStrategyForPropMap(ctx, propMap)));
         }
 
-        IStrategy DeduceStrategyForPropMap(Context ctx, PropertyMap map) 
+        IMapStrategy DeduceStrategyForPropMap(Context ctx, PropertyMap map) 
         {
             var tOrig = ((PropertyInfo)map.SourceMember).PropertyType;
             var tDest = map.DestinationPropertyType;

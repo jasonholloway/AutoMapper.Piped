@@ -1,4 +1,4 @@
-﻿using Materialize.Projection;
+﻿using Materialize.ProjectionTypes;
 using Materialize.Reify.Mapping;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ namespace Materialize.Reify.Mapping
     {
         public static readonly ContextFactory Default = new ContextFactory();
 
-        StrategyProvider _strategySource = StrategyProvider.Default;
+        MapStrategyProvider _strategySource = MapStrategyProvider.Default;
         ProjectedTypeBuilder _projTypeBuilder = new ProjectedTypeBuilder();
         
         public Context CreateContext(Type tOrig, Type tDest) {

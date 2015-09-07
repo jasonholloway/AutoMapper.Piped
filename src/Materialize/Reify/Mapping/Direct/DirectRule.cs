@@ -3,9 +3,9 @@ using System.Linq.Expressions;
 
 namespace Materialize.Reify.Mapping.Direct
 {
-    class DirectRule : RuleBase
+    class DirectRule : MapRuleBase
     {        
-        public override IStrategy DeduceStrategy(Context ctx) 
+        public override IMapStrategy DeduceStrategy(Context ctx) 
         {
             var spec = ctx.TypeVector;
 

@@ -32,7 +32,7 @@ namespace Materialize.Reify.Mapping.PropertyMaps
 
 
 
-        class Mapper : MapperBase<TOrig, TDest>
+        class Mapper : MapperModifier<TOrig, TDest>
         {
             Context _ctx;
             PropMapSpec[] _propSpecs;
@@ -63,7 +63,7 @@ namespace Materialize.Reify.Mapping.PropertyMaps
             }
 
 
-            protected override Expression ProjectSingle(Expression exSource) {
+            protected override Expression RewriteSingle(Expression exSource) {
                 return Expression.MemberInit( //should handle custom ctors etc.
                                     Expression.New(typeof(TDest).GetConstructors().First()),
                                     BuildBindings(exSource)

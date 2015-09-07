@@ -26,7 +26,7 @@ namespace Materialize.Reify.Mapping.Direct
         }
 
 
-        class Mapper : MapperBase<TOrig, TDest>
+        class Mapper : MapperModifier<TOrig, TDest>
         {
             Context _ctx;
 
@@ -34,7 +34,7 @@ namespace Materialize.Reify.Mapping.Direct
                 _ctx = ctx;
             }
 
-            protected override Expression ProjectSingle(Expression exOrig) {
+            protected override Expression RewriteSingle(Expression exOrig) {
                 return exOrig;
             }
 

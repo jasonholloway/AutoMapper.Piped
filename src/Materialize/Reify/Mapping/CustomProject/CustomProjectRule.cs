@@ -10,9 +10,9 @@ using System.Collections.Generic;
 namespace Materialize.Reify.Mapping.CustomProject
 {
     class CustomProjectRule 
-        : RuleBase
+        : MapRuleBase
     {        
-        public override IStrategy DeduceStrategy(Context ctx) 
+        public override IMapStrategy DeduceStrategy(Context ctx) 
         {
             var spec = ctx.TypeVector;
             var typeMap = ctx.TypeMap;

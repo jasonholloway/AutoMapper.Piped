@@ -5,12 +5,15 @@ using System.Linq.Expressions;
 namespace Materialize
 {
     public static class QueryableExtensions
-    {        
-        public static IMaterializable<TDest> MaterializeAs<TDest>(this IQueryable qyOrig) 
+    {
+        static ReifiableFactory _reifiableFac = new ReifiableFactory();        
+            
+        public static IMaterializable<TDest> MaterializeAs<TDest>(this IQueryable qySource) 
         {
-            var reifiable = Reifiable.Create<TDest>(qyOrig);
-                        
-            return new Materializable<TDest>(reifiable.ReifyQuery);                                       
+            var reifiable = _reifiableFac.CreateReifiable<TDest>(qySource);
+            
+            return new Materializable<TDest>(
+                                reifiable.BaseReifyQuery);                                       
         }
     }
 }

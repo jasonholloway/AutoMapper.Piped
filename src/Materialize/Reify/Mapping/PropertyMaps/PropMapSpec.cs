@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Materialize.Projection;
+using Materialize.ProjectionTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +11,9 @@ namespace Materialize.Reify.Mapping.PropertyMaps
     struct PropMapSpec : IProjectedMemberSpec
     {
         public readonly PropertyMap PropMap;
-        public readonly IStrategy Strategy;
+        public readonly IMapStrategy Strategy;
 
-        public PropMapSpec(PropertyMap propMap, IStrategy strategy) {
+        public PropMapSpec(PropertyMap propMap, IMapStrategy strategy) {
             PropMap = propMap;
             Strategy = strategy;
         }

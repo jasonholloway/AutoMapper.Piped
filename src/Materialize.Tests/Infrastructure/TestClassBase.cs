@@ -12,7 +12,7 @@ namespace Materialize.Tests.Infrastructure
     {
 
         protected void Initialize(Action<IConfiguration> fnConfig) {
-            StrategyProvider.Default.Reset();
+            MapStrategyProvider.Default.Reset();
             Mapper.Initialize(fnConfig);
         }
 

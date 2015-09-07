@@ -3,7 +3,7 @@ using System;
 
 namespace Materialize.Reify.Mapping
 {
-    interface IStrategy
+    interface IMapStrategy
     {
         Type SourceType { get; }
         Type ProjectedType { get; }

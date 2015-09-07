@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using System.Linq.Expressions;
 
-namespace Materialize.SourceContexts
+namespace Materialize.SourceRegimes
 {
-    class EnumerableQueryContext : ISourceContext
+    class EnumerableQueryRegime : ISourceRegime
     {
         public bool MatchesProvider(IQueryProvider provider) {
             return provider is EnumerableQuery;

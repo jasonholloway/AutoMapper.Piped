@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Materialize.Reify.Mapping
 {
     abstract class StrategyBase<TOrig, TDest>
-        : IStrategy //<TOrig, TDest>
+        : IMapStrategy //<TOrig, TDest>
     {
         public Type SourceType {
             get { return typeof(TOrig); }

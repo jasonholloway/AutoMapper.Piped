@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using System.Linq.Expressions;
 
-namespace Materialize.SourceContexts
+namespace Materialize.SourceRegimes
 {
-    internal interface ISourceContext
+    internal interface ISourceRegime
     {
         bool MatchesProvider(IQueryProvider provider);
         bool Accepts(Expression exp);
