@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Materialize.ProjectionTypes
+namespace Materialize.ProjectedTypes
 {
     struct ProjectedMemberInfo<TMemberSpec>
         where TMemberSpec : IProjectedMemberSpec

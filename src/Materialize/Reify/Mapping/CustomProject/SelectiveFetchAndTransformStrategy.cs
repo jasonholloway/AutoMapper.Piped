@@ -14,12 +14,12 @@ namespace Materialize.Reify.Mapping.CustomProject
     class SelectiveFetchAndTransformStrategy<TOrig, TDest>
         : StrategyBase<TOrig, TDest>
     {
-        Context _ctx;
+        MapContext _ctx;
         LambdaExpression _exProject;
         DataType _dataType;
         Func<IModifier> _fnCreateModifier;
 
-        public SelectiveFetchAndTransformStrategy(Context ctx, TypeMap typeMap) 
+        public SelectiveFetchAndTransformStrategy(MapContext ctx, TypeMap typeMap) 
         {
             //Need to figure out exactly what source properties we need to fuel projection
             //need to analyse expression: if only accessors appear as modulators of the param, then we're on.
@@ -66,7 +66,7 @@ namespace Materialize.Reify.Mapping.CustomProject
         }
 
 
-        public override Type ProjectedType {
+        public override Type FetchedType {
             get { return _dataType.Type; }
         }
 
@@ -98,10 +98,10 @@ namespace Materialize.Reify.Mapping.CustomProject
 
         class Reifier<TMed> : MapperModifier<TOrig, TMed, TDest>
         {
-            Context _ctx;
+            MapContext _ctx;
             DataType _dataType;
 
-            public Reifier(Context ctx, DataType dataType) {
+            public Reifier(MapContext ctx, DataType dataType) {
                 _ctx = ctx;
                 _dataType = dataType;
             }

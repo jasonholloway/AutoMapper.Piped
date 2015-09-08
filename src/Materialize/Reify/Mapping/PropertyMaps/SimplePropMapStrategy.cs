@@ -12,16 +12,16 @@ namespace Materialize.Reify.Mapping.PropertyMaps
     class SimplePropMapStrategy<TOrig, TDest>
         : StrategyBase<TOrig, TDest>
     {
-        Context _ctx;
+        MapContext _ctx;
         PropMapSpec[] _propMapSpecs;
 
-        public SimplePropMapStrategy(Context ctx, TypeMap typeMap, PropMapSpec[] propMapSpecs) {
+        public SimplePropMapStrategy(MapContext ctx, TypeMap typeMap, PropMapSpec[] propMapSpecs) {
             _ctx = ctx;
             _propMapSpecs = propMapSpecs;
         }
 
 
-        public override Type ProjectedType {
+        public override Type FetchedType {
             get { return typeof(TDest); }
         }
         
@@ -34,10 +34,10 @@ namespace Materialize.Reify.Mapping.PropertyMaps
 
         class Mapper : MapperModifier<TOrig, TDest>
         {
-            Context _ctx;
+            MapContext _ctx;
             PropMapSpec[] _propSpecs;
 
-            public Mapper(Context ctx, PropMapSpec[] propSpecs) {
+            public Mapper(MapContext ctx, PropMapSpec[] propSpecs) {
                 _ctx = ctx;
                 _propSpecs = propSpecs;
             }

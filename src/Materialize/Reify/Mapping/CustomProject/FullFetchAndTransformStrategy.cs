@@ -14,35 +14,35 @@ namespace Materialize.Reify.Mapping.CustomProject
     class FullFetchAndTransformStrategy<TOrig, TDest>
         : StrategyBase<TOrig, TDest>
     {
-        Context _ctx;
-        Func<TOrig, TDest> _fnMap;
+        MapContext _ctx;
+        Func<TOrig, TDest> _fnTransform;
         
-        public FullFetchAndTransformStrategy(Context ctx, TypeMap typeMap) 
+        public FullFetchAndTransformStrategy(MapContext ctx, TypeMap typeMap) 
         {
             //no intermediate tuple: just return the full type, and project from it to the destination type, please
 
             _ctx = ctx;
-            _fnMap = (Func<TOrig, TDest>)typeMap.CustomProjection.Compile();
+            _fnTransform = (Func<TOrig, TDest>)typeMap.CustomProjection.Compile();
         }
 
-        public override Type ProjectedType {
+        public override Type FetchedType {
             get { return typeof(TOrig); }
         }
 
 
         public override IModifier CreateModifier() {
-            return new Mapper(_ctx, _fnMap);
+            return new Mapper(_ctx, _fnTransform);
         }
 
         
         class Mapper : MapperModifier<TOrig, TOrig, TDest>
         {
-            Context _ctx;
-            Func<TOrig, TDest> _fnProject;
+            MapContext _ctx;
+            Func<TOrig, TDest> _fnTransform;
 
-            public Mapper(Context ctx, Func<TOrig, TDest> fnProject) {
+            public Mapper(MapContext ctx, Func<TOrig, TDest> fnTransform) {
                 _ctx = ctx;
-                _fnProject = fnProject;
+                _fnTransform = fnTransform;
             }
 
             protected override Expression RewriteSingle(Expression exSource) {
@@ -50,7 +50,7 @@ namespace Materialize.Reify.Mapping.CustomProject
             }
             
             protected override TDest TransformSingle(TOrig source) {
-                return _fnProject(source);
+                return _fnTransform(source);
             }
         }
 

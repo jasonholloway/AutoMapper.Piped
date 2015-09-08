@@ -1,6 +1,13 @@
 ﻿
 TO DO! ********************************************
 
+> Projection rules should test their perojections against regime
+
+
+
+
+
+
 
 
 

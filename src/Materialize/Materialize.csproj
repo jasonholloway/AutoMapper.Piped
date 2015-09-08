@@ -33,21 +33,27 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DynaType, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DynaType.1.13\lib\40\DynaType.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IMaterializable.cs" />
+    <Compile Include="Dependencies\LightInject\LightInject.cs" />
     <Compile Include="Materializable.cs" />
+    <Compile Include="ProjectedTypes\DynaType\DynaType.cs" />
+    <Compile Include="ProjectedTypes\IProjectedTypeBuilder.cs" />
+    <Compile Include="Reify\Mapping\IMapRuleRegistry.cs" />
+    <Compile Include="Reify\Mapping\IMapStrategySource.cs" />
+    <Compile Include="Reify\Mapping\MapRuleRegistry.cs" />
     <Compile Include="Reify\Modifiers\UnaryModifier.cs" />
     <Compile Include="Reify\ReifiableFactory.cs" />
     <Compile Include="Reify\ReifyQueryParser.cs" />
+    <Compile Include="Dependencies\IServiceRegistry.cs" />
+    <Compile Include="Dependencies\ServiceRegistry.cs" />
+    <Compile Include="Services.cs" />
     <Compile Include="SourceRegimes\EnumerableQueryRegime.cs" />
+    <Compile Include="SourceRegimes\ISourceRegimeDetector.cs" />
     <Compile Include="SourceRegimes\MinimalRegime.cs" />
     <Compile Include="SourceRegimes\EF6Regime.cs" />
     <Compile Include="SourceRegimes\ISourceRegime.cs" />
@@ -58,12 +64,11 @@
     <Compile Include="Reify\ReifyQuery.cs" />
     <Compile Include="Reify\Reifiable.cs" />
     <Compile Include="Reify\Mapping\IMapStrategy.cs" />
-    <Compile Include="ProjectionTypes\IProjectedMemberSpec.cs" />
-    <Compile Include="ProjectionTypes\ProjectedTypeInfo.cs" />
+    <Compile Include="ProjectedTypes\IProjectedMemberSpec.cs" />
+    <Compile Include="ProjectedTypes\ProjectedTypeInfo.cs" />
     <Compile Include="MaterializableExtensions.cs" />
-    <Compile Include="ProjectionTypes\ProjectedMemberInfo.cs" />
-    <Compile Include="ProjectionTypes\ProjectedTypeBuilder.cs" />
-    <Compile Include="Reify\Mapping\ContextFactory.cs" />
+    <Compile Include="ProjectedTypes\ProjectedMemberInfo.cs" />
+    <Compile Include="ProjectedTypes\ProjectedTypeBuilder.cs" />
     <Compile Include="Obsolete\TypeSpec.cs" />
     <Compile Include="Obsolete\InputSpecSource.cs" />
     <Compile Include="Reify\Mapping\CustomProject\FullFetchAndTransformStrategy.cs" />
@@ -74,8 +79,10 @@
     <Compile Include="QueryableExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reify\Mapping\MapperModifier.cs" />
-    <Compile Include="Reify\Mapping\MapStrategyProvider.cs" />
-    <Compile Include="Reify\Mapping\Context.cs" />
+    <Compile Include="Reify\Mapping\MapStrategySource.cs" />
+    <Compile Include="Reify\Mapping\MapContext.cs" />
+    <Compile Include="TypeMaps\CachedTypeMapProvider.cs" />
+    <Compile Include="TypeMaps\ITypeMapProvider.cs" />
     <Compile Include="TypeVector.cs" />
     <Compile Include="Reify\Mapping\CustomProject\ServerFriendlyProjectStrategy.cs" />
     <Compile Include="Reify\Mapping\PropertyMaps\PropertyMapRule.cs" />

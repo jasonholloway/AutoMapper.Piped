@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Materialize.ProjectionTypes
+namespace Materialize.ProjectedTypes
 {
-    interface IProjectedMemberSpec
+    internal interface IProjectedMemberSpec
     {
         string Name { get; }
         Type ProjectedType { get; }

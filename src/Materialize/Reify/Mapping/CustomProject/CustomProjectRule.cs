@@ -6,16 +6,30 @@ using JH.DynaType;
 using System.Reflection;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using Materialize.TypeMaps;
 
 namespace Materialize.Reify.Mapping.CustomProject
 {
     class CustomProjectRule 
         : MapRuleBase
-    {        
-        public override IMapStrategy DeduceStrategy(Context ctx) 
+    {
+        ITypeMapProvider _typeMaps;
+        IMapStrategySource _mapStrategySource;
+
+
+        public CustomProjectRule(
+            ITypeMapProvider typeMaps,
+            IMapStrategySource mapStrategySource) 
+        {
+            _typeMaps = typeMaps;
+            _mapStrategySource = mapStrategySource;
+        }
+
+        
+        public override IMapStrategy DeduceStrategy(MapContext ctx) 
         {
             var spec = ctx.TypeVector;
-            var typeMap = ctx.TypeMap;
+            var typeMap = _typeMaps.FindTypeMap(ctx.TypeVector);
 
             if(typeMap != null && typeMap.CustomProjection != null) 
             {

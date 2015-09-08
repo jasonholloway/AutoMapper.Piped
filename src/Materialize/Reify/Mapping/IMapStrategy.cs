@@ -3,10 +3,10 @@ using System;
 
 namespace Materialize.Reify.Mapping
 {
-    interface IMapStrategy
+    internal interface IMapStrategy
     {
         Type SourceType { get; }
-        Type ProjectedType { get; }
+        Type FetchedType { get; }
         Type TransformedType { get; }
 
         bool UsesIntermediateType { get; }

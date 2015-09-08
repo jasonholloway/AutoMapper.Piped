@@ -1,11 +1,10 @@
-﻿using Materialize.Reify.Mapping;
-using System;
+﻿using System;
 
 namespace Materialize.Reify.Mapping
 {
-    interface IMapRule
+    internal interface IMapRule
     {
-        IMapStrategy DeduceStrategy(Context ctx);
+        IMapStrategy DeduceStrategy(MapContext ctx);
     }
 
 
@@ -13,7 +12,7 @@ namespace Materialize.Reify.Mapping
     abstract class MapRuleBase
         : IMapRule
     {
-        public abstract IMapStrategy DeduceStrategy(Context ctx);
+        public abstract IMapStrategy DeduceStrategy(MapContext ctx);
 
         protected IMapStrategy CreateStrategy(Type typeDef, Type tOrig, Type tDest, params object[] ctorArgs) {
             var type = typeDef.MakeGenericType(tOrig, tDest);

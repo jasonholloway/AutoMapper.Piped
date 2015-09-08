@@ -14,7 +14,7 @@ namespace Materialize.Reify.Mapping
             get { return typeof(TOrig); }
         }
         
-        public abstract Type ProjectedType { get; }
+        public abstract Type FetchedType { get; }
 
         public Type TransformedType {
             get { return typeof(TDest); }
@@ -22,7 +22,7 @@ namespace Materialize.Reify.Mapping
         
 
         public bool UsesIntermediateType {  //?????????
-            get { return ProjectedType != TransformedType; }
+            get { return FetchedType != TransformedType; }
         }
 
 

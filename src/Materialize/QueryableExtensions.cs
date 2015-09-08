@@ -6,11 +6,11 @@ namespace Materialize
 {
     public static class QueryableExtensions
     {
-        static ReifiableFactory _reifiableFac = new ReifiableFactory();        
-            
         public static IMaterializable<TDest> MaterializeAs<TDest>(this IQueryable qySource) 
         {
-            var reifiable = _reifiableFac.CreateReifiable<TDest>(qySource);
+            var reifiableFac = Services.Resolve<ReifiableFactory>();
+            
+            var reifiable = reifiableFac.CreateReifiable<TDest>(qySource);
             
             return new Materializable<TDest>(
                                 reifiable.BaseReifyQuery);                                       

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Materialize.ProjectionTypes;
+using Materialize.ProjectedTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +23,7 @@ namespace Materialize.Reify.Mapping.PropertyMaps
         }
 
         Type IProjectedMemberSpec.ProjectedType {
-            get { return Strategy.ProjectedType; }
+            get { return Strategy.FetchedType; }
         }
     }
 

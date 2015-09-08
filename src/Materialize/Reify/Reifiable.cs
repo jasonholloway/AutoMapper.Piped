@@ -53,8 +53,8 @@ namespace Materialize.Reify
     class Reifiable<TSource, TDest> 
         : Reifiable, IReifiable<TDest>
     {
-        static PropertyInfo _reifyQueryProp = typeof(Reifiable<TSource, TDest>)
-                                                        .GetProperty("ReifyQuery");
+        static PropertyInfo _baseReifyQueryProp = typeof(Reifiable<TSource, TDest>)
+                                                        .GetProperty("BaseReifyQuery");
 
         Lazy<IMapStrategy> _lzMapStrategy;
 
@@ -71,7 +71,7 @@ namespace Materialize.Reify
             BaseReifyQuery = CreateQuery<TDest>(
                                     Expression.MakeMemberAccess(
                                                 Expression.Constant(this), 
-                                                _reifyQueryProp)
+                                                _baseReifyQueryProp)
                                     );
 
             _lzMapStrategy = new Lazy<IMapStrategy>(fnMapStrategy);

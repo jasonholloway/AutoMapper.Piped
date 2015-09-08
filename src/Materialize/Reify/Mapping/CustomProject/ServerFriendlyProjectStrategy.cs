@@ -11,11 +11,11 @@ namespace Materialize.Reify.Mapping.CustomProject
     class ServerFriendlyProjectStrategy<TOrig, TDest>
         : StrategyBase<TOrig, TDest>
     {
-        Context _ctx;
+        MapContext _ctx;
         LambdaExpression _exProject;
         DataType _dataType;
 
-        public ServerFriendlyProjectStrategy(Context ctx, TypeMap typeMap) 
+        public ServerFriendlyProjectStrategy(MapContext ctx, TypeMap typeMap) 
         {
             _ctx = ctx;
             _exProject = typeMap.CustomProjection;
@@ -32,7 +32,7 @@ namespace Materialize.Reify.Mapping.CustomProject
             _dataType = BuildDataType(sourceProps);
         }
 
-        public override Type ProjectedType {
+        public override Type FetchedType {
             get { return typeof(TDest); }
         }
 
@@ -65,10 +65,10 @@ namespace Materialize.Reify.Mapping.CustomProject
     class EdmCompProjectionReifier<TOrig, TDest>
         : MapperModifier<TOrig, TDest>
     {
-        Context _ctx;
+        MapContext _ctx;
         DataType _dataType;
 
-        public EdmCompProjectionReifier(Context ctx, DataType dataType) {
+        public EdmCompProjectionReifier(MapContext ctx, DataType dataType) {
             _ctx = ctx;
             _dataType = dataType;
         }

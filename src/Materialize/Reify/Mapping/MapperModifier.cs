@@ -8,6 +8,9 @@ using System.Linq.Expressions;
 
 namespace Materialize.Reify.Mapping
 {
+    //Base classes for modifiers supplied by mapping strategies.
+    //Multiples are handled so subclasses only need to project and transform single entities.
+
     abstract class MapperModifier<TOrig, TDest>
         : MapperModifier<TOrig, TDest, TDest>
     { }
@@ -27,7 +30,7 @@ namespace Materialize.Reify.Mapping
                 Debug.Assert(exLambdaBody.Type == typeof(TMed));
 
                 var tIn = typeof(TOrig);
-                var tOut = exLambdaBody.Type;   //should be changed to use TMed, rather than expression type
+                var tOut = typeof(TMed);
 
                 return Expression.Call(
                                 typeof(Queryable),

@@ -5,7 +5,7 @@ namespace Materialize.Reify.Mapping.Direct
 {
     class DirectRule : MapRuleBase
     {        
-        public override IMapStrategy DeduceStrategy(Context ctx) 
+        public override IMapStrategy DeduceStrategy(MapContext ctx) 
         {
             var spec = ctx.TypeVector;
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Materialize.ProjectionTypes;
+using Materialize.ProjectedTypes;
 using Materialize.Reify.Modifiers;
 
 namespace Materialize.Reify.Mapping.PropertyMaps
@@ -12,17 +12,22 @@ namespace Materialize.Reify.Mapping.PropertyMaps
     class MediatedPropMapStrategy<TOrig, TDest>
         : StrategyBase<TOrig, TDest>
     {
-        Context _ctx;
+        MapContext _ctx;
         TypeMap _typeMap;
         ProjectedTypeInfo<PropMapSpec> _projTypeInfo;
 
-        public MediatedPropMapStrategy(Context ctx, TypeMap typeMap, PropMapSpec[] propMapSpecs) {
+        public MediatedPropMapStrategy(
+            MapContext ctx, 
+            TypeMap typeMap, 
+            PropMapSpec[] propMapSpecs,
+            IProjectedTypeBuilder typeBuilder) 
+        {
             _ctx = ctx;
             _typeMap = typeMap;
-            _projTypeInfo = ctx.ProjectedTypeBuilder.BuildType(propMapSpecs);
+            _projTypeInfo = typeBuilder.BuildType(propMapSpecs);
         }
         
-        public override Type ProjectedType {
+        public override Type FetchedType {
             get { return _projTypeInfo.Type; }
         }
         

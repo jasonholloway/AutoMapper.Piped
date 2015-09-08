@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Materialize.ProjectionTypes
+namespace Materialize.ProjectedTypes
 {
-    class ProjectedTypeBuilder
+    class ProjectedTypeBuilder : IProjectedTypeBuilder
     {
         public ProjectedTypeInfo<TMemberSpec> BuildType<TMemberSpec>(IEnumerable<TMemberSpec> specs)
             where TMemberSpec : IProjectedMemberSpec

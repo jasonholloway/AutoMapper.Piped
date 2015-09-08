@@ -2,11 +2,11 @@
 
 namespace Materialize.SourceRegimes
 {
-    class SourceRegimeDetector
+    class SourceRegimeDetector : ISourceRegimeDetector 
     {
         ISourceRegime[] _regimes = new ISourceRegime[] {
                                             new EnumerableQueryRegime(),
-                                            new EF6Regime(),
+                                            //new EF6Regime(), //unimplemented for now...
                                             new MinimalRegime()
                                         };
         

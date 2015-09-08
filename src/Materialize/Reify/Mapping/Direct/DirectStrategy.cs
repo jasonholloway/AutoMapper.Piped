@@ -11,13 +11,13 @@ namespace Materialize.Reify.Mapping.Direct
     class DirectStrategy<TOrig, TDest>
         : StrategyBase<TOrig, TDest>
     {
-        Context _ctx;
+        MapContext _ctx;
 
-        public DirectStrategy(Context ctx) {
+        public DirectStrategy(MapContext ctx) {
             _ctx = ctx;
         }
 
-        public override Type ProjectedType {
+        public override Type FetchedType {
             get { return typeof(TDest); }
         }
 
@@ -28,9 +28,9 @@ namespace Materialize.Reify.Mapping.Direct
 
         class Mapper : MapperModifier<TOrig, TDest>
         {
-            Context _ctx;
+            MapContext _ctx;
 
-            public Mapper(Context ctx) {
+            public Mapper(MapContext ctx) {
                 _ctx = ctx;
             }
 
