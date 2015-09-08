@@ -26,7 +26,7 @@ namespace Materialize.Tests
                                     .AsQueryable()
                                     .Skip(50)
                                     .MaterializeAs<float>()
-                                    .Snoop(e => fetchedItemsCount += e.OfType<object>().Count());
+                                    .Snoop(fetchedItems => fetchedItemsCount += fetchedItems.Count());
 
             var first = materializable.First();
 
@@ -78,7 +78,7 @@ namespace Materialize.Tests
             var materializable = Enumerable.Range(0, 100)
                                     .AsQueryable()
                                     .MaterializeAs<float>()
-                                    .Snoop(e => fetchedItemsCount += e.OfType<object>().Count());
+                                    .Snoop(fetchedItems => fetchedItemsCount += fetchedItems.Count());
 
             var last = materializable.Last();
 

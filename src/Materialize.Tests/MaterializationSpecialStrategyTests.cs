@@ -1,10 +1,12 @@
-﻿using Materialize.Tests.Infrastructure;
+﻿using Materialize.SourceRegimes;
+using Materialize.Tests.Infrastructure;
 using Materialize.Tests.Model;
+using NSubstitute;
+using Should;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 using Xunit;
 
 namespace Materialize.Tests
@@ -12,36 +14,72 @@ namespace Materialize.Tests
     class MaterializationSpecialStrategyTests : TestClassBase
     {
         [Fact]
-        public void ProviderFriendlyProjectionsDoneByServer() {
-            InitServices();
-
+        public void ProviderFriendlyProjectionsDoneByServer() 
+        {
+            Expression<Func<Person, PersonModel>> exPersonProj 
+                                                    = (p) => new PersonModel() { Name = "Colin" };
+            
             InitMapper(x => {
-                x.CreateMap<Dog, DogModel>();
-                x.CreateMap<Person, PersonModel>()
-                    .ProjectUsing(p => new PersonModel() { Name = "Colin" });
+                x.CreateMap<Dog, DogAndOwnerModel>();
+                x.CreateMap<Person, PersonModel>().ProjectUsing(exPersonProj);
             });
 
+            InitServices(x => {
+                var regime = Substitute.For<ISourceRegime>();
+                regime.ServerAccepts(Arg.Any<Expression>()).Returns(true);
+
+                var detector = Substitute.For<ISourceRegimeDetector>();
+                detector.DetectRegime(Arg.Any<IQueryProvider>()).Returns(regime);
+
+                x.Register(detector);
+            });
             
 
+            Expression queryExpression = null;
+            
+            var models = Data.Dogs.AsQueryable()
+                                    .Snoop(ex => queryExpression = ex)
+                                    .MaterializeAs<DogAndOwnerModel>()
+                                    .ToArray();
 
-            //should mock expression tester, so wouldn't just be edm, but would
-            //be provider-dependent
 
-
-            throw new NotImplementedException();
+            queryExpression.Contains(exPersonProj).ShouldBeTrue();
         }
 
+
+
+
         [Fact]
-        public void ProviderUnfriendlyProjectionsDoneByClient() {
-            InitServices();
+        public void ProviderUnfriendlyProjectionsDoneByClient() 
+        {
+            Expression<Func<Person, PersonModel>> exPersonProj
+                                                    = (p) => new PersonModel() { Name = "Colin" };
 
             InitMapper(x => {
-                x.CreateMap<Dog, DogModel>();
-                x.CreateMap<Person, PersonModel>()
-                    .ProjectUsing(p => new PersonModel() { Name = "Colin" });
+                x.CreateMap<Dog, DogAndOwnerModel>();
+                x.CreateMap<Person, PersonModel>().ProjectUsing(exPersonProj);
             });
 
-            throw new NotImplementedException();
+            InitServices(x => {
+                var regime = Substitute.For<ISourceRegime>();
+                regime.ServerAccepts(Arg.Any<Expression>()).Returns(false);
+
+                var detector = Substitute.For<ISourceRegimeDetector>();
+                detector.DetectRegime(Arg.Any<IQueryProvider>()).Returns(regime);
+
+                x.Register(detector);
+            });
+
+
+            Expression queryExpression = null;
+
+            var models = Data.Dogs.AsQueryable()
+                                    .Snoop(ex => queryExpression = ex)
+                                    .MaterializeAs<DogAndOwnerModel>()
+                                    .ToArray();
+
+
+            queryExpression.Contains(exPersonProj).ShouldBeFalse();
         }
 
 

@@ -27,45 +27,13 @@ namespace Materialize.Tests.Infrastructure
     class DatabaseInitializer
         : DropCreateDatabaseAlways<Context> // CreateDatabaseIfNotExists<Context>
     {
-        string[] _dogNames = { "Rex", "Gnasher", "Gnipper", "Fido", "Beethoven", "K9", "Yap-Yap", "Prince", "Teddy Pom-Pom" };
-        int[] _dogAges = Enumerable.Range(0, 18).ToArray();
-        string[] _personNames = { "Geoff", "Guinivere", "Aldridge", "Humphrey", "Charlotte", "Gwendeline", "Rupert", "Colin" };
-        decimal[] _prices = { 5M, 7M, 15M, 20M, 50M };
-        
         protected override void Seed(Context context) {
-            var people = Builder<Person>.CreateListOfSize(5)
-                                        .All()
-                                        .Do(p => {
-                                            p.Name = Pick<string>.RandomItemFrom(_personNames);
-                                        }).Build();
-
-            var dogs = Builder<Dog>.CreateListOfSize(8)
-                                    .All()
-                                    .Do(d => {
-                                        d.Name = Pick<string>.RandomItemFrom(_dogNames);
-                                        d.Age = Pick<int>.RandomItemFrom(_dogAges);
-                                        d.Owner = Pick<Person>.RandomItemFrom(people);
-                                    }).Build();
-
-            var groomers = Builder<DogGroomer>.CreateListOfSize(3)
-                                    .All()
-                                    .Do(g => {
-                                        g.Name = Pick<string>.RandomItemFrom(_personNames);
-                                    }).Build();
-
-            var contracts = Builder<Contract>.CreateListOfSize(7)
-                                    .All()
-                                    .Do(c => {
-                                        c.Dog = Pick<Dog>.RandomItemFrom(dogs);
-                                        c.Groomer = Pick<DogGroomer>.RandomItemFrom(groomers);
-                                        c.Fee = Pick<decimal>.RandomItemFrom(_prices);
-                                    }).Build();
-
-
-            context.People.AddRange(people);
-            context.Dogs.AddRange(dogs);
-            context.Groomers.AddRange(groomers);
-            context.Contracts.AddRange(contracts);
+            var data = new TestData();
+                        
+            context.People.AddRange(data.People);
+            context.Dogs.AddRange(data.Dogs);
+            context.Groomers.AddRange(data.Groomers);
+            context.Contracts.AddRange(data.Contracts);
 
             base.Seed(context);
         }

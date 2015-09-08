@@ -11,6 +11,9 @@ namespace Materialize.Tests.Infrastructure
 {
     abstract class TestClassBase
     {
+        protected TestData Data = new TestData();
+
+
         protected void InitMapper(Action<IConfiguration> fnConfig = null) {
             Mapper.Initialize(fnConfig ?? (_ => { }));
         }
@@ -18,5 +21,8 @@ namespace Materialize.Tests.Infrastructure
         protected void InitServices(Action<IServiceRegistry> fnConfig = null) {
             Services.Init(fnConfig ?? (_ => { }));
         }
+
+
+
     }
 }

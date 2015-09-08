@@ -17,7 +17,7 @@ namespace Materialize.SourceRegimes
             throw new NotImplementedException();
         }
 
-        public bool Accepts(Expression exp) {
+        public bool ServerAccepts(Expression exp) {
             //No non-EDM functions!
 
             //No non-model member accesses!

@@ -2,7 +2,7 @@
 
 namespace Materialize.SourceRegimes
 {
-    internal interface ISourceRegimeDetector
+    public interface ISourceRegimeDetector
     {
         ISourceRegime DetectRegime(IQueryProvider queryProv);
     }

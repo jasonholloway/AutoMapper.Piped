@@ -6,58 +6,48 @@ using JH.DynaType;
 using System.Reflection;
 using Materialize.Reify.Modifiers;
 
-namespace Materialize.Reify.Mapping.CustomProject
+namespace Materialize.Reify.Mapping.Translation
 {
     class ServerFriendlyProjectStrategy<TOrig, TDest>
         : StrategyBase<TOrig, TDest>
     {
         MapContext _ctx;
         LambdaExpression _exProject;
-        DataType _dataType;
-
+        
         public ServerFriendlyProjectStrategy(MapContext ctx, TypeMap typeMap) 
         {
             _ctx = ctx;
-            _exProject = typeMap.CustomProjection;
-
-            //is projection fit for EDM constraints?
-            //if so, can stitch into expression
-
-            //otherwise, have to use data object - maybe this should be separate rule, separate factories, etc.
-
-            //should try and figure out exactly what data is needed to feed projection
-            //for now just fetch it all
-            var sourceProps = typeof(TOrig).GetProperties();
-
-            _dataType = BuildDataType(sourceProps);
+            _exProject = typeMap.CustomProjection;            
         }
 
         public override Type FetchedType {
             get { return typeof(TDest); }
         }
-
-
-        DataType BuildDataType(MemberInfo[] sourceMembers) 
-        {
-            //will eventually have to use tuple here - can't emit in certain environments
-            var type = DynaType.Design(x => {  
-                foreach(var sourceProp in sourceMembers.OfType<PropertyInfo>()) {   //obvs use fields too
-                    x.Field(sourceProp.Name, sourceProp.PropertyType)
-                        .MakePublic();
-                }
-            });
-
-            var fieldMaps = sourceMembers
-                                .Select(m => new DataFieldMap(type.GetField(m.Name), m))
-                                .ToArray();
-            
-            return new DataType(type, fieldMaps);
-        }
-
         
         public override IModifier CreateModifier() {
-            return new EdmCompProjectionReifier<TOrig, TDest>(_ctx, _dataType);
+            return new Mapper(_exProject);
         }
+        
+
+
+        class Mapper : MapperModifier<TOrig, TDest>
+        {
+            LambdaExpression _exProject;
+
+            public Mapper(LambdaExpression exProject) {
+                _exProject = exProject;
+            }
+
+            protected override Expression RewriteSingle(Expression exSource) {
+                throw new NotImplementedException();
+            }
+
+            protected override TDest TransformSingle(TDest obj) {
+                throw new NotImplementedException();
+            }
+        }
+
+
     }
 
     

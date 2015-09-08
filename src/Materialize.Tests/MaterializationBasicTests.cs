@@ -231,5 +231,10 @@ namespace Materialize.Tests
         }
 
 
+        [Fact]
+        public void ThrowsAutoMapperEquivalentExceptions() {
+            throw new NotImplementedException();
+        }
+        
     }
 }

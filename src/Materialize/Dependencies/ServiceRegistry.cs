@@ -43,7 +43,7 @@ namespace Materialize.Dependencies
 
         public void Dispose() {
             if(_cont != null) {
-                var c = _cont;
+                var c = _cont;  //stops recursion...
                 _cont = null;
                 c.Dispose();
             }

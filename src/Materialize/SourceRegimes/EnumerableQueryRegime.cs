@@ -9,7 +9,7 @@ namespace Materialize.SourceRegimes
             return provider is EnumerableQuery;
         }
 
-        public bool Accepts(Expression exp) {
+        public bool ServerAccepts(Expression exp) {
             return true;
         }
     }

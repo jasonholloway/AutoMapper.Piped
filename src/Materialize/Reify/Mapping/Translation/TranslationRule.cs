@@ -8,16 +8,16 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Materialize.TypeMaps;
 
-namespace Materialize.Reify.Mapping.CustomProject
+namespace Materialize.Reify.Mapping.Translation
 {
-    class CustomProjectRule 
+    class TranslationRule 
         : MapRuleBase
     {
         ITypeMapProvider _typeMaps;
         IMapStrategySource _mapStrategySource;
 
 
-        public CustomProjectRule(
+        public TranslationRule(
             ITypeMapProvider typeMaps,
             IMapStrategySource mapStrategySource) 
         {
@@ -28,39 +28,26 @@ namespace Materialize.Reify.Mapping.CustomProject
         
         public override IMapStrategy DeduceStrategy(MapContext ctx) 
         {
-            var spec = ctx.TypeVector;
             var typeMap = _typeMaps.FindTypeMap(ctx.TypeVector);
 
-            if(typeMap != null && typeMap.CustomProjection != null) 
-            {
-                //Projections DON'T cascade downwards - they project from the source type
-                //into a tuple and then thereafter transform.
-
-                //PropertyMaps however most certainly do!
-
-                //So,
-
-                //is projection edm-compatible?
-                //  - then EdmFriendlyProjectionStrategy
-
-                //does projection only require certain aspects of source?
-                //  - then MediatedProjectionStrategy
-
-                //default
-                //  - FullProjectionStrategy
-
-                //for now just render FullFetchAndProjectStrategy - should cover all bases, functionally
-                
-
-
-                return base.CreateStrategy(
-                                typeof(FullFetchAndTransformStrategy<,>),
-                                spec.SourceType,
-                                spec.DestType,
-                                new object[] {
+            if(typeMap != null 
+                && (typeMap.CustomProjection != null || typeMap.CustomMapper != null)) 
+            {                
+                if(typeMap.CustomMapper != null || !ctx.QueryRegime.ServerAccepts(typeMap.CustomProjection)) 
+                {
+                    return base.CreateStrategy(
+                                    typeof(FullFetchAndTransformStrategy<,>),
+                                    ctx.TypeVector,
                                     ctx,
-                                    typeMap
-                                });                
+                                    typeMap);
+                }
+                else {
+                    return base.CreateStrategy(
+                                    typeof(ServerFriendlyProjectStrategy<,>),
+                                    ctx.TypeVector,
+                                    ctx,
+                                    typeMap);   //!!!!!!!!
+                }                                
             }
 
             return null;

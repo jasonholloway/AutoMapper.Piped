@@ -71,8 +71,8 @@
     <Compile Include="ProjectedTypes\ProjectedTypeBuilder.cs" />
     <Compile Include="Obsolete\TypeSpec.cs" />
     <Compile Include="Obsolete\InputSpecSource.cs" />
-    <Compile Include="Reify\Mapping\CustomProject\FullFetchAndTransformStrategy.cs" />
-    <Compile Include="Reify\Mapping\CustomProject\SelectiveFetchAndTransformStrategy.cs" />
+    <Compile Include="Reify\Mapping\Translation\FullFetchAndTransformStrategy.cs" />
+    <Compile Include="Reify\Mapping\Translation\SelectiveFetchAndTransformStrategy.cs" />
     <Compile Include="Reify\Mapping\PropertyMaps\SimplePropMapStrategy.cs" />
     <Compile Include="Reify\Mapping\PropertyMaps\MediatedPropMapStrategy.cs" />
     <Compile Include="Reify\Mapping\PropertyMaps\PropMapSpec.cs" />
@@ -84,9 +84,9 @@
     <Compile Include="TypeMaps\CachedTypeMapProvider.cs" />
     <Compile Include="TypeMaps\ITypeMapProvider.cs" />
     <Compile Include="TypeVector.cs" />
-    <Compile Include="Reify\Mapping\CustomProject\ServerFriendlyProjectStrategy.cs" />
+    <Compile Include="Reify\Mapping\Translation\ServerFriendlyProjectStrategy.cs" />
     <Compile Include="Reify\Mapping\PropertyMaps\PropertyMapRule.cs" />
-    <Compile Include="Reify\Mapping\CustomProject\CustomProjectRule.cs" />
+    <Compile Include="Reify\Mapping\Translation\TranslationRule.cs" />
     <Compile Include="Reify\Mapping\Direct\DirectRule.cs" />
     <Compile Include="Reify\Mapping\IMapRule.cs" />
     <Compile Include="Reify\Mapping\Direct\DirectStrategy.cs" />

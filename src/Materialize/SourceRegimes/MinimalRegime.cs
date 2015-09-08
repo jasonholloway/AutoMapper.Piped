@@ -16,7 +16,7 @@ namespace Materialize.SourceRegimes
             return true;
         }
 
-        public bool Accepts(Expression exp) {
+        public bool ServerAccepts(Expression exp) {
             return false; //maybe should be more tolerant than this...
 
             //this would forbid property mapper bindings...

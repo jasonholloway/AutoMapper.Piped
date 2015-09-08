@@ -27,7 +27,6 @@ namespace Materialize.Reify.Mapping.PropertyMaps
 
         public override IMapStrategy DeduceStrategy(MapContext ctx) 
         {
-            var spec = ctx.TypeVector;
             var typeMap = _typeMaps.FindTypeMap(ctx.TypeVector);
 
             if(typeMap != null
@@ -40,8 +39,7 @@ namespace Materialize.Reify.Mapping.PropertyMaps
                     if(propMapSpecs.Any(s => s.Strategy.UsesIntermediateType)) {
                         return base.CreateStrategy(
                                         typeof(MediatedPropMapStrategy<,>),
-                                        spec.SourceType,
-                                        spec.DestType,
+                                        ctx.TypeVector,
                                         ctx,
                                         typeMap,
                                         propMapSpecs,
@@ -50,8 +48,7 @@ namespace Materialize.Reify.Mapping.PropertyMaps
                     else {
                         return base.CreateStrategy(
                                         typeof(SimplePropMapStrategy<,>),
-                                        spec.SourceType,
-                                        spec.DestType,
+                                        ctx.TypeVector,
                                         ctx,
                                         typeMap,
                                         propMapSpecs);                                    

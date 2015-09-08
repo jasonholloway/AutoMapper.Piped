@@ -14,9 +14,14 @@ namespace Materialize.Reify.Mapping
     {
         public abstract IMapStrategy DeduceStrategy(MapContext ctx);
 
-        protected IMapStrategy CreateStrategy(Type typeDef, Type tOrig, Type tDest, params object[] ctorArgs) {
-            var type = typeDef.MakeGenericType(tOrig, tDest);
-            return (IMapStrategy)Activator.CreateInstance(type, ctorArgs);
+
+        protected IMapStrategy CreateStrategy(
+            Type typeDef, 
+            TypeVector types, 
+            params object[] ctorArgs) 
+        {
+            var tStrategy = typeDef.MakeGenericType(types.SourceType, types.DestType);
+            return (IMapStrategy)Activator.CreateInstance(tStrategy, ctorArgs);
         }
 
     }

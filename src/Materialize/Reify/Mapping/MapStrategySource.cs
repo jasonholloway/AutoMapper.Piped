@@ -1,4 +1,5 @@
-﻿using Materialize.SourceRegimes;
+﻿using AutoMapper;
+using Materialize.SourceRegimes;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -36,7 +37,7 @@ namespace Materialize.Reify.Mapping
                 if(fac != null) return fac;
             }
 
-            throw new InvalidOperationException();
+            throw new AutoMapperMappingException("Unsupported mapping!");
         }
 
 

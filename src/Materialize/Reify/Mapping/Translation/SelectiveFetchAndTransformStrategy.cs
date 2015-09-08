@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Materialize.Reify.Modifiers;
 
-namespace Materialize.Reify.Mapping.CustomProject
+namespace Materialize.Reify.Mapping.Translation
 {
     class SelectiveFetchAndTransformStrategy<TOrig, TDest>
         : StrategyBase<TOrig, TDest>
