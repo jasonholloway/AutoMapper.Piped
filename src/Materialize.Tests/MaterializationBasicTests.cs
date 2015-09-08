@@ -9,12 +9,14 @@ using Xunit;
 
 namespace Materialize.Tests
 {
-    class MaterializationTests : TestClassBase
+    class MaterializationBasicTests : TestClassBase
     {        
         [Fact]
         public void ShallowPropertyMapping() 
         {
-            base.Initialize(x => {
+            InitServices();
+
+            InitMapper(x => {
                 x.CreateMap<Dog, DogModel>();
             });
             
@@ -37,8 +39,10 @@ namespace Materialize.Tests
 
         [Fact]
         public void ShallowProjection() 
-        {            
-            base.Initialize(x => {
+        {
+            InitServices();
+               
+            InitMapper(x => {
                 x.CreateMap<Dog, DogModel>()
                     .ProjectUsing(d => new DogModel() { Name = d.Name.ToUpper() });
             });
@@ -65,7 +69,9 @@ namespace Materialize.Tests
         [Fact]
         public void SimplePropertyMapsCascade() 
         {
-            base.Initialize(x => {
+            InitServices();
+
+            InitMapper(x => {
                 x.CreateMap<Dog, DogAndOwnerModel>();
                 x.CreateMap<Person, PersonModel>();
             });
@@ -94,7 +100,9 @@ namespace Materialize.Tests
         [Fact]
         public void PropertyMapsAccommodateMemberProjections() 
         {
-            base.Initialize(x => {
+            InitServices();
+
+            InitMapper(x => {
                 x.CreateMap<Dog, DogModel>();
 
                 x.CreateMap<DogGroomer, DogGroomerModel>();
@@ -132,7 +140,9 @@ namespace Materialize.Tests
         [Fact]
         public void FetchesOnlyWhenEnumerated() 
         {
-            base.Initialize(x => {
+            InitServices();
+
+            InitMapper(x => {
                 x.CreateMap<int, float>()
                     .ProjectUsing(i => i);
             });
@@ -159,7 +169,9 @@ namespace Materialize.Tests
         [Fact]
         public void MaterializablesFetchOnceOnly() 
         {
-            base.Initialize(x => {
+            InitServices();
+
+            InitMapper(x => {
                 x.CreateMap<int, float>()
                     .ProjectUsing(i => i);
             });

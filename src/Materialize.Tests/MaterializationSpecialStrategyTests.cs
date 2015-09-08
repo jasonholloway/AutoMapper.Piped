@@ -13,7 +13,9 @@ namespace Materialize.Tests
     {
         [Fact]
         public void ProviderFriendlyProjectionsDoneByServer() {
-            base.Initialize(x => {
+            InitServices();
+
+            InitMapper(x => {
                 x.CreateMap<Dog, DogModel>();
                 x.CreateMap<Person, PersonModel>()
                     .ProjectUsing(p => new PersonModel() { Name = "Colin" });
@@ -31,7 +33,9 @@ namespace Materialize.Tests
 
         [Fact]
         public void ProviderUnfriendlyProjectionsDoneByClient() {
-            base.Initialize(x => {
+            InitServices();
+
+            InitMapper(x => {
                 x.CreateMap<Dog, DogModel>();
                 x.CreateMap<Person, PersonModel>()
                     .ProjectUsing(p => new PersonModel() { Name = "Colin" });

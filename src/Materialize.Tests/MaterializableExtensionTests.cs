@@ -13,7 +13,9 @@ namespace Materialize.Tests
     {
         [Fact]
         public void First() {
-            base.Initialize(x => {
+            InitServices();
+
+            InitMapper(x => {
                 x.CreateMap<int, float>()
                     .ProjectUsing(i => 2F * i);
             });
@@ -64,7 +66,9 @@ namespace Materialize.Tests
 
         [Fact]
         public void Last() {
-            base.Initialize(x => {
+            InitServices();
+
+            InitMapper(x => {
                 x.CreateMap<int, float>()
                     .ProjectUsing(i => 2F * i);
             });

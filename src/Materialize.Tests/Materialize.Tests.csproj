@@ -58,7 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MaterializationTests.cs" />
+    <Compile Include="MaterializationBasicTests.cs" />
     <Compile Include="Infrastructure\Database.cs" />
     <Compile Include="Infrastructure\MaterializableSnooping.cs" />
     <Compile Include="Infrastructure\TestClassBase.cs" />

@@ -11,13 +11,12 @@ namespace Materialize.Tests.Infrastructure
 {
     abstract class TestClassBase
     {
-        protected void Initialize(
-            Action<IConfiguration> fnAutoMapperConfig,
-            Action<IServiceRegistry> fnServicesConfig = null) 
-        {
-            Services.Init(fnServicesConfig);
-            Mapper.Initialize(fnAutoMapperConfig);
+        protected void InitMapper(Action<IConfiguration> fnConfig = null) {
+            Mapper.Initialize(fnConfig ?? (_ => { }));
         }
 
+        protected void InitServices(Action<IServiceRegistry> fnConfig = null) {
+            Services.Init(fnConfig ?? (_ => { }));
+        }
     }
 }

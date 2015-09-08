@@ -42,7 +42,11 @@ namespace Materialize.Dependencies
         }
 
         public void Dispose() {
-            if(_cont != null) _cont.Dispose();
+            if(_cont != null) {
+                var c = _cont;
+                _cont = null;
+                c.Dispose();
+            }
         }
     }
 
