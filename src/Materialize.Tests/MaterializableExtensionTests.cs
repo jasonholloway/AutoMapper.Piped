@@ -1,5 +1,6 @@
 ﻿using Materialize.Tests.Infrastructure;
 using Should;
+using Should.Core.Assertions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,19 +50,92 @@ namespace Materialize.Tests
 
         [Fact]
         public void Single() {
-            throw new NotImplementedException();
+            InitServices();
+
+            InitMapper(x => {
+                x.CreateMap<int, float>()
+                    .ProjectUsing(i => 2F * i);
+            });
+
+            var ints = Enumerable.Range(0, 100).AsQueryable();
+            
+            int fetchedItemsCount = 0;
+
+            var floats = ints.Skip(10).Take(1)
+                                .MaterializeAs<float>()
+                                .Snoop(fetchedItems => fetchedItemsCount += fetchedItems.Count());
+
+            var single = floats.Single();
+            
+            single.ShouldEqual(20F);
+            fetchedItemsCount.ShouldEqual(1);
         }
+
 
         [Fact]
-        public void SingleThrowsFamiliarException() {
-            throw new NotImplementedException();
+        public void SingleThrowsFamiliarException() 
+        {
+            //this is the provider's business, not ours...
+            InitServices();
+
+            InitMapper(x => {
+                x.CreateMap<int, float>()
+                    .ProjectUsing(i => 2F * i);
+            });
+
+            var ints = Enumerable.Range(0, 100).AsQueryable();
+            
+            var manyFloats = ints.MaterializeAs<float>();
+            
+            Assert.Throws<InvalidOperationException>(() => manyFloats.Single());
         }
 
 
         [Fact]
-        public void SingleOrDefault() {
-            throw new NotImplementedException();
+        public void SingleOrDefault() 
+        {
+            InitServices();
+
+            InitMapper(x => {
+                x.CreateMap<int, float>()
+                    .ProjectUsing(i => 2F * i);
+            });
+
+            var ints = Enumerable.Range(0, 100).AsQueryable();
+
+            int fetchedItemsCount = 0;
+
+            var floats = ints.Skip(10).Take(1)
+                                .MaterializeAs<float>()
+                                .Snoop(fetchedItems => fetchedItemsCount += fetchedItems.Count());
+
+            var single = floats.SingleOrDefault();
+                        
+            single.ShouldEqual(20F);
+            fetchedItemsCount.ShouldEqual(1);
         }
+
+
+
+        [Fact]
+        public void SingleOrDefaultReturnsDefaultIfSequenceEmpty() {
+            //this is the provider's business, not ours...
+
+            InitServices();
+
+            InitMapper(x => {
+                x.CreateMap<int, float>().ProjectUsing(i => 2F * i);
+            });
+
+            var emptyInts = Enumerable.Range(0, 0).AsQueryable();
+            
+            var emptyFloats = emptyInts.MaterializeAs<float>();
+            
+            var result = emptyFloats.SingleOrDefault();
+
+            result.ShouldEqual(default(float));
+        }
+
 
 
         [Fact]
@@ -99,12 +173,49 @@ namespace Materialize.Tests
 
         [Fact]
         public void Take() {
-            throw new NotImplementedException();
+            InitServices();
+
+            InitMapper(x => {
+                x.CreateMap<int, float>()
+                    .ProjectUsing(i => 2F * i);
+            });
+
+            int fetchedItemsCount = 0;
+
+            var ints = Enumerable.Range(0, 100).AsQueryable();
+
+            var materializable = ints.MaterializeAs<float>()
+                                        .Snoop(fetchedItems => fetchedItemsCount += fetchedItems.Count());
+
+            var taken = materializable.Take(10).ToArray();
+
+            taken.Length.ShouldEqual(10);
+            taken.SequenceEqual(ints.Take(10).Select(i => 2F * i)).ShouldBeTrue();
+            fetchedItemsCount.ShouldEqual(10);
         }
+
 
         [Fact]
         public void Skip() {
-            throw new NotImplementedException();
+            InitServices();
+
+            InitMapper(x => {
+                x.CreateMap<int, float>()
+                    .ProjectUsing(i => 2F * i);
+            });
+
+            int fetchedItemsCount = 0;
+
+            var ints = Enumerable.Range(0, 100).AsQueryable();
+
+            var materializable = ints.MaterializeAs<float>()
+                                        .Snoop(fetchedItems => fetchedItemsCount += fetchedItems.Count());
+
+            var taken = materializable.Skip(90).ToArray();
+
+            taken.Length.ShouldEqual(10);
+            taken.SequenceEqual(ints.Skip(90).Select(i => 2F * i)).ShouldBeTrue();
+            fetchedItemsCount.ShouldEqual(10);
         }
 
 

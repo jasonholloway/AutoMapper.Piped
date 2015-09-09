@@ -56,7 +56,6 @@
     <Compile Include="SourceRegimes\EnumerableQueryRegime.cs" />
     <Compile Include="SourceRegimes\ISourceRegimeDetector.cs" />
     <Compile Include="SourceRegimes\MinimalRegime.cs" />
-    <Compile Include="SourceRegimes\EF6Regime.cs" />
     <Compile Include="SourceRegimes\ISourceRegime.cs" />
     <Compile Include="SourceRegimes\SourceRegimeDetector.cs" />
     <Compile Include="ReflectionHelper.cs" />

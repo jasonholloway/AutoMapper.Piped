@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Materialize.SourceRegimes
 {
+    //But how will this hook in to library? Via some app.config rule? 
+
+
     class EF6Regime : ISourceRegime
     {
         //Can this be written without hard dependency on EF? Doubtful.

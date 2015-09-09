@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Materialize
 {
-    static class ReflectionHelper
+    static class Refl
     {
         public static MethodInfo GetMethod(Expression<Action> exAction) 
         {
@@ -25,6 +25,20 @@ namespace Materialize
         public static MethodInfo GetGenericMethodDef(Expression<Action> exAction) 
         {
             return GetMethod(exAction).GetGenericMethodDefinition();
+        }
+
+
+        public static Type GetElementType(Type type) {
+            var tEnumerable = new[] { type }
+                                .Concat(type.GetInterfaces())
+                                .FirstOrDefault(t => t.IsGenericType
+                                                && t.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+
+            if(tEnumerable == null) {
+                throw new ArgumentException("Passed type is not of IEnumerable<T>!", "type");
+            }
+
+            return tEnumerable.GetGenericArguments().First();
         }
 
     }

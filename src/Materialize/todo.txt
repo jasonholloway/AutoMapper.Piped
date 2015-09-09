@@ -1,24 +1,14 @@
 ﻿
 TO DO! ********************************************
 
-> Projection rules should test their perojections against regime
-	- start with test, eh?
+> Dictionary of Queryable method handlers
 
+> Complete ReifyQuery support for unary expressions
 
+> Test projection expressions for inputs. Use IProjectionInpuDetector interface.
 
+> Collection-to-collection mapping: need to handle different collection types - does AutoMapper do this already?
 
-
-
-
-
-
-> Strategies should also be keyed by provider type
-	- although theres nothing to say these won't be proxied or something. In any case, they could unacceptably vary,
-		and defeat our cache.
-	- should be keyed on category of provider then, and this is signified by chosen QueryRegime.
-
-> Imagining layers of strategy then. First we choose a QueryRegime, and create a IReifyStrategySource, which will be a 
-	proxy of the global source, but with the ReifyContext pre-set with the regime.
-
-> This is a big, lingering to-do: figure out how to nicely build strategies and contexts.
+> How to hook in provider-specific extensions from other projects - needed to limit dependencies. 
+	Surely has to be some configuration option, and type-gathering at initialization.
 

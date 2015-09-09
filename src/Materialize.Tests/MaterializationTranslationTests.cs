@@ -12,7 +12,7 @@ using Xunit;
 
 namespace Materialize.Tests
 {
-    class MaterializationSpecialStrategyTests : TestClassBase
+    class MaterializationTranslationTests : TestClassBase
     {
         [Fact]
         public void ProviderFriendlyProjectionsDoneByServer() {
@@ -80,13 +80,5 @@ namespace Materialize.Tests
             throw new NotImplementedException();
         }
         
-        [Fact]
-        public void CanMapToContextEntites() {
-            //this is special case: needs to be treated like custom projection behind the scenes
-            //...
-
-            throw new NotImplementedException();
-        }
-
     }
 }

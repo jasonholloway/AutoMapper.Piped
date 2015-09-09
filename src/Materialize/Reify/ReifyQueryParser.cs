@@ -11,6 +11,118 @@ namespace Materialize.Reify
     {
         //minimally featured at mo: will only handle unary queryable methods and base constant.
 
+        delegate IModifier Handler(ReifyQueryParser p, MethodCallExpression ex);
+
+        static Dictionary<MethodInfo, Handler> _dHandlers = new Dictionary<MethodInfo, Handler>();
+
+        static void RegisterHandlerForMethod(MethodInfo method, Handler fnHandler) {
+            _dHandlers[method] = fnHandler;
+        }
+
+
+        static ReifyQueryParser() {
+            var mFirst = Refl.GetGenericMethodDef(() => Queryable.First<int>(null));
+
+            RegisterHandlerForMethod(mFirst,
+                (p, ex) => {
+                    return new UnaryModifier(
+                                    p.Parse(ex.Arguments[0]),
+                                    mFirst);
+                });
+
+
+            var mFirstOrDef = Refl.GetGenericMethodDef(() => Queryable.FirstOrDefault<int>(null));
+
+            RegisterHandlerForMethod(mFirstOrDef,
+                (p, ex) => {
+                    return new UnaryModifier(
+                                    p.Parse(ex.Arguments[0]),
+                                    mFirstOrDef);
+                });
+
+
+
+
+
+            var mLast = Refl.GetGenericMethodDef(() => Queryable.Last<int>(null));
+
+            RegisterHandlerForMethod(mLast,
+                (p, ex) => {
+                    return new UnaryModifier(
+                                    p.Parse(ex.Arguments[0]),
+                                    mLast);
+                });
+
+
+            var mLastOrDef = Refl.GetGenericMethodDef(() => Queryable.LastOrDefault<int>(null));
+
+            RegisterHandlerForMethod(mLastOrDef,
+                (p, ex) => {
+                    return new UnaryModifier(
+                                    p.Parse(ex.Arguments[0]),
+                                    mLastOrDef);
+                });
+
+
+
+            var mSingle = Refl.GetGenericMethodDef(() => Queryable.Single<int>(null));
+
+            RegisterHandlerForMethod(mSingle,
+                (p, ex) => {
+                    return new UnaryModifier(
+                                    p.Parse(ex.Arguments[0]),
+                                    mSingle);
+                });
+
+
+            var mSingleOrDef = Refl.GetGenericMethodDef(() => Queryable.SingleOrDefault<int>(null));
+
+            RegisterHandlerForMethod(mSingleOrDef,
+                (p, ex) => {
+                    return new UnaryModifier(
+                                    p.Parse(ex.Arguments[0]),
+                                    mSingleOrDef);
+                });
+
+
+
+
+
+
+            var mTake = Refl.GetGenericMethodDef(() => Queryable.Take<int>(null, 1));
+
+            RegisterHandlerForMethod(mTake,
+                (p, ex) => {
+                    return new AdLibModifier(
+                                    p.Parse(ex.Arguments[0]),
+                                    exSource => Expression.Call(
+                                                            mTake.MakeGenericMethod(Refl.GetElementType(ex.Type)),
+                                                            exSource,
+                                                            ex.Arguments[1])
+                                    );
+                });
+
+
+            var mSkip = Refl.GetGenericMethodDef(() => Queryable.Skip<int>(null, 1));
+
+            RegisterHandlerForMethod(mSkip,
+                (p, ex) => {
+                    return new AdLibModifier(
+                                    p.Parse(ex.Arguments[0]),
+                                    exSource => Expression.Call(
+                                                            mSkip.MakeGenericMethod(Refl.GetElementType(ex.Type)),
+                                                            exSource,
+                                                            ex.Arguments[1])
+                                    );
+                });
+            
+        }
+
+
+        //----------------------------------------------------------------------------
+
+
+
         Expression _baseExp;
         IModifier _baseModifier;
 
@@ -22,6 +134,8 @@ namespace Materialize.Reify
             _baseModifier = baseModifier;
         }
 
+
+        
 
         public IModifier Parse(Expression ex) 
         {
@@ -40,36 +154,20 @@ namespace Materialize.Reify
         
         
         IModifier ParseCall(MethodCallExpression ex) 
-        {
-            if(ex.Method.DeclaringType == typeof(Queryable))
-            {
-                var genMethod = ex.Method.GetGenericMethodDefinition();
-                
-                if(_unaryMethodDefs.Contains(genMethod)) 
-                {                   
-                    var upstreamMod = Parse(ex.Arguments.First());
-
-                    return new UnaryModifier(
-                                    upstreamMod, 
-                                    ex.Method.GetGenericMethodDefinition());
-                }
-            }
+        {            
+            var method = ex.Method.IsGenericMethod
+                            ? ex.Method.GetGenericMethodDefinition()
+                            : ex.Method;
             
-            throw new InvalidOperationException();            
+            try {
+                var fnHandler = _dHandlers[method];
+                return fnHandler(this, ex);
+            }
+            catch(KeyNotFoundException) {
+                throw new InvalidOperationException("ReifyQueryParser has encountered an unhandled MethodCallExpression!");
+            }            
         }
-
-
-        
-        static ISet<MethodInfo> _unaryMethodDefs
-            = new HashSet<MethodInfo>(new MethodInfo[] {
-                                            ReflectionHelper.GetGenericMethodDef(() => Queryable.First<int>(null)),
-                                            ReflectionHelper.GetGenericMethodDef(() => Queryable.Last<int>(null)),
-                                            ReflectionHelper.GetGenericMethodDef(() => Queryable.Single<int>(null)),
-                                            ReflectionHelper.GetGenericMethodDef(() => Queryable.FirstOrDefault<int>(null)),
-                                            ReflectionHelper.GetGenericMethodDef(() => Queryable.LastOrDefault<int>(null)),
-                                            ReflectionHelper.GetGenericMethodDef(() => Queryable.SingleOrDefault<int>(null))
-                                        });
-        
+               
 
     }
 }

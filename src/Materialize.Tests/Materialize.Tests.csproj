@@ -69,7 +69,8 @@
     <Compile Include="Infrastructure\MaterializableSnooping.cs" />
     <Compile Include="Infrastructure\TestClassBase.cs" />
     <Compile Include="MaterializableExtensionTests.cs" />
-    <Compile Include="MaterializationSpecialStrategyTests.cs" />
+    <Compile Include="MaterializationEFRegimeTests.cs" />
+    <Compile Include="MaterializationTranslationTests.cs" />
     <Compile Include="Model\DbModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Infrastructure\QueryableSnooping.cs" />
@@ -84,6 +85,10 @@
     <ProjectReference Include="..\AutoMapper.Net4\AutoMapper.Net4.csproj">
       <Project>{8c955148-fa96-4f0d-880d-abb6770f54e9}</Project>
       <Name>AutoMapper.Net4</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Materialize.EntityFramework6\Materialize.EF6.csproj">
+      <Project>{17079aef-66a9-49ab-8556-b753e170ef42}</Project>
+      <Name>Materialize.EF6</Name>
     </ProjectReference>
     <ProjectReference Include="..\Materialize\Materialize.csproj">
       <Project>{f8a1b543-0b7f-40aa-907d-775cdb36ce7f}</Project>
