@@ -46,7 +46,7 @@ namespace Materialize.Reify.Mapping.Translation
                                     typeof(ServerFriendlyProjectStrategy<,>),
                                     ctx.TypeVector,
                                     ctx,
-                                    typeMap);   //!!!!!!!!
+                                    typeMap);
                 }                                
             }
 

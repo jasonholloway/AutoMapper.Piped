@@ -13,8 +13,7 @@ namespace Materialize.Reify.Mapping.Direct
             {
                 return base.CreateStrategy(
                                     typeof(DirectStrategy<,>),
-                                    spec.SourceType,
-                                    spec.DestType,
+                                    ctx.TypeVector,
                                     ctx);
             }
 

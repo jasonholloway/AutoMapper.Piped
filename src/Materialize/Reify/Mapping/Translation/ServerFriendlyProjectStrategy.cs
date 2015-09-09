@@ -2,9 +2,6 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using JH.DynaType;
-using System.Reflection;
-using Materialize.Reify.Modifiers;
 
 namespace Materialize.Reify.Mapping.Translation
 {
@@ -30,7 +27,7 @@ namespace Materialize.Reify.Mapping.Translation
         
 
 
-        class Mapper : MapperModifier<TOrig, TDest>
+        class Mapper : MapperModifier<TOrig, TDest, TDest>
         {
             LambdaExpression _exProject;
 
@@ -39,52 +36,18 @@ namespace Materialize.Reify.Mapping.Translation
             }
 
             protected override Expression RewriteSingle(Expression exSource) {
-                throw new NotImplementedException();
+                return _exProject.Body.Replace(
+                                        _exProject.Parameters.First(), 
+                                        exSource);                           
             }
 
             protected override TDest TransformSingle(TDest obj) {
-                throw new NotImplementedException();
+                //nothing to do here, as server-side projection should give us correct type
+                return obj;
             }
         }
 
 
     }
-
     
-
-    class EdmCompProjectionReifier<TOrig, TDest>
-        : MapperModifier<TOrig, TDest>
-    {
-        MapContext _ctx;
-        DataType _dataType;
-
-        public EdmCompProjectionReifier(MapContext ctx, DataType dataType) {
-            _ctx = ctx;
-            _dataType = dataType;
-        }
-
-        protected override Expression RewriteSingle(Expression exSource) 
-        {
-            return Expression.MemberInit(
-                                Expression.New(_dataType.Type),
-                                BuildBindings(exSource)
-                                );
-        }
-
-        MemberBinding[] BuildBindings(Expression exSource) {
-            return _dataType.FieldMaps
-                            .Select(f => Expression.Bind(
-                                                    f.Field,
-                                                    Expression.MakeMemberAccess(exSource, f.SourceMember))
-                            ).ToArray();
-        }
-
-        protected override TDest TransformSingle(TDest obj) {
-            throw new NotImplementedException();
-        }
-        
-    }
-
-
-
 }

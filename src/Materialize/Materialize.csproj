@@ -38,6 +38,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExpressionExtensions.cs" />
     <Compile Include="IMaterializable.cs" />
     <Compile Include="Dependencies\LightInject\LightInject.cs" />
     <Compile Include="Materializable.cs" />

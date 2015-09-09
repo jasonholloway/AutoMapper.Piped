@@ -1,4 +1,5 @@
-﻿using Materialize.SourceRegimes;
+﻿using Materialize.Dependencies;
+using Materialize.SourceRegimes;
 using Materialize.Tests.Infrastructure;
 using Materialize.Tests.Model;
 using NSubstitute;
@@ -14,44 +15,7 @@ namespace Materialize.Tests
     class MaterializationSpecialStrategyTests : TestClassBase
     {
         [Fact]
-        public void ProviderFriendlyProjectionsDoneByServer() 
-        {
-            Expression<Func<Person, PersonModel>> exPersonProj 
-                                                    = (p) => new PersonModel() { Name = "Colin" };
-            
-            InitMapper(x => {
-                x.CreateMap<Dog, DogAndOwnerModel>();
-                x.CreateMap<Person, PersonModel>().ProjectUsing(exPersonProj);
-            });
-
-            InitServices(x => {
-                var regime = Substitute.For<ISourceRegime>();
-                regime.ServerAccepts(Arg.Any<Expression>()).Returns(true);
-
-                var detector = Substitute.For<ISourceRegimeDetector>();
-                detector.DetectRegime(Arg.Any<IQueryProvider>()).Returns(regime);
-
-                x.Register(detector);
-            });
-            
-
-            Expression queryExpression = null;
-            
-            var models = Data.Dogs.AsQueryable()
-                                    .Snoop(ex => queryExpression = ex)
-                                    .MaterializeAs<DogAndOwnerModel>()
-                                    .ToArray();
-
-
-            queryExpression.Contains(exPersonProj).ShouldBeTrue();
-        }
-
-
-
-
-        [Fact]
-        public void ProviderUnfriendlyProjectionsDoneByClient() 
-        {
+        public void ProviderFriendlyProjectionsDoneByServer() {
             Expression<Func<Person, PersonModel>> exPersonProj
                                                     = (p) => new PersonModel() { Name = "Colin" };
 
@@ -61,13 +25,7 @@ namespace Materialize.Tests
             });
 
             InitServices(x => {
-                var regime = Substitute.For<ISourceRegime>();
-                regime.ServerAccepts(Arg.Any<Expression>()).Returns(false);
-
-                var detector = Substitute.For<ISourceRegimeDetector>();
-                detector.DetectRegime(Arg.Any<IQueryProvider>()).Returns(regime);
-
-                x.Register(detector);
+                x.EmplaceTolerantSourceRegime();
             });
 
 
@@ -79,14 +37,43 @@ namespace Materialize.Tests
                                     .ToArray();
 
 
-            queryExpression.Contains(exPersonProj).ShouldBeFalse();
+            queryExpression.Contains(exPersonProj.Body).ShouldBeTrue();
         }
 
 
 
 
+        [Fact]
+        public void ProviderUnfriendlyProjectionsDoneByClient() {
+            Expression<Func<Person, PersonModel>> exPersonProj
+                                                    = (p) => new PersonModel() { Name = "Colin" };
+
+            InitMapper(x => {
+                x.CreateMap<Dog, DogAndOwnerModel>();
+                x.CreateMap<Person, PersonModel>().ProjectUsing(exPersonProj);
+            });
+
+            InitServices(x => {
+                x.EmplaceIntolerantSourceRegime();
+            });
 
 
+            Expression queryExpression = null;
+
+            var dogModels = Data.Dogs.AsQueryable()
+                                        .Snoop(ex => queryExpression = ex)
+                                        .MaterializeAs<DogAndOwnerModel>()
+                                        .ToArray();
+
+
+            queryExpression.Contains(exPersonProj.Body)
+                                        .ShouldBeFalse();
+
+            dogModels.Select(d => d.Owner.Name)
+                        .All(n => n == "Colin")
+                        .ShouldBeTrue();
+        }
+        
 
         [Fact]
         public void OnlyValuesNeededForProjectionAreFetched() {

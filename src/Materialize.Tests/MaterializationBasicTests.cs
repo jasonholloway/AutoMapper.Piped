@@ -19,21 +19,20 @@ namespace Materialize.Tests
             InitMapper(x => {
                 x.CreateMap<Dog, DogModel>();
             });
-            
-            using(var ctx = new Context()) {
-                ctx.Dogs.ShouldNotBeEmpty();
-                
-                var dogModels = ctx.Dogs.MaterializeAs<DogModel>();
-                dogModels.ShouldNotBeEmpty();
 
-                dogModels.Zip(
-                        ctx.Dogs,
-                        (m, d) => new {
-                            DogModel = m,
-                            Dog = d
-                        }).All(t => t.Dog.Name == t.DogModel.Name)
-                            .ShouldBeTrue();
-            }
+            var dogs = Data.Dogs.AsQueryable();
+
+            var dogModels = dogs.MaterializeAs<DogModel>();
+
+            dogModels.ShouldNotBeEmpty();
+
+            dogModels.Zip(
+                    dogs,
+                    (m, d) => new {
+                        DogModel = m,
+                        Dog = d
+                    }).All(t => t.Dog.Name == t.DogModel.Name)
+                        .ShouldBeTrue();            
         }
 
 
@@ -47,23 +46,20 @@ namespace Materialize.Tests
                     .ProjectUsing(d => new DogModel() { Name = d.Name.ToUpper() });
             });
 
-            using(var ctx = new Context()) {
-                var dogs = ctx.Dogs.ToArray();
+            var dogs = Data.Dogs.AsQueryable();
 
-                var dogModels = ctx.Dogs
-                                    .MaterializeAs<DogModel>()
+            var dogModels = dogs.MaterializeAs<DogModel>()
                                     .ToArray();
 
-                dogModels.ShouldNotBeEmpty();
+            dogModels.ShouldNotBeEmpty();
 
-                dogs.Zip(dogModels,
-                            (d, m) => new {
-                                Dog = d,
-                                Model = m
-                            })
-                            .All(t => t.Dog.Name.ToUpper() == t.Model.Name)
-                                .ShouldBeTrue();
-            }
+            dogs.Zip(dogModels,
+                        (d, m) => new {
+                            Dog = d,
+                            Model = m
+                        })
+                        .All(t => t.Dog.Name.ToUpper() == t.Model.Name)
+                            .ShouldBeTrue();
         }
 
         [Fact]
@@ -76,24 +72,18 @@ namespace Materialize.Tests
                 x.CreateMap<Person, PersonModel>();
             });
 
-            using(var ctx = new Context()) {
-                var dogs = ctx.Dogs
-                                .Include(d => d.Owner)
-                                .ToArray();
+            var dogs = Data.Dogs.AsQueryable();
 
-                var dogModels = ctx.Dogs
-                                    .Include(d => d.Owner)
-                                    .MaterializeAs<DogAndOwnerModel>()
+            var dogModels = dogs.MaterializeAs<DogAndOwnerModel>()
                                     .ToArray();
 
-                dogs.Zip(dogModels,
-                            (d, m) => new {
-                                Dog = d,
-                                Model = m
-                            })
-                            .All(t => t.Dog.Owner.Name == t.Model.Owner.Name)
-                            .ShouldBeTrue();
-            }
+            dogs.Zip(dogModels,
+                        (d, m) => new {
+                            Dog = d,
+                            Model = m
+                        })
+                        .All(t => t.Dog.Owner.Name == t.Model.Owner.Name)
+                        .ShouldBeTrue();
         }
         
 
@@ -112,27 +102,20 @@ namespace Materialize.Tests
 
                 x.CreateMap<Contract, ContractModel>();
             });
+            
+            var contracts = Data.Contracts.AsQueryable();
 
-            using(var ctx = new Context()) {
-                var qyContracts = ctx.Contracts
-                                    .Include(c => c.Dog)
-                                    .Include(c => c.Groomer);
-
-                var contracts = qyContracts
-                                        .ToArray();
-
-                var contractModels = qyContracts
-                                        .MaterializeAs<ContractModel>()
-                                        .ToArray();
+            var contractModels = contracts
+                                    .MaterializeAs<ContractModel>()
+                                    .ToArray();
                                 
-                contracts.Zip(contractModels,
-                            (c, m) => new {
-                                Contract = c,
-                                Model = m
-                            })
-                            .All(t => t.Contract.Fee == t.Model.Fee.Amount)
-                            .ShouldBeTrue();
-            }
+            contracts.Zip(contractModels,
+                        (c, m) => new {
+                            Contract = c,
+                            Model = m
+                        })
+                        .All(t => t.Contract.Fee == t.Model.Fee.Amount)
+                        .ShouldBeTrue();
         }
 
 

@@ -62,7 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Infrastructure\ExpressionExtensions.cs" />
+    <Compile Include="Infrastructure\ServiceRegistryExtensions.cs" />
     <Compile Include="Infrastructure\TestData.cs" />
     <Compile Include="MaterializationBasicTests.cs" />
     <Compile Include="Infrastructure\Database.cs" />
