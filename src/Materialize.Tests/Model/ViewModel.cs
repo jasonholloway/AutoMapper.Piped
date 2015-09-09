@@ -22,6 +22,13 @@ namespace Materialize.Tests.Model
     {
         public string Name { get; set; }
     }
+
+    class PersonWithPetsModel
+    {
+        public string Name { get; set; }
+        public ICollection<DogModel> Dogs { get; set; }
+    }
+
     
     class DogGroomerModel
     {

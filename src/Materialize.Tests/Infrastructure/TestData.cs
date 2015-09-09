@@ -26,6 +26,7 @@ namespace Materialize.Tests.Infrastructure
                                         .All()
                                         .Do(p => {
                                             p.Name = qPersonNames.Dequeue();
+                                            p.Dogs = new List<Dog>();
                                         }).Build().ToArray();
 
             Dogs = Builder<Dog>.CreateListOfSize(8)
@@ -34,6 +35,7 @@ namespace Materialize.Tests.Infrastructure
                                         d.Name = qDogNames.Dequeue();
                                         d.Age = Pick<int>.RandomItemFrom(dogAges);
                                         d.Owner = Pick<Person>.RandomItemFrom(People);
+                                        d.Owner.Dogs.Add(d);
                                     }).Build().ToArray();
 
             Groomers = Builder<DogGroomer>.CreateListOfSize(3)

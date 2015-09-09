@@ -204,6 +204,26 @@ namespace Materialize.Tests
                 
 
         [Fact]
+        public void WorksWithCollections() {
+            InitServices();
+
+            InitMapper(x => {
+                x.CreateMap<Dog, DogModel>();
+                x.CreateMap<Person, PersonWithPetsModel>();
+            });
+            
+            var people = Data.People.AsQueryable();
+
+            var personModels = people.MaterializeAs<PersonWithPetsModel>()
+                                .ToArray();
+
+            personModels.SelectMany(p => p.Dogs.Select(d => d.Name))
+                .SequenceEqual(people.SelectMany(p => p.Dogs.Select(d => d.Name)))
+                .ShouldBeTrue();
+        }
+
+
+        [Fact]
         public void WorksWithNonGenericCollections() {
             throw new NotImplementedException();
         }
@@ -218,6 +238,12 @@ namespace Materialize.Tests
         public void ThrowsAutoMapperEquivalentExceptions() {
             throw new NotImplementedException();
         }
-        
+                
+
+        [Fact]
+        public void MaterializeAsTakesAndRespectsOptions() {            
+            throw new NotImplementedException();
+        }
+
     }
 }
