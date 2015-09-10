@@ -49,7 +49,7 @@ namespace Materialize.Demo
                                             .Do(v => {
                                                 v.Name = qPersonNames.Dequeue();
                                                 v.Town = Pick<Town>.RandomItemFrom(Towns);
-                                                v.RabbitForSale = Builder<Rabbit>.CreateNew()
+                                                v.RabbitOnOffer = Builder<Rabbit>.CreateNew()
                                                                                 .Do(r => {
                                                                                     r.Name = qRabbitNames.Dequeue();
                                                                                     r.Price = Pick<decimal>.RandomItemFrom(prices);
@@ -58,7 +58,7 @@ namespace Materialize.Demo
                                                                                 .Build();                                                
                                             }).Build().ToArray();
 
-            Rabbits = Vendors.Select(v => v.RabbitForSale)
+            Rabbits = Vendors.Select(v => v.RabbitOnOffer)
                                 .ToArray();
             
         }

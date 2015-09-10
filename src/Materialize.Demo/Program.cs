@@ -12,8 +12,8 @@ namespace Materialize.Demo
 {
     class Program
     {
-        //////////////////////////////////////////////////////////////////////////
-        // A small, contrived example to show how Materialize might be used
+        //////////////////////////////////////////////////////////////////////////////////////
+        // A small, contrived example to show what Materialize does behind the scenes.
         //
         // Different projections prompt different behaviours. 
         //
@@ -26,14 +26,15 @@ namespace Materialize.Demo
         static void Main(string[] args) 
         {            
             var currencyContext = new CurrencyContext();
-            currencyContext.SetActiveCurrency(new Currency("Euro", "€{0:N}", 1.43M));
+            currencyContext.SetActiveCurrency(new Currency("Pound", "£{0:N}", 0.65M));
 
 
             //The below just customises sourge regime behaviour for this demo
-            //Usually this is determined by the pre-provided ISourceRegime classes (still to finish for EF!)
+            //Usually this is determined by the pre-provided ISourceRegime classes (yet to be written for EF!)
             //In this instance, projections with paramterised ctors are rejected 
-            MaterializeServices.Init(x => {     
-                x.EmplaceCustomSourceRegime(    
+            //For fun, you could change this to always return false (setting to true would raise EF exceptions)
+            MaterializeServices.Init(x => {
+                x.EmplaceCustomSourceRegime(
                     exProj => !exProj.Contains(ex => ex is NewExpression 
                                                         && ((NewExpression)ex).Arguments.Any()));
             });
@@ -52,6 +53,7 @@ namespace Materialize.Demo
             });
                  
 
+            //Make sure SQLServer service is running!
             using(var ctx = new Context()) 
             {
                 Expression sourceQueryExp = null;
@@ -60,36 +62,39 @@ namespace Materialize.Demo
                 IEnumerable<object> transformed = null;
 
                 var vendorQuery = ctx.Vendors
-                                        .Include(v => v.RabbitForSale.Breed)
+                                        .Include(v => v.RabbitOnOffer.Breed)
                                         .Include(v => v.Town)
-                                        .Snoop(e => sourceQueryExp = e);
-                
+                                            .Snoop(e => sourceQueryExp = e); //the snoop extensions are simply utilities for testing
+
                 var venderModels = vendorQuery
                                         .MaterializeAs<RabbitVendorModel>()
-                                        .SnoopOnQuery(q => query = q)       //the snoop extensions are simply utilities for testing
-                                        .SnoopOnFetched(f => fetched = f)
-                                        .SnoopOnTransformed(t => transformed = t)
-                                        //  .Take(5)
+                                            .SnoopOnQuery(q => query = q) 
+                                            .SnoopOnFetched(f => fetched = f)
+                                            .SnoopOnTransformed(t => transformed = t)
+                                        .Take(3)    //this is IMaterializable<T>.Take, which adds a modifier to the stack
                                         .ToArray(); //needed to trigger materialization
 
 
                 Console.WriteLine("***************************************************");
-                Console.WriteLine("Underlying source query sent to EF: \r\n");
+                Console.WriteLine("* Underlying source query sent to EF: \r\n");
                 Console.WriteLine(sourceQueryExp.ToCSharpCode());
                 Console.WriteLine();
+                Console.WriteLine();
 
                 Console.WriteLine("***************************************************");
-                Console.WriteLine("SQL query: \r\n");
+                Console.WriteLine("* SQL query: \r\n");
                 Console.WriteLine(query.ToString());
                 Console.WriteLine();
-                
-                Console.WriteLine("***************************************************");
-                Console.WriteLine("Object graph fetched from server: \r\n");
-                Console.WriteLine(fetched.DumpToString());
                 Console.WriteLine();
 
                 Console.WriteLine("***************************************************");
-                Console.WriteLine("Object graph transformed by client: \r\n");
+                Console.WriteLine("* Object graph fetched from server: \r\n");
+                Console.WriteLine(fetched.DumpToString());
+                Console.WriteLine();
+                Console.WriteLine();
+
+                Console.WriteLine("***************************************************");
+                Console.WriteLine("* Object graph transformed by client: \r\n");
                 Console.WriteLine(transformed.DumpToString());
                 Console.WriteLine();
 

@@ -23,7 +23,7 @@ namespace Materialize.Demo
         public int ID { get; set; }
         public string Name { get; set; }
         public Town Town { get; set; }
-        public Rabbit RabbitForSale { get; set; }
+        public Rabbit RabbitOnOffer { get; set; }
     }
     
     class Town

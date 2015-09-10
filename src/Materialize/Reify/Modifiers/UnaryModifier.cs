@@ -32,14 +32,8 @@ namespace Materialize.Reify.Modifiers
         public Expression RewriteQuery(Expression exQuery) 
         {
             var ex = _upstreamModifier.RewriteQuery(exQuery);
-
-            ////upstream expression always IQueryable, no?                
-            //var tQueryable = new[] { ex.Type }
-            //                    .Concat(ex.Type.GetInterfaces())
-            //                    .First(t => t.IsGenericType 
-            //                                && t.GetGenericTypeDefinition() == typeof(IQueryable<>));
-
-            var tElem = Refl.GetElementType(ex.Type); //  tQueryable.GetGenericArguments().First();
+            
+            var tElem = Refl.GetElementType(ex.Type);
 
             var mTypedUnary = _mUnaryGenDef.MakeGenericMethod(tElem);
 

@@ -11,7 +11,7 @@ namespace Materialize.Demo
     {
         public string Name { get; set; }
         public TownModel Town { get; set; }
-        public RabbitModel RabbitForSale { get; set; }
+        public RabbitModel RabbitOnOffer { get; set; }
     }
 
     class RabbitModel
@@ -29,7 +29,6 @@ namespace Materialize.Demo
     class RabbitBreedModel
     {
         public string Name { get; set; }
-        //public string FullName { get; set; }
     }
 
     

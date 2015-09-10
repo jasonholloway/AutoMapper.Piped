@@ -13,8 +13,9 @@ namespace Materialize.Tests
     class MaterializableExtensionTests : TestClassBase
     {
         [Fact]
-        public void First() {
-            InitServices();
+        public void First() 
+        {
+            InitServices(x => x.EmplaceIntolerantSourceRegime());
 
             InitMapper(x => {
                 x.CreateMap<int, float>()
@@ -49,8 +50,9 @@ namespace Materialize.Tests
 
 
         [Fact]
-        public void Single() {
-            InitServices();
+        public void Single() 
+        {
+            InitServices(x => x.EmplaceIntolerantSourceRegime());
 
             InitMapper(x => {
                 x.CreateMap<int, float>()
@@ -76,7 +78,7 @@ namespace Materialize.Tests
         public void SingleThrowsFamiliarException() 
         {
             //this is the provider's business, not ours...
-            InitServices();
+            InitServices(x => x.EmplaceIntolerantSourceRegime());
 
             InitMapper(x => {
                 x.CreateMap<int, float>()
@@ -94,7 +96,7 @@ namespace Materialize.Tests
         [Fact]
         public void SingleOrDefault() 
         {
-            InitServices();
+            InitServices(x => x.EmplaceIntolerantSourceRegime());
 
             InitMapper(x => {
                 x.CreateMap<int, float>()
@@ -121,7 +123,7 @@ namespace Materialize.Tests
         public void SingleOrDefaultReturnsDefaultIfSequenceEmpty() {
             //this is the provider's business, not ours...
 
-            InitServices();
+            InitServices(x => x.EmplaceIntolerantSourceRegime());
 
             InitMapper(x => {
                 x.CreateMap<int, float>().ProjectUsing(i => 2F * i);
@@ -140,7 +142,7 @@ namespace Materialize.Tests
 
         [Fact]
         public void Last() {
-            InitServices();
+            InitServices(x => x.EmplaceIntolerantSourceRegime());
 
             InitMapper(x => {
                 x.CreateMap<int, float>()
@@ -173,7 +175,7 @@ namespace Materialize.Tests
 
         [Fact]
         public void Take() {
-            InitServices();
+            InitServices(x => x.EmplaceIntolerantSourceRegime());
 
             InitMapper(x => {
                 x.CreateMap<int, float>()
@@ -193,11 +195,12 @@ namespace Materialize.Tests
             taken.SequenceEqual(ints.Take(10).Select(i => 2F * i)).ShouldBeTrue();
             fetchedItemsCount.ShouldEqual(10);
         }
+                
 
 
         [Fact]
         public void Skip() {
-            InitServices();
+            InitServices(x => x.EmplaceIntolerantSourceRegime());
 
             InitMapper(x => {
                 x.CreateMap<int, float>()

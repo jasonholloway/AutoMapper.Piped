@@ -11,6 +11,8 @@ namespace Materialize.Demo
 
         public DbSet<Rabbit> Rabbits { get; set; }
         public DbSet<RabbitVendor> Vendors { get; set; }
+        public DbSet<RabbitBreed> Breeds { get; set; }
+        public DbSet<Town> Towns { get; set; }
     }
 
 
@@ -22,6 +24,8 @@ namespace Materialize.Demo
                         
             context.Rabbits.AddRange(data.Rabbits);
             context.Vendors.AddRange(data.Vendors);
+            context.Breeds.AddRange(data.Breeds);
+            context.Towns.AddRange(data.Towns);
 
             base.Seed(context);
         }

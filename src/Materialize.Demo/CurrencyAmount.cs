@@ -12,9 +12,14 @@ namespace Materialize.Demo
         readonly CurrencyContext _currencyCtx;
         readonly decimal _baseAmount;
 
-        public decimal Amount {
+        public decimal BaseAmount {
+            get { return _baseAmount; }
+        }
+
+        public decimal LocalAmount {
             get { return _baseAmount * _currencyCtx.ActiveCurrency.Ratio; }
         }
+
 
         public CurrencyAmount(CurrencyContext currencyCtx, decimal baseAmount) {
             _currencyCtx = currencyCtx;
@@ -25,7 +30,7 @@ namespace Materialize.Demo
         public override string ToString() {
             return string.Format(
                             _currencyCtx.ActiveCurrency.Format,
-                            Amount
+                            LocalAmount
                             );
         }
 
