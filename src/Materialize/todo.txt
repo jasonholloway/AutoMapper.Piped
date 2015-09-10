@@ -1,10 +1,6 @@
 ﻿
 TO DO! ********************************************
 
-> Dictionary of Queryable method handlers
-
-> Complete ReifyQuery support for unary expressions
-
 > Test projection expressions for inputs. Use IProjectionInpuDetector interface.
 
 > Collection-to-collection mapping: need to handle different collection types - does AutoMapper do this already?

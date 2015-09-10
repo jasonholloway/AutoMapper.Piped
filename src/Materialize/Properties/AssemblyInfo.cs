@@ -37,3 +37,4 @@ using System.Runtime.InteropServices;
 
 [assembly: InternalsVisibleTo("Materialize.EntityFramework6")]
 [assembly: InternalsVisibleTo("Materialize.Tests")]
+[assembly: InternalsVisibleTo("Materialize.Demo")]

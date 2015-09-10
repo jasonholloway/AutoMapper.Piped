@@ -8,7 +8,7 @@ namespace Materialize
     {
         public static IMaterializable<TDest> MaterializeAs<TDest>(this IQueryable qySource) 
         {
-            var reifiableFac = Services.Resolve<ReifiableFactory>();
+            var reifiableFac = MaterializeServices.Resolve<ReifiableFactory>();
             
             var reifiable = reifiableFac.CreateReifiable<TDest>(qySource);
             

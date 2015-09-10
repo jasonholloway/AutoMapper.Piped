@@ -56,6 +56,10 @@ namespace Materialize.Tests.Infrastructure
         IEnumerator IEnumerable.GetEnumerator() {
             return GetEnumerator();
         }
+
+        public override string ToString() {
+            return _qyInner.ToString();
+        }
     }
        
 

@@ -6,43 +6,43 @@ using System.Threading.Tasks;
 
 namespace Materialize.Tests.Model
 {
-    class DogModel
+    internal class DogModel
     {
         public string Name { get; set; }
     }
 
-    class DogAndOwnerModel
+    internal class DogAndOwnerModel
     {
         public string Name { get; set; }
         public PersonModel Owner { get; set; }
     }
 
     
-    class PersonModel
+    internal class PersonModel
     {
         public string Name { get; set; }
     }
 
-    class PersonWithPetsModel
+    internal class PersonWithPetsModel
     {
         public string Name { get; set; }
         public ICollection<DogModel> Dogs { get; set; }
     }
 
     
-    class DogGroomerModel
+    internal class DogGroomerModel
     {
         public string Name { get; set; }
     }
 
-    class ContractModel
+    internal class ContractModel
     {
         public DogModel Dog { get; set; }
         public DogGroomerModel Groomer { get; set; }
         public Fee Fee { get; set; }
     }
 
-    struct Fee
+    internal struct Fee
     {
         public readonly decimal Amount;
 

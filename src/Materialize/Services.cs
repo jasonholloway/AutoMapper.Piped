@@ -10,11 +10,11 @@ using System.Linq;
 
 namespace Materialize
 { 
-    internal static class Services 
+    internal static class MaterializeServices 
     {
         static IServiceRegistry _registry;
 
-        static Services() {
+        static MaterializeServices() {
             Init();
         }
 

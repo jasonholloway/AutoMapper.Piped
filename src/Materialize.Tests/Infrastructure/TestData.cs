@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Materialize.Tests.Infrastructure
 {
-    class TestData
+    internal class TestData
     {
         public Dog[] Dogs { get; private set; }
         public Person[] People { get; private set; }

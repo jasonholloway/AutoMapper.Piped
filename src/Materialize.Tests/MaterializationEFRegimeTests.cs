@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Materialize.Tests.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ using Xunit;
 namespace Materialize.Tests
 {
     class MaterializationEFRegimeTests
-    {
+    {        
         
         [Fact]
         public void OnlyNonParameterizedCtorsAllowed() {
@@ -18,7 +19,13 @@ namespace Materialize.Tests
 
         [Fact]
         public void OnlyMappedMemberAccessesAllowed() {            
-            throw new NotImplementedException();
+            
+            using(var ctx = new Context()) {
+                ctx.Dogs.Select(d => new { Name = d.Name });
+
+            }
+
+            //throw new NotImplementedException();
         }
 
 

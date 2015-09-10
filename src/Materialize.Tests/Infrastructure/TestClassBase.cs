@@ -19,7 +19,7 @@ namespace Materialize.Tests.Infrastructure
         }
 
         protected void InitServices(Action<IServiceRegistry> fnConfig = null) {
-            Services.Init(fnConfig ?? (_ => { }));
+            MaterializeServices.Init(fnConfig ?? (_ => { }));
         }
 
 

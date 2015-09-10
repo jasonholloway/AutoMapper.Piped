@@ -27,7 +27,7 @@ namespace Materialize.Tests
                                     .AsQueryable()
                                     .Skip(50)
                                     .MaterializeAs<float>()
-                                    .Snoop(fetchedItems => fetchedItemsCount += fetchedItems.Count());
+                                    .SnoopOnFetched(items => fetchedItemsCount += items.Count());
 
             var first = materializable.First();
 
@@ -63,7 +63,7 @@ namespace Materialize.Tests
 
             var floats = ints.Skip(10).Take(1)
                                 .MaterializeAs<float>()
-                                .Snoop(fetchedItems => fetchedItemsCount += fetchedItems.Count());
+                                .SnoopOnFetched(items => fetchedItemsCount += items.Count());
 
             var single = floats.Single();
             
@@ -107,7 +107,7 @@ namespace Materialize.Tests
 
             var floats = ints.Skip(10).Take(1)
                                 .MaterializeAs<float>()
-                                .Snoop(fetchedItems => fetchedItemsCount += fetchedItems.Count());
+                                .SnoopOnFetched(items => fetchedItemsCount += items.Count());
 
             var single = floats.SingleOrDefault();
                         
@@ -152,7 +152,7 @@ namespace Materialize.Tests
             var materializable = Enumerable.Range(0, 100)
                                     .AsQueryable()
                                     .MaterializeAs<float>()
-                                    .Snoop(fetchedItems => fetchedItemsCount += fetchedItems.Count());
+                                    .SnoopOnFetched(items => fetchedItemsCount += items.Count());
 
             var last = materializable.Last();
 
@@ -185,7 +185,7 @@ namespace Materialize.Tests
             var ints = Enumerable.Range(0, 100).AsQueryable();
 
             var materializable = ints.MaterializeAs<float>()
-                                        .Snoop(fetchedItems => fetchedItemsCount += fetchedItems.Count());
+                                        .SnoopOnFetched(items => fetchedItemsCount += items.Count());
 
             var taken = materializable.Take(10).ToArray();
 
@@ -209,7 +209,7 @@ namespace Materialize.Tests
             var ints = Enumerable.Range(0, 100).AsQueryable();
 
             var materializable = ints.MaterializeAs<float>()
-                                        .Snoop(fetchedItems => fetchedItemsCount += fetchedItems.Count());
+                                        .SnoopOnFetched(items => fetchedItemsCount += items.Count());
 
             var taken = materializable.Skip(90).ToArray();
 

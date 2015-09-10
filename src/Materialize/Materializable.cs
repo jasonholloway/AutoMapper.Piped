@@ -10,8 +10,15 @@ namespace Materialize
 {
     internal abstract class Materializable
     {
+        public event EventHandler<IQueryable> Queried;
         public event EventHandler<IEnumerable> Fetched;
         public event EventHandler<IEnumerable> Transformed;
+
+        protected void OnQueried(IQueryable query) {
+            if(Queried != null) {
+                Queried(this, query);
+            }
+        }
 
         protected void OnFetched(IEnumerable elems) {
             if(Fetched != null) {
@@ -38,6 +45,7 @@ namespace Materialize
             _query = query;
 
             var reifiable = (Reifiable)_query.Provider;
+            reifiable.Queried += new EventHandler<IQueryable>((o, q) => OnQueried(q));
             reifiable.Fetched += new EventHandler<IEnumerable>((o, en) => OnFetched(en));
             reifiable.Transformed += new EventHandler<IEnumerable>((o, en) => OnTransformed(en));
         }

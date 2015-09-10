@@ -32,6 +32,19 @@ namespace Materialize.Tests.Infrastructure
 
             x.Register(detector);
         }
+
+
+        public static void EmplaceCustomSourceRegime(this IServiceRegistry x, Predicate<Expression> fnTest) {
+            var regime = Substitute.For<ISourceRegime>();
+            regime.ServerAccepts(Arg.Any<Expression>()).Returns(c => fnTest(c.Arg<Expression>()));
+
+            var detector = Substitute.For<ISourceRegimeDetector>();
+            detector.DetectRegime(Arg.Any<IQueryProvider>()).Returns(regime);
+
+            x.Register(detector);
+        }
+               
+
     }
 
 }

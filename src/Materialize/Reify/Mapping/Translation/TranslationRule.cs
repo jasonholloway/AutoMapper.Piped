@@ -28,7 +28,7 @@ namespace Materialize.Reify.Mapping.Translation
         
         public override IMapStrategy DeduceStrategy(MapContext ctx) 
         {
-            var typeMap = _typeMaps.FindTypeMap(ctx.TypeVector);
+            var typeMap = _typeMaps.FindTypeMap(ctx.TypeVector);    //EEEEEK!
 
             if(typeMap != null 
                 && (typeMap.CustomProjection != null || typeMap.CustomMapper != null)) 

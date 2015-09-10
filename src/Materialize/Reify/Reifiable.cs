@@ -32,18 +32,27 @@ namespace Materialize.Reify
         public abstract object Execute(Expression expression);
         public abstract TResult Execute<TResult>(Expression expression);
 
+        public event EventHandler<IQueryable> Queried;
         public event EventHandler<IEnumerable> Fetched;
         public event EventHandler<IEnumerable> Transformed;
 
+        protected void OnQueried(IQueryable query) {
+            if(Queried != null) {
+                Queried(this, query);
+            }
+        }
+
         protected void OnFetched(IEnumerable elems) {
             if(Fetched != null) {
-                Fetched(this, elems);
+                var rElems = elems.Cast<object>().ToArray();
+                Fetched(this, rElems);
             }
         }
 
         protected void OnTransformed(IEnumerable elems) {
             if(Transformed != null) {
-                Transformed(this, elems);
+                var rElems = elems.Cast<object>().ToArray();
+                Transformed(this, rElems);
             }
         }        
     }
@@ -94,23 +103,28 @@ namespace Materialize.Reify
         public override TResult Execute<TResult>(Expression exReifyQuery) 
         {            
             //parser creates modifier stack based on passed ReifyQuery expression
+            //the core of the stack is provided by the selected mapping strategy
+            //and only amended by the query parser
             var parser = new ReifyQueryParser(
                                     BaseReifyQuery.Expression,
                                     _lzMapStrategy.Value.CreateModifier());
 
-            var modifier = parser.Parse(exReifyQuery);
+            var modifierStack = parser.Parse(exReifyQuery);
                                                             
 
             //modifier stack rewrites the SourceQuery expression
-            var exQuery = modifier.RewriteQuery(SourceQuery.Expression);
+            var exQuery = modifierStack.RewriteQuery(SourceQuery.Expression);
             
 
             //fetch from source; transform fetched via modifiers                                    
             if(typeof(IQueryable).IsAssignableFrom(exQuery.Type)) {
-                var enFetched = (IEnumerable)SourceQuery.Provider.CreateQuery(exQuery);
+                var query = SourceQuery.Provider.CreateQuery(exQuery);
+                OnQueried(query);
+
+                var enFetched = (IEnumerable)query;
                 OnFetched(enFetched);
 
-                var enTransformed = (IEnumerable)modifier.TransformFetched(enFetched);
+                var enTransformed = (IEnumerable)modifierStack.TransformFetched(enFetched);
                 OnTransformed(enTransformed);
 
                 return (TResult)enTransformed;
@@ -119,7 +133,7 @@ namespace Materialize.Reify
                 var fetched = SourceQuery.Provider.Execute(exQuery);
                 OnFetched(new[] { fetched });
 
-                var transformed = (TResult)modifier.TransformFetched(fetched);
+                var transformed = (TResult)modifierStack.TransformFetched(fetched);
                 OnTransformed(new[] { transformed });
 
                 return transformed;
