@@ -1,14 +1,9 @@
-﻿using Materialize.Reify.Modifiers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace Materialize.Reify.Mapping
 {
     abstract class StrategyBase<TOrig, TDest>
-        : IMapStrategy //<TOrig, TDest>
+        : IMapStrategy
     {
         public Type SourceType {
             get { return typeof(TOrig); }

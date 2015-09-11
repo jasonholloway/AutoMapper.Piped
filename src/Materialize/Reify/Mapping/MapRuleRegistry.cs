@@ -1,7 +1,8 @@
 ﻿using Materialize.Dependencies;
-using Materialize.Reify.Mapping.Translation;
+using Materialize.Reify.Mapping.Collections;
 using Materialize.Reify.Mapping.Direct;
 using Materialize.Reify.Mapping.PropertyMaps;
+using Materialize.Reify.Mapping.Translation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,10 @@ namespace Materialize.Reify.Mapping
     class MapRuleRegistry : IMapRuleRegistry
     {
         static Type[] _ruleTypes = new[] {
-                                        typeof(TranslationRule),
+                                        typeof(CustomTranslationRule),
                                         typeof(PropertyMapRule),
+                                        //special string rule here to preempt collection rule
+                                        typeof(CollectionRule),
                                         typeof(DirectRule)
                                     };
 

@@ -1,23 +1,18 @@
-﻿using AutoMapper;
-using System;
+﻿using System;
 using System.Linq;
-using System.Linq.Expressions;
-using JH.DynaType;
 using System.Reflection;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using Materialize.TypeMaps;
 
 namespace Materialize.Reify.Mapping.Translation
 {
-    class TranslationRule 
+    class CustomTranslationRule 
         : MapRuleBase
     {
         ITypeMapProvider _typeMaps;
         IMapStrategySource _mapStrategySource;
 
 
-        public TranslationRule(
+        public CustomTranslationRule(
             ITypeMapProvider typeMaps,
             IMapStrategySource mapStrategySource) 
         {

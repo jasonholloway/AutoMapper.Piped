@@ -44,6 +44,8 @@
     <Compile Include="Materializable.cs" />
     <Compile Include="ProjectedTypes\DynaType\DynaType.cs" />
     <Compile Include="ProjectedTypes\IProjectedTypeBuilder.cs" />
+    <Compile Include="Reify\Mapping\Collections\CollectionRule.cs" />
+    <Compile Include="Reify\Mapping\Collections\ListStrategy.cs" />
     <Compile Include="Reify\Mapping\IMapRuleRegistry.cs" />
     <Compile Include="Reify\Mapping\IMapStrategySource.cs" />
     <Compile Include="Reify\Mapping\MapRuleRegistry.cs" />
@@ -81,6 +83,7 @@
     <Compile Include="Reify\Mapping\MapperModifier.cs" />
     <Compile Include="Reify\Mapping\MapStrategySource.cs" />
     <Compile Include="Reify\Mapping\MapContext.cs" />
+    <Compile Include="TypeExtensions.cs" />
     <Compile Include="TypeMaps\CachedTypeMapProvider.cs" />
     <Compile Include="TypeMaps\ITypeMapProvider.cs" />
     <Compile Include="TypeVector.cs" />

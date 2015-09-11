@@ -7,13 +7,13 @@ namespace Materialize.Reify.Mapping.Direct
     {        
         public override IMapStrategy DeduceStrategy(MapContext ctx) 
         {
-            var spec = ctx.TypeVector;
+            var types = ctx.TypeVector;
 
-            if(spec.SourceType == spec.DestType) 
+            if(types.DestType.IsAssignableFrom(types.SourceType)) 
             {
                 return base.CreateStrategy(
                                     typeof(DirectStrategy<,>),
-                                    ctx.TypeVector,
+                                    types,
                                     ctx);
             }
 

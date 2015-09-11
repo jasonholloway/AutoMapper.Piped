@@ -32,8 +32,8 @@ namespace Materialize.Reify.Modifiers
         public Expression RewriteQuery(Expression exQuery) 
         {
             var ex = _upstreamModifier.RewriteQuery(exQuery);
-            
-            var tElem = Refl.GetElementType(ex.Type);
+
+            var tElem = ex.Type.GetEnumerableElementType();
 
             var mTypedUnary = _mUnaryGenDef.MakeGenericMethod(tElem);
 

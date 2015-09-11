@@ -54,7 +54,7 @@ namespace Materialize.Reify.Mapping
 
         public object TransformFetched(object obj) 
         {
-            if(typeof(IEnumerable<TMed>).IsAssignableFrom(obj.GetType())) 
+            if(typeof(IEnumerable<TMed>).IsAssignableFrom(obj.GetType()))  //this should be dealt with by special collectionr rules...
             {
                 return ((IEnumerable<TMed>)obj)
                             .Select(e => TransformSingle(e));

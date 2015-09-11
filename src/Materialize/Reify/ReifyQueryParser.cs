@@ -96,7 +96,7 @@ namespace Materialize.Reify
                     return new AdLibModifier(
                                     p.Parse(ex.Arguments[0]),
                                     exSource => Expression.Call(
-                                                            mTake.MakeGenericMethod(Refl.GetElementType(exSource.Type)),
+                                                            mTake.MakeGenericMethod(exSource.Type.GetEnumerableElementType()),
                                                             exSource,
                                                             ex.Arguments[1])
                                     );
@@ -110,7 +110,7 @@ namespace Materialize.Reify
                     return new AdLibModifier(
                                     p.Parse(ex.Arguments[0]),
                                     exSource => Expression.Call(
-                                                            mSkip.MakeGenericMethod(Refl.GetElementType(exSource.Type)),
+                                                            mSkip.MakeGenericMethod(exSource.Type.GetEnumerableElementType()),
                                                             exSource,
                                                             ex.Arguments[1])
                                     );

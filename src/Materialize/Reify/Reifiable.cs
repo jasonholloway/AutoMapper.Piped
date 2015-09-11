@@ -44,15 +44,13 @@ namespace Materialize.Reify
 
         protected void OnFetched(IEnumerable elems) {
             if(Fetched != null) {
-                var rElems = elems.Cast<object>().ToArray();
-                Fetched(this, rElems);
+                Fetched(this, elems);
             }
         }
 
         protected void OnTransformed(IEnumerable elems) {
             if(Transformed != null) {
-                var rElems = elems.Cast<object>().ToArray();
-                Transformed(this, rElems);
+                Transformed(this, elems);
             }
         }        
     }

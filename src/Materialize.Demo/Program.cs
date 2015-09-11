@@ -35,8 +35,8 @@ namespace Materialize.Demo
             //For fun, you could change this to always return false (setting to true would raise EF exceptions)
             MaterializeServices.Init(x => {
                 x.EmplaceCustomSourceRegime(
-                    exProj => !exProj.Contains(ex => ex is NewExpression 
-                                                        && ((NewExpression)ex).Arguments.Any()));
+                        exProj => !exProj.Contains(ex => ex is NewExpression
+                                                            && ((NewExpression)ex).Arguments.Any()));                
             });
 
 
@@ -69,8 +69,8 @@ namespace Materialize.Demo
                 var venderModels = vendorQuery
                                         .MaterializeAs<RabbitVendorModel>()
                                             .SnoopOnQuery(q => query = q) 
-                                            .SnoopOnFetched(f => fetched = f)
-                                            .SnoopOnTransformed(t => transformed = t)
+                                            .SnoopOnFetched(f => fetched = f.ToArray())
+                                            .SnoopOnTransformed(t => transformed = t.ToArray())
                                         .Take(3)    //this is IMaterializable<T>.Take, which adds a modifier to the stack
                                         .ToArray(); //needed to trigger materialization
 
