@@ -111,7 +111,7 @@ namespace Materialize.Reify
                                                             
 
             //modifier stack rewrites the SourceQuery expression
-            var exQuery = modifierStack.RewriteQuery(SourceQuery.Expression);
+            var exQuery = modifierStack.Rewrite(SourceQuery.Expression);
             
 
             //fetch from source; transform fetched via modifiers                                    
@@ -122,7 +122,7 @@ namespace Materialize.Reify
                 var enFetched = (IEnumerable)query;
                 OnFetched(enFetched);
 
-                var enTransformed = (IEnumerable)modifierStack.TransformFetched(enFetched);
+                var enTransformed = (IEnumerable)modifierStack.Transform(enFetched);
                 OnTransformed(enTransformed);
 
                 return (TResult)enTransformed;
@@ -131,7 +131,7 @@ namespace Materialize.Reify
                 var fetched = SourceQuery.Provider.Execute(exQuery);
                 OnFetched(new[] { fetched });
 
-                var transformed = (TResult)modifierStack.TransformFetched(fetched);
+                var transformed = (TResult)modifierStack.Transform(fetched);
                 OnTransformed(new[] { transformed });
 
                 return transformed;

@@ -1,4 +1,5 @@
-﻿using Materialize.Dependencies;
+﻿using Materialize.CollectionFactories;
+using Materialize.Dependencies;
 using Materialize.ProjectedTypes;
 using Materialize.Reify;
 using Materialize.Reify.Mapping;
@@ -48,6 +49,7 @@ namespace Materialize
             x.Register<IMapRuleRegistry, MapRuleRegistry>();
             x.Register<IMapStrategySource, MapStrategySource>();
             x.Register<IProjectedTypeBuilder, ProjectedTypeBuilder>();
+            x.Register<ICollectionFactorySource, CollectionFactorySource>();
             x.Register<ReifiableFactory>();
         }        
     }

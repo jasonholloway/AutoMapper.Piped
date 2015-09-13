@@ -21,8 +21,17 @@ namespace Materialize.Reify.Mapping
             params object[] ctorArgs) 
         {
             var tStrategy = typeDef.MakeGenericType(types.SourceType, types.DestType);
-            return (IMapStrategy)Activator.CreateInstance(tStrategy, ctorArgs);
+            return CreateStrategy(tStrategy, ctorArgs);
         }
+
+
+        protected IMapStrategy CreateStrategy(
+            Type type,
+            params object[] ctorArgs) 
+        {
+            return (IMapStrategy)Activator.CreateInstance(type, ctorArgs);
+        }
+
 
     }
 

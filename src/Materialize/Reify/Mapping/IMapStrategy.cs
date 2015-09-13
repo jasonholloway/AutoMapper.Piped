@@ -9,7 +9,8 @@ namespace Materialize.Reify.Mapping
         Type FetchedType { get; }
         Type TransformedType { get; }
 
-        bool UsesIntermediateType { get; }
+        bool FetchesToTuple { get; }
+        bool RewritesExpression { get; }
 
         IModifier CreateModifier();
     }

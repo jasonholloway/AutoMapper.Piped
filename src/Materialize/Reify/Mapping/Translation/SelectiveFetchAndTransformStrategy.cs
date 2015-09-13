@@ -106,7 +106,7 @@ namespace Materialize.Reify.Mapping.Translation
                 _dataType = dataType;
             }
 
-            protected override Expression RewriteSingle(Expression exSource) {
+            public override Expression Rewrite(Expression exSource) {
                 return Expression.MemberInit(
                                     Expression.New(_dataType.Type),
                                     BuildBindings(exSource)
@@ -129,7 +129,7 @@ namespace Materialize.Reify.Mapping.Translation
             }
 
 
-            protected override TDest TransformSingle(TMed source) {
+            protected override TDest Transform(TMed fetched) {
 
                 //how do we know what our input streams are? Strategy should build up array of maps for us to
                 //iterate through. Every member with a rule to be mapped.

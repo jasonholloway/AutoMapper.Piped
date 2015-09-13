@@ -1,15 +1,13 @@
-﻿using Materialize.Reify.Modifiers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Materialize.Reify.Mapping.Direct
 {
     class DirectStrategy<TOrig, TDest>
         : StrategyBase<TOrig, TDest>
+        where TDest : TOrig
     {
         MapContext _ctx;
 
@@ -21,12 +19,16 @@ namespace Materialize.Reify.Mapping.Direct
             get { return typeof(TDest); }
         }
 
+        public override bool RewritesExpression {
+            get { return false; }
+        }
+        
         public override IModifier CreateModifier() {
             return new Mapper(_ctx);
         }
 
 
-        class Mapper : MapperModifier<TOrig, TDest>
+        class Mapper : MapperModifier<TOrig, TOrig, TDest>
         {
             MapContext _ctx;
 
@@ -34,12 +36,12 @@ namespace Materialize.Reify.Mapping.Direct
                 _ctx = ctx;
             }
 
-            protected override Expression RewriteSingle(Expression exOrig) {
+            public override Expression Rewrite(Expression exOrig) {
                 return exOrig;
             }
 
-            protected override TDest TransformSingle(TDest orig) {
-                return orig;
+            protected override TDest Transform(TOrig fetched) {
+                return (TDest)fetched;
             }
         }
     }

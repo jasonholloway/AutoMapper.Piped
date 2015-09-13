@@ -35,13 +35,13 @@ namespace Materialize.Reify.Mapping.Translation
                 _exProject = exProject;
             }
 
-            protected override Expression RewriteSingle(Expression exSource) {
+            public override Expression Rewrite(Expression exSource) {
                 return _exProject.Body.Replace(
                                         _exProject.Parameters.First(), 
                                         exSource);                           
             }
 
-            protected override TDest TransformSingle(TDest obj) {
+            protected override TDest Transform(TDest obj) {
                 //nothing to do here, as server-side projection should give us correct type
                 return obj;
             }

@@ -24,8 +24,11 @@ namespace Materialize.Reify
 
         public IReifiable<TDest> CreateReifiable<TDest>(IQueryable qySource) 
         {
-            var tOrig = qySource.ElementType;
-            var tDest = typeof(TDest);
+            var tOrig = qySource.GetType();
+            var tOrigElem = qySource.ElementType;
+
+            var tDest = typeof(IEnumerable<TDest>);
+            var tDestElem = typeof(TDest);
             
             var regime = _regimeDetector.DetectRegime(qySource.Provider);
             
@@ -35,7 +38,7 @@ namespace Materialize.Reify
             //construct and return nicely-typed reifiable
             return (IReifiable<TDest>)Activator.CreateInstance(
                                                     typeof(Reifiable<,>)
-                                                                .MakeGenericType(tOrig, tDest),
+                                                                .MakeGenericType(tOrigElem, tDestElem),
                                                     qySource,
                                                     fnMapStrategy);
         }

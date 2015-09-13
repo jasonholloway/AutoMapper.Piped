@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -12,8 +13,10 @@ namespace Materialize.Reify.Modifiers
     //of the same unary method should be appended to the source query: that is,
     //after the mapping projection, and therefore limiting what is fetched.
 
-    //No additional transformations on fetched are needed, as the mapping transformers
-    //should be agnostic as to quantity.
+    //On transformation however, this modifier will be the first encountered,
+    //and so we have to package the fetched single object into an enumerable
+    //to pass up the modifier stack.
+
              
     class UnaryModifier : IModifier
     {
@@ -29,9 +32,9 @@ namespace Materialize.Reify.Modifiers
         }
 
 
-        public Expression RewriteQuery(Expression exQuery) 
+        public Expression Rewrite(Expression exQuery) 
         {
-            var ex = _upstreamModifier.RewriteQuery(exQuery);
+            var ex = _upstreamModifier.Rewrite(exQuery);
 
             var tElem = ex.Type.GetEnumerableElementType();
 
@@ -41,9 +44,15 @@ namespace Materialize.Reify.Modifiers
         }
 
 
-        public object TransformFetched(object fetched) 
+        public object Transform(object fetched) 
         {
-            return _upstreamModifier.TransformFetched(fetched);
+            var rFetched = Array.CreateInstance(fetched.GetType(), 1);
+            rFetched.SetValue(fetched, 0);
+
+            var enTransformed = (IEnumerable)_upstreamModifier.Transform(rFetched);
+
+            return enTransformed.OfType<object>().Single();
         }
+
     }
 }

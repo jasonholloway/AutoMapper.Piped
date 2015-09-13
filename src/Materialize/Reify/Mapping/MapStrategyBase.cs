@@ -16,11 +16,14 @@ namespace Materialize.Reify.Mapping
         }
         
 
-        public bool UsesIntermediateType {  //?????????
+        public bool FetchesToTuple {  //?????????
             get { return FetchedType != TransformedType; }
         }
-
-
+        
+        public virtual bool RewritesExpression {
+            get { return true; }
+        }
+        
         public abstract IModifier CreateModifier();
         
     }

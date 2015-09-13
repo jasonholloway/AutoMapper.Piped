@@ -56,18 +56,18 @@ namespace Materialize.Reify.Mapping.PropertyMaps
                                                                         ).ToArray();
             }
             
-            protected override Expression RewriteSingle(Expression exSource) 
+            public override Expression Rewrite(Expression exSource) 
             {
                 return Expression.MemberInit(
                                         Expression.New(_projType),
                                         _memberSpecs.Select(m => Expression.Bind(
                                                                         m.ProjectedField,
-                                                                        m.Mapper.RewriteQuery(
+                                                                        m.Mapper.Rewrite(
                                                                                     Expression.MakeMemberAccess(exSource, m.PropertyMap.SourceMember))
                                                                         )).ToArray());
             }
                         
-            protected override TDest TransformSingle(TMed obj) 
+            protected override TDest Transform(TMed obj) 
             {
                 //should use more elegant per-strategy-compiled ctor + binders
                 //...
@@ -77,7 +77,7 @@ namespace Materialize.Reify.Mapping.PropertyMaps
                 foreach(var memberSpec in _memberSpecs) {
                     var memberValue = memberSpec.ProjectedField.GetValue(obj);
 
-                    var transformedValue = memberSpec.Mapper.TransformFetched(memberValue);
+                    var transformedValue = memberSpec.Mapper.Transform(memberValue);
                     
                     memberSpec.PropertyMap.DestinationProperty.SetValue(dest, transformedValue);
                 }

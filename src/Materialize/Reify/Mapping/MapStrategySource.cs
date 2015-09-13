@@ -27,14 +27,14 @@ namespace Materialize.Reify.Mapping
                         
             return _dStrategies.GetOrAdd(
                                     context, 
-                                    c => PlanStrategy(c));
+                                    c => DeduceStrategy(c));
         }
 
 
-        IMapStrategy PlanStrategy(MapContext ctx) {            
+        IMapStrategy DeduceStrategy(MapContext ctx) {            
             foreach(var rule in _ruleRegistry.Rules) {
-                var fac = rule.DeduceStrategy(ctx);
-                if(fac != null) return fac;
+                var strategy = rule.DeduceStrategy(ctx);
+                if(strategy != null) return strategy;
             }
 
             throw new AutoMapperMappingException("Unsupported mapping!");

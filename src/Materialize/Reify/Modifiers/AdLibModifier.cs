@@ -26,16 +26,16 @@ namespace Materialize.Reify.Modifiers
         }
 
 
-        public Expression RewriteQuery(Expression exQuery) 
+        public Expression Rewrite(Expression exQuery) 
         {
-            var ex = _upstreamModifier.RewriteQuery(exQuery);
+            var ex = _upstreamModifier.Rewrite(exQuery);
             return _fnRewrite(ex);
         }
 
 
-        public object TransformFetched(object fetched) 
+        public object Transform(object fetched) 
         {
-            var obj = _upstreamModifier.TransformFetched(fetched);
+            var obj = _upstreamModifier.Transform(fetched);
 
             return _fnTransform != null
                         ? _fnTransform(obj)

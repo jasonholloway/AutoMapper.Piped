@@ -29,8 +29,9 @@ namespace Materialize.Reify.Mapping
             }
 
             _lzRules = new Lazy<IMapRule[]>(
-                            () => _ruleTypes.Select(t => (IMapRule)registry.Resolve(t))
-                                                .ToArray());
+                            () => _ruleTypes
+                                        .Select(t => (IMapRule)registry.Resolve(t))
+                                        .ToArray());
         }
         
 

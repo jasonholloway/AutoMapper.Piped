@@ -20,7 +20,8 @@ namespace Materialize.Reify
         }
 
 
-        static ReifyQueryParser() {
+        static ReifyQueryParser() 
+        {
             var mFirst = Refl.GetGenericMethodDef(() => Queryable.First<int>(null));
 
             RegisterHandlerForMethod(mFirst,

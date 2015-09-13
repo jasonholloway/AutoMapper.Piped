@@ -10,11 +10,15 @@ namespace Materialize
     internal static class TypeExtensions
     {
         public static bool IsEnumerable(this Type @this) {
-            return typeof(IEnumerable).IsAssignableFrom(@this);
+            return @this.IsArray || typeof(IEnumerable).IsAssignableFrom(@this);
         }
         
         public static Type GetEnumerableElementType(this Type @this) 
         {            
+            if(@this.IsArray) {
+                return @this.GetElementType();
+            }
+
             var tEnumerable = new[] { @this }
                                 .Concat(@this.GetInterfaces())
                                 .FirstOrDefault(t => t.IsGenericType

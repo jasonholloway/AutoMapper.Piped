@@ -29,6 +29,9 @@ namespace Materialize.Reify.Mapping.Translation
             get { return typeof(TOrig); }
         }
 
+        public override bool RewritesExpression {
+            get { return false; }
+        }
 
         public override IModifier CreateModifier() {
             return new Mapper(_ctx, _fnTransform);
@@ -44,14 +47,15 @@ namespace Materialize.Reify.Mapping.Translation
                 _ctx = ctx;
                 _fnTransform = fnTransform;
             }
-
-            protected override Expression RewriteSingle(Expression exSource) {
+            
+            public override Expression Rewrite(Expression exSource) {
                 return exSource;
             }
             
-            protected override TDest TransformSingle(TOrig source) {
-                return _fnTransform(source);
+            protected override TDest Transform(TOrig fetched) {
+                return _fnTransform(fetched);
             }
+
         }
 
 

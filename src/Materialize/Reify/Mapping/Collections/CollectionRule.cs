@@ -24,28 +24,10 @@ namespace Materialize.Reify.Mapping.Collections
             var tOrig = ctx.TypeVector.SourceType;
             var tDest = ctx.TypeVector.DestType;
             
-            //NEED TO ENSURE DESTINATION TYPE IS CREATABLE ENUMERABLE
-            //ie test is array, list, etc. Need to test against hash prob.
-            //otherwise we will come a cropper
-
             if(tOrig.IsEnumerable()) {
                 var collFactory = _collFactorySource.GetFactory(tDest);
                 if(collFactory == null) return null;
                 
-
-
-
-            }
-
-
-
-
-            if(tOrig.IsEnumerable() && tDest.IsEnumerable()) 
-            {
-
-
-
-
                 var tOrigElem = tOrig.GetEnumerableElementType();
                 var tDestElem = tDest.GetEnumerableElementType();
                 
@@ -53,20 +35,26 @@ namespace Materialize.Reify.Mapping.Collections
                                                         ctx.QueryRegime, 
                                                         tOrigElem, 
                                                         tDestElem);
+
                 if(elemStrategy != null) {
-                    //now branch out to cater for different collection types
-                    //for each handler, see if emitted collection type would fit destination
+                    if(elemStrategy.RewritesExpression) {
+                        var tMedElem = elemStrategy.FetchedType;
 
-                    //try list first
-                    //then array
-                    //then collection
-
-                    //return base.CreateStrategy(
-                    //                    typeof(DirectStrategy<,>),
-                    //                    ctx.TypeVector,
-                    //                    ctx);
-
-                    throw new NotImplementedException();
+                        return base.CreateStrategy(
+                                            typeof(CollectionStrategy<,,,>)
+                                                .MakeGenericType(tOrigElem, tMedElem, tDestElem, tDest),
+                                            ctx,
+                                            collFactory,
+                                            elemStrategy);
+                    }
+                    else {
+                        return base.CreateStrategy(
+                                            typeof(DirectCollectionStrategy<,,>)
+                                                .MakeGenericType(tOrigElem, tDestElem, tDest),
+                                            ctx,
+                                            collFactory,
+                                            elemStrategy);
+                    }                    
                 }
             }
 

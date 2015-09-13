@@ -36,7 +36,7 @@ namespace Materialize.Reify.Mapping.PropertyMaps
                     var propMapSpecs = CreatePropMapSpecs(ctx, typeMap.GetPropertyMaps())
                                                     .ToArray();
                                 
-                    if(propMapSpecs.Any(s => s.Strategy.UsesIntermediateType)) {
+                    if(propMapSpecs.Any(s => s.Strategy.FetchesToTuple)) {
                         return base.CreateStrategy(
                                         typeof(MediatedPropMapStrategy<,>),
                                         ctx.TypeVector,
