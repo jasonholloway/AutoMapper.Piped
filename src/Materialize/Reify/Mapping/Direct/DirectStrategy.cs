@@ -7,7 +7,7 @@ namespace Materialize.Reify.Mapping.Direct
 {
     class DirectStrategy<TOrig, TDest>
         : StrategyBase<TOrig, TDest>
-        where TDest : TOrig
+        where TOrig : TDest
     {
         MapContext _ctx;
 

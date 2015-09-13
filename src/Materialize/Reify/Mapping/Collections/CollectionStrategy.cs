@@ -39,13 +39,14 @@ namespace Materialize.Reify.Mapping.Collections
 
         class Mapper : MapperModifier<IEnumerable<TOrigElem>, IEnumerable<TMedElem>, TDest>
         {
+            static MethodInfo _mQueryableSelect = Refl.GetMethod(() => Queryable.Select(null, (Expression<Func<TOrigElem, TMedElem>>)null));
+            static MethodInfo _mEnumerableSelect = Refl.GetMethod(() => Enumerable.Select(null, (Func<TOrigElem, TMedElem>)null));
+            
+
             CollectionFactory _collFactory;
             IMapStrategy _elemStrategy;
             IModifier _elemModifier;
-
-            static MethodInfo _mQueryableSelect = Refl.GetMethod(() => Queryable.Select(null, (Expression<Func<TOrigElem, TMedElem>>)null));
-            static MethodInfo _mEnumerableSelect = Refl.GetMethod(() => Enumerable.Select(null, (Func<TOrigElem, TMedElem>)null));
-
+            
             public Mapper(
                 CollectionFactory collFactory, 
                 IMapStrategy elemStrategy) 
@@ -54,6 +55,7 @@ namespace Materialize.Reify.Mapping.Collections
                 _elemStrategy = elemStrategy;
                 _elemModifier = elemStrategy.CreateModifier();
             }
+
 
             public override Expression Rewrite(Expression exQuery) 
             {
