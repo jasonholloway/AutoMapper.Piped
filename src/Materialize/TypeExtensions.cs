@@ -12,6 +12,11 @@ namespace Materialize
         public static bool IsEnumerable(this Type @this) {
             return @this.IsArray || typeof(IEnumerable).IsAssignableFrom(@this);
         }
+
+        public static bool IsQueryable(this Type @this) {
+            return typeof(IQueryable).IsAssignableFrom(@this);
+        }
+
         
         public static Type GetEnumerableElementType(this Type @this) 
         {            

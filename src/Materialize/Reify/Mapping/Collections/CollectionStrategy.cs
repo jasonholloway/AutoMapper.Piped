@@ -43,7 +43,8 @@ namespace Materialize.Reify.Mapping.Collections
             IMapStrategy _elemStrategy;
             IModifier _elemModifier;
 
-            static MethodInfo _mSelect = Refl.GetMethod(() => Queryable.Select(null, (Expression<Func<TOrigElem, TMedElem>>)null));
+            static MethodInfo _mQueryableSelect = Refl.GetMethod(() => Queryable.Select(null, (Expression<Func<TOrigElem, TMedElem>>)null));
+            static MethodInfo _mEnumerableSelect = Refl.GetMethod(() => Enumerable.Select(null, (Func<TOrigElem, TMedElem>)null));
 
             public Mapper(
                 CollectionFactory collFactory, 
@@ -60,7 +61,9 @@ namespace Materialize.Reify.Mapping.Collections
                 var exLambdaBody = _elemModifier.Rewrite(exInParam);
                 
                 return Expression.Call(
-                                    _mSelect,
+                                    exQuery.Type.IsQueryable()
+                                        ? _mQueryableSelect
+                                        : _mEnumerableSelect,
                                     exQuery,
                                     Expression.Lambda(
                                                 typeof(Func<TOrigElem, TMedElem>),
