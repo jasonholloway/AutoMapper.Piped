@@ -13,6 +13,8 @@ namespace Materialize.Tests
 {    
     class MaterializationCollectionTests : TestClassBase
     {
+        //All a question of making appropriate CollectionFactories available
+
         [Fact]
         public void MapsToIEnumerable() {
             MapsToCollection<IEnumerable<DogModel>>();
@@ -53,6 +55,16 @@ namespace Materialize.Tests
             MapsToCollection<ICollection>();
         }
 
+        [Fact]
+        public void MapsToISet() {
+            MapsToCollection<ISet<DogModel>>();
+        }
+
+        [Fact]
+        public void MapsToHashSet() {
+            MapsToCollection<HashSet<DogModel>>();
+        }
+        
 
 
         void MapsToCollection<TColl>()
@@ -67,10 +79,10 @@ namespace Materialize.Tests
 
             var people = Data.People.AsQueryable();
 
-            var personModels = people.MaterializeAs<DogOwnerModel<TColl>>()
+            var ownerModels = people.MaterializeAs<DogOwnerModel<TColl>>()
                                 .ToArray();
 
-            personModels.SelectMany(p => p.Dogs.Cast<DogModel>().Select(d => d.Name))
+            ownerModels.SelectMany(p => p.Dogs.Cast<DogModel>().Select(d => d.Name))
                 .SequenceEqual(people.SelectMany(p => p.Dogs.Select(d => d.Name)))
                 .ShouldBeTrue();
         }
