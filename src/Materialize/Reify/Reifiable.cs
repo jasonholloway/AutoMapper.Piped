@@ -1,4 +1,5 @@
 ﻿using Materialize.Reify.Mapping;
+using Materialize.Reify.Parsing;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -64,6 +65,7 @@ namespace Materialize.Reify
                                                         .GetProperty("BaseReifyQuery");
 
         Lazy<IMapStrategy> _lzMapStrategy;
+        IParseStrategySource _parseStrategySource;
 
         public IQueryable<TSource> SourceQuery { get; private set; }
         public IQueryable<TDest> BaseReifyQuery { get; private set; }
@@ -71,7 +73,8 @@ namespace Materialize.Reify
 
         public Reifiable(
             IQueryable<TSource> sourceQuery, 
-            Func<IMapStrategy> fnMapStrategy) 
+            Func<IMapStrategy> fnMapStrategy,
+            IParseStrategySource parseStrategySource) 
         {
             SourceQuery = sourceQuery;
 
@@ -82,6 +85,8 @@ namespace Materialize.Reify
                                     );
 
             _lzMapStrategy = new Lazy<IMapStrategy>(fnMapStrategy);
+
+            _parseStrategySource = parseStrategySource;
         }
         
 
@@ -103,9 +108,10 @@ namespace Materialize.Reify
             //parser creates modifier stack based on passed ReifyQuery expression
             //the core of the stack is provided by the selected mapping strategy
             //and only amended by the query parser
-            var parser = new ReifyQueryParser(
+            var parser = new ReifyQueryParser2(
                                     BaseReifyQuery.Expression,
-                                    _lzMapStrategy.Value.CreateModifier());
+                                    _lzMapStrategy.Value.CreateModifier(),
+                                    _parseStrategySource);
 
             var modifierStack = parser.Parse(exReifyQuery);
                                                             
@@ -120,12 +126,16 @@ namespace Materialize.Reify
                 OnQueried(query);
 
                 var enFetched = (IEnumerable)query;
+
                 OnFetched(enFetched);
 
-                var enTransformed = (IEnumerable)modifierStack.Transform(enFetched);
-                OnTransformed(enTransformed);
+                var transformed = modifierStack.Transform(enFetched);
+                
+                OnTransformed(transformed is IEnumerable
+                                    ? (IEnumerable)transformed
+                                    : new[] { transformed });
 
-                return (TResult)enTransformed;
+                return (TResult)transformed;
             }
             else {
                 var fetched = SourceQuery.Provider.Execute(exQuery);

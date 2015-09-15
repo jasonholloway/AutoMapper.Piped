@@ -227,5 +227,56 @@ namespace Materialize.Tests
             throw new NotImplementedException();
         }
 
+
+        [Fact]
+        public void Where() {
+            InitServices(x => x.EmplaceIntolerantSourceRegime());
+
+            InitMapper(x => {
+                x.CreateMap<int, float>()
+                    .ProjectUsing(i => 2F * i);
+            });
+
+            int fetchedItemsCount = 0;
+
+            var ints = Enumerable.Range(0, 100).AsQueryable();
+
+            var materializable = ints.MaterializeAs<float>()
+                                        .SnoopOnFetched(items => fetchedItemsCount += items.Count());
+
+            var taken = materializable
+                            .Where(f => f > 100F)
+                            .ToArray();
+
+            taken.Length.ShouldEqual(49);
+            taken.SequenceEqual(ints.Skip(51).Select(i => 2F * i)).ShouldBeTrue();
+        }
+
+        [Fact]
+        public void WhereFirst() {
+            InitServices(x => x.EmplaceIntolerantSourceRegime());
+
+            InitMapper(x => {
+                x.CreateMap<int, float>()
+                    .ProjectUsing(i => 2F * i);
+            });
+
+            int fetchedItemsCount = 0;
+
+            var ints = Enumerable.Range(0, 100).AsQueryable();
+
+            var materializable = ints.MaterializeAs<float>()
+                                        .SnoopOnFetched(items => fetchedItemsCount += items.Count());
+
+            var taken = materializable
+                            .Where(f => f > 100F)
+                            .First();
+
+            taken.ShouldEqual(102F);
+        }
+
+
+
+
     }
 }

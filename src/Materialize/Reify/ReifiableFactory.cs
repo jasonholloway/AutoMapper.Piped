@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Materialize.SourceRegimes;
 using Materialize.Reify.Mapping;
+using Materialize.Reify.Parsing;
 
 namespace Materialize.Reify
 {
@@ -10,14 +11,17 @@ namespace Materialize.Reify
     {
         ISourceRegimeDetector _regimeDetector;
         IMapStrategySource _mapStrategySource;
+        IParseStrategySource _parseStrategySource;
 
 
         public ReifiableFactory(
             ISourceRegimeDetector regimeDetector,
-            IMapStrategySource mapStrategySource) 
+            IMapStrategySource mapStrategySource,
+            IParseStrategySource parseStrategySource) 
         {
             _regimeDetector = regimeDetector;
             _mapStrategySource = mapStrategySource;
+            _parseStrategySource = parseStrategySource;
         }
 
 
@@ -40,7 +44,8 @@ namespace Materialize.Reify
                                                     typeof(Reifiable<,>)
                                                                 .MakeGenericType(tOrigElem, tDestElem),
                                                     qySource,
-                                                    fnMapStrategy);
+                                                    fnMapStrategy,
+                                                    _parseStrategySource);
         }
 
     }

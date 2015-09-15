@@ -2,7 +2,7 @@
 
 namespace Materialize.Reify.Mapping
 {
-    abstract class StrategyBase<TOrig, TDest>
+    abstract class StrategyBase<TOrig, TDest> 
         : IMapStrategy
     {
         public Type SourceType {

@@ -61,5 +61,16 @@ namespace Materialize
             return new Materializable<TDest>(queryable.Skip(count));
         }
 
+
+        public static IMaterializable<TDest> Where<TDest>(
+            this IMaterializable<TDest> @this, 
+            Expression<Func<TDest, bool>> predicate) 
+        {
+            var queryable = ((Materializable<TDest>)@this).AsQueryable();
+            return new Materializable<TDest>(queryable.Where(predicate));
+        }
+
+
+
     }
 }

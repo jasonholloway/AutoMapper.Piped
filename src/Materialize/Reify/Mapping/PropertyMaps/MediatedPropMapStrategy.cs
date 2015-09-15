@@ -63,8 +63,9 @@ namespace Materialize.Reify.Mapping.PropertyMaps
                                         _memberSpecs.Select(m => Expression.Bind(
                                                                         m.ProjectedField,
                                                                         m.Mapper.Rewrite(
-                                                                                    Expression.MakeMemberAccess(exSource, m.PropertyMap.SourceMember))
-                                                                        )).ToArray());
+                                                                            Expression.MakeMemberAccess(exSource, m.PropertyMap.SourceMember))
+                                                                        )
+                                                            ).ToArray());
             }
                         
             protected override TDest Transform(TMed obj) 

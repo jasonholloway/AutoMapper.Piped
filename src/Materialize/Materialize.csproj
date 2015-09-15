@@ -36,6 +36,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CollectionFactories\CollectionFactorySource.cs" />
@@ -52,9 +53,25 @@
     <Compile Include="Reify\Mapping\Collections\DirectCollectionStrategy.cs" />
     <Compile Include="Reify\Mapping\IMapRuleRegistry.cs" />
     <Compile Include="Reify\Mapping\IMapStrategySource.cs" />
+    <Compile Include="Reify\Mapping\MapRuleBase.cs" />
     <Compile Include="Reify\Mapping\MapRuleRegistry.cs" />
+    <Compile Include="Reify\Modifiers\WhereModifier.cs" />
     <Compile Include="Reify\Modifiers\UnaryModifier.cs" />
+    <Compile Include="Reify\Parsing\IParseStrategySource.cs" />
+    <Compile Include="Reify\Parsing\IParseRuleRegistry.cs" />
+    <Compile Include="Reify\Parsing\IParseRule.cs" />
+    <Compile Include="Reify\Parsing\IParseStrategy.cs" />
+    <Compile Include="Reify\Parsing\ParserModifier.cs" />
+    <Compile Include="Reify\Parsing\ParseRuleBase.cs" />
+    <Compile Include="Reify\Parsing\ParseStrategy.cs" />
+    <Compile Include="Reify\Parsing\ParseStrategySource.cs" />
+    <Compile Include="Reify\Parsing\ParseRuleRegistry.cs" />
+    <Compile Include="Reify\Parsing\ParseContext.cs" />
+    <Compile Include="Reify\Parsing\Unaries\FirstOrDefaultStrategy.cs" />
+    <Compile Include="Reify\Parsing\Unaries\UnaryRule.cs" />
+    <Compile Include="Reify\Parsing\Unaries\FirstStrategy.cs" />
     <Compile Include="Reify\ReifiableFactory.cs" />
+    <Compile Include="Reify\ReifyQueryParser2.cs" />
     <Compile Include="Reify\ReifyQueryParser.cs" />
     <Compile Include="Dependencies\IServiceRegistry.cs" />
     <Compile Include="Dependencies\ServiceRegistry.cs" />

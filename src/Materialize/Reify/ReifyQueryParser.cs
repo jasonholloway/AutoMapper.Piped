@@ -1,5 +1,7 @@
 ﻿using Materialize.Reify.Modifiers;
+using Materialize.Reify.Parsing;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -116,7 +118,19 @@ namespace Materialize.Reify
                                                             ex.Arguments[1])
                                     );
                 });
-            
+
+
+
+            var mWhere = Refl.GetGenericMethodDef(() => Queryable.Where<int>(null, i => false));
+
+            RegisterHandlerForMethod(mWhere,
+                (p, ex) => {
+                    return WhereModifier.Create(
+                                            ex.Type.GetEnumerableElementType(),
+                                            p.Parse(ex.Arguments[0]),
+                                            ((UnaryExpression)ex.Arguments[1]).Operand);
+                });
+
         }
 
 
