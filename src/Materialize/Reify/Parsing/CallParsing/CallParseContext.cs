@@ -12,8 +12,9 @@ namespace Materialize.Reify.Parsing.CallParsing
         public readonly MethodInfo Method;
         public readonly MethodInfo MethodDef;
         public readonly Type[] ArgTypes;
+        public readonly bool FilterOnClient;
         
-        public CallParseContext(MethodInfo method) {
+        public CallParseContext(MethodInfo method, bool filterOnClient = false) {
             Method = method;
             
             if(method.IsGenericMethod) {
@@ -24,6 +25,8 @@ namespace Materialize.Reify.Parsing.CallParsing
                 MethodDef = null;
                 ArgTypes = Type.EmptyTypes;
             }
+
+            FilterOnClient = filterOnClient;
         }
     }
 
@@ -32,14 +35,15 @@ namespace Materialize.Reify.Parsing.CallParsing
         : IEqualityComparer<CallParseContext>
     {
         public static readonly ParseContextEqualityComparer Default = new ParseContextEqualityComparer();
-        static TypeVectorEqualityComparer _vectorComparer = TypeVectorEqualityComparer.Default;
 
         public bool Equals(CallParseContext x, CallParseContext y) {
-            return x.Method == y.Method;
+            return x.Method == y.Method 
+                    && x.FilterOnClient == y.FilterOnClient;
         }
 
         public int GetHashCode(CallParseContext obj) {
-            return obj.Method.GetHashCode();
+            return obj.Method.GetHashCode() 
+                    ^ obj.FilterOnClient.GetHashCode();
         }
     }
 

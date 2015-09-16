@@ -9,6 +9,12 @@ namespace Materialize.Reify.Parsing.CallParsing.Where
     class ClientOnlyWhereStrategy<TElem> 
         : QueryableCallParseStrategy
     {
+        
+        public override bool FiltersFetchedSet {
+            get { return true; }
+        }
+
+
         protected override IModifier Parse(IModifier upstreamMod, MethodCallExpression exSubject) 
         {
             var exPredicate = (Expression<Func<TElem, bool>>)((UnaryExpression)exSubject.Arguments[1]).Operand;

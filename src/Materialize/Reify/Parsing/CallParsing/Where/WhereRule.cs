@@ -16,23 +16,14 @@ namespace Materialize.Reify.Parsing.CallParsing.Where
             {                
                 var tElem = ctx.ArgTypes.First();
                 
-                //Need to get the parsed exp in from somehwere - yet can't key on this, annoyingly.
-                //Can only key on the method, and on certain downstream flags.
+                //if we do any filtering client-side, then unary functions can't be passed onto server:
+                //strategies must register the fact that the set extent only gets finalized client-side.
+                //How to pass it? Has to be via the parser... Or rather, the parser is the active party.
 
-                //Rules concern what can be keyed upon, and emplace strategies to suit this. These
-                //strategies then create modifiers based on what they parse. This really is a different
-                //strategy set-up.
+                //Strategies should just expose a property, to be picked up and remembered by the parser.
 
-                //If each strategy does the parsing... then they will become fixed in brittle hierarchies.
-
-                //For the sake of strategy re-use and simple keying (specialising in this even), the strategies
-                //cooperate with a runner: ReifyQueryParser.
-
-                //This does mean though that strategies will do more than now: they will take the top layer
-                //of the incoming query expression, and return a suitable modifier.
-
-
-
+                
+                                
                 return base.CreateStrategy(
                                 typeof(ClientOnlyWhereStrategy<>).MakeGenericType(tElem));
             }

@@ -9,8 +9,15 @@ namespace Materialize.Reify.Parsing.CallParsing
     abstract class QueryableCallParseStrategy
         : ICallParseStrategy
     {
+        public virtual bool FiltersFetchedSet {
+            get { return false; }
+        }
+
         protected abstract IModifier Parse(IModifier upstreamMod, MethodCallExpression exSubject);
         
+
+
+
 
         CallParser ICallParseStrategy.CreateCallParser(Parser parser) {
             return (ex) => {
