@@ -1,5 +1,6 @@
 ﻿using Materialize.Reify.Mapping;
 using Materialize.Reify.Parsing;
+using Materialize.Reify.Parsing.CallParsing;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -65,7 +66,7 @@ namespace Materialize.Reify
                                                         .GetProperty("BaseReifyQuery");
 
         Lazy<IMapStrategy> _lzMapStrategy;
-        IParseStrategySource _parseStrategySource;
+        ICallParserProvider _callParsers;
 
         public IQueryable<TSource> SourceQuery { get; private set; }
         public IQueryable<TDest> BaseReifyQuery { get; private set; }
@@ -74,7 +75,7 @@ namespace Materialize.Reify
         public Reifiable(
             IQueryable<TSource> sourceQuery, 
             Func<IMapStrategy> fnMapStrategy,
-            IParseStrategySource parseStrategySource) 
+            ICallParserProvider callParsers) 
         {
             SourceQuery = sourceQuery;
 
@@ -86,7 +87,7 @@ namespace Materialize.Reify
 
             _lzMapStrategy = new Lazy<IMapStrategy>(fnMapStrategy);
 
-            _parseStrategySource = parseStrategySource;
+            _callParsers = callParsers;
         }
         
 
@@ -104,14 +105,16 @@ namespace Materialize.Reify
 
 
         public override TResult Execute<TResult>(Expression exReifyQuery) 
-        {            
+        {
             //parser creates modifier stack based on passed ReifyQuery expression
             //the core of the stack is provided by the selected mapping strategy
             //and only amended by the query parser
-            var parser = new ReifyQueryParser2(
-                                    BaseReifyQuery.Expression,
-                                    _lzMapStrategy.Value.CreateModifier(),
-                                    _parseStrategySource);
+            var mapperModifier = _lzMapStrategy.Value.CreateModifier();
+
+            var parser = new Parser(
+                                BaseReifyQuery.Expression,
+                                mapperModifier, //the modifier stack created by the mapper is fed in as base to the parser
+                                _callParsers);
 
             var modifierStack = parser.Parse(exReifyQuery);
                                                             

@@ -5,15 +5,15 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Materialize.Reify.Parsing
+namespace Materialize.Reify.Parsing.CallParsing
 {
-    struct ParseContext
+    struct CallParseContext
     {
         public readonly MethodInfo Method;
         public readonly MethodInfo MethodDef;
         public readonly Type[] ArgTypes;
         
-        public ParseContext(MethodInfo method) {
+        public CallParseContext(MethodInfo method) {
             Method = method;
             
             if(method.IsGenericMethod) {
@@ -29,16 +29,16 @@ namespace Materialize.Reify.Parsing
 
 
     class ParseContextEqualityComparer
-        : IEqualityComparer<ParseContext>
+        : IEqualityComparer<CallParseContext>
     {
         public static readonly ParseContextEqualityComparer Default = new ParseContextEqualityComparer();
         static TypeVectorEqualityComparer _vectorComparer = TypeVectorEqualityComparer.Default;
 
-        public bool Equals(ParseContext x, ParseContext y) {
+        public bool Equals(CallParseContext x, CallParseContext y) {
             return x.Method == y.Method;
         }
 
-        public int GetHashCode(ParseContext obj) {
+        public int GetHashCode(CallParseContext obj) {
             return obj.Method.GetHashCode();
         }
     }

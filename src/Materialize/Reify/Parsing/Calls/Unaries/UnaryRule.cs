@@ -5,25 +5,25 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Materialize.Reify.Parsing.Unaries
+namespace Materialize.Reify.Parsing.CallParsing.Unaries
 {
-    class UnaryRule : ParseRuleBase
+    class UnaryRule : CallParseRule
     {
         static IDictionary<MethodInfo, Type> _dStrategies
             = new Dictionary<MethodInfo, Type>() {
                 {
                     Refl.GetGenericMethodDef(() => Queryable.First<int>(null)),
-                    typeof(FirstStrategy<>)
+                    typeof(FirstParser<>)
                 },
                 {
                     Refl.GetGenericMethodDef(() => Queryable.FirstOrDefault<int>(null)),
-                    typeof(FirstOrDefaultStrategy<>)
+                    typeof(FirstOrDefaultParser<>)
                 },
             };
         
                        
         
-        public override IParseStrategy DeduceStrategy(ParseContext ctx) 
+        public override CallParserFactory GetParserFactory(CallParseContext ctx) 
         {
             if(ctx.MethodDef != null && ctx.ArgTypes.Length == 1) 
             {
@@ -31,8 +31,8 @@ namespace Materialize.Reify.Parsing.Unaries
 
                 if(_dStrategies.TryGetValue(ctx.MethodDef, out tStrategy)) {
                     var tElem = ctx.ArgTypes.First();
-                    
-                    return base.CreateStrategy(
+
+                    return base.BuildParserFactory(
                                         tStrategy.MakeGenericType(tElem));
                 }
             }

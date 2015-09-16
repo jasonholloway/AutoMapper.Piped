@@ -26,7 +26,7 @@ namespace Materialize.Reify.Parsing
     //could just expose properties that could be fed back into subsequent contexts by the parser.
     
 
-    abstract class ParserModifier<TIn, TOut> : IModifier
+    abstract class ParserModifier<TUpstream, TDownstream> : IModifier
     {
         protected IModifier UpstreamMod { get; private set; }
         
@@ -37,17 +37,37 @@ namespace Materialize.Reify.Parsing
 
         protected abstract Expression Rewrite(Expression exQuery);
 
-        protected abstract TOut Transform(TIn fetched);
+        protected abstract TDownstream Transform(object fetched);
+
+
+        protected Expression UpstreamRewrite(Expression exQuery) {
+            return UpstreamMod.Rewrite(exQuery);
+        }
+
+        protected TUpstream UpstreamTransform(object fetched) {
+            return (TUpstream)UpstreamMod.Transform(fetched);
+        }
+
+
+
+        //transform has two stages really: in and return. Inbetween is the delegation upstream.
+        //Both stages have their unique typings, which should be enforced. Are these always knowable by the strategy/rule?
+
+        //types:
+        //  > In from above, to transform
+        //  > Sent on downwards
+        //  > Received upwards
+        //  > Returned upwards      : That's four separate types! I suppose we must always know what these types are to be, as we have to work with them...
+        //
+        //
 
 
         Expression IModifier.Rewrite(Expression exQuery) {
-            var ex = UpstreamMod.Rewrite(exQuery);
-            return Rewrite(ex);
+            return Rewrite(exQuery);
         }    
         
         object IModifier.Transform(object fetched) {
-            var upstream = UpstreamMod.Transform(fetched);            
-            return Transform((TIn)upstream);
+            return Transform(fetched);            
         }        
     }
 }

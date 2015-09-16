@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Materialize.Reify.Parsing
+namespace Materialize.Reify.Parsing.CallParsing
 {
     //Unlike MapStrategies, which form quasi-static hierarchies,
     //ParseStrategies are more loosely assembled
@@ -13,8 +14,8 @@ namespace Materialize.Reify.Parsing
 
 
 
-    interface IParseStrategy
+    interface ICallParser
     {
-        IModifier CreateModifier(IModifier upstreamMod);
+        IModifier Parse(MethodCallExpression exSubject);
     }
 }
