@@ -13,17 +13,17 @@ namespace Materialize.Reify.Parsing.CallParsing.Unaries
             = new Dictionary<MethodInfo, Type>() {
                 {
                     Refl.GetGenericMethodDef(() => Queryable.First<int>(null)),
-                    typeof(FirstParser<>)
+                    typeof(FirstStrategy<>)
                 },
                 {
                     Refl.GetGenericMethodDef(() => Queryable.FirstOrDefault<int>(null)),
-                    typeof(FirstOrDefaultParser<>)
+                    typeof(FirstOrDefaultStrategy<>)
                 },
             };
         
                        
         
-        public override CallParserFactory GetParserFactory(CallParseContext ctx) 
+        public override ICallParseStrategy GetStrategy(CallParseContext ctx) 
         {
             if(ctx.MethodDef != null && ctx.ArgTypes.Length == 1) 
             {
@@ -32,8 +32,8 @@ namespace Materialize.Reify.Parsing.CallParsing.Unaries
                 if(_dStrategies.TryGetValue(ctx.MethodDef, out tStrategy)) {
                     var tElem = ctx.ArgTypes.First();
 
-                    return base.BuildParserFactory(
-                                        tStrategy.MakeGenericType(tElem));
+                    return base.CreateStrategy(
+                                    tStrategy.MakeGenericType(tElem));
                 }
             }
 

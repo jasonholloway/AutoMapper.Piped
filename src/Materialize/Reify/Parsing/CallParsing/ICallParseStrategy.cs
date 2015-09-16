@@ -13,9 +13,11 @@ namespace Materialize.Reify.Parsing.CallParsing
     //Each incoming query is read clause by clause
 
 
+    delegate IModifier CallParser(MethodCallExpression exCall);
 
-    interface ICallParser
+
+    interface ICallParseStrategy
     {
-        IModifier Parse(MethodCallExpression exSubject);
+        CallParser CreateCallParser(Parser parser);
     }
 }

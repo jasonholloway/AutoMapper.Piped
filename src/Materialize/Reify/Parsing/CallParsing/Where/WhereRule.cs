@@ -2,19 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Materialize.Reify.Parsing.CallParsing.Where
 {
     class WhereRule : CallParseRule
     {
-        static MethodInfo _mWhere = Refl.GetGenericMethodDef(() => Queryable.Where<int>(null, i => true));
+        static MethodInfo _mWhereGen = Refl.GetGenericMethodDef(() => Queryable.Where<int>(null, i => true));
 
 
-        public override CallParserFactory GetParserFactory(CallParseContext ctx) 
+        public override ICallParseStrategy GetStrategy(CallParseContext ctx) 
         {
-            if(ctx.MethodDef == _mWhere)
+            if(ctx.MethodDef == _mWhereGen)
             {                
                 var tElem = ctx.ArgTypes.First();
                 
@@ -35,8 +33,8 @@ namespace Materialize.Reify.Parsing.CallParsing.Where
 
 
 
-                return base.BuildParserFactory(
-                                typeof(ClientWhereParser<>).MakeGenericType(tElem));
+                return base.CreateStrategy(
+                                typeof(ClientOnlyWhereStrategy<>).MakeGenericType(tElem));
             }
 
             return null;

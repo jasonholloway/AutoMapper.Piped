@@ -3,8 +3,8 @@ using System;
 
 namespace Materialize.Reify.Parsing.CallParsing
 {
-    internal interface ICallParserProvider
+    internal interface ICallParseStrategySource
     {
-        ICallParser GetParser(Parser parser, CallParseContext ctx);
+        ICallParseStrategy GetStrategy(CallParseContext ctx);
     }
 }

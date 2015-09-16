@@ -20,16 +20,16 @@ namespace Materialize.Reify.Parsing
     {
         Expression _baseExp;
         IModifier _baseModifier;
-        ICallParserProvider _callParsers;
+        ICallParseStrategySource _callParseStrategies;
 
         public Parser(
             Expression baseExp, 
             IModifier baseModifier,
-            ICallParserProvider callParsers) 
+            ICallParseStrategySource callParseStrategies) 
         {
             _baseExp = baseExp;
             _baseModifier = baseModifier;
-            _callParsers = callParsers;
+            _callParseStrategies = callParseStrategies;
         }
                 
 
@@ -53,11 +53,16 @@ namespace Materialize.Reify.Parsing
         {
             //certain flags need to be tracked, based on characteristics of resolved strategies
             
+            //how to pass these between strategies? Parser could accumulate info, though this seems naff.
+            //Seems best way, however.
+
             var parseContext = new CallParseContext(exCall.Method);
 
-            var callParser = _callParsers.GetParser(this, parseContext);
+            var callParseStrategy = _callParseStrategies.GetStrategy(parseContext);
+
+            var callParser = callParseStrategy.CreateCallParser(this);
             
-            var modifier = callParser.Parse(exCall);
+            var modifier = callParser(exCall);
 
             return modifier;
         }

@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace Materialize.Reify.Parsing.CallParsing
 {
-    delegate ICallParser CallParserFactory(Parser parser);
-
     interface ICallParseRule
     {
-        CallParserFactory GetParserFactory(CallParseContext ctx);
+        ICallParseStrategy GetStrategy(CallParseContext ctx);
     }
 }

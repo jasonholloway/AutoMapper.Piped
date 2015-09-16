@@ -12,13 +12,13 @@ namespace Materialize.Reify
     {
         ISourceRegimeDetector _regimeDetector;
         IMapStrategySource _mapStrategySource;
-        ICallParserProvider _callParsers;
+        ICallParseStrategySource _callParsers;
 
 
         public ReifiableFactory(
             ISourceRegimeDetector regimeDetector,
             IMapStrategySource mapStrategySource,
-            ICallParserProvider callParsers) 
+            ICallParseStrategySource callParsers) 
         {
             _regimeDetector = regimeDetector;
             _mapStrategySource = mapStrategySource;

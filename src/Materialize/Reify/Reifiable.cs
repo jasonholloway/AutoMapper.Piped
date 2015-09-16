@@ -66,7 +66,7 @@ namespace Materialize.Reify
                                                         .GetProperty("BaseReifyQuery");
 
         Lazy<IMapStrategy> _lzMapStrategy;
-        ICallParserProvider _callParsers;
+        ICallParseStrategySource _callParsers;
 
         public IQueryable<TSource> SourceQuery { get; private set; }
         public IQueryable<TDest> BaseReifyQuery { get; private set; }
@@ -75,7 +75,7 @@ namespace Materialize.Reify
         public Reifiable(
             IQueryable<TSource> sourceQuery, 
             Func<IMapStrategy> fnMapStrategy,
-            ICallParserProvider callParsers) 
+            ICallParseStrategySource callParsers) 
         {
             SourceQuery = sourceQuery;
 
