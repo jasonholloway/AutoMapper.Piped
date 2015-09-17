@@ -64,6 +64,8 @@
     <Compile Include="Reify\Parsing\ParserFactory.cs" />
     <Compile Include="Reify\Parsing\ParseRuleRegistry.cs" />
     <Compile Include="Reify\Parsing\Parser.cs" />
+    <Compile Include="Reify\Parsing\Limiters\ServerSideLimiterStrategy.cs" />
+    <Compile Include="Reify\Parsing\Limiters\LimiterRule.cs" />
     <Compile Include="Reify\Parsing\QueryableMethodRule.cs" />
     <Compile Include="Reify\Parsing\Unaries\FirstOrDefaultStrategy.cs" />
     <Compile Include="Reify\Parsing\ParseModifier.cs" />
