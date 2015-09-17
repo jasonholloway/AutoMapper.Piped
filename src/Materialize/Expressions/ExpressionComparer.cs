@@ -1,6 +1,7 @@
 ﻿// Adapted from: https://gist.github.com/jnm2/83b36ad497b4cb1cbcac
 // Not fully tested, like - but looks good.
 
+using Materialize.Expressions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -340,13 +341,9 @@ abstract class ExpressionComparer : IEqualityComparer<Expression>
         }
     }
 
-    public int GetHashCode(Expression obj) {
-        // Better to put everything in one bin than to let the default reference-based GetHashCode cause a false negative.
-
-        //This should be implemented via a visitor
-        //...
-
-        return 0;
+    public int GetHashCode(Expression obj) {                
+        var hasher = new ExpressionHasher(obj);
+        return hasher.HashCode;
     }
 }
 

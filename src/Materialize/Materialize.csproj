@@ -42,8 +42,10 @@
     <Compile Include="CollectionFactories\CollectionFactorySource.cs" />
     <Compile Include="CollectionFactories\ICollectionFactorySource.cs" />
     <Compile Include="ExpressionExtensions.cs" />
+    <Compile Include="Expressions\ExpressionHasher.cs" />
     <Compile Include="Expressions\QueryExpressionComparer.cs" />
     <Compile Include="Expressions\ExpressionComparer.cs" />
+    <Compile Include="Expressions\VoidExpressionVisitor.cs" />
     <Compile Include="IMaterializable.cs" />
     <Compile Include="Dependencies\LightInject\LightInject.cs" />
     <Compile Include="Materializable.cs" />
