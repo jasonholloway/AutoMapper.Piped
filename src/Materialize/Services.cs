@@ -52,7 +52,7 @@ namespace Materialize
             x.Register<IMapStrategySource, MapStrategySource>();
             x.Register<IProjectedTypeBuilder, ProjectedTypeBuilder>();
             x.Register<ICollectionFactorySource, CollectionFactorySource>();
-            x.Register<ICallParseStrategySource, CallParserStrategySource>();
+            x.Register<ICallParseStrategySource, ParseStrategySource>();
             x.Register<ReifiableFactory>();
         }        
     }

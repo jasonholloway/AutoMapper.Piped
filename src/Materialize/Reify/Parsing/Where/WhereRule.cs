@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Materialize.Reify.Parsing.CallParsing.Where
+namespace Materialize.Reify.Parsing.Where
 {
-    class WhereRule : CallParseRule
+    class WhereRule : ParseRule
     {
         static MethodInfo _mWhereGen = Refl.GetGenericMethodDef(() => Queryable.Where<int>(null, i => true));
 
 
-        public override ICallParseStrategy GetStrategy(CallParseContext ctx) 
+        public override IParseStrategy GetStrategy(ParseContext ctx) 
         {
             if(ctx.MethodDef == _mWhereGen)
             {                
-                var tElem = ctx.ArgTypes.First();
+                var tElem = ctx.TypeArgs.First();
                 
                 //if we do any filtering client-side, then unary functions can't be passed onto server:
                 //strategies must register the fact that the set extent only gets finalized client-side.

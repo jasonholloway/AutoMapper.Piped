@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Materialize.Reify.Parsing.CallParsing
+namespace Materialize.Reify.Parsing
 {
-    delegate IModifier CallParser(MethodCallExpression exCall);
-    
-    interface ICallParseStrategy
+    interface IParseStrategy
     {
         bool FiltersFetchedSet { get; } //affects behavioural possibilities downstream...
-
-        CallParser CreateCallParser(Parser parser);
+        IModifier Parse(Expression exSubject);
     }
 }

@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 namespace Materialize.Reify.Parsing
 {   
 
-    abstract class ParserModifier<TTransIn, TTransOut> : IModifier
+    abstract class ParseModifier<TTransIn, TTransOut> : IModifier
     {
         IModifier _upstreamMod;
                 
-        public ParserModifier(IModifier upstreamMod) {
+        public ParseModifier(IModifier upstreamMod) {
             _upstreamMod = upstreamMod;
         }
 

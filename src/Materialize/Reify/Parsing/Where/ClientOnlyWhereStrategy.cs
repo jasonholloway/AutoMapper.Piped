@@ -4,10 +4,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Materialize.Reify.Parsing.CallParsing.Where
+namespace Materialize.Reify.Parsing.Where
 {
     class ClientOnlyWhereStrategy<TElem> 
-        : QueryableCallParseStrategy
+        : QueryableMethodStrategy
     {
         
         public override bool FiltersFetchedSet {
@@ -33,7 +33,7 @@ namespace Materialize.Reify.Parsing.CallParsing.Where
         }
                        
 
-        class Modifier : ParserModifier<IEnumerable<TElem>, IEnumerable<TElem>>
+        class Modifier : ParseModifier<IEnumerable<TElem>, IEnumerable<TElem>>
         {
             Func<TElem, bool> _fnPredicate;
 
