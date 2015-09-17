@@ -11,7 +11,7 @@ namespace Materialize.Reify.Parsing
     {
         IParseRuleRegistry _ruleRegistry;
 
-        ConcurrentDictionary<ParseContext, IParseStrategy> _dParsers
+        ConcurrentDictionary<ParseContext, IParseStrategy> _dStrategies
             = new ConcurrentDictionary<ParseContext, IParseStrategy>(ParseContextEqualityComparer.Default);
                 
 
@@ -22,7 +22,7 @@ namespace Materialize.Reify.Parsing
 
 
         public IParseStrategy GetStrategy(ParseContext ctx) {
-            return _dParsers.GetOrAdd(ctx, c => DeviseParser(c));
+            return _dStrategies.GetOrAdd(ctx, c => DeviseParser(c));
         }
 
 

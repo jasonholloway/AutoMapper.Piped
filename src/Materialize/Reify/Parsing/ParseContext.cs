@@ -1,4 +1,5 @@
-﻿using Materialize.Reify.Mapping;
+﻿using Materialize.Expressions;
+using Materialize.Reify.Mapping;
 using Materialize.SourceRegimes;
 using System;
 using System.Collections.Generic;
@@ -19,12 +20,16 @@ namespace Materialize.Reify.Parsing
         //---------------------------------------------------
         //Below fields not for keying: all derived from above
 
-        public readonly Expression BaseExp;
+        public readonly Expression BaseExp; //even though variable, will never be mistaken for anything else...
 
         public readonly MethodCallExpression CallExp;
         public readonly MethodInfo Method;
         public readonly MethodInfo MethodDef;
         public readonly Type[] TypeArgs;
+                
+        public bool IsMappingBase {
+            get { return SubjectExp == BaseExp; }
+        }
 
         public ParseContext(
             Expression exSubject, 
@@ -60,22 +65,34 @@ namespace Materialize.Reify.Parsing
 
 
 
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //THIS IS FOR THE MOMENT WORSE THAN USELESS!!!!!!!!!!!!!
-    //equality on subject exps will almost always fail: need to parameterize and test via visitor
+
+
+    //There is a problem with the cache: the MappedBase is a constant, and will only 
+    //be compared by its type, which should be pretty unique in the query expression,
+    //but isn't guaranteed to be so. The fact that it's the base expression should be part of the
+    //comparison. 
+
+    //i subject is baseexp is another part of the comparison then
+
+
+
+
     class ParseContextEqualityComparer
         : IEqualityComparer<ParseContext>
     {
         public static readonly ParseContextEqualityComparer Default = new ParseContextEqualityComparer();
+
         static readonly MapContextEqualityComparer _mapContextComp = MapContextEqualityComparer.Default;
+        static readonly IEqualityComparer<Expression> _subjectExpComparer = new QueryExpressionComparer();
 
         public bool Equals(ParseContext x, ParseContext y) {
             return _mapContextComp.Equals(x.MapContext, y.MapContext)
-                    && x.SubjectExp == y.SubjectExp;                    //exp matching will be more expensive surely
+                    && x.IsMappingBase == y.IsMappingBase
+                    && _subjectExpComparer.Equals(x.SubjectExp, y.SubjectExp);
         }
 
         public int GetHashCode(ParseContext obj) {
-            return obj.SubjectExp.GetHashCode()
+            return _subjectExpComparer.GetHashCode(obj.SubjectExp)
                     ^ (_mapContextComp.GetHashCode(obj.MapContext) << 16);
         }
     }

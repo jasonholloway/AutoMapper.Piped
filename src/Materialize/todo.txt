@@ -1,6 +1,10 @@
 ﻿
 TO DO! ********************************************
 
+> ExpressionComparer to generate hashcodes for a more functional cache
+
+> Test cache behaviour...
+
 > Unary strategies must be sensitive to whether the set has been re-limited on the client:
 	different strategies needed in this case 
 
@@ -8,4 +12,3 @@ TO DO! ********************************************
 
 > How to hook in provider-specific extensions from other projects - needed to limit dependencies. 
 	Surely has to be some configuration option, and type-gathering at initialization.
-

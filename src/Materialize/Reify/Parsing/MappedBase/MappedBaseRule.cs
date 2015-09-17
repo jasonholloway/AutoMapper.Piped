@@ -16,7 +16,7 @@ namespace Materialize.Reify.Parsing.MappedBase
 
         public override IParseStrategy GetStrategy(ParseContext ctx) 
         {
-            if(ctx.SubjectExp == ctx.BaseExp) 
+            if(ctx.IsMappingBase) 
             {                
                 var mapStrategy = _mapStrategies.GetStrategy(ctx.MapContext);
                 return new MappedBaseStrategy(mapStrategy);
