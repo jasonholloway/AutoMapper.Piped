@@ -68,10 +68,8 @@ namespace Materialize.Reify
 
         ISourceRegimeDetector _regimeDetector;
         ParserFactory _parserFac;
-
-        //Lazy<IMapStrategy> _lzMapStrategy;
-        //IParseStrategySource _parseStrategies;
         
+
         public IQueryable<TSource> SourceQuery { get; private set; }
         public IQueryable<TDest> BaseReifyQuery { get; private set; }
 
@@ -80,8 +78,6 @@ namespace Materialize.Reify
             IQueryable<TSource> sourceQuery, 
             ISourceRegimeDetector regimeDetector,
             ParserFactory parserFac)
-            //Func<IMapStrategy> fnMapStrategy,
-            //IParseStrategySource parseStrategies) 
         {
             SourceQuery = sourceQuery;
 
@@ -122,7 +118,7 @@ namespace Materialize.Reify
 
             var mapContext = new MapContext(
                                     _regimeDetector.DetectRegime(SourceQuery.Provider),
-                                    new TypeVector(typeof(TSource), typeof(TDest))
+                                    new TypeVector(typeof(IEnumerable<TSource>), typeof(IEnumerable<TDest>))
                                     );
 
             var parser = _parserFac.Create(BaseReifyQuery.Expression, mapContext);

@@ -32,7 +32,7 @@ namespace Materialize.Reify.Parsing
             MapContext mapContext) 
         {
             Debug.Assert(exSubject.Contains(exBase));
-            Debug.Assert(exBase.Type.GetEnumerableElementType() == mapContext.TypeVector.DestType);
+            Debug.Assert(exBase.Type.GetEnumerableElementType() == mapContext.TypeVector.DestType.GetEnumerableElementType());
 
             SubjectExp = exSubject;
             BaseExp = exBase;

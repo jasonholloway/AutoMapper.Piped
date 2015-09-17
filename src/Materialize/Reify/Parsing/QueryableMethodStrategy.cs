@@ -20,9 +20,10 @@ namespace Materialize.Reify.Parsing
             get { return false; }
         }
         
+        //as is, the expression is passed just so we can access variables - not for its form,
+        //which should be felt out by the rule
         protected abstract IModifier Parse(IModifier upstreamMod, MethodCallExpression exSubject);
         
-
         IModifier IParseStrategy.Parse(Expression exSubject) {
             var exCall = (MethodCallExpression)exSubject;
 
@@ -30,17 +31,7 @@ namespace Materialize.Reify.Parsing
 
             return Parse(upstreamMod, exCall);
         }
-
-
-
-        //Parser IParser.CreateCallParser(Parser parser) {
-        //    return (ex) => {
-        //        var exUpstream = ex.Arguments.First();
-        //        var upstreamMod = parser.Parse(exUpstream);
-
-        //        return Parse(upstreamMod, ex);
-        //    };            
-        //}
+        
 
     }
 

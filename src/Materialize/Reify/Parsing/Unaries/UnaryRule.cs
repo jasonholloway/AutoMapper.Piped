@@ -5,27 +5,23 @@ using System.Reflection;
 
 namespace Materialize.Reify.Parsing.Unaries
 {
-    class UnaryRule : ParseRule
+    class UnaryRule : QueryableMethodRule
     {
         static IDictionary<MethodInfo, Type> _dStrategies
             = new Dictionary<MethodInfo, Type>() {
                 {
-                    Refl.GetGenericMethodDef(() => Queryable.First<int>(null)),
+                    Refl.GetGenMethod(() => Queryable.First<int>(null)),
                     typeof(FirstStrategy<>)
                 },
                 {
-                    Refl.GetGenericMethodDef(() => Queryable.FirstOrDefault<int>(null)),
+                    Refl.GetGenMethod(() => Queryable.FirstOrDefault<int>(null)),
                     typeof(FirstOrDefaultStrategy<>)
                 },
             };
 
-
-        IParseStrategySource _strategySource;
         
-
-        public UnaryRule(IParseStrategySource strategySource) {
-            _strategySource = strategySource;
-        }
+        public UnaryRule(IParseStrategySource strategySource)
+            : base(strategySource) { }
         
         
         public override IParseStrategy GetStrategy(ParseContext ctx) 
@@ -37,10 +33,9 @@ namespace Materialize.Reify.Parsing.Unaries
                 if(_dStrategies.TryGetValue(ctx.MethodDef, out tStrategy)) {
                     var tElem = ctx.TypeArgs.First();
 
-                    var upstreamContext = ctx.Spawn(ctx.CallExp.Arguments.First());         //could be hived off to base class I reckon!
-                    var upstreamStrategy = _strategySource.GetStrategy(upstreamContext);
+                    var upstreamStrategy = GetUpstreamStrategy(ctx);
 
-                    return base.CreateStrategy(
+                    return CreateStrategy(
                                     tStrategy.MakeGenericType(tElem),
                                     upstreamStrategy);
                 }

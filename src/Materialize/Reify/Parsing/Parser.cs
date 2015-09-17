@@ -1,5 +1,4 @@
 ﻿using Materialize.Reify.Mapping;
-using Materialize.Reify.Modifiers;
 using Materialize.Reify.Parsing;
 using System;
 using System.Collections;

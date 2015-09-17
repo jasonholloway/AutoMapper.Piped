@@ -10,7 +10,7 @@ namespace Materialize.Reify.Parsing.Unaries
     class FirstOrDefaultStrategy<TElem> 
         : QueryableMethodStrategy
     {
-        static MethodInfo _mFirstGen = Refl.GetGenericMethodDef(() => Queryable.FirstOrDefault<object>(null));
+        static MethodInfo _mFirstGen = Refl.GetGenMethod(() => Queryable.FirstOrDefault<object>(null));
 
 
         public FirstOrDefaultStrategy(IParseStrategy upstreamStrategy)

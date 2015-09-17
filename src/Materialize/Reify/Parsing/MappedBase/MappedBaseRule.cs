@@ -2,15 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
-namespace Materialize.Reify.Parsing.Unaries
+namespace Materialize.Reify.Parsing.MappedBase
 {
-    class BaseRule : ParseRule
+    class MappedBaseRule : ParseRule
     {
         IMapStrategySource _mapStrategies;
 
-        public BaseRule(IMapStrategySource mapStrategies) {
+        public MappedBaseRule(IMapStrategySource mapStrategies) {
             _mapStrategies = mapStrategies;
         }
         
@@ -20,7 +19,7 @@ namespace Materialize.Reify.Parsing.Unaries
             if(ctx.SubjectExp == ctx.BaseExp) 
             {                
                 var mapStrategy = _mapStrategies.GetStrategy(ctx.MapContext);
-                return new BaseStrategy(mapStrategy);
+                return new MappedBaseStrategy(mapStrategy);
             }
             
             return null;

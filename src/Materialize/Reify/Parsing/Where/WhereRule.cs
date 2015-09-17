@@ -5,16 +5,13 @@ using System.Reflection;
 
 namespace Materialize.Reify.Parsing.Where
 {
-    class WhereRule : ParseRule
+    class WhereRule : QueryableMethodRule
     {
-        static MethodInfo _mWhereGen = Refl.GetGenericMethodDef(() => Queryable.Where<int>(null, i => true));
+        static MethodInfo _mWhereGen = Refl.GetGenMethod(() => Queryable.Where<int>(null, i => true));
 
-
-        IParseStrategySource _strategySource;
-
-        public WhereRule(IParseStrategySource strategySource) {
-            _strategySource = strategySource;
-        }
+        
+        public WhereRule(IParseStrategySource strategySource)
+            : base(strategySource) { }
 
         
 
@@ -29,12 +26,10 @@ namespace Materialize.Reify.Parsing.Where
                 //How to pass it? Has to be via the parser... Or rather, the parser is the active party.
 
                 //Strategies should just expose a property, to be picked up and remembered by the parser.
-
-
-                var upstreamContext = ctx.Spawn(ctx.CallExp.Arguments.First());
-                var upstreamStrategy = _strategySource.GetStrategy(upstreamContext);
+                
+                var upstreamStrategy = GetUpstreamStrategy(ctx);
                                 
-                return base.CreateStrategy(
+                return CreateStrategy(
                                 typeof(ClientOnlyWhereStrategy<>).MakeGenericType(tElem),
                                 upstreamStrategy);
             }

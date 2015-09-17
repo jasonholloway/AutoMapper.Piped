@@ -55,10 +55,8 @@
     <Compile Include="Reify\Mapping\IMapStrategySource.cs" />
     <Compile Include="Reify\Mapping\MapRuleBase.cs" />
     <Compile Include="Reify\Mapping\MapRuleRegistry.cs" />
-    <Compile Include="Reify\Modifiers\WhereModifier.cs" />
-    <Compile Include="Reify\Modifiers\UnaryModifier.cs" />
-    <Compile Include="Reify\Parsing\Base\BaseRule.cs" />
-    <Compile Include="Reify\Parsing\Base\BaseStrategy.cs" />
+    <Compile Include="Reify\Parsing\MappedBase\MappedBaseRule.cs" />
+    <Compile Include="Reify\Parsing\MappedBase\MappedBaseStrategy.cs" />
     <Compile Include="Reify\Parsing\IParseRuleRegistry.cs" />
     <Compile Include="Reify\Parsing\IParseStrategySource.cs" />
     <Compile Include="Reify\Parsing\IParseRule.cs" />
@@ -66,6 +64,7 @@
     <Compile Include="Reify\Parsing\ParserFactory.cs" />
     <Compile Include="Reify\Parsing\ParseRuleRegistry.cs" />
     <Compile Include="Reify\Parsing\Parser.cs" />
+    <Compile Include="Reify\Parsing\QueryableMethodRule.cs" />
     <Compile Include="Reify\Parsing\Unaries\FirstOrDefaultStrategy.cs" />
     <Compile Include="Reify\Parsing\ParseModifier.cs" />
     <Compile Include="Reify\Parsing\ParseRule.cs" />
@@ -87,7 +86,6 @@
     <Compile Include="SourceRegimes\SourceRegimeDetector.cs" />
     <Compile Include="ReflectionHelper.cs" />
     <Compile Include="Reify\IModifier.cs" />
-    <Compile Include="Reify\Modifiers\AdLibModifier.cs" />
     <Compile Include="Reify\ReifyQuery.cs" />
     <Compile Include="Reify\Reifiable.cs" />
     <Compile Include="Reify\Mapping\IMapStrategy.cs" />

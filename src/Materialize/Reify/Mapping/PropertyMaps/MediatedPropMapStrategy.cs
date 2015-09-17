@@ -5,7 +5,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Materialize.ProjectedTypes;
-using Materialize.Reify.Modifiers;
 
 namespace Materialize.Reify.Mapping.PropertyMaps
 {

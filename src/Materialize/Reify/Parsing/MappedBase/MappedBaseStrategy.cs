@@ -6,14 +6,14 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 
-namespace Materialize.Reify.Parsing.Unaries
+namespace Materialize.Reify.Parsing.MappedBase
 {
-    class BaseStrategy
+    class MappedBaseStrategy
         : IParseStrategy
     {
         IMapStrategy _mapStrategy;
 
-        public BaseStrategy(IMapStrategy mapStrategy) {
+        public MappedBaseStrategy(IMapStrategy mapStrategy) {
             _mapStrategy = mapStrategy;
         }
 

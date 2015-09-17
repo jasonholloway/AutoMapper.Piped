@@ -35,7 +35,8 @@ namespace Materialize.Reify
             var tDestElem = typeof(TDest);
 
             //var regime = _regimeDetector.DetectRegime(qySource.Provider);
-
+            //var mapContext = new MapContext(regime, new TypeVector(tOrig, tDest));
+            
             //Func<IMapStrategy> fnMapStrategy = () => _mapStrategies
             //                                                .GetStrategy(regime, tOrig, tDest);
 

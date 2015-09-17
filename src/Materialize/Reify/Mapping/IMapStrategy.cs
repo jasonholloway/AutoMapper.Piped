@@ -1,5 +1,4 @@
-﻿using Materialize.Reify.Modifiers;
-using System;
+﻿using System;
 
 namespace Materialize.Reify.Mapping
 {

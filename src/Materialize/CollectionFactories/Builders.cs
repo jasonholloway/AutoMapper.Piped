@@ -8,23 +8,20 @@ namespace Materialize.CollectionFactories
 {
     abstract class CollFactoryBuilder
     {
-        static MethodInfo _mTypedBuild = typeof(CollFactoryBuilder).GetMethod(
-                                                                        "TypedBuild", 
-                                                                        BindingFlags.Instance 
-                                                                        | BindingFlags.NonPublic);
-
+        static MethodInfo _mBuildGen = Refl.GetGenMethod<CollFactoryBuilder>(b => b.Build<object>());
+                  
         public CollectionFactory Build(Type tElem) {
-            return (CollectionFactory)_mTypedBuild.MakeGenericMethod(tElem).Invoke(this, null);
+            return (CollectionFactory)_mBuildGen.MakeGenericMethod(tElem).Invoke(this, null);
         }
         
-        protected abstract CollectionFactory TypedBuild<TElem>();
+        public abstract CollectionFactory Build<TElem>();
     }
 
 
 
     class ArrayFactoryBuilder : CollFactoryBuilder
     {
-        protected override CollectionFactory TypedBuild<TElem>() {
+        public override CollectionFactory Build<TElem>() {
             return (items) => items.Cast<TElem>().ToArray();
         }        
     }
@@ -32,7 +29,7 @@ namespace Materialize.CollectionFactories
 
     class ListFactoryBuilder : CollFactoryBuilder
     {
-        protected override CollectionFactory TypedBuild<TElem>() {
+        public override CollectionFactory Build<TElem>() {
             return (items) => items.Cast<TElem>().ToList();
         }
     }    
