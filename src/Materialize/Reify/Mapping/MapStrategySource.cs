@@ -20,14 +20,18 @@ namespace Materialize.Reify.Mapping
         }
         
 
-        public IMapStrategy GetStrategy(ISourceRegime regime, Type tSource, Type tDest) {
-            var context = new MapContext(
-                                    regime,
-                                    new TypeVector(tSource, tDest));
-                        
+        public IMapStrategy GetStrategy(MapContext mapContext) {
             return _dStrategies.GetOrAdd(
-                                    context, 
+                                    mapContext,
                                     c => DeduceStrategy(c));
+        }
+
+
+        public IMapStrategy GetStrategy(ISourceRegime regime, Type tSource, Type tDest) {
+            return GetStrategy(new MapContext(
+                                        regime,
+                                        new TypeVector(tSource, tDest)));
+                        
         }
 
 

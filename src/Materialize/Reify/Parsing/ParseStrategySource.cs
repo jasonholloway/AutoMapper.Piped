@@ -9,15 +9,17 @@ namespace Materialize.Reify.Parsing
 {
     class ParseStrategySource : IParseStrategySource
     {
-        static IParseRule[] _rules
-            = new IParseRule[] {
-                new Unaries.UnaryRule(),
-                new Where.WhereRule()
-            };
+        IParseRuleRegistry _ruleRegistry;
 
         ConcurrentDictionary<ParseContext, IParseStrategy> _dParsers
             = new ConcurrentDictionary<ParseContext, IParseStrategy>(ParseContextEqualityComparer.Default);
-        
+                
+
+        public ParseStrategySource(IParseRuleRegistry ruleRegistry) {
+            _ruleRegistry = ruleRegistry;
+        }
+
+
 
         public IParseStrategy GetStrategy(ParseContext ctx) {
             return _dParsers.GetOrAdd(ctx, c => DeviseParser(c));
@@ -25,12 +27,12 @@ namespace Materialize.Reify.Parsing
 
 
         IParseStrategy DeviseParser(ParseContext ctx) {            
-            foreach(var rule in _rules) {
+            foreach(var rule in _ruleRegistry.Rules) {
                 var strategy = rule.GetStrategy(ctx);
                 if(strategy != null) return strategy;
             }
 
-            throw new InvalidOperationException("No IParseRule found!");
+            throw new InvalidOperationException("No suitable IParseRule found!");
         }
                 
     }

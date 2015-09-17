@@ -12,8 +12,18 @@ namespace Materialize.Reify.Parsing.Unaries
     {
         static MethodInfo _mFirstGen = Refl.GetGenericMethodDef(() => Queryable.First<object>(null));
 
+        public FirstStrategy(IParseStrategy upstreamStrategy)
+            : base(upstreamStrategy) { }
+        
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //currently, though the rule knows the form of the expression, the actual
+        //instance to be parsed must be passed here: this is because this is our only
+        //way of accessing variable constant values. If all were converted to a 
+        //parameterised lambda, then this could be different (though parameter values
+        //would always have to be passed on each parse!!!
 
-        protected override IModifier Parse(IModifier upstreamMod, MethodCallExpression ex) {
+        protected override IModifier Parse(IModifier upstreamMod, MethodCallExpression ex) 
+        {
             return new Modifier(upstreamMod);
         }
         

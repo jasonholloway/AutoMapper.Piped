@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Materialize.Reify.Mapping;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -6,30 +7,22 @@ using System.Reflection;
 namespace Materialize.Reify.Parsing.Unaries
 {
     class BaseRule : ParseRule
-    {   
+    {
+        IMapStrategySource _mapStrategies;
+
+        public BaseRule(IMapStrategySource mapStrategies) {
+            _mapStrategies = mapStrategies;
+        }
+        
+
         public override IParseStrategy GetStrategy(ParseContext ctx) 
         {
-            if(ctx.SubjectExp == ctx.BaseExp) { //not sure 
-
-
-
-
+            if(ctx.SubjectExp == ctx.BaseExp) 
+            {                
+                var mapStrategy = _mapStrategies.GetStrategy(ctx.MapContext);
+                return new BaseStrategy(mapStrategy);
             }
-
-
-
-            if(ctx.MethodDef != null && ctx.TypeArgs.Length == 1) 
-            {
-                Type tStrategy = null;
-
-                if(_dStrategies.TryGetValue(ctx.MethodDef, out tStrategy)) {
-                    var tElem = ctx.TypeArgs.First();
-
-                    return base.CreateStrategy(
-                                    tStrategy.MakeGenericType(tElem));
-                }
-            }
-
+            
             return null;
         }
     }

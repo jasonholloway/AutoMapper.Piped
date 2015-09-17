@@ -59,9 +59,12 @@
     <Compile Include="Reify\Modifiers\UnaryModifier.cs" />
     <Compile Include="Reify\Parsing\Base\BaseRule.cs" />
     <Compile Include="Reify\Parsing\Base\BaseStrategy.cs" />
+    <Compile Include="Reify\Parsing\IParseRuleRegistry.cs" />
     <Compile Include="Reify\Parsing\IParseStrategySource.cs" />
     <Compile Include="Reify\Parsing\IParseRule.cs" />
     <Compile Include="Reify\Parsing\IParseStrategy.cs" />
+    <Compile Include="Reify\Parsing\ParserFactory.cs" />
+    <Compile Include="Reify\Parsing\ParseRuleRegistry.cs" />
     <Compile Include="Reify\Parsing\Parser.cs" />
     <Compile Include="Reify\Parsing\Unaries\FirstOrDefaultStrategy.cs" />
     <Compile Include="Reify\Parsing\ParseModifier.cs" />

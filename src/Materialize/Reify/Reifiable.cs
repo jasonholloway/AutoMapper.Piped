@@ -1,5 +1,6 @@
 ﻿using Materialize.Reify.Mapping;
 using Materialize.Reify.Parsing;
+using Materialize.SourceRegimes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -64,17 +65,23 @@ namespace Materialize.Reify
         static PropertyInfo _baseReifyQueryProp = typeof(Reifiable<TSource, TDest>)
                                                         .GetProperty("BaseReifyQuery");
 
-        Lazy<IMapStrategy> _lzMapStrategy;
-        IParseStrategySource _parseStrategies;
 
+        ISourceRegimeDetector _regimeDetector;
+        ParserFactory _parserFac;
+
+        //Lazy<IMapStrategy> _lzMapStrategy;
+        //IParseStrategySource _parseStrategies;
+        
         public IQueryable<TSource> SourceQuery { get; private set; }
         public IQueryable<TDest> BaseReifyQuery { get; private set; }
 
 
         public Reifiable(
             IQueryable<TSource> sourceQuery, 
-            Func<IMapStrategy> fnMapStrategy,
-            IParseStrategySource parseStrategies) 
+            ISourceRegimeDetector regimeDetector,
+            ParserFactory parserFac)
+            //Func<IMapStrategy> fnMapStrategy,
+            //IParseStrategySource parseStrategies) 
         {
             SourceQuery = sourceQuery;
 
@@ -84,9 +91,12 @@ namespace Materialize.Reify
                                                 _baseReifyQueryProp)
                                     );
 
-            _lzMapStrategy = new Lazy<IMapStrategy>(fnMapStrategy);
+            _regimeDetector = regimeDetector;
+            _parserFac = parserFac;
+            
+            //_lzMapStrategy = new Lazy<IMapStrategy>(fnMapStrategy);
 
-            _parseStrategies = parseStrategies;
+            //_parseStrategies = parseStrategies;
         }
         
 
@@ -105,15 +115,25 @@ namespace Materialize.Reify
 
         public override TResult Execute<TResult>(Expression exReifyQuery) 
         {
-            var context = new ParseContext(
-                                    exReifyQuery, 
-                                    BaseReifyQuery.Expression);
+            //var context = new ParseContext(
+            //                        exReifyQuery, 
+            //                        BaseReifyQuery.Expression);
 
-            var strategy = _parseStrategies.GetStrategy(context);
 
-            var parser = strategy.CreateParser();
+            var mapContext = new MapContext(
+                                    _regimeDetector.DetectRegime(SourceQuery.Provider),
+                                    new TypeVector(typeof(TSource), typeof(TDest))
+                                    );
 
-            var modifierStack = parser(exReifyQuery);
+            var parser = _parserFac.Create(BaseReifyQuery.Expression, mapContext);
+            
+            var modifierStack = parser.Parse(exReifyQuery);
+
+            //var strategy = _parseStrategies.GetStrategy(context);
+
+            //var parser = strategy.CreateParser();
+
+            //var modifierStack = parser(exReifyQuery);
 
 
             ////parser creates modifier stack based on passed ReifyQuery expression

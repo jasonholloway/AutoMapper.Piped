@@ -4,25 +4,24 @@ using System.Linq;
 using Materialize.SourceRegimes;
 using Materialize.Reify.Mapping;
 using Materialize.Reify.Parsing;
-using Materialize.Reify.Parsing.CallParsing;
 
 namespace Materialize.Reify
 {
     internal class ReifiableFactory
     {
         ISourceRegimeDetector _regimeDetector;
-        IMapStrategySource _mapStrategySource;
-        ICallParseStrategySource _callParsers;
-
+        //IMapStrategySource _mapStrategies;
+        //IParseStrategySource _parseStrategies;
+        ParserFactory _parserFac;
 
         public ReifiableFactory(
             ISourceRegimeDetector regimeDetector,
-            IMapStrategySource mapStrategySource,
-            ICallParseStrategySource callParsers) 
+            ParserFactory parserFac) 
         {
             _regimeDetector = regimeDetector;
-            _mapStrategySource = mapStrategySource;
-            _callParsers = callParsers;
+            _parserFac = parserFac;
+            //_mapStrategies = mapStrategies;
+            //_parseStrategies = parseStrategies;
         }
 
 
@@ -34,19 +33,22 @@ namespace Materialize.Reify
 
             var tDest = typeof(IEnumerable<TDest>);
             var tDestElem = typeof(TDest);
-            
-            var regime = _regimeDetector.DetectRegime(qySource.Provider);
-            
-            Func<IMapStrategy> fnMapStrategy = () => _mapStrategySource
-                                                            .GetStrategy(regime, tOrig, tDest);
-            
+
+            //var regime = _regimeDetector.DetectRegime(qySource.Provider);
+
+            //Func<IMapStrategy> fnMapStrategy = () => _mapStrategies
+            //                                                .GetStrategy(regime, tOrig, tDest);
+
             //construct and return nicely-typed reifiable
             return (IReifiable<TDest>)Activator.CreateInstance(
                                                     typeof(Reifiable<,>)
                                                                 .MakeGenericType(tOrigElem, tDestElem),
                                                     qySource,
-                                                    fnMapStrategy,
-                                                    _callParsers);
+                                                    _regimeDetector,
+                                                    _parserFac);
+
+                                                    //fnMapStrategy,
+                                                    //_parseStrategies);
         }
 
     }

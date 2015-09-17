@@ -9,12 +9,28 @@ namespace Materialize.Reify.Parsing
     abstract class QueryableMethodStrategy
         : IParseStrategy
     {
+        IParseStrategy _upstreamStrategy;
+
+        public QueryableMethodStrategy(IParseStrategy upstreamStrategy) {
+            _upstreamStrategy = upstreamStrategy;
+        }
+
+
         public virtual bool FiltersFetchedSet {
             get { return false; }
         }
         
-        public abstract IModifier Parse(Expression exSubject);
+        protected abstract IModifier Parse(IModifier upstreamMod, MethodCallExpression exSubject);
         
+
+        IModifier IParseStrategy.Parse(Expression exSubject) {
+            var exCall = (MethodCallExpression)exSubject;
+
+            var upstreamMod = _upstreamStrategy.Parse(exCall.Arguments.First());
+
+            return Parse(upstreamMod, exCall);
+        }
+
 
 
         //Parser IParser.CreateCallParser(Parser parser) {

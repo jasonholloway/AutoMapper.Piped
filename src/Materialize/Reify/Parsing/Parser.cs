@@ -1,6 +1,6 @@
-﻿using Materialize.Reify.Modifiers;
+﻿using Materialize.Reify.Mapping;
+using Materialize.Reify.Modifiers;
 using Materialize.Reify.Parsing;
-using Materialize.Reify.Parsing.CallParsing;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,24 +15,28 @@ namespace Materialize.Reify.Parsing
     class Parser
     {
         Expression _exBase;
+        MapContext _mapContext;
         IParseStrategySource _parseStrategies;
         
         public Parser(
             Expression exBase, 
+            MapContext mapContext,
             IParseStrategySource parseStrategies) 
         {
             _exBase = exBase;
+            _mapContext = mapContext;
             _parseStrategies = parseStrategies;
         }
 
 
         public IModifier Parse(Expression exSubject) 
         {
-            var context = new ParseContext(
-                                    exSubject, 
-                                    _exBase);
+            var parseContext = new ParseContext(
+                                            exSubject, 
+                                            _exBase,
+                                            _mapContext);
 
-            var strategy = _parseStrategies.GetStrategy(context);
+            var strategy = _parseStrategies.GetStrategy(parseContext);
 
             return strategy.Parse(exSubject);
         }

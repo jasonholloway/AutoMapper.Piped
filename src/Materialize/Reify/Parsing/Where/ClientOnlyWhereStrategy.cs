@@ -10,6 +10,10 @@ namespace Materialize.Reify.Parsing.Where
         : QueryableMethodStrategy
     {
         
+        public ClientOnlyWhereStrategy(IParseStrategy upstreamStrategy)
+            : base(upstreamStrategy) { }
+
+
         public override bool FiltersFetchedSet {
             get { return true; }
         }

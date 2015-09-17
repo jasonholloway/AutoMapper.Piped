@@ -13,6 +13,10 @@ namespace Materialize.Reify.Parsing.Unaries
         static MethodInfo _mFirstGen = Refl.GetGenericMethodDef(() => Queryable.FirstOrDefault<object>(null));
 
 
+        public FirstOrDefaultStrategy(IParseStrategy upstreamStrategy)
+            : base(upstreamStrategy) { }
+
+
         protected override IModifier Parse(IModifier upstreamMod, MethodCallExpression ex) {
             return new Modifier(upstreamMod);
         }

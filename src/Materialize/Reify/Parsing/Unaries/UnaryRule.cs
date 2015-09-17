@@ -11,23 +11,22 @@ namespace Materialize.Reify.Parsing.Unaries
             = new Dictionary<MethodInfo, Type>() {
                 {
                     Refl.GetGenericMethodDef(() => Queryable.First<int>(null)),
-                    typeof(FirstParser<>)
+                    typeof(FirstStrategy<>)
                 },
                 {
                     Refl.GetGenericMethodDef(() => Queryable.FirstOrDefault<int>(null)),
-                    typeof(FirstOrDefaultParser<>)
+                    typeof(FirstOrDefaultStrategy<>)
                 },
             };
+
+
+        IParseStrategySource _strategySource;
         
-                       
 
-        //need to get upstream strategy before working out current strategy
-
-        //so rules find rules via their knowledge of instance arg
-        //but then strategy itself must know the same
-
-
-
+        public UnaryRule(IParseStrategySource strategySource) {
+            _strategySource = strategySource;
+        }
+        
         
         public override IParseStrategy GetStrategy(ParseContext ctx) 
         {
@@ -38,11 +37,12 @@ namespace Materialize.Reify.Parsing.Unaries
                 if(_dStrategies.TryGetValue(ctx.MethodDef, out tStrategy)) {
                     var tElem = ctx.TypeArgs.First();
 
-                    //get upstream strategy
-
+                    var upstreamContext = ctx.Spawn(ctx.CallExp.Arguments.First());         //could be hived off to base class I reckon!
+                    var upstreamStrategy = _strategySource.GetStrategy(upstreamContext);
 
                     return base.CreateStrategy(
-                                    tStrategy.MakeGenericType(tElem));
+                                    tStrategy.MakeGenericType(tElem),
+                                    upstreamStrategy);
                 }
             }
 

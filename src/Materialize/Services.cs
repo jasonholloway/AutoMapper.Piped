@@ -4,7 +4,6 @@ using Materialize.ProjectedTypes;
 using Materialize.Reify;
 using Materialize.Reify.Mapping;
 using Materialize.Reify.Parsing;
-using Materialize.Reify.Parsing.CallParsing;
 using Materialize.SourceRegimes;
 using Materialize.TypeMaps;
 using System;
@@ -52,7 +51,9 @@ namespace Materialize
             x.Register<IMapStrategySource, MapStrategySource>();
             x.Register<IProjectedTypeBuilder, ProjectedTypeBuilder>();
             x.Register<ICollectionFactorySource, CollectionFactorySource>();
-            x.Register<ICallParseStrategySource, ParseStrategySource>();
+            x.Register<IParseStrategySource, ParseStrategySource>();
+            x.Register<IParseRuleRegistry, ParseRuleRegistry>();
+            x.Register<ParserFactory>();
             x.Register<ReifiableFactory>();
         }        
     }
