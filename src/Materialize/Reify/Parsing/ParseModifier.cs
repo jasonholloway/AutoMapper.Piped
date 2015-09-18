@@ -7,8 +7,12 @@ using System.Threading.Tasks;
 
 namespace Materialize.Reify.Parsing
 {   
+    //*****************************************************
+    //FASCINATING: TUpstreamOut should always == TSource! *
+    //*****************************************************
 
-    abstract class ParseModifier<TTransIn, TTransOut> : IModifier
+    abstract class ParseModifier<TUpstreamOut, TDest> 
+        : IModifier
     {
         IModifier _upstreamMod;
                 
@@ -28,10 +32,10 @@ namespace Materialize.Reify.Parsing
         }
 
 
-        protected abstract TTransOut Transform(object fetched);
+        protected abstract TDest Transform(object fetched);
 
-        protected TTransIn UpstreamTransform(object fetched) {
-            return (TTransIn)_upstreamMod.Transform(fetched);
+        protected TUpstreamOut UpstreamTransform(object fetched) {
+            return (TUpstreamOut)_upstreamMod.Transform(fetched);
         }
 
         object IModifier.Transform(object fetched) {

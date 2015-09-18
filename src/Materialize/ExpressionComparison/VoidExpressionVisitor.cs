@@ -4,7 +4,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 
-namespace Materialize.Expressions
+namespace Materialize.ExpressionComparison
 {
     abstract class VoidExpressionVisitor
     {

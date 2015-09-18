@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Materialize.Expressions
+namespace Materialize.ExpressionComparison
 {
     class QueryExpressionComparer : ExpressionComparer
     {

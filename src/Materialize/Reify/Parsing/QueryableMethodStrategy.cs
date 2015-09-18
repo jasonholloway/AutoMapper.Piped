@@ -6,20 +6,28 @@ namespace Materialize.Reify.Parsing
 {
     //Quietly does all the upstream-delegation-via-the-parser
 
-    abstract class QueryableMethodStrategy
+    abstract class QueryableMethodStrategy<TSource, TDest>
         : IParseStrategy
     {
-        IParseStrategy _upstreamStrategy;
-
-        public QueryableMethodStrategy(IParseStrategy upstreamStrategy) {
-            _upstreamStrategy = upstreamStrategy;
+        public QueryableMethodStrategy(IParseStrategy upstreamStrategy) 
+        {
+            SourceType = typeof(TSource);
+            FetchType = typeof(TSource);
+            DestType = typeof(TDest);
+            UpstreamStrategy = upstreamStrategy;
         }
 
+        public Type SourceType { get; private set; }        
+        public Type FetchType { get; protected set; }
+        public Type DestType { get; private set; }
 
+        protected IParseStrategy UpstreamStrategy { get; private set; }
+        
         public virtual bool FiltersFetchedSet {
-            get { return false; }
+            get { return UpstreamStrategy.FiltersFetchedSet; }
         }
         
+                
         //as is, the expression is passed just so we can access variables - not for its form,
         //which should be felt out by the rule
         protected abstract IModifier Parse(IModifier upstreamMod, MethodCallExpression exSubject);
@@ -27,7 +35,7 @@ namespace Materialize.Reify.Parsing
         IModifier IParseStrategy.Parse(Expression exSubject) {
             var exCall = (MethodCallExpression)exSubject;
 
-            var upstreamMod = _upstreamStrategy.Parse(exCall.Arguments.First());
+            var upstreamMod = UpstreamStrategy.Parse(exCall.Arguments.First());
 
             return Parse(upstreamMod, exCall);
         }

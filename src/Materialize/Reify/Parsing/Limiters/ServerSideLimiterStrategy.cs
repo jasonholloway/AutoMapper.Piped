@@ -8,7 +8,7 @@ using System.Reflection;
 namespace Materialize.Reify.Parsing.Limiters
 {   
     class ServerSideLimiterStrategy<TElem> 
-        : QueryableMethodStrategy
+        : QueryableMethodStrategy<IEnumerable<TElem>, IEnumerable<TElem>>
     {
         MethodInfo _mLimiterDef;
 
@@ -17,7 +17,7 @@ namespace Materialize.Reify.Parsing.Limiters
         {
             _mLimiterDef = mLimiterDef;
         }
-     
+        
 
         protected override IModifier Parse(IModifier upstreamMod, MethodCallExpression ex) 
         {

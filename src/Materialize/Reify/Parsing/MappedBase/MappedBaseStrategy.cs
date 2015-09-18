@@ -17,6 +17,19 @@ namespace Materialize.Reify.Parsing.MappedBase
             _mapStrategy = mapStrategy;
         }
 
+
+        public Type SourceType {
+            get { return _mapStrategy.SourceType; }
+        }
+
+        public Type FetchType {
+            get { return _mapStrategy.FetchedType; }
+        }
+        
+        public Type DestType {
+            get { return _mapStrategy.TransformedType; }
+        }
+
         public bool FiltersFetchedSet {
             get { return false; }
         }

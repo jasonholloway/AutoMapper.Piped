@@ -1,4 +1,4 @@
-﻿using Materialize.Expressions;
+﻿using Materialize.ExpressionComparison;
 using Materialize.Reify.Mapping;
 using Materialize.SourceRegimes;
 using System;

@@ -7,12 +7,12 @@ using System.Reflection;
 namespace Materialize.Reify.Parsing.Where
 {
     class ClientOnlyWhereStrategy<TElem> 
-        : QueryableMethodStrategy
+        : QueryableMethodStrategy<IEnumerable<TElem>, IEnumerable<TElem>>
     {
         
         public ClientOnlyWhereStrategy(IParseStrategy upstreamStrategy)
             : base(upstreamStrategy) { }
-
+               
 
         public override bool FiltersFetchedSet {
             get { return true; }
@@ -22,6 +22,12 @@ namespace Materialize.Reify.Parsing.Where
         protected override IModifier Parse(IModifier upstreamMod, MethodCallExpression exSubject) 
         {
             var exPredicate = (Expression<Func<TElem, bool>>)((UnaryExpression)exSubject.Arguments[1]).Operand;
+
+
+            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            //BELOW COMPILATION TO BE DONE BY STRATEGY IN A CACHE-FRIENDLY MANNER!!!
+            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 
             var fnPredicate = exPredicate.Compile(); //Nasty: no way to cache? Only if entire tree were cached further up...
                                                         //Nah: we could (and should) have a predicate-only auxiliary cache.                                                    

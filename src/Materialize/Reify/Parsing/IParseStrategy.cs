@@ -6,8 +6,13 @@ using System.Linq.Expressions;
 namespace Materialize.Reify.Parsing
 {
     interface IParseStrategy
-    {
-        bool FiltersFetchedSet { get; } //affects behavioural possibilities downstream...
+    {        
+        Type SourceType { get; }
+        Type FetchType { get; }
+        Type DestType { get; }
+
+        bool FiltersFetchedSet { get; } //affects downstream possibilities...
+
         IModifier Parse(Expression exSubject);
     }
 }
