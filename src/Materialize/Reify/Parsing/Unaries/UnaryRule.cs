@@ -7,20 +7,6 @@ namespace Materialize.Reify.Parsing.Unaries
 {
     class UnaryRule : QueryableMethodRule
     {
-        //static IDictionary<MethodInfo, Type> _dStrategies
-        //    = new Dictionary<MethodInfo, Type>() {
-        //        {
-        //            Refl.GetGenMethod(() => Queryable.First<int>(null)),
-        //            typeof(FirstStrategy<>)
-        //        },
-        //        {
-        //            Refl.GetGenMethod(() => Queryable.FirstOrDefault<int>(null)),
-        //            typeof(FirstOrDefaultStrategy<>)
-        //        },
-        //    };
-
-
-
         static ISet<MethodInfo> _unaryMethods
             = new HashSet<MethodInfo>(new[] {
                 Refl.GetGenMethod(() => Queryable.First<object>(null)),
@@ -54,7 +40,7 @@ namespace Materialize.Reify.Parsing.Unaries
                     upstreamStrategy = GetUpstreamStrategy(ctx);
 
                     tStrategyGen = upstreamStrategy.FiltersFetchedSet
-                                    ? null //typeof(FirstOnClientStrategy<>)
+                                    ? typeof(UnaryOnClientStrategy<>)
                                     : typeof(UnaryOnServerStrategy<>);
                 }
                     
@@ -63,7 +49,7 @@ namespace Materialize.Reify.Parsing.Unaries
                     upstreamStrategy = GetUpstreamStrategy(ctx);
 
                     tStrategyGen = upstreamStrategy.FiltersFetchedSet
-                                    ? null
+                                    ? typeof(UnaryOnClientStrategy<>)
                                     : typeof(UnaryOrDefaultOnServerStrategy<>);
                 }
 

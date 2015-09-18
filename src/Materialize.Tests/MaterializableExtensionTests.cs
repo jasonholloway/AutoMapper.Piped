@@ -12,35 +12,41 @@ namespace Materialize.Tests
 {    
     class MaterializableExtensionTests : TestClassBase
     {
-        [Fact]
-        public void First() 
+        public MaterializableExtensionTests() 
         {
             InitServices(x => x.EmplaceIntolerantSourceRegime());
 
             InitMapper(x => {
-                x.CreateMap<int, float>()
-                    .ProjectUsing(i => 2F * i);
+                x.CreateMap<int, string>()
+                    .ProjectUsing(i => i.ToString());
             });
-
-            int fetchedItemsCount = 0;
-
-            var materializable = Enumerable.Range(0, 100)
-                                    .AsQueryable()
-                                    .Skip(50)
-                                    .MaterializeAs<float>()
-                                    .SnoopOnFetched(items => fetchedItemsCount += items.Count());
-
-            var first = materializable.First();
-
-            first.ShouldEqual(100F);
-            fetchedItemsCount.ShouldEqual(1);
         }
                 
-        [Fact]
-        public void FirstThrowsFamiliarException() {
-            throw new NotImplementedException();
+        IMaterializable<string> Range(int start, int count) {
+            var ints = Enumerable.Range(start, count);
+            return ints.AsQueryable().MaterializeAs<string>();
         }
 
+
+
+
+
+
+        [Fact]
+        public void First() {
+            var first = Range(50, 100)
+                            .SnoopOnFetched(f => f.Count().ShouldEqual(1))
+                            .First();
+
+            first.ShouldEqual("50");       
+        }
+         
+        [Fact]
+        public void FirstThrows() {
+            Assert.Throws<InvalidOperationException>(() => Range(199, 0).First());
+        }
+        
+        
 
 
         [Fact]
@@ -50,121 +56,59 @@ namespace Materialize.Tests
 
 
         [Fact]
-        public void Single() 
-        {
-            InitServices(x => x.EmplaceIntolerantSourceRegime());
+        public void Single() {
+            var single = Range(10, 1)
+                            .SnoopOnFetched(f => f.Count().ShouldEqual(1))
+                            .Single();
 
-            InitMapper(x => {
-                x.CreateMap<int, float>()
-                    .ProjectUsing(i => 2F * i);
-            });
-
-            var ints = Enumerable.Range(0, 100).AsQueryable();
-            
-            int fetchedItemsCount = 0;
-
-            var floats = ints.Skip(10).Take(1)
-                                .MaterializeAs<float>()
-                                .SnoopOnFetched(items => fetchedItemsCount += items.Count());
-
-            var single = floats.Single();
-            
-            single.ShouldEqual(20F);
-            fetchedItemsCount.ShouldEqual(1);
+            single.ShouldEqual("10");
         }
 
 
         [Fact]
-        public void SingleThrowsFamiliarException() 
-        {
-            //this is the provider's business, not ours...
-            InitServices(x => x.EmplaceIntolerantSourceRegime());
-
-            InitMapper(x => {
-                x.CreateMap<int, float>()
-                    .ProjectUsing(i => 2F * i);
-            });
-
-            var ints = Enumerable.Range(0, 100).AsQueryable();
-            
-            var manyFloats = ints.MaterializeAs<float>();
-            
-            Assert.Throws<InvalidOperationException>(() => manyFloats.Single());
+        public void SingleThrows() 
+        {            
+            Assert.Throws<InvalidOperationException>(() => Range(0, 10).Single());
         }
 
 
         [Fact]
         public void SingleOrDefault() 
         {
-            InitServices(x => x.EmplaceIntolerantSourceRegime());
+            var single = Range(1, 1)
+                            .SnoopOnFetched(f => f.Count().ShouldEqual(1))
+                            .SingleOrDefault();
 
-            InitMapper(x => {
-                x.CreateMap<int, float>()
-                    .ProjectUsing(i => 2F * i);
-            });
-
-            var ints = Enumerable.Range(0, 100).AsQueryable();
-
-            int fetchedItemsCount = 0;
-
-            var floats = ints.Skip(10).Take(1)
-                                .MaterializeAs<float>()
-                                .SnoopOnFetched(items => fetchedItemsCount += items.Count());
-
-            var single = floats.SingleOrDefault();
-                        
-            single.ShouldEqual(20F);
-            fetchedItemsCount.ShouldEqual(1);
+            single.ShouldEqual("1");
         }
 
 
 
         [Fact]
-        public void SingleOrDefaultReturnsDefaultIfSequenceEmpty() {
-            //this is the provider's business, not ours...
+        public void SingleOrDefaultReturnsDefault() 
+        {
+            var result = Range(1, 0)
+                            .SnoopOnFetched(f => f.Count().ShouldEqual(0))
+                            .SingleOrDefault();
 
-            InitServices(x => x.EmplaceIntolerantSourceRegime());
-
-            InitMapper(x => {
-                x.CreateMap<int, float>().ProjectUsing(i => 2F * i);
-            });
-
-            var emptyInts = Enumerable.Range(0, 0).AsQueryable();
-            
-            var emptyFloats = emptyInts.MaterializeAs<float>();
-            
-            var result = emptyFloats.SingleOrDefault();
-
-            result.ShouldEqual(default(float));
+            result.ShouldEqual(default(string));
         }
 
 
+    
 
         [Fact]
         public void Last() {
-            InitServices(x => x.EmplaceIntolerantSourceRegime());
+            var first = Range(50, 100)
+                            .SnoopOnFetched(f => f.Count().ShouldEqual(1))
+                            .First();
 
-            InitMapper(x => {
-                x.CreateMap<int, float>()
-                    .ProjectUsing(i => 2F * i);
-            });
-
-            int fetchedItemsCount = 0;
-
-            var materializable = Enumerable.Range(0, 100)
-                                    .AsQueryable()
-                                    .MaterializeAs<float>()
-                                    .SnoopOnFetched(items => fetchedItemsCount += items.Count());
-
-            var last = materializable.Last();
-
-            last.ShouldEqual(198F);
-            fetchedItemsCount.ShouldEqual(1);
+            first.ShouldEqual("149");
         }
 
         [Fact]
-        public void LastThrowsFamiliarException() {
-            throw new NotImplementedException();
+        public void LastThrows() {
+            Assert.Throws<InvalidOperationException>(() => Range(20, 0).Last());
         }
 
         [Fact]
@@ -174,51 +118,35 @@ namespace Materialize.Tests
 
 
         [Fact]
-        public void Take() {
-            InitServices(x => x.EmplaceIntolerantSourceRegime());
+        public void Take() 
+        {
+            var result = Range(100, 50)                            
+                            .Take(10)
+                            .SnoopOnFetched(f => f.Count().ShouldEqual(10))
+                            .ToArray();
 
-            InitMapper(x => {
-                x.CreateMap<int, float>()
-                    .ProjectUsing(i => 2F * i);
-            });
+            result.Length.ShouldEqual(10);
 
-            int fetchedItemsCount = 0;
-
-            var ints = Enumerable.Range(0, 100).AsQueryable();
-
-            var materializable = ints.MaterializeAs<float>()
-                                        .SnoopOnFetched(items => fetchedItemsCount += items.Count());
-
-            var taken = materializable.Take(10).ToArray();
-
-            taken.Length.ShouldEqual(10);
-            taken.SequenceEqual(ints.Take(10).Select(i => 2F * i)).ShouldBeTrue();
-            fetchedItemsCount.ShouldEqual(10);
+            result.SequenceEqual(
+                            Enumerable.Range(100, 10).Select(i => i.ToString())
+                        ).ShouldBeTrue();
         }
                 
 
 
         [Fact]
-        public void Skip() {
-            InitServices(x => x.EmplaceIntolerantSourceRegime());
+        public void Skip() 
+        {
+            var result = Range(100, 50)
+                            .Skip(10)
+                            .SnoopOnFetched(f => f.Count().ShouldEqual(40))
+                            .ToArray();
 
-            InitMapper(x => {
-                x.CreateMap<int, float>()
-                    .ProjectUsing(i => 2F * i);
-            });
+            result.Length.ShouldEqual(40);
 
-            int fetchedItemsCount = 0;
-
-            var ints = Enumerable.Range(0, 100).AsQueryable();
-
-            var materializable = ints.MaterializeAs<float>()
-                                        .SnoopOnFetched(items => fetchedItemsCount += items.Count());
-
-            var taken = materializable.Skip(90).ToArray();
-
-            taken.Length.ShouldEqual(10);
-            taken.SequenceEqual(ints.Skip(90).Select(i => 2F * i)).ShouldBeTrue();
-            fetchedItemsCount.ShouldEqual(10);
+            result.SequenceEqual(
+                            Enumerable.Range(110, 40).Select(i => i.ToString())
+                        ).ShouldBeTrue();
         }
 
 
@@ -228,29 +156,21 @@ namespace Materialize.Tests
         }
 
 
+        
+
         [Fact]
         public void Where() {
-            InitServices(x => x.EmplaceIntolerantSourceRegime());
-
-            InitMapper(x => {
-                x.CreateMap<int, float>()
-                    .ProjectUsing(i => 2F * i);
-            });
-
-            int fetchedItemsCount = 0;
-
-            var ints = Enumerable.Range(0, 100).AsQueryable();
-
-            var materializable = ints.MaterializeAs<float>()
-                                        .SnoopOnFetched(items => fetchedItemsCount += items.Count());
-
-            var taken = materializable
-                            .Where(f => f > 100F)
+            var result = Range(0, 50)
+                            .Where(s => s.Length == 1)
                             .ToArray();
 
-            taken.Length.ShouldEqual(49);
-            taken.SequenceEqual(ints.Skip(51).Select(i => 2F * i)).ShouldBeTrue();
+            result.Length.ShouldEqual(10);
+
+            result.SequenceEqual(
+                            Enumerable.Range(0, 10).Select(i => i.ToString())
+                        ).ShouldBeTrue();            
         }
+
 
         [Fact]
         public void WhereFirst() {
@@ -273,8 +193,42 @@ namespace Materialize.Tests
                             .First();
 
             taken.ShouldEqual(102F);
+
+            Assert.Throws<InvalidOperationException>(() => {
+                materializable
+                        .Where(f => false)
+                        .First();
+            });
         }
 
+
+        [Fact]
+        public void WhereFirstOrDefault() {
+            InitServices(x => x.EmplaceIntolerantSourceRegime());
+
+            InitMapper(x => {
+                x.CreateMap<int, float>()
+                    .ProjectUsing(i => 2F * i);
+            });
+            
+            var ints = Enumerable.Range(0, 100).AsQueryable();
+
+            var materializable = ints.MaterializeAs<float>();
+            
+            var result1 = materializable
+                            .Where(f => f > 100F)
+                            .FirstOrDefault();
+
+            result1.ShouldEqual(102F);
+
+
+            var result2 = materializable
+                            .Where(f => false)
+                            .FirstOrDefault();
+
+            result2.ShouldEqual(default(float));
+
+        }
 
 
 
