@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Materialize.Reify.Parsing.Where
@@ -17,21 +18,38 @@ namespace Materialize.Reify.Parsing.Where
 
         public override IParseStrategy GetStrategy(ParseContext ctx) 
         {
-            if(ctx.MethodDef == _mWhereGen)
-            {                
-                var tElem = ctx.TypeArgs.First();
-
-                //if we do any filtering client-side, then unary functions can't be passed onto server:
-                //strategies must register the fact that the set extent only gets finalized client-side.
-                //How to pass it? Has to be via the parser... Or rather, the parser is the active party.
-
-                //Strategies should just expose a property, to be picked up and remembered by the parser.
+            if(ctx.MethodDef == _mWhereGen) 
+            {
+                var tElem = ctx.TypeArgs.Single();
                 
                 var upstreamStrategy = GetUpstreamStrategy(ctx);
-                                
-                return CreateStrategy(
-                                typeof(ClientOnlyWhereStrategy<>).MakeGenericType(tElem),
-                                upstreamStrategy);
+                
+                //we have our predicate here
+                var exDestPredicate = (LambdaExpression)((UnaryExpression)ctx.CallExp.Arguments[2]).Operand;
+
+                //should split here
+                //...
+
+                //try to rebase
+                var exSourceParam = Expression.Parameter(ctx.MapContext.TypeVector.SourceType);
+
+                var exSourceRebased = upstreamStrategy.RebaseToSource(
+                                                            exDestPredicate.Parameters.Single(),
+                                                            exSourceParam,
+                                                            exDestPredicate.Body);
+
+                if(exSourceRebased != null 
+                    && ctx.MapContext.QueryRegime.ServerAccepts(exSourceRebased)) 
+                {
+                    //give to strategy to append to SourceQuery (but before other rewriting)
+                    throw new NotImplementedException();
+                }
+                else {
+                    return CreateStrategy(
+                                    typeof(ClientOnlyWhereStrategy<>)
+                                                        .MakeGenericType(tElem),
+                                    upstreamStrategy);
+                }                
             }
 
             return null;

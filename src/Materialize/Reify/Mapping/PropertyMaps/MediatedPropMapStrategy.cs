@@ -26,7 +26,7 @@ namespace Materialize.Reify.Mapping.PropertyMaps
             _projTypeInfo = typeBuilder.BuildType(propMapSpecs);
         }
         
-        public override Type FetchedType {
+        public override Type FetchType {
             get { return _projTypeInfo.Type; }
         }
         

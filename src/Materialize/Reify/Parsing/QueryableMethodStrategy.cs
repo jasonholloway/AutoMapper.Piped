@@ -39,8 +39,13 @@ namespace Materialize.Reify.Parsing
 
             return Parse(upstreamMod, exCall);
         }
-        
 
+
+
+        //by default, behaves as though nothing to rebase here - but this will often be right
+        public Expression RebaseToSource(Expression exOld, Expression exNew, Expression exSubject) {
+            return UpstreamStrategy.RebaseToSource(exOld, exNew, exSubject);
+        }
     }
 
 }

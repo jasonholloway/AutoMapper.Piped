@@ -20,7 +20,7 @@ namespace Materialize.Reify.Mapping.PropertyMaps
         }
 
 
-        public override Type FetchedType {
+        public override Type FetchType {
             get { return typeof(TDest); }
         }
         

@@ -12,7 +12,14 @@ namespace Materialize.Reify.Parsing
         Type DestType { get; }
 
         bool FiltersFetchedSet { get; } //affects downstream possibilities...
-
+                
         IModifier Parse(Expression exSubject);
+        
+        Expression RebaseToSource(
+                        Expression exOldRoot, 
+                        Expression exNewRoot, 
+                        Expression exSubject);      //allows downstream strategies to append to source query (but before other transformations)
+                                                    //by rebasing predicates to suit it. Often won't be possible
+                                                    //however... in which case will return null.
     }
 }

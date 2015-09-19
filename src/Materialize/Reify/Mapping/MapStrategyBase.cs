@@ -9,7 +9,7 @@ namespace Materialize.Reify.Mapping
             get { return typeof(TOrig); }
         }
         
-        public abstract Type FetchedType { get; }
+        public abstract Type FetchType { get; }
 
         public Type TransformedType {
             get { return typeof(TDest); }
@@ -17,7 +17,7 @@ namespace Materialize.Reify.Mapping
         
 
         public bool FetchesToTuple {  //?????????
-            get { return FetchedType != TransformedType; }
+            get { return FetchType != TransformedType; }
         }
         
         public virtual bool RewritesExpression {

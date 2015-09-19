@@ -5,7 +5,7 @@ namespace Materialize.Reify.Mapping
     internal interface IMapStrategy 
     {
         Type SourceType { get; }
-        Type FetchedType { get; }
+        Type FetchType { get; }
         Type TransformedType { get; }
 
         bool FetchesToTuple { get; }

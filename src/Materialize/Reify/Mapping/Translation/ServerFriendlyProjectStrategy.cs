@@ -17,7 +17,7 @@ namespace Materialize.Reify.Mapping.Translation
             _exProject = typeMap.CustomProjection;            
         }
 
-        public override Type FetchedType {
+        public override Type FetchType {
             get { return typeof(TDest); }
         }
         

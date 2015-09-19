@@ -24,7 +24,7 @@ namespace Materialize.Reify.Mapping.Translation
             _fnTransform = (Func<TOrig, TDest>)typeMap.CustomProjection.Compile();
         }
 
-        public override Type FetchedType {
+        public override Type FetchType {
             get { return typeof(TOrig); }
         }
 

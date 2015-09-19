@@ -23,7 +23,7 @@ namespace Materialize.Reify.Mapping.PropertyMaps
         }
 
         Type IProjectedMemberSpec.ProjectedType {
-            get { return Strategy.FetchedType; }
+            get { return Strategy.FetchType; }
         }
     }
 

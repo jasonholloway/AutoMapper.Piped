@@ -1,8 +1,6 @@
 ﻿
 TO DO! ********************************************
 
-> ExpressionComparer to generate hashcodes for a more functional cache
-
 > Test cache behaviour...
 
 > Unary strategies must be sensitive to whether the set has been re-limited on the client:
@@ -12,3 +10,15 @@ TO DO! ********************************************
 
 > How to hook in provider-specific extensions from other projects - needed to limit dependencies. 
 	Surely has to be some configuration option, and type-gathering at initialization.
+
+> Compiled little functions to cached by their expression trees
+
+> Filtering on the server. This is the meat. This pulls in the issue of downstream projections too.
+
+	As the query is parsed, then a map of what things are mapped where needs to be constructed, with edges
+	marked as transitive or not.
+
+	Subsequent parse strategies can thereafter use the information of the map to rewrite the source query.
+
+	Eventually, the mapping operation itself could be folded into such a structure. As is, it would have 
+	to play a large part in the generation of the map, though subsequent Select statements will also contribute.

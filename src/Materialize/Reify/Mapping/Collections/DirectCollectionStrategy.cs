@@ -25,7 +25,7 @@ namespace Materialize.Reify.Mapping.Collections
             _elemStrategy = elemStrategy;
         }
         
-        public override Type FetchedType {
+        public override Type FetchType {
             get { return typeof(IEnumerable<TOrigElem>); }
         }
 

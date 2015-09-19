@@ -15,7 +15,7 @@ namespace Materialize.Reify.Mapping.Direct
             _ctx = ctx;
         }
 
-        public override Type FetchedType {
+        public override Type FetchType {
             get { return typeof(TDest); }
         }
 

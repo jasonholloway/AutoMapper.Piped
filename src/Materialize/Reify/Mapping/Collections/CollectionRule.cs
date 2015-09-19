@@ -38,7 +38,7 @@ namespace Materialize.Reify.Mapping.Collections
 
                 if(elemStrategy != null) {
                     if(elemStrategy.RewritesExpression) {
-                        var tMedElem = elemStrategy.FetchedType;
+                        var tMedElem = elemStrategy.FetchType;
 
                         return base.CreateStrategy(
                                             typeof(CollectionStrategy<,,,>)

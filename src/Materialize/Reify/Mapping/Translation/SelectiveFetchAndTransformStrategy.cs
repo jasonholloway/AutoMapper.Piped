@@ -65,7 +65,7 @@ namespace Materialize.Reify.Mapping.Translation
         }
 
 
-        public override Type FetchedType {
+        public override Type FetchType {
             get { return _dataType.Type; }
         }
 
