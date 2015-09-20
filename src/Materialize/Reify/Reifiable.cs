@@ -118,7 +118,7 @@ namespace Materialize.Reify
 
             var mapContext = new MapContext(
                                     _regimeDetector.DetectRegime(SourceQuery.Provider),
-                                    new TypeVector(typeof(IEnumerable<TSource>), typeof(IEnumerable<TDest>))
+                                    new TypeVector(typeof(IQueryable<TSource>), typeof(IEnumerable<TDest>))
                                     );
 
             var parser = _parserFac.Create(BaseReifyQuery.Expression, mapContext);

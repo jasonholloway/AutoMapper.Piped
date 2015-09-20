@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Materialize.Reify.Rebasing;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -39,13 +40,13 @@ namespace Materialize.Reify.Parsing
 
             return Parse(upstreamMod, exCall);
         }
-
-
+        
 
         //by default, behaves as though nothing to rebase here - but this will often be right
-        public Expression RebaseToSource(Expression exOld, Expression exNew, Expression exSubject) {
-            return UpstreamStrategy.RebaseToSource(exOld, exNew, exSubject);
+        public RootedExpression RebaseToSource(RootedExpression subject) {
+            return UpstreamStrategy.RebaseToSource(subject);
         }
+
     }
 
 }

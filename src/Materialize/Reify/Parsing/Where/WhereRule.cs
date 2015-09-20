@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Materialize.Reify.Rebasing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -25,21 +26,42 @@ namespace Materialize.Reify.Parsing.Where
                 var upstreamStrategy = GetUpstreamStrategy(ctx);
                 
                 //we have our predicate here
-                var exDestPredicate = (LambdaExpression)((UnaryExpression)ctx.CallExp.Arguments[2]).Operand;
+                var exDestPredicate = (LambdaExpression)((UnaryExpression)ctx.CallExp.Arguments[1]).Operand;
 
                 //should split here
                 //...
 
                 //try to rebase
-                var exSourceParam = Expression.Parameter(ctx.MapContext.TypeVector.SourceType);
 
-                var exSourceRebased = upstreamStrategy.RebaseToSource(
-                                                            exDestPredicate.Parameters.Single(),
-                                                            exSourceParam,
-                                                            exDestPredicate.Body);
+                //we want to rebase our where clause, which relates to a set
+                //which is all well and good, but what will we rebase to?
+                //we need to make a parameter specially to feed to the rebaser
+                //this param will always be IQueryable<TElem>                
 
-                if(exSourceRebased != null 
-                    && ctx.MapContext.QueryRegime.ServerAccepts(exSourceRebased)) 
+                //argh, why do we have to do this? seems like it would be a lot easier to package the parameter stuff into a lambda
+
+
+                //the each modifier in action can 
+
+                //var exSourceParam = Expression.Parameter(typeof(IQueryable<>)
+                //                                            .MakeGenericType(ctx.MapContext.TypeVector.SourceType));
+
+
+                //package below into lambda simply for rebasing pipeline: lambda form 
+
+
+                var exArg0 = ctx.CallExp.Arguments.First();
+
+                var exParam = Expression.Parameter(exArg0.Type, "enDest");
+
+                var rebaseSubject = new RootedExpression(
+                                                exParam,
+                                                ctx.CallExp.Replace(exArg0, exParam));
+
+                var sourceRebased = upstreamStrategy.RebaseToSource(rebaseSubject);
+
+                if(sourceRebased != null 
+                    && ctx.MapContext.QueryRegime.ServerAccepts(sourceRebased.Subject)) 
                 {
                     //give to strategy to append to SourceQuery (but before other rewriting)
                     throw new NotImplementedException();

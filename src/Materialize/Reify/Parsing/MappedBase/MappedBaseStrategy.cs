@@ -1,4 +1,5 @@
 ﻿using Materialize.Reify.Mapping;
+using Materialize.Reify.Rebasing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +13,11 @@ namespace Materialize.Reify.Parsing.MappedBase
         : IParseStrategy
     {
         IMapStrategy _mapStrategy;
+        RebaserFactory _rebaserFac;
 
-        public MappedBaseStrategy(IMapStrategy mapStrategy) {
+        public MappedBaseStrategy(IMapStrategy mapStrategy, RebaserFactory rebaserFac) {
             _mapStrategy = mapStrategy;
+            _rebaserFac = rebaserFac;
         }
 
 
@@ -40,30 +43,13 @@ namespace Materialize.Reify.Parsing.MappedBase
         }
 
 
-        public Expression RebaseToSource(
-            Expression exOld, 
-            Expression exNew, 
-            Expression exSubject) 
+        public RootedExpression RebaseToSource(RootedExpression subject) 
         {
-            //This is the problematic site!!!
-            //mapping strategies also need to rebase, in order to serve this.
+            var rebaseMap = new RebaseMap();
 
-            //mapping rebaser wouldn't deal in entire lambdaexpression, however.
-            //the different layers of mapping are intra-layer, intra-lambda.
-
-            //simple idea would be to rebase each parameter instance (as before) and then each member access of that
-            //parameter. Instead of rebasing by parameter, should primarily work from accessor.
-
-            //will often be rebased to an intermediary tuple.
-
-            //*******************************************************************************************************
-            //THOUGH THIS IS IMPOSSIBLE, AS TUPLE MEMBERS CAN'T BE REFERENCED!!! Can't, therefore, rebase to TFetch.
-            //*******************************************************************************************************
-
-            //TFetch predicates are not palatable to the server. Only TSource predicates are possible.
+            var rebaser = _rebaserFac.Create(rebaseMap);
             
-
-            throw new NotImplementedException();
+            return rebaser.Rebase(subject);
         }
     }
 }

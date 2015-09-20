@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Infrastructure\ServiceRegistryExtensions.cs" />
     <Compile Include="Infrastructure\TestData.cs" />
+    <Compile Include="MaterializableRebaseTests.cs" />
     <Compile Include="MaterializationCollectionTests.cs" />
     <Compile Include="MaterializationBasicTests.cs" />
     <Compile Include="Infrastructure\Database.cs" />

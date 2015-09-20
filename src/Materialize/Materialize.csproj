@@ -82,6 +82,17 @@
     <Compile Include="Reify\Parsing\Unaries\UnaryRule.cs" />
     <Compile Include="Reify\Parsing\Where\ClientOnlyWhereStrategy.cs" />
     <Compile Include="Reify\Parsing\Where\WhereRule.cs" />
+    <Compile Include="Reify\Rebasing\IRebaseStrategySource.cs" />
+    <Compile Include="Reify\Rebasing\IRebaseRule.cs" />
+    <Compile Include="Reify\Rebasing\IRebaseRuleRegistry.cs" />
+    <Compile Include="Reify\Rebasing\IRebaseStrategy.cs" />
+    <Compile Include="Reify\Rebasing\RebaseMap.cs" />
+    <Compile Include="Reify\Rebasing\Rebaser.cs" />
+    <Compile Include="Reify\Rebasing\RebaserFactory.cs" />
+    <Compile Include="Reify\Rebasing\RebaseStrategySource.cs" />
+    <Compile Include="Reify\Rebasing\RebaseContext.cs" />
+    <Compile Include="Reify\Rebasing\RebaseRuleRegistry.cs" />
+    <Compile Include="Reify\Rebasing\RootedExpression.cs" />
     <Compile Include="Reify\ReifiableFactory.cs" />
     <Compile Include="Dependencies\IServiceRegistry.cs" />
     <Compile Include="Dependencies\ServiceRegistry.cs" />
