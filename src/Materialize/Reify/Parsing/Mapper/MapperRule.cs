@@ -4,14 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Materialize.Reify.Parsing.MappedBase
+namespace Materialize.Reify.Parsing.Mapper
 {
-    class MappedBaseRule : ParseRule
+    class MapperRule : ParseRule
     {
         IMapStrategySource _mapStrategies;
         RebaserFactory _rebaserFac;
 
-        public MappedBaseRule(IMapStrategySource mapStrategies, RebaserFactory rebaserFac) {
+        public MapperRule(IMapStrategySource mapStrategies, RebaserFactory rebaserFac) {
             _mapStrategies = mapStrategies;
             _rebaserFac = rebaserFac;
         }
@@ -22,7 +22,7 @@ namespace Materialize.Reify.Parsing.MappedBase
             if(ctx.IsMappingBase) 
             {                
                 var mapStrategy = _mapStrategies.GetStrategy(ctx.MapContext);
-                return new MappedBaseStrategy(mapStrategy, _rebaserFac);
+                return new MapperStrategy(mapStrategy, _rebaserFac);
             }
             
             return null;

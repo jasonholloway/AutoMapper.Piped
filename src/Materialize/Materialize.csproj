@@ -48,6 +48,7 @@
     <Compile Include="ExpressionComparison\VoidExpressionVisitor.cs" />
     <Compile Include="IMaterializable.cs" />
     <Compile Include="Dependencies\LightInject\LightInject.cs" />
+    <Compile Include="Info\QueryableMethods.cs" />
     <Compile Include="Materializable.cs" />
     <Compile Include="ProjectedTypes\DynaType\DynaType.cs" />
     <Compile Include="ProjectedTypes\IProjectedTypeBuilder.cs" />
@@ -59,8 +60,8 @@
     <Compile Include="Reify\Mapping\IMapStrategySource.cs" />
     <Compile Include="Reify\Mapping\MapRuleBase.cs" />
     <Compile Include="Reify\Mapping\MapRuleRegistry.cs" />
-    <Compile Include="Reify\Parsing\MappedBase\MappedBaseRule.cs" />
-    <Compile Include="Reify\Parsing\MappedBase\MappedBaseStrategy.cs" />
+    <Compile Include="Reify\Parsing\Mapper\MapperRule.cs" />
+    <Compile Include="Reify\Parsing\Mapper\MapperStrategy.cs" />
     <Compile Include="Reify\Parsing\IParseRuleRegistry.cs" />
     <Compile Include="Reify\Parsing\IParseStrategySource.cs" />
     <Compile Include="Reify\Parsing\IParseRule.cs" />
@@ -82,10 +83,14 @@
     <Compile Include="Reify\Parsing\Unaries\UnaryRule.cs" />
     <Compile Include="Reify\Parsing\Where\ClientOnlyWhereStrategy.cs" />
     <Compile Include="Reify\Parsing\Where\WhereRule.cs" />
+    <Compile Include="Reify\Rebasing2\RebaseContext.cs" />
+    <Compile Include="Reify\Rebasing2\RebaserVisitor.cs" />
+    <Compile Include="Reify\Rebasing2\RebaseSpec.cs" />
     <Compile Include="Reify\Rebasing\IRebaseStrategySource.cs" />
     <Compile Include="Reify\Rebasing\IRebaseRule.cs" />
     <Compile Include="Reify\Rebasing\IRebaseRuleRegistry.cs" />
     <Compile Include="Reify\Rebasing\IRebaseStrategy.cs" />
+    <Compile Include="Reify\Rebasing\Misc\PassiveStrategy.cs" />
     <Compile Include="Reify\Rebasing\RebaseMap.cs" />
     <Compile Include="Reify\Rebasing\Rebaser.cs" />
     <Compile Include="Reify\Rebasing\RebaserFactory.cs" />
@@ -93,6 +98,10 @@
     <Compile Include="Reify\Rebasing\RebaseContext.cs" />
     <Compile Include="Reify\Rebasing\RebaseRuleRegistry.cs" />
     <Compile Include="Reify\Rebasing\RootedExpression.cs" />
+    <Compile Include="Reify\Rebasing\Root\RootRule.cs" />
+    <Compile Include="Reify\Rebasing\Root\RootStrategy.cs" />
+    <Compile Include="Reify\Rebasing\Where\WhereRule.cs" />
+    <Compile Include="Reify\Rebasing\Where\WhereStrategy.cs" />
     <Compile Include="Reify\ReifiableFactory.cs" />
     <Compile Include="Dependencies\IServiceRegistry.cs" />
     <Compile Include="Dependencies\ServiceRegistry.cs" />

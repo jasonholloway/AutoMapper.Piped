@@ -1,4 +1,6 @@
 ﻿using Materialize.Dependencies;
+using Materialize.Reify.Rebasing.Root;
+using Materialize.Reify.Rebasing.Where;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +12,8 @@ namespace Materialize.Reify.Rebasing
     class RebaseRuleRegistry : IRebaseRuleRegistry
     {
         static Type[] _ruleTypes = new Type[] {
-                                        //typeof(MappedBaseRule), //should always be first
-                                        //typeof(UnaryRule),
-                                        //typeof(LimiterRule),
-                                        //typeof(WhereRule),
+                                        typeof(WhereRule),
+                                        typeof(RootRule)
                                     };
 
 

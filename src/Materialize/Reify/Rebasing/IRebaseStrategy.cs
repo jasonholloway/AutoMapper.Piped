@@ -9,6 +9,9 @@ namespace Materialize.Reify.Rebasing
 {
     interface IRebaseStrategy
     {
-        RootedExpression Rebase();
+        bool IsPassive { get; }
+        RebaseMap ActiveMap { get; }
+
+        RootedExpression Rebase(RootedExpression subject);
     }
 }

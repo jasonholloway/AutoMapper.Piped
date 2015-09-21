@@ -1,6 +1,6 @@
 ﻿using Materialize.Dependencies;
 using Materialize.Reify.Parsing.Limiters;
-using Materialize.Reify.Parsing.MappedBase;
+using Materialize.Reify.Parsing.Mapper;
 using Materialize.Reify.Parsing.Unaries;
 using Materialize.Reify.Parsing.Where;
 using System;
@@ -12,7 +12,7 @@ namespace Materialize.Reify.Parsing
     class ParseRuleRegistry : IParseRuleRegistry
     {
         static Type[] _ruleTypes = new[] {
-                                        typeof(MappedBaseRule), //should always be first
+                                        typeof(MapperRule), //should always be first
                                         typeof(UnaryRule),
                                         typeof(LimiterRule),
                                         typeof(WhereRule),

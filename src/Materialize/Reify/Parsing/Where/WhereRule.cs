@@ -52,7 +52,7 @@ namespace Materialize.Reify.Parsing.Where
 
                 var exArg0 = ctx.CallExp.Arguments.First();
 
-                var exParam = Expression.Parameter(exArg0.Type, "enDest");
+                var exParam = Expression.Parameter(exArg0.Type, "en");
 
                 var rebaseSubject = new RootedExpression(
                                                 exParam,
@@ -61,7 +61,7 @@ namespace Materialize.Reify.Parsing.Where
                 var sourceRebased = upstreamStrategy.RebaseToSource(rebaseSubject);
 
                 if(sourceRebased != null 
-                    && ctx.MapContext.QueryRegime.ServerAccepts(sourceRebased.Subject)) 
+                    && ctx.MapContext.QueryRegime.ServerAccepts(sourceRebased.Expression)) 
                 {
                     //give to strategy to append to SourceQuery (but before other rewriting)
                     throw new NotImplementedException();

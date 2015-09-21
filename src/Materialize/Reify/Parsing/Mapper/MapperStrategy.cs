@@ -7,15 +7,15 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 
-namespace Materialize.Reify.Parsing.MappedBase
+namespace Materialize.Reify.Parsing.Mapper
 {
-    class MappedBaseStrategy
+    class MapperStrategy
         : IParseStrategy
     {
         IMapStrategy _mapStrategy;
         RebaserFactory _rebaserFac;
 
-        public MappedBaseStrategy(IMapStrategy mapStrategy, RebaserFactory rebaserFac) {
+        public MapperStrategy(IMapStrategy mapStrategy, RebaserFactory rebaserFac) {
             _mapStrategy = mapStrategy;
             _rebaserFac = rebaserFac;
         }
@@ -45,7 +45,7 @@ namespace Materialize.Reify.Parsing.MappedBase
 
         public RootedExpression RebaseToSource(RootedExpression subject) 
         {
-            var rebaseMap = new RebaseMap();
+            var rebaseMap = new RebaseMap(DestType, SourceType);
 
             var rebaser = _rebaserFac.Create(rebaseMap);
             

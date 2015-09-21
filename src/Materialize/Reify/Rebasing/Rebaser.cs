@@ -15,14 +15,18 @@ namespace Materialize.Reify.Rebasing
             _rebaseMap = rebaseMap;
         }
 
-        public RootedExpression Rebase(RootedExpression subject) {
+        public RootedExpression Rebase(RootedExpression subject) 
+        {            
+            var exNewRoot = Expression.Parameter(_rebaseMap.RebasedType, "rebased");
+
             var ctx = new RebaseContext(
                                     subject,
+                                    exNewRoot,
                                     _rebaseMap);
             
             var strategy = _rebaseStrategies.GetStrategy(ctx);
 
-            return strategy.Rebase();
+            return strategy.Rebase(subject);
         }
 
     }
