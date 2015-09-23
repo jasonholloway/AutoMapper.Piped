@@ -29,15 +29,17 @@ namespace Materialize.Tests
             });
 
 
-            Expression queryExpression = null;
+            Expression exServerQuery = null;
 
-            var models = Data.Dogs.AsQueryable()
-                                    .Snoop(ex => queryExpression = ex)
-                                    .MaterializeAs<DogAndOwnerModel>()
+            var snooper = new Snooper();
+            snooper.QueryToServer += (qy => exServerQuery = qy.Expression);
+
+
+            var models = Data.Dogs.AsQueryable()                                    
+                                    .MapAs<DogAndOwnerModel>(snooper)
                                     .ToArray();
-
-
-            queryExpression.Contains(exPersonProj.Body).ShouldBeTrue();
+            
+            exServerQuery.Contains(exPersonProj.Body).ShouldBeTrue();
         }
 
 
@@ -58,15 +60,17 @@ namespace Materialize.Tests
             });
 
 
-            Expression queryExpression = null;
+            Expression exServerQuery = null;
+
+            var snooper = new Snooper();
+            snooper.QueryToServer += (qy => exServerQuery = qy.Expression);
 
             var dogModels = Data.Dogs.AsQueryable()
-                                        .Snoop(ex => queryExpression = ex)
-                                        .MaterializeAs<DogAndOwnerModel>()
+                                        .MapAs<DogAndOwnerModel>(snooper)
                                         .ToArray();
 
 
-            queryExpression.Contains(exPersonProj.Body)
+            exServerQuery.Contains(exPersonProj.Body)
                                         .ShouldBeFalse();
 
             dogModels.Select(d => d.Owner.Name)

@@ -69,9 +69,8 @@
     <Compile Include="MaterializationCollectionTests.cs" />
     <Compile Include="MaterializationBasicTests.cs" />
     <Compile Include="Infrastructure\Database.cs" />
-    <Compile Include="Infrastructure\MaterializableSnooping.cs" />
     <Compile Include="Infrastructure\TestClassBase.cs" />
-    <Compile Include="MaterializableExtensionTests.cs" />
+    <Compile Include="MaterializableQueryableMethodTests.cs" />
     <Compile Include="MaterializationEFRegimeTests.cs" />
     <Compile Include="MaterializationTranslationTests.cs" />
     <Compile Include="Model\DbModel.cs" />

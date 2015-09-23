@@ -8,9 +8,9 @@ using Xunit;
 
 namespace Materialize.Tests
 {    
-    class MaterializableExtensionTests : TestClassBase
+    class MaterializableQueryableMethodTests : TestClassBase
     {
-        public MaterializableExtensionTests() 
+        public MaterializableQueryableMethodTests() 
         {
             InitServices(x => x.EmplaceIntolerantSourceRegime());
 
@@ -181,6 +181,7 @@ namespace Materialize.Tests
                         ).ShouldBeTrue();            
         }
 
+                       
 
         [Fact]
         public void WhereFirst() {
@@ -190,24 +191,18 @@ namespace Materialize.Tests
                 x.CreateMap<int, float>()
                     .ProjectUsing(i => 2F * i);
             });
-
-            //int fetchedItemsCount = 0;
-
-            //var snooper = new Snooper();
-            //snooper.Fetched += (f => fetchedItemsCount += f.Count());
             
-
             var ints = Enumerable.Range(0, 100).AsQueryable();
 
-            var mapped = ints.MapAs<float>();
+            var qyMapped = ints.MapAs<float>();
 
-            var taken = mapped.Where(f => f > 100F)
+            var taken = qyMapped.Where(f => f > 100F)
                                 .First();
 
             taken.ShouldEqual(102F);
 
             Assert.Throws<InvalidOperationException>(() => {
-                mapped.Where(f => false)
+                qyMapped.Where(f => false)
                         .First();
             });
         }
@@ -224,16 +219,16 @@ namespace Materialize.Tests
             
             var ints = Enumerable.Range(0, 100).AsQueryable();
 
-            var mapped = ints.MapAs<float>();
+            var qyMapped = ints.MapAs<float>();
             
-            var result1 = mapped
+            var result1 = qyMapped
                             .Where(f => f > 100F)
                             .FirstOrDefault();
 
             result1.ShouldEqual(102F);
 
 
-            var result2 = mapped
+            var result2 = qyMapped
                             .Where(f => false)
                             .FirstOrDefault();
 

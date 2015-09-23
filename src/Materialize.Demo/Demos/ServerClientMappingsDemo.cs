@@ -64,14 +64,15 @@ Relies on running SqlServer service.
                                         .Include(v => v.RabbitOnOffer.Breed)
                                         .Include(v => v.Town)
                                             .Snoop(e => sourceQueryExp = e); //the snoop extensions are simply utilities for testing
+                
+                var snooper = new Snooper();
+                snooper.QueryToServer += (qy => query = qy);
+                snooper.Fetched += (f => fetched = f.ToArray());
+                snooper.Transformed += (t => transformed = t.ToArray());
 
-                var vendorModels = vendorQuery
-                                        .MaterializeAs<RabbitVendorModel>()
-                                            .SnoopOnQuery(q => query = q)
-                                            .SnoopOnFetched(f => fetched = f.ToArray())
-                                            .SnoopOnTransformed(t => transformed = t.ToArray())
-                                        .Take(3)    //this is IMaterializable<T>.Take, which adds a modifier to the stack
-                                        .ToArray(); //needed to trigger materialization
+                var vendorModels = vendorQuery.MapAs<RabbitVendorModel>(snooper)
+                                                .Take(3)    
+                                                .ToArray();
                 
 
                 Console.WriteLine("***************************************************");

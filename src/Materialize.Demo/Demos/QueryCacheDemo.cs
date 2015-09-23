@@ -61,11 +61,7 @@ Don't quite know as yet...
             }
         }
 
-
-        IQueryable<TElem> GetQueryable<TElem>(IMaterializable<TElem> materializable) {
-            return ((Materializable<TElem>)materializable).AsQueryable();
-        }
-
+        
 
         
         public override void Run() 
@@ -89,11 +85,9 @@ Don't quite know as yet...
             
             var data = new TestData();
 
-            var qyRabbits = GetQueryable(data.Rabbits.AsQueryable()
-                                                        .MaterializeAs<RabbitModel>());
+            var qyRabbits = data.Rabbits.AsQueryable().MapAs<RabbitModel>();
 
-            var qyVendors = GetQueryable(data.Vendors.AsQueryable()
-                                                        .MaterializeAs<RabbitVendorModel>());
+            var qyVendors = data.Vendors.AsQueryable().MapAs<RabbitVendorModel>();
                         
 
             var queryTests = new QueryTest[] {

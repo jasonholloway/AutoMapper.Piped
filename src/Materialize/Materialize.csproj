@@ -47,11 +47,9 @@
     <Compile Include="ExpressionComparison\QueryExpressionComparer.cs" />
     <Compile Include="ExpressionComparison\ExpressionComparer.cs" />
     <Compile Include="ExpressionComparison\VoidExpressionVisitor.cs" />
-    <Compile Include="IMaterializable.cs" />
     <Compile Include="Dependencies\LightInject\LightInject.cs" />
     <Compile Include="Info\QueryableMethods.cs" />
     <Compile Include="ISnooper.cs" />
-    <Compile Include="Materializable.cs" />
     <Compile Include="ProjectedTypes\DynaType\DynaType.cs" />
     <Compile Include="ProjectedTypes\IProjectedTypeBuilder.cs" />
     <Compile Include="CollectionFactories\Builders.cs" />
@@ -132,7 +130,6 @@
     <Compile Include="Reify\Mapping\IMapStrategy.cs" />
     <Compile Include="ProjectedTypes\IProjectedMemberSpec.cs" />
     <Compile Include="ProjectedTypes\ProjectedTypeInfo.cs" />
-    <Compile Include="MaterializableExtensions.cs" />
     <Compile Include="ProjectedTypes\ProjectedMemberInfo.cs" />
     <Compile Include="ProjectedTypes\ProjectedTypeBuilder.cs" />
     <Compile Include="Obsolete\TypeSpec.cs" />
