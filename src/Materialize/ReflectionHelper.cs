@@ -11,6 +11,24 @@ namespace Materialize
     static class Refl
     {
 
+
+        public static Type GetMemberType(MemberInfo member) {
+            if(member is PropertyInfo) {
+                return ((PropertyInfo)member).PropertyType;
+            }
+
+            if(member is FieldInfo) {
+                return ((FieldInfo)member).FieldType;
+            }
+
+            if(member is MethodInfo) {
+                return ((MethodInfo)member).ReturnType;
+            }
+
+            throw new NotImplementedException();
+        }
+
+
         public static MethodInfo GetMethod<TInst>(Expression<Action<TInst>> exAction) {
             var exCall = exAction.Body as MethodCallExpression;
 

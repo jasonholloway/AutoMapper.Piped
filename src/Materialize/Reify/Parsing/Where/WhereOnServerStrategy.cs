@@ -10,12 +10,12 @@ namespace Materialize.Reify.Parsing.Where
     class WhereOnServerStrategy<TElem> 
         : QueryableMethodStrategy<IEnumerable<TElem>, IEnumerable<TElem>>
     {
-        RootedExpression _rebasedPredicate;
+        IRebaseStrategy _rebaseStrategy;
 
-        public WhereOnServerStrategy(IParseStrategy upstreamStrategy, RootedExpression rebasedPredicate)
+        public WhereOnServerStrategy(IParseStrategy upstreamStrategy, IRebaseStrategy rebaseStrategy)
             : base(upstreamStrategy) 
         {
-            _rebasedPredicate = rebasedPredicate;
+            _rebaseStrategy = rebaseStrategy;
         }
                
 
@@ -26,48 +26,41 @@ namespace Materialize.Reify.Parsing.Where
 
         protected override IModifier Parse(IModifier upstreamMod, MethodCallExpression exSubject) 
         {
-            var exPredicate = (Expression<Func<TElem, bool>>)((UnaryExpression)exSubject.Arguments[1]).Operand;
+            var exRebaseSubject = exSubject.Replace(
+                                                exSubject.Arguments[0],
+                                                _rebaseStrategy.Roots.Keys.Single()
+                                                );
 
+            var exRebasedWhere = _rebaseStrategy.Rebase(exRebaseSubject);
 
-            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            //BELOW COMPILATION TO BE DONE BY STRATEGY IN A CACHE-FRIENDLY MANNER!!!
-            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-            var fnPredicate = exPredicate.Compile(); //Nasty: no way to cache? Only if entire tree were cached further up...
-                                                        //Nah: we could (and should) have a predicate-only auxiliary cache.                                                    
-                                                        //specially for little compilations...
-
-                                                        //even better would be a stripping out of non-value-type constants,
-                                                        //to be replaced with arguments. This would leave us with the essential
-                                                        //shape of the predicate: much easier to cache.
-
-                                                        //Names of parameters should also be stripped for the same reason.
-
-            return new Modifier(upstreamMod, fnPredicate);
+            return new Modifier(upstreamMod, (MethodCallExpression)exRebasedWhere);
         }
                        
 
         class Modifier : ParseModifier<IEnumerable<TElem>, IEnumerable<TElem>>
         {
-            Func<TElem, bool> _fnPredicate;
+            MethodCallExpression _exRebasedWhere;
 
-            public Modifier(IModifier upstreamMod, Func<TElem, bool> fnPredicate)
+            public Modifier(IModifier upstreamMod, MethodCallExpression exRebasedWhere)
                 : base(upstreamMod) 
             {
-                _fnPredicate = fnPredicate;
+                _exRebasedWhere = exRebasedWhere;
             }
             
 
-            protected override Expression Rewrite(Expression exQuery) {
-                return UpstreamRewrite(exQuery); //no rewrite, as nothing to do on server
+            protected override Expression Rewrite(Expression exQuery) 
+            {                
+                var exAppended = _exRebasedWhere.Replace(
+                                                    _exRebasedWhere.Arguments[0], 
+                                                    exQuery);
+                
+                return UpstreamRewrite(exAppended); //no rewrite, as nothing to do on server
             }
 
 
             protected override IEnumerable<TElem> Transform(object fetched) 
             {                
-                var transformed = UpstreamTransform(fetched);
-                return transformed.Where(_fnPredicate);
+                return UpstreamTransform(fetched);
             }
 
         }

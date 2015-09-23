@@ -43,18 +43,19 @@ namespace Materialize.Reify.Parsing.Mapper
         }
 
 
-        public RootedExpression RebaseToSource(RootedExpression subject) 
+        public IRebaseStrategy GetRebaseStrategy(RootedExpression subject) 
         {
-            var memberRebaser = new MappedMemberRebaser(); //should pack with all applied projections
+            var memberStrategizer = new MappedMemberRebaseStrategizer();
+        
+            var strategizer = new RebaseStrategizer(
+                                        memberStrategizer,
+                                        x => {
+                                            x.AddRoot(subject.Root, Expression.Parameter(SourceType));
+                                        });
 
-            var rebaser = new Rebaser(memberRebaser);
-            
-            var exNewRoot = Expression.Parameter(SourceType, "r");
-            rebaser.Roots[subject.Root] = exNewRoot;
-
-            return new RootedExpression(
-                                exNewRoot, 
-                                rebaser.Rebase(subject.Expression));
+            return strategizer.GetStrategy(subject.Expression); //need some way to retrieve new roots...
         }
+
+
     }
 }

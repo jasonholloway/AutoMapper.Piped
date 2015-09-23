@@ -32,9 +32,12 @@ namespace Materialize.Tests
         [Fact]
         public void ATest() {
             var dogs = Data.Dogs.AsQueryable()
-                        .MaterializeAs<DogAndOwnerModel>();
+                        .MaterializeAs<DogAndOwnerModel>()
+                        .SnoopOnQuery(q => { })
+                        .SnoopOnFetched(f => { });
 
-            var result = dogs.Where(d => d.Owner.Name == "Brian").First();
+
+            var result = dogs.Where(d => d.Owner.Name == Data.Dogs.Last().Owner.Name).ToArray();
 
             throw new NotImplementedException();
         }

@@ -1,5 +1,6 @@
 ﻿using Materialize.Reify.Rebasing2;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -42,11 +43,13 @@ namespace Materialize.Reify.Parsing
         }
         
 
-        //by default, behaves as though nothing to rebase here - but this will often be right
-        public RootedExpression RebaseToSource(RootedExpression subject) {
-            return UpstreamStrategy.RebaseToSource(subject);
-        }
+        //by default, behaves as though nothing to rebase here - but this will often be right        
+        public virtual IRebaseStrategy GetRebaseStrategy(RootedExpression subject) 
+        {
+            Debug.Assert(subject.Root.Type == DestType);
 
+            return UpstreamStrategy.GetRebaseStrategy(subject);
+        }
     }
 
 }

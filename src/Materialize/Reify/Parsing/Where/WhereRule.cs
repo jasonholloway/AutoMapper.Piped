@@ -21,70 +21,50 @@ namespace Materialize.Reify.Parsing.Where
                 var tElem = ctx.TypeArgs.Single();
                 
                 var upstreamStrategy = GetUpstreamStrategy(ctx);
-                
+
                 //we have our predicate here
-                var exDestPredicate = (LambdaExpression)((UnaryExpression)ctx.CallExp.Arguments[1]).Operand;
+                var exInst = ctx.CallExp.Arguments[0];
 
-                //should split here
+                var exPredicate = (LambdaExpression)((UnaryExpression)ctx.CallExp.Arguments[1]).Operand;
+
+                //should split here as much as possible (ANDs can be applied in series)
                 //...
-
-                //try to rebase
-
-                //we want to rebase our where clause, which relates to a set
-                //which is all well and good, but what will we rebase to?
-                //we need to make a parameter specially to feed to the rebaser
-                //this param will always be IQueryable<TElem>                
-
-                //argh, why do we have to do this? seems like it would be a lot easier to package the parameter stuff into a lambda
-
-
-                //the each modifier in action can 
-
-                //var exSourceParam = Expression.Parameter(typeof(IQueryable<>)
-                //                                            .MakeGenericType(ctx.MapContext.TypeVector.SourceType));
-
-
-                //package below into lambda simply for rebasing pipeline: lambda form 
-
-
-                var exArg0 = ctx.CallExp.Arguments.First();
-
-                var exParam = Expression.Parameter(exArg0.Type, "en");
+                
+                //eeeeh.... to rebase, each predicate will have to be packed within its own where clause,
+                //operating on IQueryable<TElem>. Only in this form can it be sent upstream to be rebased.                                
+                
+                var exRootParam = Expression.Parameter(exInst.Type, "root");
 
                 var rebaseSubject = new RootedExpression(
-                                                exParam,
-                                                ctx.CallExp.Replace(exArg0, exParam));
+                                                exRootParam,
+                                                Expression.Call(
+                                                    QueryableMethods.WhereDef.MakeGenericMethod(tElem),
+                                                    exRootParam,
+                                                    exPredicate
+                                                ));
+                
+                var rebaseStrategy = upstreamStrategy.GetRebaseStrategy(rebaseSubject);
 
-                var sourceRebased = upstreamStrategy.RebaseToSource(rebaseSubject);
-
-                if(sourceRebased != null 
-                    && ctx.MapContext.QueryRegime.ServerAccepts(sourceRebased.Expression)) 
-                {
-                    //give to strategy to append to SourceQuery (but before other rewriting)
-
-                    //So, we have form of rebased where predicate...
-                    //But its constants will be unique each time, potentially
-                    //So we can't just simply emplace it as we have it here.
-
-                    //Options would seem to be:
-                    //  > Rerun in full for each fetch
-                    //  > Complicated parameterization
-                    //  > Build strategies of rebasing ********
-                    //
-                    // STRATEGISATION!!!!!!!!!!!
-                    // (doesn't have to be to same extent as parsing...)
-
-
-
-
-                    throw new NotImplementedException();
+                
+                if(rebaseStrategy != null) {
+                    var exTest = rebaseStrategy.Rebase(rebaseSubject.Expression);
+                    
+                    if(ctx.MapContext.QueryRegime.ServerAccepts(exTest)) 
+                    {
+                        //we can prepend to source query!                        
+                        return CreateStrategy(
+                                        typeof(WhereOnServerStrategy<>)
+                                                    .MakeGenericType(tElem),
+                                        upstreamStrategy,
+                                        rebaseStrategy);                        
+                    }
                 }
-                else {
-                    return CreateStrategy(
-                                    typeof(ClientOnlyWhereStrategy<>)
-                                                        .MakeGenericType(tElem),
-                                    upstreamStrategy);
-                }                
+
+
+                return CreateStrategy(
+                                typeof(ClientOnlyWhereStrategy<>)
+                                                    .MakeGenericType(tElem),
+                                upstreamStrategy);                
             }
 
             return null;
