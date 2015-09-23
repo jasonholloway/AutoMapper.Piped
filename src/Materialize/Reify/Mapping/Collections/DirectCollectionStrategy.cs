@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace Materialize.Reify.Mapping.Collections
 {
-    class DirectCollectionStrategy<TOrigElem, TDestElem, TDest>
-        : StrategyBase<IEnumerable<TOrigElem>, TDest>
+    class DirectCollectionStrategy<TOrig, TOrigElem, TDestElem, TDest>
+        : StrategyBase<TOrig, TDest>
+        where TOrig : IEnumerable<TOrigElem>
     {
         MapContext _ctx;
         CollectionFactory _collFactory;

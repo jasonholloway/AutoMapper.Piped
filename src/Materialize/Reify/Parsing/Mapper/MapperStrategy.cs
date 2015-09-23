@@ -1,5 +1,5 @@
 ﻿using Materialize.Reify.Mapping;
-using Materialize.Reify.Rebasing;
+using Materialize.Reify.Rebasing2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +13,11 @@ namespace Materialize.Reify.Parsing.Mapper
         : IParseStrategy
     {
         IMapStrategy _mapStrategy;
-        RebaserFactory _rebaserFac;
+        //RebaserFactory _rebaserFac;
 
-        public MapperStrategy(IMapStrategy mapStrategy, RebaserFactory rebaserFac) {
+        public MapperStrategy(IMapStrategy mapStrategy/*, RebaserFactory rebaserFac*/) {
             _mapStrategy = mapStrategy;
-            _rebaserFac = rebaserFac;
+            //_rebaserFac = rebaserFac;
         }
 
 
@@ -45,11 +45,16 @@ namespace Materialize.Reify.Parsing.Mapper
 
         public RootedExpression RebaseToSource(RootedExpression subject) 
         {
-            var rebaseMap = new RebaseMap(DestType, SourceType);
+            var memberRebaser = new MappedMemberRebaser(); //should pack with all applied projections
 
-            var rebaser = _rebaserFac.Create(rebaseMap);
+            var rebaser = new Rebaser(memberRebaser);
             
-            return rebaser.Rebase(subject);
+            var exNewRoot = Expression.Parameter(SourceType, "r");
+            rebaser.Roots[subject.Root] = exNewRoot;
+
+            return new RootedExpression(
+                                exNewRoot, 
+                                rebaser.Rebase(subject.Expression));
         }
     }
 }

@@ -28,9 +28,14 @@ namespace Materialize.Demo
     
     class Town
     {
+        public Town() {
+            Vendors = new List<RabbitVendor>();
+        }
+
         [Key]
         public int ID { get; set; }
         public string Name { get; set; }
+        public ICollection<RabbitVendor> Vendors { get; set; }
     }
 
     class RabbitBreed

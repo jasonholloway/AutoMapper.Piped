@@ -46,8 +46,8 @@ namespace Materialize.Reify.Parsing.Unaries
             }
 
 
-            protected override TElem Transform(object fetched) 
-            {
+            protected override TElem Transform(object fetched) { 
+                //need to package in enumerable to pass upstream
                 var rFetched = Array.CreateInstance(fetched.GetType(), 1);
                 rFetched.SetValue(fetched, 0);
 

@@ -69,6 +69,7 @@
     <Compile Include="CurrencyContext.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="DbModel.cs" />
+    <Compile Include="Demos\EFRegimeDemo.cs" />
     <Compile Include="Demos\QueryCacheDemo.cs" />
     <Compile Include="Demos\ServerClientMappingsDemo.cs" />
     <Compile Include="Demo.cs" />

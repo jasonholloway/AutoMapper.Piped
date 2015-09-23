@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 
 namespace Materialize.Reify.Mapping.Collections
 {
-    class CollectionStrategy<TOrigElem, TMedElem, TDestElem, TDest>
-        : StrategyBase<IEnumerable<TOrigElem>, TDest>
+    class CollectionStrategy<TOrig, TOrigElem, TMedElem, TDestElem, TDest>
+        : StrategyBase<TOrig, TDest>
+        where TOrig : IEnumerable<TOrigElem>
     {
         MapContext _ctx;
         CollectionFactory _collFactory;

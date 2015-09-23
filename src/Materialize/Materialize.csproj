@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="CollectionFactories\CollectionFactorySource.cs" />
     <Compile Include="CollectionFactories\ICollectionFactorySource.cs" />
+    <Compile Include="ExpressionComparison\CustomExpressionVisitor.cs" />
     <Compile Include="ExpressionExtensions.cs" />
     <Compile Include="ExpressionComparison\ExpressionHasher.cs" />
     <Compile Include="ExpressionComparison\QueryExpressionComparer.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Reify\Mapping\IMapStrategySource.cs" />
     <Compile Include="Reify\Mapping\MapRuleBase.cs" />
     <Compile Include="Reify\Mapping\MapRuleRegistry.cs" />
+    <Compile Include="Reify\Parsing\Mapper\MappedMemberRebaser.cs" />
     <Compile Include="Reify\Parsing\Mapper\MapperRule.cs" />
     <Compile Include="Reify\Parsing\Mapper\MapperStrategy.cs" />
     <Compile Include="Reify\Parsing\IParseRuleRegistry.cs" />
@@ -83,9 +85,17 @@
     <Compile Include="Reify\Parsing\Unaries\UnaryRule.cs" />
     <Compile Include="Reify\Parsing\Where\ClientOnlyWhereStrategy.cs" />
     <Compile Include="Reify\Parsing\Where\WhereRule.cs" />
-    <Compile Include="Reify\Rebasing2\RebaseContext.cs" />
-    <Compile Include="Reify\Rebasing2\RebaserVisitor.cs" />
-    <Compile Include="Reify\Rebasing2\RebaseSpec.cs" />
+    <Compile Include="Reify\Rebasing2\IMemberRebaser.cs" />
+    <Compile Include="Reify\Rebasing2\Rebased.cs" />
+    <Compile Include="Reify\Rebasing2\RebaserParts\Constant.cs" />
+    <Compile Include="Reify\Rebasing2\RebaserParts\MemberAccess.cs" />
+    <Compile Include="Reify\Rebasing2\RebaserParts\Lambda.cs" />
+    <Compile Include="Reify\Rebasing2\RebaserParts\Unary.cs" />
+    <Compile Include="Reify\Rebasing2\RootedExpression.cs" />
+    <Compile Include="Reify\Rebasing2\RebaserParts\MethodCall.cs" />
+    <Compile Include="Reify\Rebasing2\RebaserParts\Binary.cs" />
+    <Compile Include="Reify\Rebasing2\RebaserParts\Parameter.cs" />
+    <Compile Include="Reify\Rebasing2\Rebaser.cs" />
     <Compile Include="Reify\Rebasing\IRebaseStrategySource.cs" />
     <Compile Include="Reify\Rebasing\IRebaseRule.cs" />
     <Compile Include="Reify\Rebasing\IRebaseRuleRegistry.cs" />

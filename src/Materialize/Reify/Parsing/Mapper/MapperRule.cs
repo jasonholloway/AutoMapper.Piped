@@ -22,7 +22,7 @@ namespace Materialize.Reify.Parsing.Mapper
             if(ctx.IsMappingBase) 
             {                
                 var mapStrategy = _mapStrategies.GetStrategy(ctx.MapContext);
-                return new MapperStrategy(mapStrategy, _rebaserFac);
+                return new MapperStrategy(mapStrategy); //, _rebaserFac);
             }
             
             return null;

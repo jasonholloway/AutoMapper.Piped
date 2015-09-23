@@ -1,4 +1,5 @@
-﻿using Materialize.Reify.Rebasing;
+﻿using Materialize.Info;
+using Materialize.Reify.Rebasing2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,17 +10,13 @@ namespace Materialize.Reify.Parsing.Where
 {
     class WhereRule : QueryableMethodRule
     {
-        static MethodInfo _mWhereGen = Refl.GetGenMethod(() => Queryable.Where<int>(null, i => true));
-
-        
         public WhereRule(IParseStrategySource strategySource)
             : base(strategySource) { }
-
-        
+                
 
         public override IParseStrategy GetStrategy(ParseContext ctx) 
         {
-            if(ctx.MethodDef == _mWhereGen) 
+            if(ctx.MethodDef == QueryableMethods.WhereDef) 
             {
                 var tElem = ctx.TypeArgs.Single();
                 
@@ -64,6 +61,22 @@ namespace Materialize.Reify.Parsing.Where
                     && ctx.MapContext.QueryRegime.ServerAccepts(sourceRebased.Expression)) 
                 {
                     //give to strategy to append to SourceQuery (but before other rewriting)
+
+                    //So, we have form of rebased where predicate...
+                    //But its constants will be unique each time, potentially
+                    //So we can't just simply emplace it as we have it here.
+
+                    //Options would seem to be:
+                    //  > Rerun in full for each fetch
+                    //  > Complicated parameterization
+                    //  > Build strategies of rebasing ********
+                    //
+                    // STRATEGISATION!!!!!!!!!!!
+                    // (doesn't have to be to same extent as parsing...)
+
+
+
+
                     throw new NotImplementedException();
                 }
                 else {

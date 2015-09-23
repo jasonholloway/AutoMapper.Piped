@@ -49,6 +49,8 @@ namespace Materialize.Demo
                                             .Do(v => {
                                                 v.Name = qPersonNames.Dequeue();
                                                 v.Town = Pick<Town>.RandomItemFrom(Towns);
+                                                v.Town.Vendors.Add(v);
+
                                                 v.RabbitOnOffer = Builder<Rabbit>.CreateNew()
                                                                                 .Do(r => {
                                                                                     r.Name = qRabbitNames.Dequeue();

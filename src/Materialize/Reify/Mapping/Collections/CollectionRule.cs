@@ -41,16 +41,16 @@ namespace Materialize.Reify.Mapping.Collections
                         var tMedElem = elemStrategy.FetchType;
 
                         return base.CreateStrategy(
-                                            typeof(CollectionStrategy<,,,>)
-                                                .MakeGenericType(tOrigElem, tMedElem, tDestElem, tDest),
+                                            typeof(CollectionStrategy<,,,,>)
+                                                .MakeGenericType(tOrig, tOrigElem, tMedElem, tDestElem, tDest),
                                             ctx,
                                             collFactory,
                                             elemStrategy);
                     }
                     else {
                         return base.CreateStrategy(
-                                            typeof(DirectCollectionStrategy<,,>)
-                                                .MakeGenericType(tOrigElem, tDestElem, tDest),
+                                            typeof(DirectCollectionStrategy<,,,>)
+                                                .MakeGenericType(tOrig, tOrigElem, tDestElem, tDest),
                                             ctx,
                                             collFactory,
                                             elemStrategy);

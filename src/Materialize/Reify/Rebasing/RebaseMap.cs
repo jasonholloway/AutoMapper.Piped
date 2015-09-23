@@ -26,7 +26,7 @@ namespace Materialize.Reify.Rebasing
     //signal server rejection.
 
     //Without caching, the case for strategies is more slender.
-
+    //
 
 
 }
