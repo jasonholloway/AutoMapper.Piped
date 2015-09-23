@@ -15,5 +15,21 @@ namespace Materialize
             return new Materializable<TDest>(
                                 reifiable.BaseReifyQuery);                                       
         }
+
+
+
+
+
+        public static IQueryable<TDest> MapAs<TDest>(this IQueryable source) 
+        {
+            var reifiableFac = MaterializeServices.Resolve<ReifiableFactory>();
+
+            var reifiable = reifiableFac.CreateReifiable<TDest>(source);
+
+            return reifiable.BaseReifyQuery;
+        }
+
+
+
     }
 }
