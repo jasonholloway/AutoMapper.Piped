@@ -45,7 +45,7 @@ namespace Materialize
             _query = query;
 
             var reifiable = (Reifiable)_query.Provider;
-            reifiable.Queried += new EventHandler<IQueryable>((o, q) => OnQueried(q));
+            reifiable.QueryToServer += new EventHandler<IQueryable>((o, q) => OnQueried(q));
             reifiable.Fetched += new EventHandler<IEnumerable>((o, en) => OnFetched(en));
             reifiable.Transformed += new EventHandler<IEnumerable>((o, en) => OnTransformed(en));
         }

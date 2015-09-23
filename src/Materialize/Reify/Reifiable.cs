@@ -16,6 +16,8 @@ namespace Materialize.Reify
 
     internal interface IReifiable : IQueryProvider
     {
+        event EventHandler<Expression> QueryFromClient;
+        event EventHandler<IQueryable> QueryToServer;
         event EventHandler<IEnumerable> Fetched;
         event EventHandler<IEnumerable> Transformed;
     }
@@ -34,13 +36,21 @@ namespace Materialize.Reify
         public abstract object Execute(Expression expression);
         public abstract TResult Execute<TResult>(Expression expression);
 
-        public event EventHandler<IQueryable> Queried;
+        public event EventHandler<Expression> QueryFromClient;
+        public event EventHandler<IQueryable> QueryToServer;
         public event EventHandler<IEnumerable> Fetched;
         public event EventHandler<IEnumerable> Transformed;
 
-        protected void OnQueried(IQueryable query) {
-            if(Queried != null) {
-                Queried(this, query);
+
+        protected void OnQueryFromClient(Expression exQuery) {
+            if(QueryFromClient != null) {
+                QueryFromClient(this, exQuery);
+            }
+        }
+
+        protected void OnQueryToServer(IQueryable query) {
+            if(QueryToServer != null) {
+                QueryToServer(this, query);
             }
         }
 
@@ -89,10 +99,6 @@ namespace Materialize.Reify
 
             _regimeDetector = regimeDetector;
             _parserFac = parserFac;
-            
-            //_lzMapStrategy = new Lazy<IMapStrategy>(fnMapStrategy);
-
-            //_parseStrategies = parseStrategies;
         }
         
 
@@ -109,12 +115,9 @@ namespace Materialize.Reify
 
 
 
-        public override TResult Execute<TResult>(Expression exReifyQuery) 
+        public override TResult Execute<TResult>(Expression exClientQuery) 
         {
-            //var context = new ParseContext(
-            //                        exReifyQuery, 
-            //                        BaseReifyQuery.Expression);
-
+            OnQueryFromClient(exClientQuery);
 
             var mapContext = new MapContext(
                                     _regimeDetector.DetectRegime(SourceQuery.Provider),
@@ -123,26 +126,7 @@ namespace Materialize.Reify
 
             var parser = _parserFac.Create(BaseReifyQuery.Expression, mapContext);
             
-            var modifierStack = parser.Parse(exReifyQuery);
-
-            //var strategy = _parseStrategies.GetStrategy(context);
-
-            //var parser = strategy.CreateParser();
-
-            //var modifierStack = parser(exReifyQuery);
-
-
-            ////parser creates modifier stack based on passed ReifyQuery expression
-            ////the core of the stack is provided by the selected mapping strategy
-            ////and only amended by the query parser
-            //var mapperModifier = _lzMapStrategy.Value.CreateModifier();
-
-            //var parser = new Parser(
-            //                    BaseReifyQuery.Expression,
-            //                    mapperModifier, //the modifier stack created by the mapper is fed in as base to the parser
-            //                    _callParsers);
-
-            //var modifierStack = parser.Parse(exReifyQuery);
+            var modifierStack = parser.Parse(exClientQuery);
                                                             
 
             //modifier stack rewrites the SourceQuery expression
@@ -152,7 +136,7 @@ namespace Materialize.Reify
             //fetch from source; transform fetched via modifiers                                    
             if(typeof(IQueryable).IsAssignableFrom(exQuery.Type)) {
                 var query = SourceQuery.Provider.CreateQuery(exQuery);
-                OnQueried(query);
+                OnQueryToServer(query);
 
                 var enFetched = (IEnumerable)query;
 

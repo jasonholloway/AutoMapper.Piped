@@ -33,8 +33,10 @@ namespace Materialize.Tests
         {
             int fetchedCount = 0;
 
-            var dogModels = Dogs.MaterializeAs<DogModel>()
-                                    .SnoopOnFetched(f => fetchedCount = f.Count())
+            var snooper = new Snooper();
+            snooper.Fetched += (en => fetchedCount = en.Count());
+
+            var dogModels = Dogs.MapAs<DogModel>(snooper)
                                     .Where(m => m.Name.Length > 5)
                                     .ToArray();
 

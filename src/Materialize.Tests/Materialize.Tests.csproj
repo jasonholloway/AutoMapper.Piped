@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Infrastructure\ServiceRegistryExtensions.cs" />
+    <Compile Include="Infrastructure\Snooper.cs" />
     <Compile Include="Infrastructure\TestData.cs" />
     <Compile Include="MaterializableRebaseTests.cs" />
     <Compile Include="MaterializationCollectionTests.cs" />

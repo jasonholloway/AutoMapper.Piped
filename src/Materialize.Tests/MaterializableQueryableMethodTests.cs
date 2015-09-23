@@ -18,11 +18,20 @@ namespace Materialize.Tests
                 x.CreateMap<int, string>()
                     .ProjectUsing(i => i.ToString());
             });
+
+            Fetched = Enumerable.Empty<object>();
         }
-                
-        IMaterializable<string> Range(int start, int count) {
+
+
+        IEnumerable<object> Fetched { get; set; }
+
+
+        IQueryable<string> Range(int start, int count) {
+            var snooper = new Snooper();
+            snooper.Fetched += (en => Fetched = en);
+                        
             var ints = Enumerable.Range(start, count);
-            return ints.AsQueryable().MaterializeAs<string>();
+            return ints.AsQueryable().MapAs<string>(snooper);
         }
 
 
@@ -33,10 +42,10 @@ namespace Materialize.Tests
         [Fact]
         public void First() {
             var first = Range(50, 100)
-                            .SnoopOnFetched(f => f.Count().ShouldEqual(1))
                             .First();
 
-            first.ShouldEqual("50");       
+            first.ShouldEqual("50");
+            Fetched.Count().ShouldEqual(1);     
         }
          
         [Fact]
@@ -56,10 +65,10 @@ namespace Materialize.Tests
         [Fact]
         public void Single() {
             var single = Range(10, 1)
-                            .SnoopOnFetched(f => f.Count().ShouldEqual(1))
                             .Single();
 
             single.ShouldEqual("10");
+            Fetched.Count().ShouldEqual(1);
         }
 
 
@@ -74,10 +83,10 @@ namespace Materialize.Tests
         public void SingleOrDefault() 
         {
             var single = Range(1, 1)
-                            .SnoopOnFetched(f => f.Count().ShouldEqual(1))
                             .SingleOrDefault();
 
             single.ShouldEqual("1");
+            Fetched.Count().ShouldEqual(1);
         }
 
 
@@ -86,10 +95,10 @@ namespace Materialize.Tests
         public void SingleOrDefaultReturnsDefault() 
         {
             var result = Range(1, 0)
-                            .SnoopOnFetched(f => f.Count().ShouldEqual(0))
                             .SingleOrDefault();
 
             result.ShouldEqual(default(string));
+            Fetched.Count().ShouldEqual(0);
         }
 
 
@@ -97,11 +106,11 @@ namespace Materialize.Tests
 
         [Fact]
         public void Last() {
-            var first = Range(50, 100)
-                            .SnoopOnFetched(f => f.Count().ShouldEqual(1))
-                            .First();
+            var last = Range(50, 100)
+                            .Last();
 
-            first.ShouldEqual("149");
+            last.ShouldEqual("149");
+            Fetched.Count().ShouldEqual(1);
         }
 
         [Fact]
@@ -120,8 +129,9 @@ namespace Materialize.Tests
         {
             var result = Range(100, 50)                            
                             .Take(10)
-                            .SnoopOnFetched(f => f.Count().ShouldEqual(10))
                             .ToArray();
+
+            Fetched.Count().ShouldEqual(result.Length);
 
             result.Length.ShouldEqual(10);
 
@@ -137,8 +147,10 @@ namespace Materialize.Tests
         {
             var result = Range(100, 50)
                             .Skip(10)
-                            .SnoopOnFetched(f => f.Count().ShouldEqual(40))
                             .ToArray();
+
+
+            Fetched.Count().ShouldEqual(result.Length);
 
             result.Length.ShouldEqual(40);
 
@@ -179,22 +191,23 @@ namespace Materialize.Tests
                     .ProjectUsing(i => 2F * i);
             });
 
-            int fetchedItemsCount = 0;
+            //int fetchedItemsCount = 0;
+
+            //var snooper = new Snooper();
+            //snooper.Fetched += (f => fetchedItemsCount += f.Count());
+            
 
             var ints = Enumerable.Range(0, 100).AsQueryable();
 
-            var materializable = ints.MaterializeAs<float>()
-                                        .SnoopOnFetched(items => fetchedItemsCount += items.Count());
+            var mapped = ints.MapAs<float>();
 
-            var taken = materializable
-                            .Where(f => f > 100F)
-                            .First();
+            var taken = mapped.Where(f => f > 100F)
+                                .First();
 
             taken.ShouldEqual(102F);
 
             Assert.Throws<InvalidOperationException>(() => {
-                materializable
-                        .Where(f => false)
+                mapped.Where(f => false)
                         .First();
             });
         }
@@ -211,16 +224,16 @@ namespace Materialize.Tests
             
             var ints = Enumerable.Range(0, 100).AsQueryable();
 
-            var materializable = ints.MaterializeAs<float>();
+            var mapped = ints.MapAs<float>();
             
-            var result1 = materializable
+            var result1 = mapped
                             .Where(f => f > 100F)
                             .FirstOrDefault();
 
             result1.ShouldEqual(102F);
 
 
-            var result2 = materializable
+            var result2 = mapped
                             .Where(f => false)
                             .FirstOrDefault();
 

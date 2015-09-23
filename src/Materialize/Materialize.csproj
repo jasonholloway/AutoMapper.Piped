@@ -50,6 +50,7 @@
     <Compile Include="IMaterializable.cs" />
     <Compile Include="Dependencies\LightInject\LightInject.cs" />
     <Compile Include="Info\QueryableMethods.cs" />
+    <Compile Include="ISnooper.cs" />
     <Compile Include="Materializable.cs" />
     <Compile Include="ProjectedTypes\DynaType\DynaType.cs" />
     <Compile Include="ProjectedTypes\IProjectedTypeBuilder.cs" />

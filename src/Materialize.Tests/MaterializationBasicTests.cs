@@ -3,6 +3,7 @@ using Materialize.Tests.Infrastructure;
 using Materialize.Tests.Model;
 using Should;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using Xunit;
@@ -22,7 +23,8 @@ namespace Materialize.Tests
 
             var dogs = Data.Dogs.AsQueryable();
 
-            var dogModels = dogs.MaterializeAs<DogModel>();
+            var dogModels = dogs.MapAs<DogModel>()
+                                    .ToArray();
 
             dogModels.ShouldNotBeEmpty();
 
@@ -48,7 +50,7 @@ namespace Materialize.Tests
 
             var dogs = Data.Dogs.AsQueryable();
 
-            var dogModels = dogs.MaterializeAs<DogModel>()
+            var dogModels = dogs.MapAs<DogModel>()
                                     .ToArray();
 
             dogModels.ShouldNotBeEmpty();
@@ -74,7 +76,7 @@ namespace Materialize.Tests
 
             var dogs = Data.Dogs.AsQueryable();
 
-            var dogModels = dogs.MaterializeAs<DogAndOwnerModel>()
+            var dogModels = dogs.MapAs<DogAndOwnerModel>()
                                     .ToArray();
 
             dogs.Zip(dogModels,
@@ -105,9 +107,8 @@ namespace Materialize.Tests
             
             var contracts = Data.Contracts.AsQueryable();
 
-            var contractModels = contracts
-                                    .MaterializeAs<ContractModel>()
-                                    .ToArray();
+            var contractModels = contracts.MapAs<ContractModel>()
+                                            .ToArray();
                                 
             contracts.Zip(contractModels,
                         (c, m) => new {
@@ -130,22 +131,25 @@ namespace Materialize.Tests
                     .ProjectUsing(i => i);
             });
 
-            bool fetched = false;
+            bool fetchedYet = false;
 
-            var materializable = Enumerable.Range(0, 100)
+            var snooper = new Snooper();
+            snooper.Fetched += (_ => fetchedYet = true);
+
+            var mapped = Enumerable.Range(0, 100)
                                     .AsQueryable()
-                                    .Snoop(_ => fetched = true)
-                                    .MaterializeAs<float>();
+                                    .MapAs<float>(snooper);
 
-            fetched.ShouldBeFalse();
+            
+            fetchedYet.ShouldBeFalse();
+            
+            var result = mapped.AsEnumerable();
 
-            var result = materializable.AsEnumerable();
-
-            fetched.ShouldBeFalse();
+            fetchedYet.ShouldBeFalse();
 
             result.Count();
 
-            fetched.ShouldBeTrue();
+            fetchedYet.ShouldBeTrue();
         }
 
 
@@ -161,13 +165,16 @@ namespace Materialize.Tests
 
             int fetchCount = 0;
 
-            var materializable = Enumerable.Range(0, 100)
+            var snooper = new Snooper();
+            snooper.Fetched += (_ => fetchCount++);
+
+
+            var mapped = Enumerable.Range(0, 100)
                                     .AsQueryable()
-                                    .Snoop(_ => fetchCount++)
-                                    .MaterializeAs<float>();
+                                    .MapAs<float>(snooper);
 
             for(int i = 0; i < 10; i++) {
-                materializable.Count();
+                mapped.ToArray();
             }
 
             fetchCount.ShouldEqual(1);

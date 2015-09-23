@@ -79,8 +79,8 @@ namespace Materialize.Tests
 
             var people = Data.People.AsQueryable();
 
-            var ownerModels = people.MaterializeAs<DogOwnerModel<TColl>>()
-                                .ToArray();
+            var ownerModels = people.MapAs<DogOwnerModel<TColl>>()
+                                    .ToArray();
 
             ownerModels.SelectMany(p => p.Dogs.Cast<DogModel>().Select(d => d.Name))
                 .SequenceEqual(people.SelectMany(p => p.Dogs.Select(d => d.Name)))
