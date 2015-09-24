@@ -1,8 +1,5 @@
-﻿using Materialize.Dependencies;
-using Materialize.SourceRegimes;
-using Materialize.Tests.Infrastructure;
+﻿using Materialize.Tests.Infrastructure;
 using Materialize.Tests.Model;
-using NSubstitute;
 using Should;
 using System;
 using System.Collections.Generic;

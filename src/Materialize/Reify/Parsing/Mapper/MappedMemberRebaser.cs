@@ -9,6 +9,29 @@ namespace Materialize.Reify.Parsing.Mapper
 {
     class MappedMemberRebaseStrategizer : IMemberRebaseStrategizer
     {
+
+        //Mapping strategies need to register themselves...
+
+        //or maybe each MapStrategy could be asked to rebase the passed subject
+
+        //as is, RebaseStrategizer does half of this itself.
+
+        //in rebasing however, maybe we could burrow back down the stack, with each layer responsible
+        //for *some* rebasing. This is an established idea of course.
+
+        
+
+
+
+
+
+
+
+        public MappedMemberRebaseStrategizer() {
+
+        }
+        
+
         public IRebaseStrategy GetStrategy(IRebaseStrategy strInst, MemberInfo member) {
 
             //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
