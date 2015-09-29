@@ -12,7 +12,9 @@ namespace Materialize.Reify.Parsing.Where
     {
         IRebaseStrategy _rebaseStrategy;
 
-        public WhereOnServerStrategy(IParseStrategy upstreamStrategy, IRebaseStrategy rebaseStrategy)
+        public WhereOnServerStrategy(
+            IParseStrategy upstreamStrategy, 
+            IRebaseStrategy rebaseStrategy)
             : base(upstreamStrategy) 
         {
             _rebaseStrategy = rebaseStrategy;
@@ -26,9 +28,9 @@ namespace Materialize.Reify.Parsing.Where
 
         protected override IModifier Parse(IModifier upstreamMod, MethodCallExpression exSubject) 
         {
-            var exRebaseSubject = exSubject.Replace(
+            var exRebaseSubject = exSubject.Replace( //Don't even think this is necessary, as strategy will be in place, regardless of the expression type.
                                                 exSubject.Arguments[0],
-                                                _rebaseStrategy.Roots.Keys.Single()
+                                                Expression.Parameter(exSubject.Arguments[0].Type)
                                                 );
 
             var exRebasedWhere = _rebaseStrategy.Rebase(exRebaseSubject);

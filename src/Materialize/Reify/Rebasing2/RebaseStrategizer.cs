@@ -5,93 +5,88 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Collections.ObjectModel;
+using Materialize.Reify.Parsing;
 
 namespace Materialize.Reify.Rebasing2
 {
-    partial class RebaseStrategizer : CustomExpressionVisitor<IRebaseStrategy>
-    {
-        public IMemberRebaseStrategizer MemberStrategizer { get; private set; }
-        public IReadOnlyDictionary<ParameterExpression, ParameterExpression> Roots { get; private set; }
+    delegate IRebaseStrategy RootRebaseStrategyProvider(TypeVector typeVector, ParameterExpression exRebasedRoot);
+    
 
+
+    partial class RebaseStrategizer 
+        : CustomExpressionVisitor<IRebaseStrategy>
+    {
+        RootRebaseStrategyProvider _rootStrategyProvider;
+        IDictionary<ParameterExpression, ParameterExpression> _dRootVectors;
+       
 
         public RebaseStrategizer(
-            IMemberRebaseStrategizer memberStrategizer, 
-            Action<IRoots> fnAddRoots) 
+            RootRebaseStrategyProvider rootStrategyProvider,
+            params RootVector[] rootVectors) 
         {
-            MemberStrategizer = memberStrategizer;
+            _rootStrategyProvider = rootStrategyProvider;
 
-            var dRoots = new Dictionary<ParameterExpression, ParameterExpression>();
+            _dRootVectors = rootVectors
+                                .ToDictionary(v => v.OrigRoot, v => v.RebasedRoot);
+        }
+                      
 
-            fnAddRoots(new RootsAdaptor(dRoots));
+        private RebaseStrategizer SpawnChildStrategizer(
+            RootRebaseStrategyProvider rootStrategyProvider,
+            params RootVector[] rootVectors) 
+        {
+            var child = new RebaseStrategizer(
+                                (tv, r) => rootStrategyProvider(tv, r) 
+                                                ?? this._rootStrategyProvider(tv, r));
 
-            if(!dRoots.Any()) {
-                throw new InvalidOperationException("No roots have been added to RebaseStrategizer!");
+            child._dRootVectors = new Dictionary<ParameterExpression, ParameterExpression>(this._dRootVectors);
+
+            foreach(var rootVector in rootVectors) {
+                child._dRootVectors[rootVector.OrigRoot] = rootVector.RebasedRoot;
             }
 
-            Roots = dRoots;
+            return child;
         }
+                        
 
-
-        private RebaseStrategizer(
-            RebaseStrategizer parent,
-            Action<IRoots> fnAddRoots) 
-        {
-            MemberStrategizer = parent.MemberStrategizer;
-
-            var dRoots = new Dictionary<ParameterExpression, ParameterExpression>(
-                            (IDictionary<ParameterExpression, ParameterExpression>)parent.Roots);
-
-            fnAddRoots(new RootsAdaptor(dRoots));
-
-            Roots = dRoots;
-        }
-
-
-
-
-        public IRebaseStrategy GetStrategy(Expression exSubject) 
-        {
+        public IRebaseStrategy Strategize(Expression exSubject) {
             return Visit(exSubject);
         }
         
+                        
+
+
 
         private IRebaseStrategy PassiveStrategy(Type type) {
-            return new RebaseStrategy<Expression>(new TypeVector(type, type));
+            return new PassiveRebaseStrategy(type);
         }
         
-                
-        private IRebaseStrategy<TExp> RootedStrategy<TExp>(TypeVector typeVector, Func<TExp, TExp> fnRebase)
-            where TExp : Expression 
-        {
-            return new RebaseStrategy<TExp>(typeVector, Roots, fnRebase);
-        }
-
         
-        private IRebaseStrategy<TExp> ActiveStrategy<TExp>(TypeVector typeVector, Func<TExp, TExp> fnRebase)
+        private IRebaseStrategy<TExp> Strategy<TExp>(TypeVector typeVector, Func<TExp, TExp> fnRebase)
             where TExp : Expression 
         {
-            return new RebaseStrategy<TExp>(typeVector, null, fnRebase);
+            return new RebaseStrategy<TExp>(typeVector, /*null,*/ fnRebase);
         }
 
 
 
 
-        class RootsAdaptor : IRoots
+        class RootVectorsAdaptor : IRootVectors
         {
-            IDictionary<ParameterExpression, ParameterExpression> _dRoots;
+            IDictionary<ParameterExpression, ParameterExpression> _dRootVectors;
 
-            public RootsAdaptor(IDictionary<ParameterExpression, ParameterExpression> dRoots) {
-                _dRoots = dRoots;
+            public RootVectorsAdaptor(IDictionary<ParameterExpression, ParameterExpression> dRootVectors) {
+                _dRootVectors = dRootVectors;
             }
 
-            public void AddRoot(ParameterExpression exSubject, ParameterExpression exRebased) {
-                _dRoots[exSubject] = exRebased;
+            public void AddRootVector(ParameterExpression exOriginal, ParameterExpression exRebased) {
+                _dRootVectors[exOriginal] = exRebased;
             }
         }
 
-        public interface IRoots
+        public interface IRootVectors
         {
-            void AddRoot(ParameterExpression exSubject, ParameterExpression exRebased);
+            void AddRootVector(ParameterExpression exOriginal, ParameterExpression exRebased);
         }
 
 

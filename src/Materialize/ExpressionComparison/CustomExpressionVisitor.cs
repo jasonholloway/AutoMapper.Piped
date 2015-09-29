@@ -130,3 +130,24 @@ namespace Materialize.ExpressionComparison
         protected abstract TResult VisitInvocation(InvocationExpression invocation);
     }
 }
+
+
+
+
+/*
+        models.Where(dm => dm.Legs.First().Length > dm.Legs.Last().Length);
+
+        Models->Dogs strategy would also provide for Model->Dog from its root
+
+        Model->Dog would expand to rebase LegModels->Legs
+
+        
+    So idea is - as expressed before - to expose rebasing vectors from the root.
+    Don't set them up for entire strategiser. 
+
+    To find root in first place we need a visitor. But from then on, we must delegate to our RootedRebaseStrategy, if in place.
+
+    RootedRebaseStrategy will, in the first place, return us a RootedRebaseStrategy. Target param is a bit up in the air once more.
+
+
+*/

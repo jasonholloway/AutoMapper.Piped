@@ -12,24 +12,26 @@ namespace Materialize.Reify.Rebasing2
             var strBody = Visit(exLambda.Body);
             
             var rStrParams = exLambda.Parameters
-                                    .Select(p => Visit(p))
-                                    .Cast<IRebaseStrategy<ParameterExpression>>()
-                                    .ToArray();
+                                        .Select(p => Visit(p))
+                                        .Cast<IRebaseStrategy<ParameterExpression>>()
+                                        .ToArray();
 
-            if(strBody.IsActive || rStrParams.Any(s => s.IsActive)) {
-                return ActiveStrategy(
-                            strBody.TypeVector,
-                            (LambdaExpression x) => {
-                                return Expression.Lambda(
-                                                    strBody.Rebase(x.Body),
-                                                    rStrParams
-                                                        .Zip(x.Parameters, (s, p) => s.Rebase(p))
-                                                        .ToArray()
-                                                    );
-                            });
-            }
-
-            return PassiveStrategy(exLambda.Type);
+            if(strBody is PassiveRebaseStrategy 
+                && rStrParams.All(s => s is PassiveRebaseStrategy)) 
+                {
+                    return PassiveStrategy(exLambda.Type);
+                }
+                        
+            return Strategy(
+                        strBody.TypeVector,
+                        (LambdaExpression x) => {
+                            return Expression.Lambda(
+                                                strBody.Rebase(x.Body),
+                                                rStrParams
+                                                    .Zip(x.Parameters, (s, p) => s.Rebase(p))
+                                                    .ToArray()
+                                                );
+                        });
         }
     }
 }

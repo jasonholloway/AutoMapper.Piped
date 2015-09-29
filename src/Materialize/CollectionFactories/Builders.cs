@@ -32,5 +32,13 @@ namespace Materialize.CollectionFactories
         public override CollectionFactory Build<TElem>() {
             return (items) => items.Cast<TElem>().ToList();
         }
-    }    
+    }
+
+
+    class EnumerableQueryFactoryBuilder : CollFactoryBuilder
+    {
+        public override CollectionFactory Build<TElem>() {
+            return (items) => new EnumerableQuery<TElem>(items.Cast<TElem>());
+        }
+    }
 }

@@ -18,7 +18,7 @@ namespace Materialize
                             "{0} -> {1}",
                             SourceType.Name,
                             DestType.Name);
-        }
+        }        
     }
 
 

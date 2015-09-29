@@ -9,14 +9,14 @@ namespace Materialize.Reify.Rebasing2
     {
         protected override IRebaseStrategy VisitParameter(ParameterExpression exParam) 
         {
-            ParameterExpression exNewParam = null;
+            ParameterExpression exRebasedRoot = null;
 
-            if(Roots.TryGetValue(exParam, out exNewParam)) {
-                return RootedStrategy(
-                            new TypeVector(exParam.Type, exNewParam.Type),
-                            (ParameterExpression x) => exNewParam);
+            if(_dRootVectors.TryGetValue(exParam, out exRebasedRoot)) {
+                return _rootStrategyProvider(
+                                new TypeVector(exParam.Type, exRebasedRoot.Type),
+                                exRebasedRoot);
             }
-
+                        
             return PassiveStrategy(exParam.Type);
         }        
     }

@@ -83,6 +83,32 @@ eg:  qySource
 										Also, what would emplace the root hook? Whatever generated the new root param. That is, the orchestrator of this pass of the RebaseStrategizer.
 										
 										
+										*******************************************************
+										
+										Each encountered root would return an IRebaseStrategy offered by the in-force IMapStrategy. This IRebaseStrategy would then be delegated to
+										on return to each enclosing element handler. This IRebaseStrategy would decide whether it were a root, obvs. If it were a root (and it always 
+										would be!), then the enclosing handler would again delegate to it. The root IRebaseStrategy would then have a chance to return a new 
+										IRebaseStrategy, which may or may not be itself rooted. Rootedness really refers to this capability of handling successive clauses.
+										A rooted IRebaseStrategy is expansionist; a normal one keeps to itself.
+										
+										The RebaseStrategizer then crawls and supplies simple rebase strategies for most of the subject tree. But in the case of a root, it delegates
+										to a supplied root handler, which emplaces its own expansionist strategy.
+
+										*** Expansionist IRebaseStrategy ***
+										
+										A strategy is selected by the form of the initial expression, and then executed against each particular incoming instance of that form.
+										
+										In the case of root rebase strategies, the encountered parameter is in each case the particular input to satisfy the strategy shaped to
+										expect such singular input.
+										
+										
+										
+										
+										
+										
+										
+										
+										
 										
 										
 										

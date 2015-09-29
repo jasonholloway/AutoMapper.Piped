@@ -10,6 +10,7 @@ namespace Materialize.CollectionFactories
     {
         CollFactoryBuilder _arrayFactoryBuilder = new ArrayFactoryBuilder();
         CollFactoryBuilder _listFactoryBuilder = new ListFactoryBuilder();
+        CollFactoryBuilder _enQueryFactoryBuilder = new EnumerableQueryFactoryBuilder();
 
         public CollectionFactory GetFactory(Type collType) 
         {
@@ -26,7 +27,13 @@ namespace Materialize.CollectionFactories
                 if(collType.IsAssignableFrom(listType)) {
                     return _listFactoryBuilder.Build(elemType);
                 }
-            }
+
+                var enQueryType = typeof(EnumerableQuery<>).MakeGenericType(elemType);
+
+                if(collType.IsAssignableFrom(enQueryType)) {
+                    return _enQueryFactoryBuilder.Build(elemType);
+                }
+             }
 
             return null;
         }

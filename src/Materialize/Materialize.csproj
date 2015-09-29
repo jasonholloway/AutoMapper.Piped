@@ -60,7 +60,6 @@
     <Compile Include="Reify\Mapping\IMapStrategySource.cs" />
     <Compile Include="Reify\Mapping\MapRuleBase.cs" />
     <Compile Include="Reify\Mapping\MapRuleRegistry.cs" />
-    <Compile Include="Reify\Parsing\Mapper\MappedMemberRebaser.cs" />
     <Compile Include="Reify\Parsing\Mapper\MapperRule.cs" />
     <Compile Include="Reify\Parsing\Mapper\MapperStrategy.cs" />
     <Compile Include="Reify\Parsing\IParseRuleRegistry.cs" />
@@ -87,9 +86,12 @@
     <Compile Include="Reify\Parsing\Where\WhereRule.cs" />
     <Compile Include="Reify\Rebasing2\IMemberRebaseStrategizer.cs" />
     <Compile Include="Reify\Rebasing2\IRebaseStrategy.cs" />
+    <Compile Include="Reify\Rebasing2\IRootedRebaseStrategy.cs" />
+    <Compile Include="Reify\Rebasing2\PassiveRebaseStrategy.cs" />
     <Compile Include="Reify\Rebasing2\Rebased.cs" />
     <Compile Include="Reify\Rebasing2\RebaseStrategy.cs" />
     <Compile Include="Reify\Parsing\RootedExpression.cs" />
+    <Compile Include="Reify\Rebasing2\RootVector.cs" />
     <Compile Include="Reify\Rebasing2\StrategizerParts\Constant.cs" />
     <Compile Include="Reify\Rebasing2\StrategizerParts\MemberAccess.cs" />
     <Compile Include="Reify\Rebasing2\StrategizerParts\Lambda.cs" />
@@ -168,7 +170,9 @@
   <ItemGroup>
     <Content Include="todo.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Reify\Rebasing3\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

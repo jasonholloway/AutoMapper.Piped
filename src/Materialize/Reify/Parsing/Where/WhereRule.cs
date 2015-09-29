@@ -36,7 +36,7 @@ namespace Materialize.Reify.Parsing.Where
                 var exRootParam = Expression.Parameter(exInst.Type, "root");
 
                 var rebaseSubject = new RootedExpression(
-                                                exRootParam,
+                                                new[] { exRootParam },
                                                 Expression.Call(
                                                     QueryableMethods.WhereDef.MakeGenericMethod(tElem),
                                                     exRootParam,

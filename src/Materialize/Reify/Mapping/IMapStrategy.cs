@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Materialize.Reify.Parsing;
+using Materialize.Reify.Rebasing2;
+using System;
 
 namespace Materialize.Reify.Mapping
 {
@@ -7,11 +9,11 @@ namespace Materialize.Reify.Mapping
         Type SourceType { get; }
         Type FetchType { get; }
         Type TransformedType { get; }
-
+        
         bool FetchesToTuple { get; }
         bool RewritesExpression { get; }
 
-        IModifier CreateModifier();
+        IModifier CreateModifier();        
     }
 
 }

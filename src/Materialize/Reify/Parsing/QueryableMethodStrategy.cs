@@ -46,7 +46,7 @@ namespace Materialize.Reify.Parsing
         //by default, behaves as though nothing to rebase here - but this will often be right        
         public virtual IRebaseStrategy GetRebaseStrategy(RootedExpression subject) 
         {
-            Debug.Assert(subject.Root.Type == DestType);
+            //Debug.Assert(subject.Root.Type == DestType);
 
             return UpstreamStrategy.GetRebaseStrategy(subject);
         }

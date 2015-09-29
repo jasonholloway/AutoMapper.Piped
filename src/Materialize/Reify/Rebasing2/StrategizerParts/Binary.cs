@@ -12,19 +12,20 @@ namespace Materialize.Reify.Rebasing2
             var strLeft = Visit(exBinary.Left);
             var strRight = Visit(exBinary.Right);
 
-            if(strLeft.IsActive || strRight.IsActive) 
-            {
-                return ActiveStrategy(
-                            new TypeVector(exBinary.Type, exBinary.Type),
-                            (BinaryExpression x) => {
-                                return Expression.MakeBinary(
-                                                    x.NodeType,
-                                                    strLeft.Rebase(x.Left),
-                                                    strRight.Rebase(x.Right));
-                            });
-            }
-
-            return PassiveStrategy(exBinary.Type);
+            if(strLeft is PassiveRebaseStrategy 
+                && strRight is PassiveRebaseStrategy) 
+                {
+                    return PassiveStrategy(exBinary.Type);
+                }
+            
+            return Strategy(
+                        new TypeVector(exBinary.Type, exBinary.Type), //!!!
+                        (BinaryExpression x) => {
+                            return Expression.MakeBinary(
+                                                x.NodeType,
+                                                strLeft.Rebase(x.Left),
+                                                strRight.Rebase(x.Right));
+                        });
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using Materialize.Reify.Rebasing2;
+using Materialize.Reify.Parsing;
 
 namespace Materialize.Reify.Mapping
 {
@@ -14,7 +16,7 @@ namespace Materialize.Reify.Mapping
         public Type TransformedType {
             get { return typeof(TDest); }
         }
-        
+                
 
         public bool FetchesToTuple {  //?????????
             get { return FetchType != TransformedType; }
@@ -25,7 +27,7 @@ namespace Materialize.Reify.Mapping
         }
         
         public abstract IModifier CreateModifier();
-        
+                 
     }
 
 }

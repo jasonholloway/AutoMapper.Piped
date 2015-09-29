@@ -11,20 +11,20 @@ namespace Materialize.Reify.Rebasing2
         {
             var strOperand = Visit(exUnary.Operand);
 
-            if(strOperand.IsActive) {
-                return ActiveStrategy(
-                            strOperand.TypeVector,
-                            (UnaryExpression x) => {
-                                var exRebasedOperand = strOperand.Rebase(x.Operand);
-
-                                return Expression.MakeUnary(
-                                                    exUnary.NodeType,
-                                                    exRebasedOperand,
-                                                    exRebasedOperand.Type);
-                            });
+            if(strOperand is PassiveRebaseStrategy) {
+                return PassiveStrategy(exUnary.Type);
             }
+            
+            return Strategy(
+                        strOperand.TypeVector,
+                        (UnaryExpression x) => {
+                            var exRebasedOperand = strOperand.Rebase(x.Operand);
 
-            return PassiveStrategy(exUnary.Type);
+                            return Expression.MakeUnary(
+                                                exUnary.NodeType,
+                                                exRebasedOperand,
+                                                exRebasedOperand.Type);
+                        });
         }
     }
 }

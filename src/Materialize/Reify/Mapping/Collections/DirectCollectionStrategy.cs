@@ -5,6 +5,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Materialize.Reify.Parsing;
+using Materialize.Reify.Rebasing2;
 
 namespace Materialize.Reify.Mapping.Collections
 {
@@ -63,6 +65,14 @@ namespace Materialize.Reify.Mapping.Collections
                 return (TDest)_collFactory(transformedElems); //wrap into proper destination collection type
             }
         }
+
+
+
+
+        public override IRebaseStrategy GetRebaseStrategy(RootedExpression subject) {
+            throw new NotImplementedException();
+        }
+
     }
 
 
