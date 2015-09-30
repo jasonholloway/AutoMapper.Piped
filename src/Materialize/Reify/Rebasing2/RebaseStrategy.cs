@@ -2,31 +2,53 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Materialize.Reify.Rebasing2
 {
     class RebaseStrategy<TExp> : IRebaseStrategy<TExp>
         where TExp : Expression
     {
+        TypeVector _typeVector;
+        IRebaseStrategy _upstreamStrategy;
         Func<TExp, TExp> _fnRebase;
-        
-        public bool IsActive { get; private set; }
-        public TypeVector TypeVector { get; private set; }
-                
+
+
+        public RebaseStrategy(
+            IRebaseStrategy upstreamStrat,
+            Func<TExp, TExp> fnRebase
+            ) : this(upstreamStrat.TypeVector, upstreamStrat, fnRebase) { }
+
+
         public RebaseStrategy(
             TypeVector typeVector,
-            Func<TExp, TExp> fnRebase = null) 
+            IRebaseStrategy upstreamStrat,
+            Func<TExp, TExp> fnRebase) 
         {
-            TypeVector = typeVector;            
-            IsActive = fnRebase != null;
-            _fnRebase = fnRebase ?? (x => x);
+            _typeVector = typeVector;
+            _upstreamStrategy = upstreamStrat;
+            _fnRebase = fnRebase;
         }
 
 
-        Expression IRebaseStrategy.Rebase(Expression exSubject) {
-            return Rebase((TExp)exSubject);
+
+
+        public TypeVector TypeVector {
+            get { return _typeVector; }
+        }
+
+
+        public virtual IRebaseStrategy Expand(Expression exSubject) {
+            return null;
+        }
+        
+
+        public IRebaseStrategy GetRootStrategy(RootVector roots) {
+            return _upstreamStrategy?.GetRootStrategy(roots);
+        }
+
+
+        public Expression Rebase(Expression exSubject) {
+            return _fnRebase((TExp)exSubject);
         }
 
         public TExp Rebase(TExp exSubject) {
@@ -34,5 +56,7 @@ namespace Materialize.Reify.Rebasing2
         }
 
     }
+
+
 
 }

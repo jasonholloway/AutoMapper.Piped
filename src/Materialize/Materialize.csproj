@@ -84,13 +84,12 @@
     <Compile Include="Reify\Parsing\Where\WhereOnServerStrategy.cs" />
     <Compile Include="Reify\Parsing\Where\ClientOnlyWhereStrategy.cs" />
     <Compile Include="Reify\Parsing\Where\WhereRule.cs" />
-    <Compile Include="Reify\Rebasing2\IMemberRebaseStrategizer.cs" />
     <Compile Include="Reify\Rebasing2\IRebaseStrategy.cs" />
-    <Compile Include="Reify\Rebasing2\IRootedRebaseStrategy.cs" />
     <Compile Include="Reify\Rebasing2\PassiveRebaseStrategy.cs" />
-    <Compile Include="Reify\Rebasing2\Rebased.cs" />
-    <Compile Include="Reify\Rebasing2\RebaseStrategy.cs" />
     <Compile Include="Reify\Parsing\RootedExpression.cs" />
+    <Compile Include="Reify\Rebasing2\RebaseSubject.cs" />
+    <Compile Include="Reify\Rebasing2\RebaseStrategy.cs" />
+    <Compile Include="Reify\Rebasing2\RootRebaseStrategy.cs" />
     <Compile Include="Reify\Rebasing2\RootVector.cs" />
     <Compile Include="Reify\Rebasing2\StrategizerParts\Constant.cs" />
     <Compile Include="Reify\Rebasing2\StrategizerParts\MemberAccess.cs" />

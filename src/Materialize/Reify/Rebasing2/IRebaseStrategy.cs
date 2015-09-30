@@ -9,6 +9,8 @@ namespace Materialize.Reify.Rebasing2
     {
         TypeVector TypeVector { get; }        
         Expression Rebase(Expression exSubject);
+        IRebaseStrategy Expand(Expression exSubject);
+        IRebaseStrategy GetRootStrategy(RootVector roots);
     }
 
 

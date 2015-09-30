@@ -13,6 +13,14 @@ namespace Materialize.Reify.Rebasing2
         
         public TypeVector TypeVector { get; private set; }
 
+        public IRebaseStrategy Expand(Expression exSubject) {
+            return null;
+        }
+
+        public IRebaseStrategy GetRootStrategy(RootVector roots) {
+            return null;
+        }
+
         public Expression Rebase(Expression exSubject) {
             return exSubject;
         }

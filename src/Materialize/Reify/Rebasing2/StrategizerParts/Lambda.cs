@@ -15,14 +15,8 @@ namespace Materialize.Reify.Rebasing2
                                         .Select(p => Visit(p))
                                         .Cast<IRebaseStrategy<ParameterExpression>>()
                                         .ToArray();
-
-            if(strBody is PassiveRebaseStrategy 
-                && rStrParams.All(s => s is PassiveRebaseStrategy)) 
-                {
-                    return PassiveStrategy(exLambda.Type);
-                }
-                        
-            return Strategy(
+            
+            return UnrootedStrategy(
                         strBody.TypeVector,
                         (LambdaExpression x) => {
                             return Expression.Lambda(

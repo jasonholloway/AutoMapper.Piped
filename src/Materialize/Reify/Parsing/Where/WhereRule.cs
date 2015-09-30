@@ -33,21 +33,23 @@ namespace Materialize.Reify.Parsing.Where
                 //eeeeh.... to rebase, each predicate will have to be packed within its own where clause,
                 //operating on IQueryable<TElem>. Only in this form can it be sent upstream to be rebased.                                
                 
-                var exRootParam = Expression.Parameter(exInst.Type, "root");
 
-                var rebaseSubject = new RootedExpression(
-                                                new[] { exRootParam },
-                                                Expression.Call(
-                                                    QueryableMethods.WhereDef.MakeGenericMethod(tElem),
-                                                    exRootParam,
-                                                    exPredicate
-                                                ));
+                var roots = new RootVector(
+                                    Expression.Parameter(upstreamStrategy.DestType),
+                                    Expression.Parameter(upstreamStrategy.SourceType)); //GET THE SOURCE TYPE TO REBASE TO!!!
+
+
+                var exRebaseSubject = Expression.Call(
+                                            QueryableMethods.WhereDef.MakeGenericMethod(tElem),
+                                            roots.OrigRoot,
+                                            exPredicate);
                 
-                var rebaseStrategy = upstreamStrategy.GetRebaseStrategy(rebaseSubject);
+                var rebaseStrategy = upstreamStrategy.GetRebaseStrategy(
+                                                            new RebaseSubject(exRebaseSubject, roots));
 
                 
                 if(rebaseStrategy != null) {
-                    var exTest = rebaseStrategy.Rebase(rebaseSubject.Expression);
+                    var exTest = rebaseStrategy.Rebase(exRebaseSubject);
                     
                     if(ctx.MapContext.QueryRegime.ServerAccepts(exTest)) 
                     {

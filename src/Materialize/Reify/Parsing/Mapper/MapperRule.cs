@@ -9,11 +9,9 @@ namespace Materialize.Reify.Parsing.Mapper
     class MapperRule : ParseRule
     {
         IMapStrategySource _mapStrategies;
-        RebaserFactory _rebaserFac;
 
-        public MapperRule(IMapStrategySource mapStrategies, RebaserFactory rebaserFac) {
+        public MapperRule(IMapStrategySource mapStrategies) {
             _mapStrategies = mapStrategies;
-            _rebaserFac = rebaserFac;
         }
         
 
@@ -22,7 +20,7 @@ namespace Materialize.Reify.Parsing.Mapper
             if(ctx.IsMappingBase) 
             {                
                 var mapStrategy = _mapStrategies.GetStrategy(ctx.MapContext);
-                return new MapperStrategy(mapStrategy); //, _rebaserFac);
+                return new MapperStrategy(mapStrategy);
             }
             
             return null;

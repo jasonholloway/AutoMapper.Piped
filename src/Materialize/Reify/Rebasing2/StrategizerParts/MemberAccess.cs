@@ -11,25 +11,20 @@ namespace Materialize.Reify.Rebasing2
         {
             var strInst = Visit(exMember.Expression);
 
-            if(strInst is IRootedRebaseStrategy) {
-                var strMember = ((IRootedRebaseStrategy)strInst).Expand(exMember);
+            var strExpanded = strInst.Expand(exMember);
 
-                if(strMember != null) {
-                    return strMember;
-                }
+            if(strExpanded != null) {
+                return strExpanded;
             }
-            
-            if(strInst is PassiveRebaseStrategy) {
-                return PassiveStrategy(exMember.Type);
+            else {
+                return UnrootedStrategy(
+                            new TypeVector(exMember.Type, exMember.Type),
+                            (MemberExpression x) => {
+                                return Expression.MakeMemberAccess(
+                                                    strInst.Rebase(x.Expression),
+                                                    exMember.Member);
+                            });
             }
-            
-            return Strategy(
-                        new TypeVector(exMember.Type, exMember.Type),
-                        (MemberExpression x) => {
-                            return Expression.MakeMemberAccess(
-                                                strInst.Rebase(x.Expression),
-                                                exMember.Member);
-                        });
         }
     }
 }

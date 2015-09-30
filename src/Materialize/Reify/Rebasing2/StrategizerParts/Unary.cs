@@ -10,13 +10,9 @@ namespace Materialize.Reify.Rebasing2
         protected override IRebaseStrategy VisitUnary(UnaryExpression exUnary) 
         {
             var strOperand = Visit(exUnary.Operand);
-
-            if(strOperand is PassiveRebaseStrategy) {
-                return PassiveStrategy(exUnary.Type);
-            }
             
-            return Strategy(
-                        strOperand.TypeVector,
+            return UnrootedStrategy(
+                        strOperand.TypeVector, //does it make sense for unrooted strat to have type vector???
                         (UnaryExpression x) => {
                             var exRebasedOperand = strOperand.Rebase(x.Operand);
 

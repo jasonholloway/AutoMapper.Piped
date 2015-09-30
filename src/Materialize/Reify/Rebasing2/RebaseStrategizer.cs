@@ -96,11 +96,27 @@ namespace Materialize.Reify.Rebasing2
         }
         
         
-        IRebaseStrategy<TExp> Strategy<TExp>(TypeVector typeVector, Func<TExp, TExp> fnRebase)
+        IRebaseStrategy RootedStrategy<TExp>(IRebaseStrategy upstreamStrategy, Func<TExp, TExp> fnRebase)
+            where TExp : Expression
+        {
+            return new RebaseStrategy<TExp>(upstreamStrategy, fnRebase);
+        }
+
+
+        IRebaseStrategy RootedStrategy<TExp>(TypeVector typeVector, IRebaseStrategy upstreamStrategy, Func<TExp, TExp> fnRebase)
             where TExp : Expression 
         {
-            return new RebaseStrategy<TExp>(typeVector, /*null,*/ fnRebase);
+            return new RebaseStrategy<TExp>(typeVector, upstreamStrategy, fnRebase);
         }
+
+
+
+        IRebaseStrategy UnrootedStrategy<TExp>(TypeVector typeVector, Func<TExp, TExp> fnRebase)
+            where TExp : Expression 
+        {
+            return new RebaseStrategy<TExp>(typeVector, null, fnRebase);
+        }
+
 
 
 
