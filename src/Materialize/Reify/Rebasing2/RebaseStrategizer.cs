@@ -8,61 +8,95 @@ using System.Collections.ObjectModel;
 using Materialize.Reify.Parsing;
 
 namespace Materialize.Reify.Rebasing2
-{
-    delegate IRebaseStrategy RootRebaseStrategyProvider(TypeVector typeVector, ParameterExpression exRebasedRoot);
-    
-
+{    
 
     partial class RebaseStrategizer 
         : CustomExpressionVisitor<IRebaseStrategy>
     {
-        RootRebaseStrategyProvider _rootStrategyProvider;
-        IDictionary<ParameterExpression, ParameterExpression> _dRootVectors;
-       
+
+        public IReadOnlyDictionary<Expression, IRebaseStrategy> RootStrategies { get; private set; }
+        
 
         public RebaseStrategizer(
-            RootRebaseStrategyProvider rootStrategyProvider,
-            params RootVector[] rootVectors) 
+            Action<IRootStrategyRegistrar> fnRegister)
         {
-            _rootStrategyProvider = rootStrategyProvider;
+            var dRootStrats = new Dictionary<Expression, IRebaseStrategy>();
 
-            _dRootVectors = rootVectors
-                                .ToDictionary(v => v.OrigRoot, v => v.RebasedRoot);
+            fnRegister(new RootStrategyRegistrar(dRootStrats));
+
+            RootStrategies = dRootStrats;
         }
                       
 
-        private RebaseStrategizer SpawnChildStrategizer(
-            RootRebaseStrategyProvider rootStrategyProvider,
-            params RootVector[] rootVectors) 
+        RebaseStrategizer SpawnStrategizer(
+            Action<IRootStrategyRegistrar> fnRegister)
         {
-            var child = new RebaseStrategizer(
-                                (tv, r) => rootStrategyProvider(tv, r) 
-                                                ?? this._rootStrategyProvider(tv, r));
+            return new RebaseStrategizer(
+                                    x => {
+                                        foreach(var kv in RootStrategies) {
+                                            x.AddRootStrategy(kv.Key, kv.Value);
+                                        }
 
-            child._dRootVectors = new Dictionary<ParameterExpression, ParameterExpression>(this._dRootVectors);
-
-            foreach(var rootVector in rootVectors) {
-                child._dRootVectors[rootVector.OrigRoot] = rootVector.RebasedRoot;
-            }
-
-            return child;
+                                        fnRegister(x);
+                                    });
         }
-                        
+            
+                    
 
         public IRebaseStrategy Strategize(Expression exSubject) {
             return Visit(exSubject);
         }
-        
-                        
 
 
 
-        private IRebaseStrategy PassiveStrategy(Type type) {
+        protected override IRebaseStrategy Visit(Expression expression) {
+            IRebaseStrategy strategy = null;
+
+            if(RootStrategies.TryGetValue(expression, out strategy)) {
+                return strategy;
+            }
+
+            return base.Visit(expression);
+        }
+
+
+
+
+
+
+
+
+        public interface IRootStrategyRegistrar
+        {
+            void AddRootStrategy(Expression exRoot, IRebaseStrategy strategy);
+        }
+
+
+        class RootStrategyRegistrar
+            : IRootStrategyRegistrar
+        {
+            IDictionary<Expression, IRebaseStrategy> _dRootStrats;
+
+            public RootStrategyRegistrar(IDictionary<Expression, IRebaseStrategy> dRootStrats) {
+                _dRootStrats = dRootStrats;
+            }
+
+            public void AddRootStrategy(Expression exRoot, IRebaseStrategy strategy) {
+                _dRootStrats[exRoot] = strategy;
+            }
+        }
+
+
+
+
+                
+
+        IRebaseStrategy PassiveStrategy(Type type) {
             return new PassiveRebaseStrategy(type);
         }
         
         
-        private IRebaseStrategy<TExp> Strategy<TExp>(TypeVector typeVector, Func<TExp, TExp> fnRebase)
+        IRebaseStrategy<TExp> Strategy<TExp>(TypeVector typeVector, Func<TExp, TExp> fnRebase)
             where TExp : Expression 
         {
             return new RebaseStrategy<TExp>(typeVector, /*null,*/ fnRebase);

@@ -14,7 +14,7 @@ namespace Materialize.Reify.Parsing
 
         bool FiltersFetchedSet { get; } //affects downstream possibilities...
         
-        IRebaseStrategy GetRebaseStrategy(RootedExpression subject);
+        IRebaseStrategy GetRebaseStrategy(RebaseSubject subject);
         
         IModifier Parse(Expression exSubject);        
     }

@@ -83,7 +83,71 @@ namespace Materialize.Reify.Mapping.Collections
                 return (TDest)_collFactory(transformedElems);
             }
         }
-                
+
+        
+
+        //*********************************************************************************************
+
+
+        public override IRebaseStrategy GetRebaseStrategy(RebaseSubject subject) 
+        {
+            var roots = subject.RootVectors.Single();
+
+            if(roots.OrigRoot.Type != typeof(TDest) || roots.RebasedRoot.Type != typeof(TOrig)) {
+                throw new InvalidOperationException();
+            }
+            
+            var strategizer = new RebaseStrategizer(x => {
+                x.AddRootStrategy(roots.OrigRoot, new RootRebaseStrategy(roots.RebasedRoot));
+            });
+
+            return strategizer.Strategize(subject.Expression);
+        }
+
+
+        class RootRebaseStrategy : IRootedRebaseStrategy
+        {
+            Expression _exRebasedRoot;
+
+            public RootRebaseStrategy(Expression exRebasedRoot) {
+                _exRebasedRoot = exRebasedRoot;
+            }
+
+            public TypeVector TypeVector {
+                get { return new TypeVector(typeof(TDest), typeof(TOrig)); }
+            }
+
+            public IRebaseStrategy Expand(Expression exSubject) {
+                return null; //no simple expansion here - though what about queryable methods with predicates?
+            }
+
+            //also publish elemental handler
+            //elemental handler in this case would defer to elemental map strategy
+            //...
+
+            //after conversion of root, should re-root and delegate to property
+
+            //the more I think about it, the more I'm sure that this strategy should somehow handle where clauses etc,
+            //possibly through a base class. But the mechanism becomes an issue here.
+
+            //The strategizer is absolutely needed to find the roots through establishing the structure of the tree.
+            //But then behaviour across this structure belongs here. Rebasing works as a mould spreading through a
+            //pre-existing structure. Something of a rebasing epiphany. Duplicative though. Each node to be strategized,
+            //then the next, in an expansive movement downstream.
+
+            //Which is all well. But what of points of confluence? Then the orchestrating strategizer must act as mediator.
+            //This would happen in conditional clauses with two expression inputs (for instance). Would also occur with zips.
+
+            //The orchestrator is primary. Fitting storehouse for common queryable handlers. And so we must instead publish
+            //handlers to the orchestrating RebaseStrategizer.
+
+            //******************************************************************
+
+
+            public Expression Rebase(Expression exSubject) {
+                return _exRebasedRoot;
+            }
+        }
 
     }
 

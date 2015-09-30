@@ -13,7 +13,9 @@ namespace Materialize.Reify.Mapping
         bool FetchesToTuple { get; }
         bool RewritesExpression { get; }
 
-        IModifier CreateModifier();        
+        IModifier CreateModifier();
+
+        IRebaseStrategy GetRebaseStrategy(RebaseSubject subject);
     }
 
 }
