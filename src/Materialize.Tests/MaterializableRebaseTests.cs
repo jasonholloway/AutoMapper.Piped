@@ -48,8 +48,19 @@ namespace Materialize.Tests
         }
 
 
+
+        //un-rebasable predicates should either throw consistent exception
+        //or cause all data to be brought forth first! - dependent on switch
+
+        //before-and-after hooks should only apply after all filtering done.
+        //...
+
+
         [Fact]
-        public void MappedPropertiesWithDifferentNames() {
+        public void NestedEnumerableMethods() {
+            //within predicates, everything becomes enumerable
+            //...
+
             throw new NotImplementedException();
         }
 

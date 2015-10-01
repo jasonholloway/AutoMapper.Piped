@@ -41,17 +41,17 @@
   <ItemGroup>
     <Compile Include="CollectionFactories\CollectionFactorySource.cs" />
     <Compile Include="CollectionFactories\ICollectionFactorySource.cs" />
-    <Compile Include="ExpressionComparison\CustomExpressionVisitor.cs" />
-    <Compile Include="ExpressionExtensions.cs" />
-    <Compile Include="ExpressionComparison\ExpressionHasher.cs" />
-    <Compile Include="ExpressionComparison\QueryExpressionComparer.cs" />
-    <Compile Include="ExpressionComparison\ExpressionComparer.cs" />
-    <Compile Include="ExpressionComparison\VoidExpressionVisitor.cs" />
+    <Compile Include="Expressions\CustomExpressionVisitor.cs" />
+    <Compile Include="Expressions\ExpressionExtensions.cs" />
+    <Compile Include="Expressions\ExpressionHasher.cs" />
+    <Compile Include="Reify\Parsing\CacheableQueryComparer.cs" />
+    <Compile Include="Expressions\ExpressionComparer.cs" />
+    <Compile Include="Expressions\VoidExpressionVisitor.cs" />
     <Compile Include="Dependencies\LightInject\LightInject.cs" />
-    <Compile Include="Info\QueryableMethods.cs" />
+    <Compile Include="Types\QueryableMethods.cs" />
     <Compile Include="ISnooper.cs" />
-    <Compile Include="ProjectedTypes\DynaType\DynaType.cs" />
-    <Compile Include="ProjectedTypes\IProjectedTypeBuilder.cs" />
+    <Compile Include="Tuples\DynaType\DynaType.cs" />
+    <Compile Include="Tuples\IProjectedTypeBuilder.cs" />
     <Compile Include="CollectionFactories\Builders.cs" />
     <Compile Include="Reify\Mapping\Collections\CollectionRule.cs" />
     <Compile Include="Reify\Mapping\Collections\CollectionStrategy.cs" />
@@ -84,37 +84,20 @@
     <Compile Include="Reify\Parsing\Where\WhereOnServerStrategy.cs" />
     <Compile Include="Reify\Parsing\Where\ClientOnlyWhereStrategy.cs" />
     <Compile Include="Reify\Parsing\Where\WhereRule.cs" />
-    <Compile Include="Reify\Rebasing2\IRebaseStrategy.cs" />
-    <Compile Include="Reify\Rebasing2\PassiveRebaseStrategy.cs" />
-    <Compile Include="Reify\Parsing\RootedExpression.cs" />
-    <Compile Include="Reify\Rebasing2\RebaseSubject.cs" />
-    <Compile Include="Reify\Rebasing2\RebaseStrategy.cs" />
-    <Compile Include="Reify\Rebasing2\RootRebaseStrategy.cs" />
-    <Compile Include="Reify\Rebasing2\RootVector.cs" />
-    <Compile Include="Reify\Rebasing2\StrategizerParts\Constant.cs" />
-    <Compile Include="Reify\Rebasing2\StrategizerParts\MemberAccess.cs" />
-    <Compile Include="Reify\Rebasing2\StrategizerParts\Lambda.cs" />
-    <Compile Include="Reify\Rebasing2\StrategizerParts\Unary.cs" />
-    <Compile Include="Reify\Rebasing2\StrategizerParts\MethodCall.cs" />
-    <Compile Include="Reify\Rebasing2\StrategizerParts\Binary.cs" />
-    <Compile Include="Reify\Rebasing2\StrategizerParts\Parameter.cs" />
-    <Compile Include="Reify\Rebasing2\RebaseStrategizer.cs" />
-    <Compile Include="Reify\Rebasing\IRebaseStrategySource.cs" />
-    <Compile Include="Reify\Rebasing\IRebaseRule.cs" />
-    <Compile Include="Reify\Rebasing\IRebaseRuleRegistry.cs" />
     <Compile Include="Reify\Rebasing\IRebaseStrategy.cs" />
-    <Compile Include="Reify\Rebasing\Misc\PassiveStrategy.cs" />
-    <Compile Include="Reify\Rebasing\RebaseMap.cs" />
-    <Compile Include="Reify\Rebasing\Rebaser.cs" />
-    <Compile Include="Reify\Rebasing\RebaserFactory.cs" />
-    <Compile Include="Reify\Rebasing\RebaseStrategySource.cs" />
-    <Compile Include="Reify\Rebasing\RebaseContext.cs" />
-    <Compile Include="Reify\Rebasing\RebaseRuleRegistry.cs" />
-    <Compile Include="Reify\Rebasing\RootedExpression.cs" />
-    <Compile Include="Reify\Rebasing\Root\RootRule.cs" />
-    <Compile Include="Reify\Rebasing\Root\RootStrategy.cs" />
-    <Compile Include="Reify\Rebasing\Where\WhereRule.cs" />
-    <Compile Include="Reify\Rebasing\Where\WhereStrategy.cs" />
+    <Compile Include="Reify\Rebasing\PassiveRebaseStrategy.cs" />
+    <Compile Include="Reify\Rebasing\RebaseSubject.cs" />
+    <Compile Include="Reify\Rebasing\RebaseStrategy.cs" />
+    <Compile Include="Reify\Rebasing\RootRebaseStrategy.cs" />
+    <Compile Include="Reify\Rebasing\RootVector.cs" />
+    <Compile Include="Reify\Rebasing\StrategizerParts\Constant.cs" />
+    <Compile Include="Reify\Rebasing\StrategizerParts\MemberAccess.cs" />
+    <Compile Include="Reify\Rebasing\StrategizerParts\Lambda.cs" />
+    <Compile Include="Reify\Rebasing\StrategizerParts\Unary.cs" />
+    <Compile Include="Reify\Rebasing\StrategizerParts\MethodCall.cs" />
+    <Compile Include="Reify\Rebasing\StrategizerParts\Binary.cs" />
+    <Compile Include="Reify\Rebasing\StrategizerParts\Parameter.cs" />
+    <Compile Include="Reify\Rebasing\RebaseStrategizer.cs" />
     <Compile Include="Reify\ReifiableFactory.cs" />
     <Compile Include="Dependencies\IServiceRegistry.cs" />
     <Compile Include="Dependencies\ServiceRegistry.cs" />
@@ -124,15 +107,15 @@
     <Compile Include="SourceRegimes\MinimalRegime.cs" />
     <Compile Include="SourceRegimes\ISourceRegime.cs" />
     <Compile Include="SourceRegimes\SourceRegimeDetector.cs" />
-    <Compile Include="ReflectionHelper.cs" />
+    <Compile Include="Types\ReflectionHelper.cs" />
     <Compile Include="Reify\IModifier.cs" />
     <Compile Include="Reify\ReifyQuery.cs" />
     <Compile Include="Reify\Reifiable.cs" />
     <Compile Include="Reify\Mapping\IMapStrategy.cs" />
-    <Compile Include="ProjectedTypes\IProjectedMemberSpec.cs" />
-    <Compile Include="ProjectedTypes\ProjectedTypeInfo.cs" />
-    <Compile Include="ProjectedTypes\ProjectedMemberInfo.cs" />
-    <Compile Include="ProjectedTypes\ProjectedTypeBuilder.cs" />
+    <Compile Include="Tuples\IProjectedMemberSpec.cs" />
+    <Compile Include="Tuples\ProjectedTypeInfo.cs" />
+    <Compile Include="Tuples\ProjectedMemberInfo.cs" />
+    <Compile Include="Tuples\ProjectedTypeBuilder.cs" />
     <Compile Include="Obsolete\TypeSpec.cs" />
     <Compile Include="Obsolete\InputSpecSource.cs" />
     <Compile Include="Reify\Mapping\Translation\FullFetchAndTransformStrategy.cs" />
@@ -145,10 +128,10 @@
     <Compile Include="Reify\Mapping\MapperModifier.cs" />
     <Compile Include="Reify\Mapping\MapStrategySource.cs" />
     <Compile Include="Reify\Mapping\MapContext.cs" />
-    <Compile Include="TypeExtensions.cs" />
+    <Compile Include="Types\TypeExtensions.cs" />
     <Compile Include="TypeMaps\CachedTypeMapProvider.cs" />
     <Compile Include="TypeMaps\ITypeMapProvider.cs" />
-    <Compile Include="TypeVector.cs" />
+    <Compile Include="Types\TypeVector.cs" />
     <Compile Include="Reify\Mapping\Translation\ServerFriendlyProjectStrategy.cs" />
     <Compile Include="Reify\Mapping\PropertyMaps\PropertyMapRule.cs" />
     <Compile Include="Reify\Mapping\Translation\CustomTranslationRule.cs" />
@@ -169,9 +152,7 @@
   <ItemGroup>
     <Content Include="todo.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Reify\Rebasing3\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

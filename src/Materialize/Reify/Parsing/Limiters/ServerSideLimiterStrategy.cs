@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Materialize.Types;
 
 
 namespace Materialize.Reify.Parsing.Limiters

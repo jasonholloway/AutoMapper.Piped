@@ -3,8 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Materialize.Reify.Rebasing2;
+using Materialize.Reify.Rebasing;
 using System.Reflection;
+using Materialize.Types;
 
 namespace Materialize.Reify.Mapping.PropertyMaps
 {

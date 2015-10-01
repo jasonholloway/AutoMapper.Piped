@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Materialize.Types;
 
 namespace Materialize.TypeMaps
 {

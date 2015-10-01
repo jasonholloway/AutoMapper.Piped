@@ -1,9 +1,9 @@
-﻿using Materialize.Reify.Rebasing2;
+﻿using Materialize.Reify.Rebasing;
+using Materialize.Expressions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace Materialize.Reify.Parsing.Where
 {

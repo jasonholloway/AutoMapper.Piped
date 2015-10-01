@@ -1,6 +1,7 @@
 ﻿using Materialize.Reify.Mapping;
 using Materialize.Reify.Parsing;
 using Materialize.SourceRegimes;
+using Materialize.Types;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -151,6 +152,9 @@ namespace Materialize.Reify
                 return (TResult)transformed;
             }
             else {
+                //no simple way to implement QueryToServer hook
+                //when expression is fed directly to Execute by unary method
+
                 var fetched = SourceQuery.Provider.Execute(exQuery);
                 OnFetched(new[] { fetched });
 

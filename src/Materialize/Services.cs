@@ -1,6 +1,6 @@
 ﻿using Materialize.CollectionFactories;
 using Materialize.Dependencies;
-using Materialize.ProjectedTypes;
+using Materialize.Tuples;
 using Materialize.Reify;
 using Materialize.Reify.Mapping;
 using Materialize.Reify.Parsing;
@@ -57,11 +57,7 @@ namespace Materialize
             x.Register<IParseStrategySource, ParseStrategySource>();
             x.Register<IParseRuleRegistry, ParseRuleRegistry>();
             x.Register<ParserFactory>();
-
-            x.Register<IRebaseRuleRegistry, RebaseRuleRegistry>();
-            x.Register<IRebaseStrategySource, RebaseStrategySource>();
-            x.Register<RebaserFactory>();
-
+            
             x.Register<ReifiableFactory>();
         }        
     }

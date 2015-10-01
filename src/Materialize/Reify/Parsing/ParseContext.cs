@@ -1,5 +1,6 @@
-﻿using Materialize.ExpressionComparison;
+﻿using Materialize.Expressions;
 using Materialize.Reify.Mapping;
+using Materialize.Types;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -62,15 +63,7 @@ namespace Materialize.Reify.Parsing
 
 
 
-
-
-    //There is a problem with the cache: the MappedBase is a constant, and will only 
-    //be compared by its type, which should be pretty unique in the query expression,
-    //but isn't guaranteed to be so. The fact that it's the base expression should be part of the
-    //comparison. 
-
-    //i subject is baseexp is another part of the comparison then
-
+    
 
 
 
@@ -80,7 +73,7 @@ namespace Materialize.Reify.Parsing
         public static readonly ParseContextEqualityComparer Default = new ParseContextEqualityComparer();
 
         static readonly MapContextEqualityComparer _mapContextComp = MapContextEqualityComparer.Default;
-        static readonly IEqualityComparer<Expression> _subjectExpComparer = new QueryExpressionComparer();
+        static readonly IEqualityComparer<Expression> _subjectExpComparer = new CacheableQueryComparer();
 
         public bool Equals(ParseContext x, ParseContext y) {
             return _mapContextComp.Equals(x.MapContext, y.MapContext)

@@ -6,8 +6,9 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Materialize.Reify.Rebasing2;
+using Materialize.Reify.Rebasing;
 using Materialize.Reify.Parsing;
+using Materialize.Types;
 
 namespace Materialize.Reify.Mapping.Collections
 {

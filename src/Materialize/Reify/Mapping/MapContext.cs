@@ -1,4 +1,5 @@
 ﻿using Materialize.SourceRegimes;
+using Materialize.Types;
 using System.Collections.Generic;
 
 namespace Materialize.Reify.Mapping

@@ -1,4 +1,5 @@
 ﻿using Materialize.CollectionFactories;
+using Materialize.Types;
 using System;
 using System.Linq.Expressions;
 

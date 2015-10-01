@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Materialize.ProjectedTypes;
+using Materialize.Tuples;
 using Materialize.TypeMaps;
 using System;
 using System.Collections.Generic;

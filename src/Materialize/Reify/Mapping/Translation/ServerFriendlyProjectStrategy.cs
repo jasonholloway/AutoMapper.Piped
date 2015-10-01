@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using Materialize.Expressions;
 
 namespace Materialize.Reify.Mapping.Translation
 {

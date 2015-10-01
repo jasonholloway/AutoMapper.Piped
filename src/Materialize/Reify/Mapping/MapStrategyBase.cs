@@ -1,5 +1,5 @@
 ﻿using System;
-using Materialize.Reify.Rebasing2;
+using Materialize.Reify.Rebasing;
 using Materialize.Reify.Parsing;
 
 namespace Materialize.Reify.Mapping
