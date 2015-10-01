@@ -11,7 +11,7 @@ using Materialize.Reify.Rebasing;
 namespace Materialize.Reify.Mapping.Collections
 {
     class DirectCollectionStrategy<TOrig, TOrigElem, TDestElem, TDest>
-        : StrategyBase<TOrig, TDest>
+        : MapStrategyBase<TOrig, TDest>
         where TOrig : IEnumerable<TOrigElem>
     {
         MapContext _ctx;

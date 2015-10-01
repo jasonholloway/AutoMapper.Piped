@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Materialize.Reify.Mapping.Translation
 {
     class FullFetchAndTransformStrategy<TOrig, TDest>
-        : StrategyBase<TOrig, TDest>
+        : MapStrategyBase<TOrig, TDest>
     {
         MapContext _ctx;
         Func<TOrig, TDest> _fnTransform;

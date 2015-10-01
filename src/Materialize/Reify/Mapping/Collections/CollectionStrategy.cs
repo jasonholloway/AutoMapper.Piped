@@ -13,7 +13,7 @@ using Materialize.Types;
 namespace Materialize.Reify.Mapping.Collections
 {
     class CollectionStrategy<TOrig, TOrigElem, TMedElem, TDestElem, TDest>
-        : StrategyBase<TOrig, TDest>
+        : MapStrategyBase<TOrig, TDest>
         where TOrig : IEnumerable<TOrigElem>
     {
         MapContext _ctx;

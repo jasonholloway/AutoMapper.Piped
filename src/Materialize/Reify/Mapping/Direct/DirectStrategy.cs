@@ -7,7 +7,7 @@ using Materialize.Reify.Rebasing;
 namespace Materialize.Reify.Mapping.Direct
 {
     class DirectStrategy<TOrig, TDest>
-        : StrategyBase<TOrig, TDest>
+        : MapStrategyBase<TOrig, TDest>
         where TOrig : TDest
     {
         MapContext _ctx;

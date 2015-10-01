@@ -7,7 +7,7 @@ using Materialize.Expressions;
 namespace Materialize.Reify.Mapping.Translation
 {
     class ServerFriendlyProjectStrategy<TOrig, TDest>
-        : StrategyBase<TOrig, TDest>
+        : MapStrategyBase<TOrig, TDest>
     {
         MapContext _ctx;
         LambdaExpression _exProject;

@@ -9,7 +9,7 @@ using Materialize.Tuples;
 namespace Materialize.Reify.Mapping.PropertyMaps
 {
     class MediatedPropMapStrategy<TOrig, TDest>
-        : StrategyBase<TOrig, TDest>
+        : PropMapStrategyBase<TOrig, TDest>
     {
         MapContext _ctx;
         TypeMap _typeMap;
@@ -20,6 +20,7 @@ namespace Materialize.Reify.Mapping.PropertyMaps
             TypeMap typeMap, 
             PropMapSpec[] propMapSpecs,
             IProjectedTypeBuilder typeBuilder) 
+            : base(propMapSpecs)
         {
             _ctx = ctx;
             _typeMap = typeMap;

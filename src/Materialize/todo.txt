@@ -1,6 +1,12 @@
 ﻿
 TO DO! ********************************************
 
+> before-and-after hooks should only apply after all filtering done.
+
+> un-rebasable predicates should either throw consistent exception
+  or cause all data to be brought forth first! - dependent on switch
+  
+
 > Test cache behaviour...
 
 > Unary strategies must be sensitive to whether the set has been re-limited on the client:

@@ -6,14 +6,13 @@ using System.Linq.Expressions;
 
 namespace Materialize.Tests.Infrastructure
 {
-    class Snooper : ISnooper
+    class EventSnooper : ISnooper
     {
         public event Action<Expression> QueryFromClient;
         public event Action<IQueryable> QueryToServer;
         public event Action<IEnumerable<object>> Fetched;
         public event Action<IEnumerable<object>> Transformed;
-        
-        
+                        
         void ISnooper.OnQueryFromClient(Expression exQuery) {
             if(QueryFromClient != null) {
                 QueryFromClient(exQuery);

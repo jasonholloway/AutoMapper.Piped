@@ -4,7 +4,7 @@ using Materialize.Reify.Parsing;
 
 namespace Materialize.Reify.Mapping
 {
-    abstract class StrategyBase<TOrig, TDest> 
+    abstract class MapStrategyBase<TOrig, TDest> 
         : IMapStrategy
     {
         public Type SourceType {
@@ -30,7 +30,7 @@ namespace Materialize.Reify.Mapping
                  
 
         public virtual IRebaseStrategy GetRootRebaseStrategy(RootVector roots) {
-            throw new NotImplementedException(); //should return null or throw more precisely-typed exception...
+            return null; // throw new NotImplementedException(); //should return null or throw more precisely-typed exception...
         }
     }
 

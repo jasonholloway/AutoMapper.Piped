@@ -41,13 +41,19 @@
   <ItemGroup>
     <Compile Include="CollectionFactories\CollectionFactorySource.cs" />
     <Compile Include="CollectionFactories\ICollectionFactorySource.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="Expressions\CustomExpressionVisitor.cs" />
     <Compile Include="Expressions\ExpressionExtensions.cs" />
     <Compile Include="Expressions\ExpressionHasher.cs" />
+    <Compile Include="MaterializeException.cs" />
+    <Compile Include="Reify\Mapping\PropertyMaps\PropMapStrategyBase.cs" />
     <Compile Include="Reify\Parsing\CacheableQueryComparer.cs" />
     <Compile Include="Expressions\ExpressionComparer.cs" />
     <Compile Include="Expressions\VoidExpressionVisitor.cs" />
     <Compile Include="Dependencies\LightInject\LightInject.cs" />
+    <Compile Include="Reify\Rebasing\StrategizerParts\Methods\EnumerableCount.cs" />
+    <Compile Include="Reify\Rebasing\StrategizerParts\Methods\QueryableWhere.cs" />
+    <Compile Include="Types\EnumerableMethods.cs" />
     <Compile Include="Types\QueryableMethods.cs" />
     <Compile Include="ISnooper.cs" />
     <Compile Include="Tuples\DynaType\DynaType.cs" />

@@ -59,6 +59,10 @@ namespace Materialize
             x.Register<ParserFactory>();
             
             x.Register<ReifiableFactory>();
-        }        
+
+            x.Register<Config>(new Config() {
+                                    AllowClientSideFiltering = false
+                                });
+        }
     }
 }

@@ -12,7 +12,9 @@ namespace Materialize.Tests
     class MaterializableRebaseTests : TestClassBase
     {
 
-        private IQueryable<Dog> Dogs { get; set; }
+        IQueryable<Dog> Dogs { get; set; }
+        IQueryable<Person> People { get; set; }
+
 
         public MaterializableRebaseTests() 
         {
@@ -21,47 +23,83 @@ namespace Materialize.Tests
             InitMapper(x => {
                 x.CreateMap<Dog, DogModel>();
                 x.CreateMap<Dog, DogAndOwnerModel>();
-                x.CreateMap<Person, PersonModel>();
+                x.CreateMap<Person, PersonWithPetsModel>();
             });
 
             Dogs = Data.Dogs.AsQueryable();
+            People = Data.People.AsQueryable();
         }
         
         
         [Fact]
-        public void SimpleMappedProperties() 
+        public void RebasesSimpleMappedProperties() 
         {
-            int fetchedCount = 0;
-
-            var snooper = new Snooper();
-            snooper.Fetched += (en => fetchedCount = en.Count());
-
-            var dogModels = Dogs.MapAs<DogModel>(snooper)
+            InitServices(x => x.EmplaceTolerantSourceRegime());
+            
+            var snoop = new ItemSnooper();
+            
+            var dogModels = Dogs.MapAs<DogModel>(snoop)
                                     .Where(m => m.Name.Length > 5)
                                     .ToArray();
-
+            
             dogModels.Select(d => d.Name)
-                .SequenceEqual(Dogs.Where(d => d.Name.Length > 5).Select(d => d.Name))
-                .ShouldBeTrue();
+                        .SequenceEqual(Dogs.Where(d => d.Name.Length > 5).Select(d => d.Name))
+                        .ShouldBeTrue();
 
-            fetchedCount.ShouldEqual(dogModels.Count());
+            snoop.Fetched.Count().ShouldEqual(dogModels.Count());            
         }
 
 
+        [Fact]
+        public void UnrebasablePredicateFailsWhenClientFilteringForbidden() 
+        {
+            InitServices(x => {
+                x.EmplaceIntolerantSourceRegime();
+                x.ForbidClientSideFiltering();
+            });
 
-        //un-rebasable predicates should either throw consistent exception
-        //or cause all data to be brought forth first! - dependent on switch
-
-        //before-and-after hooks should only apply after all filtering done.
-        //...
+            Assert.Throws<MaterializeException>(() => {
+                Dogs.MapAs<DogModel>()
+                        .Where(m => m.Name == "Rex")
+                        .First();
+            });
+        }
 
 
         [Fact]
-        public void NestedEnumerableMethods() {
-            //within predicates, everything becomes enumerable
-            //...
+        public void UnrebasablePredicateAppliedOnClientInstead() 
+        {
+            InitServices(x => {
+                x.EmplaceIntolerantSourceRegime();
+                x.AllowClientSideFiltering();
+            });
 
-            throw new NotImplementedException();
+            var snoop = new ItemSnooper();
+            
+            Dogs.MapAs<DogModel>(snoop)
+                    .Where(m => m.Name.Length > 4)
+                    .ToArray();
+
+            snoop.Fetched.Count().ShouldEqual(Dogs.Count());
+            snoop.Transformed.Count().ShouldEqual(Dogs.Count(d => d.Name.Length > 4));
+        }
+
+
+        [Fact]
+        public void RebasesEnumerableCount() 
+        {            
+            InitServices(x => {
+                x.EmplaceTolerantSourceRegime();
+                x.AllowClientSideFiltering();
+            });
+
+            var models = People.MapAs<PersonWithPetsModel>()
+                                .Where(p => p.Dogs.Count() > 1)
+                                .ToArray();
+
+            models.Select(m => m.Name)
+                    .SequenceEqual(People.Where(p => p.Dogs.Count() > 1)
+                                            .Select(p => p.Name));
         }
 
         

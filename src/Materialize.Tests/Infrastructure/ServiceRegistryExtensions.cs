@@ -43,6 +43,16 @@ namespace Materialize.Tests.Infrastructure
 
             x.Register(detector);
         }
+
+
+
+        public static void AllowClientSideFiltering(this IServiceRegistry x) {
+            x.Resolve<Config>().AllowClientSideFiltering = true;
+        }
+
+        public static void ForbidClientSideFiltering(this IServiceRegistry x) {
+            x.Resolve<Config>().AllowClientSideFiltering = false;
+        }
                
 
     }

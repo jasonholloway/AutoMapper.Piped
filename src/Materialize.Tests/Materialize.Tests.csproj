@@ -62,8 +62,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\ItemSnooper.cs" />
     <Compile Include="Infrastructure\ServiceRegistryExtensions.cs" />
-    <Compile Include="Infrastructure\Snooper.cs" />
+    <Compile Include="Infrastructure\EventSnooper.cs" />
     <Compile Include="Infrastructure\TestData.cs" />
     <Compile Include="MaterializableRebaseTests.cs" />
     <Compile Include="MaterializationCollectionTests.cs" />

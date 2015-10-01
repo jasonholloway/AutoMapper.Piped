@@ -65,7 +65,7 @@ Relies on running SqlServer service.
                                         .Include(v => v.Town)
                                             .Snoop(e => sourceQueryExp = e); //the snoop extensions are simply utilities for testing
                 
-                var snooper = new Snooper();
+                var snooper = new EventSnooper();
                 snooper.QueryToServer += (qy => query = qy);
                 snooper.Fetched += (f => fetched = f.ToArray());
                 snooper.Transformed += (t => transformed = t.ToArray());

@@ -130,15 +130,16 @@ namespace Materialize.Tests
                 x.CreateMap<int, float>()
                     .ProjectUsing(i => i);
             });
-
+            
             bool fetchedYet = false;
 
-            var snooper = new Snooper();
-            snooper.Fetched += (_ => fetchedYet = true);
+            var snoop = new EventSnooper();
+            snoop.Fetched += (_ => fetchedYet = true);
+
 
             var mapped = Enumerable.Range(0, 100)
                                     .AsQueryable()
-                                    .MapAs<float>(snooper);
+                                    .MapAs<float>(snoop);
 
             
             fetchedYet.ShouldBeFalse();
@@ -165,7 +166,7 @@ namespace Materialize.Tests
 
             int fetchCount = 0;
 
-            var snooper = new Snooper();
+            var snooper = new EventSnooper();
             snooper.Fetched += (_ => fetchCount++);
 
 

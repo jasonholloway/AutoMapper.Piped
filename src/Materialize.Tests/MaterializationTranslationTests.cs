@@ -1,4 +1,5 @@
-﻿using Materialize.Tests.Infrastructure;
+﻿using Materialize.Expressions;
+using Materialize.Tests.Infrastructure;
 using Materialize.Tests.Model;
 using Should;
 using System;
@@ -28,7 +29,7 @@ namespace Materialize.Tests
 
             Expression exServerQuery = null;
 
-            var snooper = new Snooper();
+            var snooper = new EventSnooper();
             snooper.QueryToServer += (qy => exServerQuery = qy.Expression);
 
 
@@ -59,7 +60,7 @@ namespace Materialize.Tests
 
             Expression exServerQuery = null;
 
-            var snooper = new Snooper();
+            var snooper = new EventSnooper();
             snooper.QueryToServer += (qy => exServerQuery = qy.Expression);
 
             var dogModels = Data.Dogs.AsQueryable()
