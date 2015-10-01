@@ -18,6 +18,14 @@ namespace Materialize.Reify.Rebasing2
             _fnRootStrategy = fnRootStrategy;
         }
 
+        public RootRebaseStrategy(Func<Expression, Expression> fnRebase)
+            : this(fnRebase, _ => null) { }
+
+
+        public RootRebaseStrategy() //used when subclassing
+            : this(ex => ex, rv => null) { }
+
+
         public TypeVector TypeVector {
             get { return new TypeVector(typeof(TFinal), typeof(TRebased)); }
         }

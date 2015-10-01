@@ -9,15 +9,19 @@ namespace Materialize.Reify.Rebasing2
 {
     struct RootVector
     {
-        public readonly ParameterExpression OrigRoot;
-        public readonly ParameterExpression RebasedRoot;
-
+        public readonly Expression OrigRoot;
+        public readonly Expression RebasedRoot;
+        
         public RootVector(
-            ParameterExpression origRoot,
-            ParameterExpression rebasedRoot) 
+            Expression origRoot,
+            Expression rebasedRoot) 
         {
             OrigRoot = origRoot;
             RebasedRoot = rebasedRoot;
+        }
+        
+        public TypeVector TypeVector {
+            get { return new TypeVector(OrigRoot.Type, RebasedRoot.Type); }
         }
     }
 

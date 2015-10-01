@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Materialize.Reify.Rebasing2;
 
 namespace Materialize.Reify.Mapping.Direct
 {
@@ -43,6 +44,11 @@ namespace Materialize.Reify.Mapping.Direct
             protected override TDest Transform(TOrig fetched) {
                 return (TDest)fetched;
             }
+        }
+
+
+        public override IRebaseStrategy GetRootRebaseStrategy(RootVector roots) {
+            return new RootRebaseStrategy<TDest, TOrig>(ex => roots.RebasedRoot);
         }
     }
 

@@ -41,8 +41,18 @@ namespace Materialize.Reify.Parsing.Mapper
         }
 
         
-        public IRebaseStrategy GetRebaseStrategy(RebaseSubject subject) {
-            return _mapStrategy.GetRebaseStrategy(subject);
+        public IRebaseStrategy GetRebaseStrategy(RebaseSubject subject) 
+        {
+            var strategizer = new RebaseStrategizer(
+                                    x => {
+                                        foreach(var rv in subject.RootVectors) {
+                                            x.AddRootStrategy(
+                                                    rv.OrigRoot,
+                                                    _mapStrategy.GetRootRebaseStrategy(rv));
+                                        }
+                                    });
+            
+            return strategizer.Strategize(subject.Expression);
         }
     }
 }

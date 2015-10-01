@@ -29,7 +29,7 @@ namespace Materialize.Reify.Mapping
         public abstract IModifier CreateModifier();
                  
 
-        public virtual IRebaseStrategy GetRebaseStrategy(RebaseSubject subject) {
+        public virtual IRebaseStrategy GetRootRebaseStrategy(RootVector roots) {
             throw new NotImplementedException(); //should return null or throw more precisely-typed exception...
         }
     }

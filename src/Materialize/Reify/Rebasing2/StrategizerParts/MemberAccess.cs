@@ -9,19 +9,19 @@ namespace Materialize.Reify.Rebasing2
     {
         protected override IRebaseStrategy VisitMemberAccess(MemberExpression exMember) 
         {
-            var strInst = Visit(exMember.Expression);
+            var strInstance = Visit(exMember.Expression);
 
-            var strExpanded = strInst.Expand(exMember);
+            var strMember = strInstance.Expand(exMember);
 
-            if(strExpanded != null) {
-                return strExpanded;
+            if(strMember != null) {
+                return strMember;
             }
             else {
                 return UnrootedStrategy(
                             new TypeVector(exMember.Type, exMember.Type),
                             (MemberExpression x) => {
                                 return Expression.MakeMemberAccess(
-                                                    strInst.Rebase(x.Expression),
+                                                    strInstance.Rebase(x.Expression),
                                                     exMember.Member);
                             });
             }

@@ -9,23 +9,7 @@ namespace Materialize.Reify.Rebasing2
     {
         protected override IRebaseStrategy VisitLambda(LambdaExpression exLambda) 
         {
-            var strBody = Visit(exLambda.Body);
-            
-            var rStrParams = exLambda.Parameters
-                                        .Select(p => Visit(p))
-                                        .Cast<IRebaseStrategy<ParameterExpression>>()
-                                        .ToArray();
-            
-            return UnrootedStrategy(
-                        strBody.TypeVector,
-                        (LambdaExpression x) => {
-                            return Expression.Lambda(
-                                                strBody.Rebase(x.Body),
-                                                rStrParams
-                                                    .Zip(x.Parameters, (s, p) => s.Rebase(p))
-                                                    .ToArray()
-                                                );
-                        });
+            return PassiveStrategy(exLambda.Type);            
         }
     }
 }

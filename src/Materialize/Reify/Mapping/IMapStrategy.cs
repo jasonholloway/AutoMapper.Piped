@@ -15,7 +15,7 @@ namespace Materialize.Reify.Mapping
 
         IModifier CreateModifier();
 
-        IRebaseStrategy GetRebaseStrategy(RebaseSubject subject);
+        IRebaseStrategy GetRootRebaseStrategy(RootVector roots);
     }
 
 }

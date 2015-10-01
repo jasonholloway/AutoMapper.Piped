@@ -8,9 +8,6 @@ namespace Materialize.Reify.Rebasing2
 {
     partial class RebaseStrategizer 
     {
-        //Question of whether rooting should flow through method calls
-        //Yes - as long as they are Queryable methods
-        
         protected override IRebaseStrategy VisitMethodCall(MethodCallExpression exCall) 
         {
             if(exCall.Method.IsGenericMethod
@@ -22,42 +19,53 @@ namespace Materialize.Reify.Rebasing2
                 {
                     var upstreamStrategy = Visit(exCall.Arguments[0]);
                     
+
                     var tRebasedElem = upstreamStrategy.TypeVector
                                                             .DestType.GetEnumerableElementType();
 
+                    var mRebasedWhere = QueryableMethods.WhereDef
+                                                        .MakeGenericMethod(tRebasedElem);
 
-                    var exQuotedPred = (UnaryExpression)exCall.Arguments[1];
-                    var exPred = (LambdaExpression)exQuotedPred.Operand;
 
-
+                    var exPred = (LambdaExpression)((UnaryExpression)exCall.Arguments[1]).Operand;
+                    
                     var predRoots = new RootVector(
                                             exPred.Parameters.Single(),
                                             Expression.Parameter(tRebasedElem));
-                    
+
+                    IRebaseStrategy predBodyStrategy = null;
+
                     var predRootStrategy = upstreamStrategy.GetRootStrategy(predRoots);
 
-                    var predStrategizer = SpawnStrategizer(x => {
-                                                                if(predRootStrategy != null) {
-                                                                    x.AddRootStrategy(predRoots.OrigRoot, predRootStrategy);
-                                                                }
-                                                            });
-                    
-                    var predStrategy = predStrategizer.Strategize(exQuotedPred);
+                    if(predRootStrategy != null) {
+                        var predBodyStrategizer = SpawnStrategizer(x => {
+                                x.AddRootStrategy(predRoots.OrigRoot, predRootStrategy);
+                        });
 
-
-                    var mRebasedWhere = QueryableMethods.WhereDef
-                                                        .MakeGenericMethod(tRebasedElem);
+                        predBodyStrategy = predBodyStrategizer.Strategize(exPred.Body);
+                    }
+                    else {
+                        predBodyStrategy = PassiveStrategy(exPred.Body.Type);
+                    }
                     
+
                     return RootedStrategy(
                                 upstreamStrategy, 
                                 (MethodCallExpression ex) => {
                                     var exRebasedInst = upstreamStrategy.Rebase(ex.Arguments[0]);
-                                    var exRebasedPred = predStrategy.Rebase(ex.Arguments[1]);
+                                    
+                                    var exPredBody = ((LambdaExpression)((UnaryExpression)ex.Arguments[1]).Operand).Body;
+                                    var exRebasedPredBody = predBodyStrategy.Rebase(exPredBody);
 
                                     return Expression.Call(
                                                         mRebasedWhere,
                                                         exRebasedInst,
-                                                        exRebasedPred);
+                                                        Expression.Quote(
+                                                            Expression.Lambda(
+                                                                        exRebasedPredBody,
+                                                                        (ParameterExpression)predRoots.RebasedRoot
+                                                                        ))
+                                                            );
                                 });                    
                 }                
             }

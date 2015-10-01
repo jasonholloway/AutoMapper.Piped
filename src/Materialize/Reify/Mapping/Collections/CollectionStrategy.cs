@@ -84,7 +84,7 @@ namespace Materialize.Reify.Mapping.Collections
             }
         }
 
-        
+
 
         //*********************************************************************************************
 
@@ -92,27 +92,21 @@ namespace Materialize.Reify.Mapping.Collections
         //below rebase method should be moved to common collection base class
         //...
 
-        public override IRebaseStrategy GetRebaseStrategy(RebaseSubject subject) 
-        {
-            var roots = subject.RootVectors.Single();
-
-            if(roots.OrigRoot.Type != typeof(TDest) || roots.RebasedRoot.Type != typeof(TOrig)) {
-                throw new InvalidOperationException();
+        public override IRebaseStrategy GetRootRebaseStrategy(RootVector roots) 
+        {            
+            if(roots.TypeVector.Equals(new TypeVector(typeof(TDest), typeof(TOrig)))) {
+                return new RootRebaseStrategy<TDest, TOrig>(
+                                        ex => roots.RebasedRoot,
+                                        rv => GetRootRebaseStrategy(rv));
             }
             
-            var strategizer = new RebaseStrategizer(x => {
-                x.AddRootStrategy(
-                    roots.OrigRoot, 
-                    new RootRebaseStrategy<TDest, TOrig>(
-                                    ex => roots.RebasedRoot,
-                                    rv => { throw new NotImplementedException(); } //need to delegate to element map strategy here...
-                                    ));
-            });
+            if(roots.TypeVector.Equals(new TypeVector(typeof(TDestElem), typeof(TOrigElem)))) {
+                return _elemStrategy.GetRootRebaseStrategy(roots);
+            }                                                       
 
-            return strategizer.Strategize(subject.Expression);
+            return null;
         }
-
-        
+                
     }
 
 
