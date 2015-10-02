@@ -3,29 +3,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using Materialize.Reify.Parsing;
-using Materialize.Reify.Rebasing;
 
 namespace Materialize.Reify.Mapping.Collections
 {
     class DirectCollectionStrategy<TOrig, TOrigElem, TDestElem, TDest>
-        : MapStrategyBase<TOrig, TDest>
+        : CollectionStrategyBase<TOrig, TOrigElem, TDestElem, TDest>
         where TOrig : IEnumerable<TOrigElem>
     {
         MapContext _ctx;
         CollectionFactory _collFactory;
-        IMapStrategy _elemStrategy;
         
         public DirectCollectionStrategy(
             MapContext ctx, 
             CollectionFactory collFactory, 
             IMapStrategy elemStrategy) 
+            : base(elemStrategy)
         {
             _ctx = ctx;
             _collFactory = collFactory;
-            _elemStrategy = elemStrategy;
         }
         
         public override Type FetchType {

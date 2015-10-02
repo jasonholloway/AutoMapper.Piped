@@ -53,7 +53,7 @@ namespace Materialize.Reify.Parsing.Where
                                     upstreamStrategy);
                 }
                 
-                throw new MaterializeException(
+                throw new MaterializationException(
                             "Can't rebase predicate to push to server, and client-side filtering forbidden!");      
             }
 
@@ -69,8 +69,8 @@ namespace Materialize.Reify.Parsing.Where
             ISourceRegime sourceRegime) 
         {
             var roots = new RootVector(
-                                Expression.Parameter(upstreamStrategy.DestType),
-                                Expression.Parameter(upstreamStrategy.SourceType));
+                                Expression.Parameter(upstreamStrategy.DestType, "enDest"),
+                                Expression.Parameter(upstreamStrategy.SourceType, "enSource"));
             
             //to rebase, each predicate has to be packed within its own where clause,
             //operating on IQueryable<TElem>. Only in this form can it be sent upstream to be rebased.                                

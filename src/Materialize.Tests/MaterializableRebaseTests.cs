@@ -58,7 +58,7 @@ namespace Materialize.Tests
                 x.ForbidClientSideFiltering();
             });
 
-            Assert.Throws<MaterializeException>(() => {
+            Assert.Throws<MaterializationException>(() => {
                 Dogs.MapAs<DogModel>()
                         .Where(m => m.Name == "Rex")
                         .First();
@@ -137,6 +137,41 @@ namespace Materialize.Tests
 
             models.Select(m => m.Name)
                     .SequenceEqual(People.Where(p => p.Dogs.Where(d => d.Name.Length > 5).Any())
+                                            .Select(p => p.Name));
+        }
+
+
+        [Fact]
+        public void RebasesEnumerableAnyWithPredicate() {
+            InitServices(x => {
+                x.EmplaceTolerantSourceRegime();
+                x.AllowClientSideFiltering();
+            });
+
+            var models = People.MapAs<PersonWithPetsModel>()
+                                .Where(p => p.Dogs.Any(d => d.Name.Length > 5))
+                                .ToArray();
+
+            models.Select(m => m.Name)
+                    .SequenceEqual(People.Where(p => p.Dogs.Any(d => d.Name.Length > 5))
+                                            .Select(p => p.Name));
+        }
+
+
+
+        [Fact]
+        public void RebasesEnumerableCountWithPredicate() {
+            InitServices(x => {
+                x.EmplaceTolerantSourceRegime();
+                x.AllowClientSideFiltering();
+            });
+
+            var models = People.MapAs<PersonWithPetsModel>()
+                                .Where(p => p.Dogs.Count(d => d.Name.Length > 5) > 1)
+                                .ToArray();
+
+            models.Select(m => m.Name)
+                    .SequenceEqual(People.Where(p => p.Dogs.Count(d => d.Name.Length > 5) > 1)
                                             .Select(p => p.Name));
         }
 

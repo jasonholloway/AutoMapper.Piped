@@ -45,7 +45,8 @@
     <Compile Include="Expressions\CustomExpressionVisitor.cs" />
     <Compile Include="Expressions\ExpressionExtensions.cs" />
     <Compile Include="Expressions\ExpressionHasher.cs" />
-    <Compile Include="MaterializeException.cs" />
+    <Compile Include="Exceptions.cs" />
+    <Compile Include="Reify\Mapping\Collections\CollectionStrategyBase.cs" />
     <Compile Include="Reify\Mapping\PropertyMaps\PropMapStrategyBase.cs" />
     <Compile Include="Reify\Parsing\CacheableQueryComparer.cs" />
     <Compile Include="Expressions\ExpressionComparer.cs" />

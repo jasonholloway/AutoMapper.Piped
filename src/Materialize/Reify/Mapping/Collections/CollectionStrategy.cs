@@ -13,21 +13,20 @@ using Materialize.Types;
 namespace Materialize.Reify.Mapping.Collections
 {
     class CollectionStrategy<TOrig, TOrigElem, TMedElem, TDestElem, TDest>
-        : MapStrategyBase<TOrig, TDest>
+        : CollectionStrategyBase<TOrig, TOrigElem, TDestElem, TDest>
         where TOrig : IEnumerable<TOrigElem>
     {
         MapContext _ctx;
         CollectionFactory _collFactory;
-        IMapStrategy _elemStrategy;
         
         public CollectionStrategy(
             MapContext ctx, 
             CollectionFactory collFactory, 
             IMapStrategy elemStrategy) 
+            : base(elemStrategy)
         {
             _ctx = ctx;
             _collFactory = collFactory;
-            _elemStrategy = elemStrategy;
         }
         
         public override Type FetchType {
@@ -84,30 +83,7 @@ namespace Materialize.Reify.Mapping.Collections
                 return (TDest)_collFactory(transformedElems);
             }
         }
-
-
-
-        //*********************************************************************************************
-
-
-        //below rebase method should be moved to common collection base class
-        //...
-
-        public override IRebaseStrategy GetRootRebaseStrategy(RootVector roots) 
-        {            
-            if(roots.TypeVector.Equals(new TypeVector(typeof(TDest), typeof(TOrig)))) {
-                return new RootRebaseStrategy<TDest, TOrig>(
-                                        ex => roots.RebasedRoot,
-                                        rv => GetRootRebaseStrategy(rv));
-            }
-            
-            if(roots.TypeVector.Equals(new TypeVector(typeof(TDestElem), typeof(TOrigElem)))) {
-                return _elemStrategy.GetRootRebaseStrategy(roots);
-            }                                                       
-
-            return null;
-        }
-                
+        
     }
 
 

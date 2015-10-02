@@ -102,23 +102,18 @@ namespace Materialize.Reify.Rebasing.Methods
                                         exPred.Parameters.Single(),
                                         Expression.Parameter(RebasedElemType));
                 
-                IRebaseStrategy bodyStrategy = null;
-                ParameterExpression exRebasedParam = null;
-                
                 var rootStrategy = UpstreamStrategy.GetRootStrategy(roots);
 
-                if(rootStrategy != null) {
-                    var bodyStrategizer = SpawnNestedStrategizer(x => {
-                        x.AddRootStrategy(roots.OrigRoot, rootStrategy);
-                    });
+                if(rootStrategy == null) {
+                    throw new UnableToRebaseException("Can't get RebaseStrategy for specified roots!");
+                }
+                
+                var bodyStrategizer = SpawnNestedStrategizer(x => {
+                    x.AddRootStrategy(roots.OrigRoot, rootStrategy);
+                });
 
-                    bodyStrategy = bodyStrategizer.Strategize(exPred.Body);
-                    exRebasedParam = (ParameterExpression)roots.RebasedRoot;
-                }
-                else {
-                    bodyStrategy = new PassiveRebaseStrategy(exPred.Body.Type);
-                    exRebasedParam = (ParameterExpression)roots.OrigRoot;
-                }
+                var bodyStrategy = bodyStrategizer.Strategize(exPred.Body);
+                var exRebasedParam = (ParameterExpression)roots.RebasedRoot;
 
                 TypeVector typeVector = new TypeVector(
                                                 exPred.Type, 
