@@ -101,8 +101,46 @@ namespace Materialize.Tests
                     .SequenceEqual(People.Where(p => p.Dogs.Count() > 1)
                                             .Select(p => p.Name));
         }
-
         
+        [Fact]
+        public void RebasesEnumerableAny() {
+            InitServices(x => {
+                x.EmplaceTolerantSourceRegime();
+                x.AllowClientSideFiltering();
+            });
+            
+            var people = People.Concat(new[] {
+                                            new Person() { Name = "Petless", Dogs = new Dog[0], ID = 999 }
+                                        });
+
+            var models = people.MapAs<PersonWithPetsModel>()
+                                    .Where(p => p.Dogs.Any())
+                                    .ToArray();
+
+            models.Select(m => m.Name)
+                    .SequenceEqual(people.Where(p => p.Dogs.Any())
+                                            .Select(p => p.Name));
+        }
+
+
+
+        [Fact]
+        public void RebasesEnumerableWhere() {
+            InitServices(x => {
+                x.EmplaceTolerantSourceRegime();
+                x.AllowClientSideFiltering();
+            });
+
+            var models = People.MapAs<PersonWithPetsModel>()
+                                .Where(p => p.Dogs.Where(d => d.Name.Length > 5).Any())
+                                .ToArray();
+
+            models.Select(m => m.Name)
+                    .SequenceEqual(People.Where(p => p.Dogs.Where(d => d.Name.Length > 5).Any())
+                                            .Select(p => p.Name));
+        }
+
+
 
     }
 }

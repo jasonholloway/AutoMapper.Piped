@@ -8,24 +8,25 @@ namespace Materialize.Reify.Rebasing
 {
     partial class RebaseStrategizer
     {
-        IRebaseStrategy EnumerableCount(MethodCallExpression exCall) 
+        IRebaseStrategy EnumerableAny(MethodCallExpression exCall) 
         {
             var upstreamStrategy = Visit(exCall.Arguments[0]);
             
             var tRebasedElem = upstreamStrategy.TypeVector
                                                     .DestType.GetEnumerableElementType();
 
-            var mRebasedCount = EnumerableMethods.CountDef
-                                                    .MakeGenericMethod(tRebasedElem);
+            var mRebasedAny = EnumerableMethods.AnyDef
+                                                 .MakeGenericMethod(tRebasedElem);
 
             return UnrootedStrategy(
-                        new TypeVector(typeof(int), typeof(int)),
+                        new TypeVector(typeof(bool), typeof(bool)),
                         (MethodCallExpression ex) => {
                             return Expression.Call(
-                                                mRebasedCount,
+                                                mRebasedAny,
                                                 upstreamStrategy.Rebase(ex.Arguments[0])
                                                 );
-                        });                 
+                        });                       
+            
         }
     }
 }

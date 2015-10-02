@@ -8,7 +8,7 @@ namespace Materialize.Reify.Rebasing
 {
     partial class RebaseStrategizer
     {
-        IRebaseStrategy QueryableWhere(MethodCallExpression exCall) 
+        IRebaseStrategy EnumerableWhere(MethodCallExpression exCall) 
         {
             var upstreamStrategy = Visit(exCall.Arguments[0]);
             
@@ -16,11 +16,11 @@ namespace Materialize.Reify.Rebasing
             var tRebasedElem = upstreamStrategy.TypeVector
                                                     .DestType.GetEnumerableElementType();
 
-            var mRebasedWhere = QueryableMethods.WhereDef
-                                                .MakeGenericMethod(tRebasedElem);
+            var mRebasedWhere = EnumerableMethods.WhereDef
+                                                     .MakeGenericMethod(tRebasedElem);
 
 
-            var exPred = (LambdaExpression)((UnaryExpression)exCall.Arguments[1]).Operand;
+            var exPred = (LambdaExpression)exCall.Arguments[1];
 
             var predRoots = new RootVector(
                                     exPred.Parameters.Single(),
@@ -51,18 +51,17 @@ namespace Materialize.Reify.Rebasing
                         (MethodCallExpression ex) => {
                             var exRebasedInst = upstreamStrategy.Rebase(ex.Arguments[0]);
 
-                            var exPredBody = ((LambdaExpression)((UnaryExpression)ex.Arguments[1]).Operand).Body;
+                            var exPredBody = ((LambdaExpression)ex.Arguments[1]).Body;
                             var exRebasedPredBody = predBodyStrategy.Rebase(exPredBody);
 
                             return Expression.Call(
                                                 mRebasedWhere,
                                                 exRebasedInst,
-                                                Expression.Quote(
-                                                    Expression.Lambda(
-                                                                exRebasedPredBody,
-                                                                exRebasedPredParam
-                                                                ))
-                                                    );
+                                                Expression.Lambda(
+                                                            exRebasedPredBody,
+                                                            exRebasedPredParam
+                                                            )
+                                                );
                         });
 
         }

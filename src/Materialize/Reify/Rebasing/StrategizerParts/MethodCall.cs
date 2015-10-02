@@ -1,4 +1,5 @@
-﻿using Materialize.Types;
+﻿using Materialize.Reify.Rebasing.Methods;
+using Materialize.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,27 +10,33 @@ namespace Materialize.Reify.Rebasing
 {
     partial class RebaseStrategizer 
     {
-        delegate IRebaseStrategy MethodHandler(RebaseStrategizer strategizer, MethodCallExpression exCall);
-        
-        IDictionary<MethodInfo, MethodHandler> _dMethodHandlers
-            = new Dictionary<MethodInfo, MethodHandler>() {
-                { QueryableMethods.WhereDef, (@this, ex) => @this.QueryableWhere(ex) },
-                { EnumerableMethods.CountDef, (@this, ex) => @this.EnumerableCount(ex) }
-            };
-
-
         protected override IRebaseStrategy VisitMethodCall(MethodCallExpression exCall) 
         {
-            if(exCall.Method.IsGenericMethod) 
-            {
-                var methodDef = exCall.Method.GetGenericMethodDefinition();
+            var methodStrategizer = new MethodRebaseStrategizer(new ParentStrategizerAdaptor(this));
 
-                var strategy = _dMethodHandlers[methodDef](this, exCall);
-
-                return strategy;
-            }
-            
-            throw new NotImplementedException("Unhandled MethodCallExpression!");
+            return methodStrategizer.Strategize(exCall);
         }
+
+
+
+
+        class ParentStrategizerAdaptor : IParentRebaseStrategizer
+        {
+            RebaseStrategizer _strategizer;
+
+            public ParentStrategizerAdaptor(RebaseStrategizer strategizer) {
+                _strategizer = strategizer;
+            }
+
+            public RebaseStrategizer SpawnNestedStrategizer(Action<IRootStrategyRegistrar> fnRegister) {
+                return _strategizer.SpawnNestedStrategizer(fnRegister);
+            }
+
+            public IRebaseStrategy Visit(Expression ex) {
+                return _strategizer.Visit(ex);
+            }
+        }
+
+
     }
 }

@@ -13,6 +13,14 @@ namespace Materialize.Types
         public static MethodInfo WhereDef = Refl.GetGenMethod(
                                                     () => Enumerable.Where<object>(null, i => true));
 
+
+        public static MethodInfo AnyDef = Refl.GetGenMethod(
+                                                    () => Enumerable.Any<object>(null));
+
+        public static MethodInfo AnyWithPredDef = Refl.GetGenMethod(
+                                                    () => Enumerable.Any<object>(null, o => true));
+        
+
         public static MethodInfo CountDef = Refl.GetGenMethod(
                                                     () => Enumerable.Count<object>(null));
 

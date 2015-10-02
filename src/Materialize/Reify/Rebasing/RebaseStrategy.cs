@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 
 namespace Materialize.Reify.Rebasing
 {
+
     class RebaseStrategy<TExp> : IRebaseStrategy<TExp>
         where TExp : Expression
     {

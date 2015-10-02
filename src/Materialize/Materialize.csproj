@@ -51,7 +51,17 @@
     <Compile Include="Expressions\ExpressionComparer.cs" />
     <Compile Include="Expressions\VoidExpressionVisitor.cs" />
     <Compile Include="Dependencies\LightInject\LightInject.cs" />
+    <Compile Include="Reify\Rebasing\Methods\IMethodRebaseRule.cs" />
+    <Compile Include="Reify\Rebasing\Methods\IParentRebaseStrategizer.cs" />
+    <Compile Include="Reify\Rebasing\Methods\LinqMethodRule.cs" />
+    <Compile Include="Reify\Rebasing\Methods\MethodRebaseStrategizer.cs" />
+    <Compile Include="Reify\Rebasing\Methods\MethodRebaseSubject.cs" />
+    <Compile Include="Reify\Rebasing\Methods\Rules\EnumerableUnary.cs" />
+    <Compile Include="Reify\Rebasing\Methods\Rules\EnumerablePredicator.cs" />
+    <Compile Include="Reify\Rebasing\Methods\Rules\QueryableWhere.cs" />
+    <Compile Include="Reify\Rebasing\StrategizerParts\Methods\EnumerableAny.cs" />
     <Compile Include="Reify\Rebasing\StrategizerParts\Methods\EnumerableCount.cs" />
+    <Compile Include="Reify\Rebasing\StrategizerParts\Methods\EnumerableWhere.cs" />
     <Compile Include="Reify\Rebasing\StrategizerParts\Methods\QueryableWhere.cs" />
     <Compile Include="Types\EnumerableMethods.cs" />
     <Compile Include="Types\QueryableMethods.cs" />
