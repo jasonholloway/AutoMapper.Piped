@@ -1,6 +1,17 @@
 ﻿
 TO DO! ********************************************
 
+
+> EF6 Regime:
+	> Non-parameterized ctors only
+	> No non-EDM functions!
+	> No non-model member accesses!
+	> No projection to mapped entities!
+	> Test regime-detection too
+
+
+> Ensure no static dictionaries about: ioc container should deal with this
+
 > before-and-after hooks should only apply after all filtering done.
 
 > un-rebasable predicates should either throw consistent exception

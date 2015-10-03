@@ -47,7 +47,7 @@ namespace Materialize
         {
             x.Register<IServiceRegistry>(_registry);
             x.Register<ITypeMapProvider, CachedTypeMapProvider>();
-            x.Register<ISourceRegimeDetector, SourceRegimeDetector>();
+            x.Register<ISourceRegimeProvider, SourceRegimeProvider>();
             x.Register<IProjectedTypeBuilder, ProjectedTypeBuilder>();
             x.Register<ICollectionFactorySource, CollectionFactorySource>();
 

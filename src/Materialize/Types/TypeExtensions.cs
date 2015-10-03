@@ -40,5 +40,21 @@ namespace Materialize.Types
 
 
 
+        /// <summary>
+        /// Resolves the lowest base class of a type, excluding the universal object type
+        /// </summary>
+        public static Type GetLowestBaseClass(this Type @this) {
+            var t = @this;
+
+            while(t.BaseType != null && t.BaseType != typeof(object)) {
+                t = t.BaseType;
+            }
+
+            return t;
+        }
+
+        
+
+
     }
 }

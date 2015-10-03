@@ -5,7 +5,6 @@ namespace Materialize.SourceRegimes
 {
     public interface ISourceRegime
     {
-        bool MatchesProvider(IQueryProvider provider);
         bool ServerAccepts(Expression exp);
     }
 }

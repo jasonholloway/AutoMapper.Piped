@@ -35,6 +35,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
-[assembly: InternalsVisibleTo("Materialize.EntityFramework6")]
+[assembly: InternalsVisibleTo("Materialize.EF6")]
 [assembly: InternalsVisibleTo("Materialize.Tests")]
 [assembly: InternalsVisibleTo("Materialize.Demo")]

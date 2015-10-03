@@ -9,14 +9,14 @@ namespace Materialize.Reify
 {
     internal class ReifiableFactory
     {
-        ISourceRegimeDetector _regimeDetector;
+        ISourceRegimeProvider _regimeSource;
         ParserFactory _parserFac;
 
         public ReifiableFactory(
-            ISourceRegimeDetector regimeDetector,
+            ISourceRegimeProvider regimeSource,
             ParserFactory parserFac) 
         {
-            _regimeDetector = regimeDetector;
+            _regimeSource = regimeSource;
             _parserFac = parserFac;
         }
 
@@ -30,7 +30,7 @@ namespace Materialize.Reify
                                                     typeof(Reifiable<,>)
                                                                 .MakeGenericType(tOrigElem, tDestElem),
                                                     qySource,
-                                                    _regimeDetector,
+                                                    _regimeSource,
                                                     _parserFac);
         }
 

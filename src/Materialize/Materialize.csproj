@@ -64,6 +64,7 @@
     <Compile Include="Reify\Rebasing\StrategizerParts\Methods\EnumerableCount.cs" />
     <Compile Include="Reify\Rebasing\StrategizerParts\Methods\EnumerableWhere.cs" />
     <Compile Include="Reify\Rebasing\StrategizerParts\Methods\QueryableWhere.cs" />
+    <Compile Include="SourceRegimes\ISourceRegimeProvider.cs" />
     <Compile Include="Types\EnumerableMethods.cs" />
     <Compile Include="Types\QueryableMethods.cs" />
     <Compile Include="ISnooper.cs" />
@@ -120,10 +121,9 @@
     <Compile Include="Dependencies\ServiceRegistry.cs" />
     <Compile Include="Services.cs" />
     <Compile Include="SourceRegimes\EnumerableQueryRegime.cs" />
-    <Compile Include="SourceRegimes\ISourceRegimeDetector.cs" />
     <Compile Include="SourceRegimes\MinimalRegime.cs" />
     <Compile Include="SourceRegimes\ISourceRegime.cs" />
-    <Compile Include="SourceRegimes\SourceRegimeDetector.cs" />
+    <Compile Include="SourceRegimes\SourceRegimeProvider.cs" />
     <Compile Include="Types\ReflectionHelper.cs" />
     <Compile Include="Reify\IModifier.cs" />
     <Compile Include="Reify\ReifyQuery.cs" />

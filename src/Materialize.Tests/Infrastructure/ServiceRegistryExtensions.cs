@@ -16,10 +16,10 @@ namespace Materialize.Tests.Infrastructure
             var regime = Substitute.For<ISourceRegime>();
             regime.ServerAccepts(Arg.Any<Expression>()).Returns(false);
 
-            var detector = Substitute.For<ISourceRegimeDetector>();
-            detector.DetectRegime(Arg.Any<IQueryProvider>()).Returns(regime);
+            var prov = Substitute.For<ISourceRegimeProvider>();
+            prov.GetRegime(Arg.Any<IQueryable>()).Returns(regime);
 
-            x.Register(detector);
+            x.Register(prov);
         }
 
 
@@ -27,10 +27,10 @@ namespace Materialize.Tests.Infrastructure
             var regime = Substitute.For<ISourceRegime>();
             regime.ServerAccepts(Arg.Any<Expression>()).Returns(true);
 
-            var detector = Substitute.For<ISourceRegimeDetector>();
-            detector.DetectRegime(Arg.Any<IQueryProvider>()).Returns(regime);
+            var prov = Substitute.For<ISourceRegimeProvider>();
+            prov.GetRegime(Arg.Any<IQueryable>()).Returns(regime);
 
-            x.Register(detector);
+            x.Register(prov);
         }
 
 
@@ -38,10 +38,10 @@ namespace Materialize.Tests.Infrastructure
             var regime = Substitute.For<ISourceRegime>();
             regime.ServerAccepts(Arg.Any<Expression>()).Returns(c => fnTest(c.Arg<Expression>()));
 
-            var detector = Substitute.For<ISourceRegimeDetector>();
-            detector.DetectRegime(Arg.Any<IQueryProvider>()).Returns(regime);
+            var prov = Substitute.For<ISourceRegimeProvider>();
+            prov.GetRegime(Arg.Any<IQueryable>()).Returns(regime);
 
-            x.Register(detector);
+            x.Register(prov);
         }
 
 

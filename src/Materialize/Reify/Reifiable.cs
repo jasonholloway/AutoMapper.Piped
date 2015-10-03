@@ -77,7 +77,7 @@ namespace Materialize.Reify
                                                         .GetProperty("BaseReifyQuery");
 
 
-        ISourceRegimeDetector _regimeDetector;
+        ISourceRegimeProvider _regimeSource;
         ParserFactory _parserFac;
         
 
@@ -87,7 +87,7 @@ namespace Materialize.Reify
 
         public Reifiable(
             IQueryable<TSource> sourceQuery, 
-            ISourceRegimeDetector regimeDetector,
+            ISourceRegimeProvider regimeSource,
             ParserFactory parserFac)
         {
             SourceQuery = sourceQuery;
@@ -98,7 +98,7 @@ namespace Materialize.Reify
                                                 _baseReifyQueryProp)
                                     );
 
-            _regimeDetector = regimeDetector;
+            _regimeSource = regimeSource;
             _parserFac = parserFac;
         }
         
@@ -121,7 +121,7 @@ namespace Materialize.Reify
             OnQueryFromClient(exClientQuery);
 
             var mapContext = new MapContext(
-                                    _regimeDetector.DetectRegime(SourceQuery.Provider),
+                                    _regimeSource.GetRegime(SourceQuery),
                                     new TypeVector(typeof(IQueryable<TSource>), typeof(IQueryable<TDest>))
                                     );
 
