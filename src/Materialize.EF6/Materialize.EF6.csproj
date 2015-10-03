@@ -53,6 +53,7 @@
     <Compile Include="DbContextExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SourceRegimes\EF6Regime.cs" />
+    <Compile Include="SourceRegimes\EF6RegimeProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Materialize\Materialize.csproj">

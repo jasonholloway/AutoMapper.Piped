@@ -10,6 +10,10 @@ TO DO! ********************************************
 	> Test regime-detection too
 
 
+	
+> EF-mapped entities can't be projected to... need to do this client-side.
+	- so, server-side projection that would normally be attempted should be checked with regime - if unacceptable, stick on client (this seems slow...)
+	
 > Ensure no static dictionaries about: ioc container should deal with this
 
 > before-and-after hooks should only apply after all filtering done.

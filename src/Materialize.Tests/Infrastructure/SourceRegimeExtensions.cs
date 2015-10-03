@@ -19,12 +19,20 @@ namespace Materialize.Tests.Infrastructure
             regime.ServerAccepts(exp.Body).ShouldBeTrue();
         }
 
+        public static void AssertAccepts(this ISourceRegime regime, Expression exp) {
+            regime.ServerAccepts(exp).ShouldBeTrue();
+        }
+
         public static void AssertDeclines(this ISourceRegime regime, Expression<Action> exp) {
             regime.ServerAccepts(exp.Body).ShouldBeFalse();
         }
 
         public static void AssertDeclines(this ISourceRegime regime, Expression<Func<object>> exp) {
             regime.ServerAccepts(exp.Body).ShouldBeFalse();
+        }
+
+        public static void AssertDeclines(this ISourceRegime regime, Expression exp) {
+            regime.ServerAccepts(exp).ShouldBeFalse();
         }
 
     }

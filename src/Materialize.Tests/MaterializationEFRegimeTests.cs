@@ -29,29 +29,32 @@ namespace Materialize.Tests
 
 
         [Fact]
-        public void DetectsRegimeFromQuery() {
-            InitServices(x => {
-                x.Register<ISourceRegimeProvider, EF6RegimeProvider>();
-            });
-
+        public void DetectsRegimeFromQuery() {            
             using(var ctx = new Context()) {
-                Assert.DoesNotThrow(() => {
-                    ctx.Dogs.MapAs<DogModel>()
-                                .Where(d => d.Name.Length < 5)
-                                .ToArray();
-                });
+                var regimeProv = new EF6RegimeProvider();
+
+                regimeProv.GetRegime(ctx.Dogs).ShouldNotBeNull();
+                regimeProv.GetRegime(new int[3].AsQueryable()).ShouldBeNull();
+            }
+        }
+
+
+        
+        [Fact]
+        public void CachedRegimeIsUsedForSameContextType() {
+            var regimeProv = new EF6RegimeProvider();
+            
+            using(var ctx1 = new Context()) {
+                using(var ctx2 = new Context()) {
+                    regimeProv.GetRegime(ctx1.Dogs)
+                        .ShouldEqual(regimeProv.GetRegime(ctx2.Dogs));
+                }
             }
         }
 
 
         [Fact]
-        public void CachedRegimeIsUsedForSameMetadata() {
-            throw new NotImplementedException();
-        }
-
-
-        [Fact]
-        public void FreshRegimeIsUsedForNewMetadata() {
+        public void FreshRegimeIsUsedForNewContextType() {
             throw new NotImplementedException();
         }
 
@@ -81,7 +84,7 @@ namespace Materialize.Tests
             using(var ctx = new Context()) {
                 var regime = new EF6Regime(ctx);
 
-                regime.AssertAccepts(() => new float());
+                regime.AssertAccepts(Expression.New(typeof(float)));
             }
         }
 
@@ -130,18 +133,13 @@ namespace Materialize.Tests
 
 
         [Fact]
-        public void OnlyEdmMethodsAccepted() 
+        public void NonEdmMethodsForbidden() 
         {
             using(var ctx = new Context()) {
-                var objCtx = ((IObjectContextAdapter)ctx).ObjectContext;
-
-                var metadata = objCtx.MetadataWorkspace;
+                var regime = new EF6Regime(ctx);
                 
-                var items = metadata.GetItems(DataSpace.CSpace);
-                                
+                regime.AssertDeclines(() => this.NonEdmMethodsForbidden());
             }   
-
-            throw new NotImplementedException();
         }
 
 
@@ -159,7 +157,7 @@ namespace Materialize.Tests
             using(var ctx = new Context()) {
                 var regime = new EF6Regime(ctx);
                                 
-                regime.AssertAccepts(() => ctx.Dogs.First().Name);
+                regime.AssertAccepts(() => ctx.Dogs.FirstOrDefault().Name);
             }
         }
 
@@ -175,14 +173,6 @@ namespace Materialize.Tests
 
 
 
-        [Fact]
-        public void CantProjectToMappedEntities() {
-            //this is special case: needs to be treated like custom projection behind the scenes
-            //...
-
-            throw new NotImplementedException();
-        }
-
-
+        
     }
 }
