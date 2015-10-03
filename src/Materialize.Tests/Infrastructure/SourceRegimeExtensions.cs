@@ -12,19 +12,19 @@ namespace Materialize.Tests.Infrastructure
     public static class SourceRegimeExtensions
     {
         public static void AssertAccepts(this ISourceRegime regime, Expression<Action> exp) {
-            regime.ServerAccepts(exp).ShouldBeTrue();
+            regime.ServerAccepts(exp.Body).ShouldBeTrue();
         }
 
         public static void AssertAccepts(this ISourceRegime regime, Expression<Func<object>> exp) {
-            regime.ServerAccepts(exp).ShouldBeTrue();
+            regime.ServerAccepts(exp.Body).ShouldBeTrue();
         }
 
         public static void AssertDeclines(this ISourceRegime regime, Expression<Action> exp) {
-            regime.ServerAccepts(exp).ShouldBeFalse();
+            regime.ServerAccepts(exp.Body).ShouldBeFalse();
         }
 
         public static void AssertDeclines(this ISourceRegime regime, Expression<Func<object>> exp) {
-            regime.ServerAccepts(exp).ShouldBeFalse();
+            regime.ServerAccepts(exp.Body).ShouldBeFalse();
         }
 
     }

@@ -59,7 +59,7 @@ namespace Materialize.Tests
         [Fact]
         public void CreatingMappedEntitiesIsForbidden() {
             using(var ctx = new Context()) {
-                var regime = new EF6Regime(ctx.GetMetadata());
+                var regime = new EF6Regime(ctx);
                 
                 regime.AssertDeclines(() => new Dog());
             }
@@ -69,7 +69,7 @@ namespace Materialize.Tests
         [Fact]
         public void CreatingUnmappedEntitiesIsAllowed() {
             using(var ctx = new Context()) {
-                var regime = new EF6Regime(ctx.GetMetadata());
+                var regime = new EF6Regime(ctx);
 
                 regime.AssertAccepts(() => new DogModel());
             }
@@ -79,7 +79,7 @@ namespace Materialize.Tests
         [Fact]
         public void CreatingSimpleTypesIsAllowed() {
             using(var ctx = new Context()) {
-                var regime = new EF6Regime(ctx.GetMetadata());
+                var regime = new EF6Regime(ctx);
 
                 regime.AssertAccepts(() => new float());
             }
@@ -94,13 +94,14 @@ namespace Materialize.Tests
 
 
         [Fact]
-        public void ParameterizedCtorsForbidden() 
-        {
-            var regime = new EF6Regime(new MetadataWorkspace());
-                        
-            regime.AssertDeclines(() => new ClassWithParameterizedCtor(13));
+        public void ParameterizedCtorsForbidden() {
+            using(var ctx = new Context()) {
+                var regime = new EF6Regime(ctx);
 
-            regime.AssertDeclines(() => new ClassWithVariousCtors(44));
+                regime.AssertDeclines(() => new ClassWithParameterizedCtor(13));
+
+                regime.AssertDeclines(() => new ClassWithVariousCtors(44));
+            }
         }
 
 
@@ -113,11 +114,12 @@ namespace Materialize.Tests
         }
 
         [Fact]
-        public void NonParameterizedCtorsAllowed() 
-        {
-            var regime = new EF6Regime(new MetadataWorkspace());
+        public void NonParameterizedCtorsAllowed() {
+            using(var ctx = new Context()) {
+                var regime = new EF6Regime(ctx);
 
-            regime.AssertAccepts(() => new ClassWithVariousCtors());
+                regime.AssertAccepts(() => new ClassWithVariousCtors());
+            }
         }
 
 
@@ -155,7 +157,7 @@ namespace Materialize.Tests
         [Fact]
         public void MappedMemberAccessesAllowed() {
             using(var ctx = new Context()) {
-                var regime = new EF6Regime(ctx.GetMetadata());
+                var regime = new EF6Regime(ctx);
                                 
                 regime.AssertAccepts(() => ctx.Dogs.First().Name);
             }
@@ -165,7 +167,7 @@ namespace Materialize.Tests
         [Fact]
         public void UnmappedMemberAccessesForbidden() {                        
             using(var ctx = new Context()) {
-                var regime = new EF6Regime(ctx.GetMetadata());
+                var regime = new EF6Regime(ctx);
 
                 regime.AssertDeclines(() => new DogModel().Name);
             }

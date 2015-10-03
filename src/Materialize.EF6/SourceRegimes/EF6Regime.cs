@@ -10,199 +10,200 @@ using System.Data.Entity.Core.Objects;
 using System.Reflection;
 using System.Data.Entity.Core.Metadata.Edm;
 using System.Collections.Concurrent;
+using System.Collections;
+
+using ExpressionConverter = System.Object;
+using Funcletizer = System.Object;
+using Translator = System.Object;
+using System.Data.Entity.Core.Common.CommandTrees;
 
 namespace Materialize.SourceRegimes
 {
     //But how will this hook in to library? Via some app.config rule? 
-    
-    //Need to hackily summon an instance of eLinq.ExpressionConverter.MethodCallTranslator to do our bidding...?
-
+           
         
     class EF6RegimeProvider : ISourceRegimeProvider
     {        
-
         #region Static accessor creation (via hacky reflection)
 
+        static T Exec<T>(Func<T> fn) { return fn(); }
+        
         static Assembly _asmEF = typeof(DbQuery).Assembly;
 
         static Type _tDbQueryProvider = _asmEF.GetType("System.Data.Entity.Internal.Linq.DbQueryProvider");
         static Type _tInternalContext = _asmEF.GetType("System.Data.Entity.Internal.InternalContext");
 
-        static Func<IQueryProvider, DbContext> FnGetDbContext = BuildFnGetDbContext();
-        
-        //the below could be threaded off somehow... (eg make lazy and access from thread on start)
-        static Func<IQueryProvider, DbContext> BuildFnGetDbContext() 
-        {        
-            var exParam = Expression.Parameter(typeof(IQueryProvider));
-            
-            var exLambda = Expression.Lambda<Func<IQueryProvider, DbContext>>(
-                                Expression.Condition(
-                                    Expression.TypeIs(exParam, _tDbQueryProvider),
-                                    Expression.MakeMemberAccess(
-                                            Expression.MakeMemberAccess(
-                                                    Expression.Convert(exParam, _tDbQueryProvider),
-                                                    _tDbQueryProvider.GetField("_internalContext", BindingFlags.NonPublic | BindingFlags.Instance)
-                                                    ),
-                                            _tInternalContext.GetProperty("Owner")                                                    
-                                            ),
-                                    Expression.Default(typeof(DbContext))
-                                    ),
-                                exParam
-                                );
+        static Func<IQueryProvider, DbContext> GetDbContext
+            = Exec(() => {
+                var exParam = Expression.Parameter(typeof(IQueryProvider));
 
-            return exLambda.Compile();
-        }
+                var exLambda = Expression.Lambda<Func<IQueryProvider, DbContext>>(
+                                    Expression.Condition(
+                                        Expression.TypeIs(exParam, _tDbQueryProvider),
+                                        Expression.MakeMemberAccess(
+                                                Expression.MakeMemberAccess(
+                                                        Expression.Convert(exParam, _tDbQueryProvider),
+                                                        _tDbQueryProvider.GetField("_internalContext", BindingFlags.NonPublic | BindingFlags.Instance)
+                                                        ),
+                                                _tInternalContext.GetProperty("Owner")
+                                                ),
+                                        Expression.Default(typeof(DbContext))
+                                        ),
+                                    exParam
+                                    );
+
+                return exLambda.Compile();
+            });
         
         #endregion
         
 
-        ConcurrentDictionary<MetadataWorkspace, ISourceRegime> _dRegimeCache
-            = new ConcurrentDictionary<MetadataWorkspace, ISourceRegime>();
+        ConcurrentDictionary<Type, ISourceRegime> _dRegimeCache
+            = new ConcurrentDictionary<Type, ISourceRegime>();
         
 
         public ISourceRegime GetRegime(IQueryable qySource) 
         {
-            var dbContext = FnGetDbContext(qySource.Provider);
+            var dbContext = GetDbContext(qySource.Provider);
             
             if(dbContext != null) {                
                 return _dRegimeCache.GetOrAdd(
-                                        dbContext.GetMetadata(),
-                                        m => new EF6Regime(m));
+                                        dbContext.GetType(),
+                                        _ => new EF6Regime(dbContext));
             }
                         
             return null;
         }
         
     }
+        
+
+
+    class ExpressionTester
+    {
+        #region Hacky reflection here!
+
+        static T Exec<T>(Func<T> fn) { return fn(); }
+
+        static Assembly _asmEF = typeof(DbQuery).Assembly;
+
+        static Type _tExpressionConverter = _asmEF.GetType("System.Data.Entity.Core.Objects.ELinq.ExpressionConverter");
+        static Type _tFuncletizer = _asmEF.GetType("System.Data.Entity.Core.Objects.ELinq.Funcletizer");
+        
+        static Func<ObjectContext, Funcletizer> CreateFuncletizer
+            = Exec(() => {
+                var exObjContext = Expression.Parameter(typeof(ObjectContext));
+
+                var exLambda = Expression.Lambda<Func<ObjectContext, Funcletizer>>(
+                                    Expression.Call(
+                                        _tFuncletizer.GetMethod(
+                                                        "CreateQueryFuncletizer",
+                                                        BindingFlags.NonPublic | BindingFlags.Static,
+                                                        null,
+                                                        new[] { typeof(ObjectContext) },
+                                                        null),
+                                        exObjContext),                                                    
+                                    exObjContext);
+
+                return exLambda.Compile();
+            });
+
+        static Func<Funcletizer, Expression, ExpressionConverter> CreateConverter
+            = Exec(() => {
+                var exFuncletizer = Expression.Parameter(typeof(object));
+                var exExpression = Expression.Parameter(typeof(Expression));
+
+                var exLambda = Expression.Lambda<Func<Funcletizer, Expression, ExpressionConverter>>(
+                                            Expression.New(
+                                                _tExpressionConverter.GetConstructor(
+                                                                        BindingFlags.NonPublic | BindingFlags.Instance,
+                                                                        null,
+                                                                        new[] { _tFuncletizer, typeof(Expression) },
+                                                                        null
+                                                                        ),
+                                                Expression.Convert(exFuncletizer, _tFuncletizer),
+                                                exExpression
+                                                ),
+                                            exFuncletizer,
+                                            exExpression
+                                            );
+
+                return exLambda.Compile();
+            });
+                
+        static Func<ExpressionConverter, DbExpression> InvokeConvert
+            = Exec(() => {
+                var mConvert = _tExpressionConverter.GetMethod(
+                                                        "Convert",
+                                                        BindingFlags.NonPublic | BindingFlags.Instance);
+
+                var exConverter = Expression.Parameter(typeof(object));
+
+                var exLambda = Expression.Lambda<Func<ExpressionConverter, DbExpression>>(
+                                        Expression.Call(
+                                                Expression.Convert(exConverter, _tExpressionConverter),
+                                                mConvert),
+                                        exConverter);
+
+                return exLambda.Compile();
+            });
+
+        #endregion
+
+
+        Funcletizer _funcletizer;
+
+        public ExpressionTester(DbContext dbContext) 
+        {
+            var objContext = ((IObjectContextAdapter)dbContext).ObjectContext;
+            _funcletizer = CreateFuncletizer(objContext);       
+        }
+                
+        public Result Test(Expression ex) {
+            var converter = CreateConverter(_funcletizer, ex);
+            
+            try {
+                var dbExp = InvokeConvert(converter);
+                return new Result(true);
+            }
+            catch(NotSupportedException e) {
+                return new Result(e);
+            }
+        }
+        
+        public struct Result
+        {
+            public readonly bool Success;
+            public readonly Exception Exception;
+
+            public Result(bool bSuccess) {
+                Success = bSuccess;
+                Exception = null;
+            }
+
+            public Result(Exception exception) {
+                Success = false;
+                Exception = exception;
+            }
+        }
+
+    }
+
+
 
 
     class EF6Regime : ISourceRegime
-    {
-
-        #region Hacky reflection here
-
-        static Func<EdmType, Type> FnGetClrType = BuildFnGetClrType();
-
-        static Func<EdmType, Type> BuildFnGetClrType() {
-            var exParam = Expression.Parameter(typeof(EdmType));
-
-            var exLambda = Expression.Lambda<Func<EdmType, Type>>(
-                                        Expression.MakeMemberAccess(
-                                                exParam,
-                                                typeof(EdmType).GetProperty("ClrType", BindingFlags.NonPublic | BindingFlags.Instance)
-                                                ),
-                                        exParam
-                                        );
-
-            return exLambda.Compile();
-        }
-
-
-
-        static Assembly _asmEF = typeof(DbQuery).Assembly;
-        static Type _tFuncletizer = _asmEF.GetType("System.Data.Entity.Core.Objects.ELinq.Funcletizer");
-        static Type _tExpressionConverter = _asmEF.GetType("System.Data.Entity.Core.Objects.ELinq.ExpressionConverter");
-
-
-        static object Funcletizer = BuildFuncletizer();
-        static object ExpressionConverter = BuildExpressionConverter();
-        
-
-        static object BuildFuncletizer() {
-            var mCreate = _tFuncletizer.GetMethod(
-                                            "CreateCompiledQueryLockdownFuncletizer",
-                                            BindingFlags.Static
-                                            | BindingFlags.NonPublic);
-
-            return mCreate.Invoke(null, new object[0]);
-        }
-
-        static object BuildExpressionConverter() 
-        {
-            var ctor = _tExpressionConverter.GetConstructor(
-                                                BindingFlags.NonPublic | BindingFlags.Instance,
-                                                null,
-                                                new Type[] { _tFuncletizer, typeof(Expression) },
-                                                null);
-
-            var conv = ctor.Invoke(new object[] { Funcletizer, Expression.Constant(9) });
-
-            return conv;
-        }
-
-
-
-
-        static Action<Expression> FnTestExpression = BuildFnTestExpression();
-
-        static Action<Expression> BuildFnTestExpression() 
-        {
-            var exExpParam = Expression.Parameter(typeof(Expression));
-            
-            var exLambda = Expression.Lambda<Action<Expression>>(
-                                    Expression.Call(
-                                            Expression.Constant(ExpressionConverter, _tExpressionConverter),
-                                            _tExpressionConverter.GetMethod(
-                                                                    "TranslateExpression",
-                                                                    BindingFlags.NonPublic | BindingFlags.Instance,
-                                                                    null,
-                                                                    new[] { typeof(Expression) },
-                                                                    null),
-                                            exExpParam),     
-                                    exExpParam
-                                    );
-
-            return exLambda.Compile();
-        }
-
-
-        #endregion
-        
-
-        ISet<Type> _mappedTypes;
-        
-        public EF6Regime(MetadataWorkspace metadata) 
-        {
-            _mappedTypes = new HashSet<Type>(metadata.GetItems(DataSpace.OSpace)
-                                                        .OfType<EdmType>()
-                                                        .Where(t => t is EntityType || t is ComplexType)
-                                                        .Select(t => FnGetClrType(t)));
+    { 
+        DbContext _dbContext;
+                
+        public EF6Regime(DbContext dbContext) {
+            _dbContext = dbContext;
         }
                
-
-        public bool ServerAccepts(Expression exp) 
+        public bool ServerAccepts(Expression ex) 
         {
-            return !exp.Contains(ex => {                                                
-                var exNew = ex as NewExpression;
-
-                if(exNew != null) {
-                    //No parameterized ctors!
-                    if(exNew.Constructor.GetParameters().Any()) {
-                        return true;
-                    }
-
-                    //No creation of mapped entities!
-                    if(_mappedTypes.Contains(exNew.Type)) {
-                        return true;
-                    }
-                }
-
-                if(ex is MemberExpression) {
-                    FnTestExpression(ex);
-                }
-                
-                //No non-model member accesses!
-
-                //No non-EDM functions!
-
-
-
-                return false;
-            });
-
-            
-
-            
+            var tester = new ExpressionTester(_dbContext);
+            return tester.Test(ex).Success;
         }
     }
 }
