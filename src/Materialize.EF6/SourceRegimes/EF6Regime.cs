@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Data.Entity;
 using System.Data.Entity.Core.Common.CommandTrees;
 using System.Data.Entity.Core.Objects;
@@ -11,7 +10,22 @@ using ExpressionConverter = System.Object;
 using Funcletizer = System.Object;
 
 namespace Materialize.SourceRegimes
-{       
+{
+
+    internal class EF6Regime : ISourceRegime
+    {
+        DbContext _dbContext;
+
+        public EF6Regime(DbContext dbContext) {
+            _dbContext = dbContext;
+        }
+
+        public bool ServerAccepts(Expression ex) {
+            var tester = new ExpressionTester(_dbContext);
+            return tester.Test(ex).Success;
+        }
+    }
+    
 
 
     class ExpressionTester
@@ -84,21 +98,20 @@ namespace Materialize.SourceRegimes
             });
 
         #endregion
-
-
+        
         Funcletizer _funcletizer;
 
         public ExpressionTester(DbContext dbContext) 
         {
-            var objContext = ((IObjectContextAdapter)dbContext).ObjectContext;
+            var objContext = dbContext.GetObjectContext();
             _funcletizer = CreateFuncletizer(objContext);       
         }
                 
-        public Result Test(Expression ex) {
-            var converter = CreateConverter(_funcletizer, ex);
-            
+        public Result Test(Expression ex) {            
             try {
+                var converter = CreateConverter(_funcletizer, ex);
                 var dbExp = InvokeConvert(converter);
+
                 return new Result(true);
             }
             catch(NotSupportedException e) {
@@ -123,22 +136,6 @@ namespace Materialize.SourceRegimes
         }
 
     }
+    
 
-
-
-
-    class EF6Regime : ISourceRegime
-    { 
-        DbContext _dbContext;
-                
-        public EF6Regime(DbContext dbContext) {
-            _dbContext = dbContext;
-        }
-               
-        public bool ServerAccepts(Expression ex) 
-        {
-            var tester = new ExpressionTester(_dbContext);
-            return tester.Test(ex).Success;
-        }
-    }
 }

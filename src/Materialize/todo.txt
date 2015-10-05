@@ -1,25 +1,19 @@
 ﻿
 TO DO! ********************************************
 
-
-> EF6 Regime:
-	> Non-parameterized ctors only
-	> No non-EDM functions!
-	> No non-model member accesses!
-	> No projection to mapped entities!
-	> Test regime-detection too
+> before-and-after hooks should only apply after all filtering done.
 
 
+> un-rebaseable predicates should either throw consistent exception
+  or cause all data to be brought forth first! - dependent on switch
+
+
+> Fancy demo project: OData! Info about each request...
 	
 > EF-mapped entities can't be projected to... need to do this client-side.
 	- so, server-side projection that would normally be attempted should be checked with regime - if unacceptable, stick on client (this seems slow...)
 	
 > Ensure no static dictionaries about: ioc container should deal with this
-
-> before-and-after hooks should only apply after all filtering done.
-
-> un-rebasable predicates should either throw consistent exception
-  or cause all data to be brought forth first! - dependent on switch
   
 
 > Test cache behaviour...
@@ -27,120 +21,12 @@ TO DO! ********************************************
 > Unary strategies must be sensitive to whether the set has been re-limited on the client:
 	different strategies needed in this case 
 
-> Test projection expressions for inputs. Use IProjectionInpuDetector interface.
+> Test projection expressions for inputs. Use IProjectionInputDetector interface.
 
 > How to hook in provider-specific extensions from other projects - needed to limit dependencies. 
 	Surely has to be some configuration option, and type-gathering at initialization.
 
 > Compiled little functions to cached by their expression trees
 
+> Predicates to be split as much as possible to get as much on server as we can
 
-> Filtering on the server. This is the meat. This pulls in the issue of downstream projections too.
-
-	As the query is parsed, then a map of what things are mapped where needs to be constructed, with edges
-	marked as transitive or not.
-
-	Subsequent parse strategies can thereafter use the information of the map to rewrite the source query.
-
-	Eventually, the mapping operation itself could be folded into such a structure. As is, it would have 
-	to play a large part in the generation of the map, though subsequent Select statements will also contribute.
-	
-	
-	*********************************************************************************************************************************
-	The mapping layer needs to register its RebaseStrategies: each one registered against a memberinfo and an instance TypeVector
-	
-	
-	
-	
-or maybe each mapstrategy could be asked to rebase the passed subject
-as is, rebasestrategizer does half of this itself.
-
-in rebasing however, maybe we could burrow back down the stack, with each layer responsible
-for *some* rebasing. this is an established idea of course.
-
-the first layers would deal with the first layers of the rebasing.
-
-eg:  qySource
-		.select(i => map(i))		Changes the root, must apply rebase to passed expression. A conglomeration of strategies here, the outermost of which is a CollectionMapStrategy.
-										Could we say then that the CollectionMapStrategy has first responsibility for rebasing? What would it do? Rebase the iqueryable root.
-										And in processing the where clause in the expression, it would delegate rebasing of the elemental predicate to its own, inner elemental
-										MapStrategy. This latter would then receive the predicate to rebase (ie the predicate, plus expected typevector, determined from outside).
-										
-										The CollectionMapStrategy would then have a special handler for encountered Where clauses in the subject. Or rather, a special predicate
-										handler should be registrable on the common visitor. 
-										
-										The elemental MapStrategy would then receive a predicate, rooted in its own TDest. It would have to visit handle this predicate, and from this point
-										on, if it were a PropertyMapStrategy, would find instances of rooted members it had projected to, and replace these with original accessors. It would
-										delegate to its child MapStrategies to map successive accessors, somehow. Well, as part of coping with the reversion to the original accessor, 
-										
-										PropertyMapStrategy would of course encounter vectorised roots. And at that time, if all were standard, the entire root would be projected,
-										property-by-property, ready to be tested as its destination type. Obviously though, this would be hideous. Single properties should be
-										picked up. PropertyMapStrategy, as special behaviour, should then find relevant and rooted property accesses. Child strategies should though
-										be given a chance to kick in... Succeeding member accesses should be handled by the inner MapStrategy. Seems that inner Strategies should
-										be implicated by each link of the accessor chain. PropertyMapStrategy finds its own root, and finds its own relevant accessors, for which
-										it generates its own RebaseStrategies. This then is available in the handling of the succeeding accessor. 
-										
-										Or each nested MapStrategy could publish its own map of rebasing handlers, against TypeVector and MemberInfo. But such rules should be
-										scoped. They are only applicable in the part of the mapping the nested strategy pertains to. In confronting a successive accessor, the
-										problem is solved upstream, but shifted downwards. At the same time, the PropertyMapStrategy knows, through the implication of one of
-										its propertymaps, that the solutions of the nested strategy are now pertinent, but limited to only this case. From the root onwards,
-										its own special strategies have been in force. From the handling of the first accessor on the root, the child's strategies should be in
-										force too. 
-										
-										So instead of delegating downwards, nested strategies would publish upwards. These strategies would be published by other published
-										strategies, such that one handler would spread further handlers to take any succeeding, dependent expressions, until the end of the
-										root chain (whether a node is rooted becomes the decision of the upwardly-published RebaseStrategy).
-										
-										Basically, IRebaseStrategy would be expanded to also offer up further strategies. Which would affect the functioning of the visitor, of course.
-										Would this increased offering be keyed by member-accessor and typevector? There is again the issue of parameter roots being found. These are,
-										internally to the visitor, compared to a contextual dictionary. Our approach with accessors seems similar. Yet the parameter that would offer
-										up our new scope of property strategies must also be handled by an intruding strategy - can't just emplace from the visitor itself, as however
-										would our new map of property-handlers be made available? PropertyMapStrategy must give us the RebaseStrategy for our encountered root: this is
-										its access into the cascading behaviour of the visitor.
-										
-										The outer Visit method gives a chance to hook the visitor's behaviour. If a bank of handlers were in place to test every visited node... and usually
-										very few such hooks would be in place, except the omnipresent root detectors. Such root detectors would have to compare to the new root param somehow.
-										
-										Also, what would emplace the root hook? Whatever generated the new root param. That is, the orchestrator of this pass of the RebaseStrategizer.
-										
-										
-										*******************************************************
-										
-										Each encountered root would return an IRebaseStrategy offered by the in-force IMapStrategy. This IRebaseStrategy would then be delegated to
-										on return to each enclosing element handler. This IRebaseStrategy would decide whether it were a root, obvs. If it were a root (and it always 
-										would be!), then the enclosing handler would again delegate to it. The root IRebaseStrategy would then have a chance to return a new 
-										IRebaseStrategy, which may or may not be itself rooted. Rootedness really refers to this capability of handling successive clauses.
-										A rooted IRebaseStrategy is expansionist; a normal one keeps to itself.
-										
-										The RebaseStrategizer then crawls and supplies simple rebase strategies for most of the subject tree. But in the case of a root, it delegates
-										to a supplied root handler, which emplaces its own expansionist strategy.
-
-										*** Expansionist IRebaseStrategy ***
-										
-										A strategy is selected by the form of the initial expression, and then executed against each particular incoming instance of that form.
-										
-										In the case of root rebase strategies, the encountered parameter is in each case the particular input to satisfy the strategy shaped to
-										expect such singular input.
-										
-										
-										
-										
-										
-										
-										
-										
-										
-										
-										
-										
-										
-		.take(10)
-		.where(m => pred(m))		Initiates rebase on Where clause *similar* to itself (but not on itself!). But the subject clause will be rooted the same. 
-									
-
-
-
-
-	
-	
-	

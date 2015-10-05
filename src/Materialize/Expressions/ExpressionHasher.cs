@@ -36,7 +36,7 @@ namespace Materialize.Expressions
             base.Visit(expression);
         }
 
-        protected override void VisitList<T>(ReadOnlyCollection<T> list, Action<T> visitor) {
+        protected override void VisitList<T>(ReadOnlyCollection<T> list, Action<T> visitor) {           
             Add(list.Count);
 
             base.VisitList<T>(list, visitor);

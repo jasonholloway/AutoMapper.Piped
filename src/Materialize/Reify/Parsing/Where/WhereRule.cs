@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Materialize.SourceRegimes;
+using Materialize.Expressions;
 
 namespace Materialize.Reify.Parsing.Where
 {
@@ -73,7 +74,7 @@ namespace Materialize.Reify.Parsing.Where
                                 Expression.Parameter(upstreamStrategy.SourceType, "enSource"));
             
             //to rebase, each predicate has to be packed within its own where clause,
-            //operating on IQueryable<TElem>. Only in this form can it be sent upstream to be rebased.                                
+            //operating on IQueryable<TElem>. Only in this form can it be sent upstream to be rebased.                               
             
             var exSubject = Expression.Call(
                                         QueryableMethods.WhereDef.MakeGenericMethod(tElem),
@@ -82,9 +83,19 @@ namespace Materialize.Reify.Parsing.Where
 
             var rebaseStrategy = upstreamStrategy.GetRebaseStrategy(
                                                         new RebaseSubject(exSubject, roots));
-            
-            var exTest = rebaseStrategy.Rebase(exSubject);
 
+
+            //to test, need to make root param into something palatable to EF...
+            //can't just plonk in typed constant, as much sense as that would make...
+            //nor default. Need something bound. Maybe we can add binding via refl.
+
+
+            var exTest = rebaseStrategy.Rebase(exSubject);
+            
+            exTest = Expression.Quote(Expression.Lambda(
+                                    exTest,
+                                    (ParameterExpression)roots.RebasedRoot));
+            
             return sourceRegime.ServerAccepts(exTest)
                                         ? rebaseStrategy
                                         : null;

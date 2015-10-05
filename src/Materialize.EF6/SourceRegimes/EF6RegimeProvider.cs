@@ -13,7 +13,7 @@ namespace Materialize.SourceRegimes
 { 
     //But how will this hook in to library? Via some app.config rule? 
 
-    class EF6RegimeProvider : ISourceRegimeProvider
+    internal class EF6RegimeProvider : ISourceRegimeProvider
     {
         #region Static accessor creation (via hacky reflection)
 
@@ -49,18 +49,22 @@ namespace Materialize.SourceRegimes
         #endregion
 
 
-        ConcurrentDictionary<Type, ISourceRegime> _dRegimeCache
-            = new ConcurrentDictionary<Type, ISourceRegime>();
+        //ConcurrentDictionary<Type, ISourceRegime> _dRegimeCache
+        //    = new ConcurrentDictionary<Type, ISourceRegime>();
 
 
         public ISourceRegime GetRegime(IQueryable qySource) 
         {
+            //NO CACHEING ALLOWED! Each DbContext needs a fresh regime
+            
             var dbContext = GetDbContext(qySource.Provider);
-
+            
             if(dbContext != null) {
-                return _dRegimeCache.GetOrAdd(
-                                        dbContext.GetType(),
-                                        _ => new EF6Regime(dbContext));
+                return new EF6Regime(dbContext);
+
+                //return _dRegimeCache.GetOrAdd(
+                //                        dbContext.GetType(),
+                //                        _ => new EF6Regime(dbContext));
             }
 
             return null;

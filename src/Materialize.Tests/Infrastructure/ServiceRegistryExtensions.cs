@@ -45,6 +45,10 @@ namespace Materialize.Tests.Infrastructure
         }
 
 
+        public static void EmplaceSourceRegimeProvider(this IServiceRegistry x, ISourceRegimeProvider provider) {
+            x.Register<ISourceRegimeProvider>(provider);
+        }
+
 
         public static void AllowClientSideFiltering(this IServiceRegistry x) {
             x.Resolve<Config>().AllowClientSideFiltering = true;

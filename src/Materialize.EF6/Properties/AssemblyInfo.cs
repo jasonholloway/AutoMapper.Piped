@@ -36,3 +36,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
 [assembly: InternalsVisibleTo("Materialize.Tests")]
+[assembly: InternalsVisibleTo("Materialize.Demo")]
+[assembly: InternalsVisibleTo("Materialize.Demo2")]

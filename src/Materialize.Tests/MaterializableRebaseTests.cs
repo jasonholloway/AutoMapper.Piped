@@ -11,7 +11,6 @@ namespace Materialize.Tests
 {    
     class MaterializableRebaseTests : TestClassBase
     {
-
         IQueryable<Dog> Dogs { get; set; }
         IQueryable<Person> People { get; set; }
 
@@ -87,11 +86,8 @@ namespace Materialize.Tests
 
         [Fact]
         public void RebasesEnumerableCount() 
-        {            
-            InitServices(x => {
-                x.EmplaceTolerantSourceRegime();
-                x.AllowClientSideFiltering();
-            });
+        {
+            InitServices(x => x.EmplaceTolerantSourceRegime());
 
             var models = People.MapAs<PersonWithPetsModel>()
                                 .Where(p => p.Dogs.Count() > 1)
@@ -103,12 +99,10 @@ namespace Materialize.Tests
         }
         
         [Fact]
-        public void RebasesEnumerableAny() {
-            InitServices(x => {
-                x.EmplaceTolerantSourceRegime();
-                x.AllowClientSideFiltering();
-            });
-            
+        public void RebasesEnumerableAny() 
+        {
+            InitServices(x => x.EmplaceTolerantSourceRegime());
+
             var people = People.Concat(new[] {
                                             new Person() { Name = "Petless", Dogs = new Dog[0], ID = 999 }
                                         });
@@ -125,11 +119,9 @@ namespace Materialize.Tests
 
 
         [Fact]
-        public void RebasesEnumerableWhere() {
-            InitServices(x => {
-                x.EmplaceTolerantSourceRegime();
-                x.AllowClientSideFiltering();
-            });
+        public void RebasesEnumerableWhere() 
+        {
+            InitServices(x => x.EmplaceTolerantSourceRegime());
 
             var models = People.MapAs<PersonWithPetsModel>()
                                 .Where(p => p.Dogs.Where(d => d.Name.Length > 5).Any())
@@ -142,11 +134,9 @@ namespace Materialize.Tests
 
 
         [Fact]
-        public void RebasesEnumerableAnyWithPredicate() {
-            InitServices(x => {
-                x.EmplaceTolerantSourceRegime();
-                x.AllowClientSideFiltering();
-            });
+        public void RebasesEnumerableAnyWithPredicate() 
+        {
+            InitServices(x => x.EmplaceTolerantSourceRegime());
 
             var models = People.MapAs<PersonWithPetsModel>()
                                 .Where(p => p.Dogs.Any(d => d.Name.Length > 5))
@@ -160,11 +150,9 @@ namespace Materialize.Tests
 
 
         [Fact]
-        public void RebasesEnumerableCountWithPredicate() {
-            InitServices(x => {
-                x.EmplaceTolerantSourceRegime();
-                x.AllowClientSideFiltering();
-            });
+        public void RebasesEnumerableCountWithPredicate() 
+        {
+            InitServices(x => x.EmplaceTolerantSourceRegime());
 
             var models = People.MapAs<PersonWithPetsModel>()
                                 .Where(p => p.Dogs.Count(d => d.Name.Length > 5) > 1)

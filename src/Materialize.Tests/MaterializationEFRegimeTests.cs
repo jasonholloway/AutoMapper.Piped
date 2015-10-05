@@ -3,12 +3,8 @@ using Materialize.Tests.Infrastructure;
 using Materialize.Tests.Model;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Should;
 using Should.Core.Assertions;
@@ -38,26 +34,7 @@ namespace Materialize.Tests
             }
         }
 
-
-        
-        [Fact]
-        public void CachedRegimeIsUsedForSameContextType() {
-            var regimeProv = new EF6RegimeProvider();
-            
-            using(var ctx1 = new Context()) {
-                using(var ctx2 = new Context()) {
-                    regimeProv.GetRegime(ctx1.Dogs)
-                        .ShouldEqual(regimeProv.GetRegime(ctx2.Dogs));
-                }
-            }
-        }
-
-
-        [Fact]
-        public void FreshRegimeIsUsedForNewContextType() {
-            throw new NotImplementedException();
-        }
-
+               
 
         [Fact]
         public void CreatingMappedEntitiesIsForbidden() {
@@ -168,6 +145,23 @@ namespace Materialize.Tests
                 var regime = new EF6Regime(ctx);
 
                 regime.AssertDeclines(() => new DogModel().Name);
+            }
+        }
+
+
+
+
+        [Fact]
+        public void WorksWithPredicateRebasing() {
+            InitServices(x => {
+                x.EmplaceSourceRegimeProvider(new EF6RegimeProvider());
+            });
+
+            using(var ctx = new Context()) {
+                var r = ctx.Dogs.MapAs<DogModel>()
+                                .Where(m => m.Name.Length > 4)
+                                .ToArray();
+
             }
         }
 
