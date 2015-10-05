@@ -152,6 +152,20 @@ namespace Materialize.Tests
 
 
         [Fact]
+        public void TakesLambdasAsParamBindingScopes() {
+            using(var ctx = new Context()) {
+                var regime = new EF6Regime(ctx);
+
+                var exParam = Expression.Parameter(typeof(int));
+
+                regime.AssertAccepts(Expression.Lambda(exParam, exParam));
+            }
+        }
+
+
+
+
+        [Fact]
         public void WorksWithPredicateRebasing() {
             InitServices(x => {
                 x.EmplaceSourceRegimeProvider(new EF6RegimeProvider());

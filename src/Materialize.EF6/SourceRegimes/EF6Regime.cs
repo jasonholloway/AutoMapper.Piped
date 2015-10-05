@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Data.Entity.Core.Common.CommandTrees;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
@@ -97,6 +98,93 @@ namespace Materialize.SourceRegimes
                 return exLambda.Compile();
             });
 
+        static Action<ExpressionConverter, Expression, DbExpression> PushBindingScope
+            = Exec(() => {
+                var tBindingContext = _asmEF.GetType("System.Data.Entity.Core.Objects.ELinq.BindingContext");
+                var tBinding = _asmEF.GetType("System.Data.Entity.Core.Objects.ELinq.Binding");
+
+                var mPushScope = tBindingContext.GetMethod(
+                                                    "PushBindingScope",
+                                                    BindingFlags.NonPublic | BindingFlags.Instance);
+
+                var fBindingContext = _tExpressionConverter.GetField(
+                                                                "_bindingContext",
+                                                                BindingFlags.NonPublic | BindingFlags.Instance);
+
+                var ctorBinding = tBinding.GetConstructor(
+                                            BindingFlags.NonPublic | BindingFlags.Instance,
+                                            null,
+                                            new Type[] { typeof(Expression), typeof(DbExpression) },
+                                            null);
+
+                var exConverter = Expression.Parameter(typeof(object));
+                var exExp = Expression.Parameter(typeof(Expression));
+                var exDbExp = Expression.Parameter(typeof(DbExpression));
+                
+                var exLambda = Expression.Lambda<Action<ExpressionConverter, Expression, DbExpression>>(
+                                            Expression.Call(
+                                                Expression.MakeMemberAccess(                                                    
+                                                            Expression.Convert(exConverter, _tExpressionConverter),
+                                                            fBindingContext),
+                                                mPushScope,
+                                                Expression.New(
+                                                            ctorBinding,
+                                                            exExp,
+                                                            exDbExp)
+                                                ),
+                                            exConverter,
+                                            exExp,
+                                            exDbExp);
+
+                return exLambda.Compile();
+            });
+
+        static Func<TypeUsage, DbNullExpression> CreateDbNullExpression
+            = Exec(() => {
+                var exTypeUsage = Expression.Parameter(typeof(TypeUsage));
+                
+                var exLambda = Expression.Lambda<Func<TypeUsage, DbNullExpression>>(
+                                                Expression.New(
+                                                    typeof(DbNullExpression).GetConstructor(
+                                                                BindingFlags.NonPublic | BindingFlags.Instance,
+                                                                null,
+                                                                new[] { typeof(TypeUsage) },
+                                                                null),
+                                                    exTypeUsage
+                                                    ),
+                                            exTypeUsage);
+
+                return exLambda.Compile();
+            });
+
+
+
+        delegate void GetTypeUsageDelegate(ExpressionConverter converter, Type type, out TypeUsage typeUsage);
+
+        static GetTypeUsageDelegate GetTypeUsage
+            = Exec(() => {
+                var mTryGetValueLayerType = _tExpressionConverter.GetMethod(
+                                                                    "TryGetValueLayerType",
+                                                                    BindingFlags.NonPublic | BindingFlags.Instance);
+
+                var exConverter = Expression.Parameter(typeof(object));
+                var exType = Expression.Parameter(typeof(Type));
+                var exTypeUsage = Expression.Parameter(typeof(TypeUsage).MakeByRefType());
+
+                var exLambda = Expression.Lambda<GetTypeUsageDelegate>(
+                                            Expression.Call(
+                                                Expression.Convert(exConverter, _tExpressionConverter),
+                                                mTryGetValueLayerType,
+                                                exType,
+                                                exTypeUsage),
+                                            exConverter,
+                                            exType,
+                                            exTypeUsage);
+
+                return exLambda.Compile();
+            });
+
+
         #endregion
         
         Funcletizer _funcletizer;
@@ -107,15 +195,37 @@ namespace Materialize.SourceRegimes
             _funcletizer = CreateFuncletizer(objContext);       
         }
                 
-        public Result Test(Expression ex) {            
+        public Result Test(Expression ex) 
+        {
+            int cBinding = 0;
+            var exLambda = ex as LambdaExpression;
+            
             try {
-                var converter = CreateConverter(_funcletizer, ex);
+                var converter = CreateConverter(
+                                        _funcletizer, 
+                                        exLambda?.Body ?? ex);
+                
+                //if lambda, ef will not convert naturally: params need to be artificially bound
+                //to dummy DbExpressions, and body of lambda tested            
+                if(exLambda != null) {
+                    foreach(var exParam in exLambda.Parameters) {
+                        TypeUsage typeUsage = null;                        
+                        GetTypeUsage(converter, exParam.Type, out typeUsage);
+                        PushBindingScope(converter, exParam, CreateDbNullExpression(typeUsage));
+                    }
+                }
+                
                 var dbExp = InvokeConvert(converter);
 
                 return new Result(true);
             }
             catch(NotSupportedException e) {
                 return new Result(e);
+            }
+            finally {
+                for(int i = 0; i < cBinding; i++) {
+                    //PopBindingScope(converter); //Not needed with current usage!
+                }
             }
         }
         
