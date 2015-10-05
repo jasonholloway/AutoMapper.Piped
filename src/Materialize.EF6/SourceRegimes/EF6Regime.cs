@@ -161,7 +161,7 @@ namespace Materialize.SourceRegimes
 
         delegate void GetTypeUsageDelegate(ExpressionConverter converter, Type type, out TypeUsage typeUsage);
 
-        static GetTypeUsageDelegate GetTypeUsage
+        static GetTypeUsageDelegate GetTypeUsageFromClrType
             = Exec(() => {
                 var mTryGetValueLayerType = _tExpressionConverter.GetMethod(
                                                                     "TryGetValueLayerType",
@@ -197,21 +197,24 @@ namespace Materialize.SourceRegimes
                 
         public Result Test(Expression ex) 
         {
+            //if lambda, ef will not convert naturally: params need to be artificially bound
+            //to dummy DbExpressions, and body of lambda tested            
+
             int cBinding = 0;
             var exLambda = ex as LambdaExpression;
             
             try {
                 var converter = CreateConverter(
                                         _funcletizer, 
-                                        exLambda?.Body ?? ex);
+                                        exLambda != null ? exLambda.Body : ex);
                 
-                //if lambda, ef will not convert naturally: params need to be artificially bound
-                //to dummy DbExpressions, and body of lambda tested            
                 if(exLambda != null) {
-                    foreach(var exParam in exLambda.Parameters) {
+                    foreach(var exParam in exLambda.Parameters) 
+                    {
                         TypeUsage typeUsage = null;                        
-                        GetTypeUsage(converter, exParam.Type, out typeUsage);
-                        PushBindingScope(converter, exParam, CreateDbNullExpression(typeUsage));
+                        GetTypeUsageFromClrType(converter, exParam.Type, out typeUsage);
+
+                        PushBindingScope(converter, exParam, CreateDbNullExpression(typeUsage)); //bind param to null DbExpression - type, not value, is tested
                     }
                 }
                 

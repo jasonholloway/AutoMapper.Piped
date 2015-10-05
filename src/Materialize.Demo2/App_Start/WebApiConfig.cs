@@ -5,6 +5,9 @@ using System.Linq;
 using System.Web.Http;
 using System.Web.OData.Builder;
 using System.Web.OData.Extensions;
+using System.Web.Mvc;
+using System.Web.Mvc.Routing;
+using System.Web.Routing;
 
 namespace Materialize.Demo2
 {
@@ -19,7 +22,7 @@ namespace Materialize.Demo2
 
             config.MapODataServiceRoute(
                         "OData",
-                        "",
+                        "odata",
                         builder.GetEdmModel());            
         }
     }
