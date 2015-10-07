@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Materialize.Demo2.QueryInfo;
 using Materialize.SourceRegimes;
 using Materialize.Tests.Infrastructure;
 using Materialize.Tests.Model;
@@ -12,7 +13,6 @@ namespace Materialize.Demo2.Controllers
 {
     public class DogsController : ODataController
     {
-
         static DogsController() {
             Mapper.CreateMap<Dog, DogAndOwnerModel>();
             Mapper.CreateMap<Person, PersonModel>();
@@ -24,10 +24,19 @@ namespace Materialize.Demo2.Controllers
 
 
         Context _ctx = new Context();
-        
+        QueryInfoSource _queryInfoSource;
+
+        public DogsController(QueryInfoSource queryInfoSource) {
+            _queryInfoSource = queryInfoSource;
+        }
+
+
         [EnableQuery]
-        public IQueryable<DogAndOwnerModel> Get() {
-            return _ctx.Dogs.MapAs<DogAndOwnerModel>();
+        public IQueryable<DogAndOwnerModel> Get() 
+        {
+            var snooper = _queryInfoSource.GetNewSnooper();
+
+            return _ctx.Dogs.MapAs<DogAndOwnerModel>(snooper);
         }
 
 

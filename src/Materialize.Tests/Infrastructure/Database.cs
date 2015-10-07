@@ -1,4 +1,5 @@
-﻿using FizzWare.NBuilder;
+﻿using Effort.DataLoaders;
+using FizzWare.NBuilder;
 using Materialize.Tests.Model;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace Materialize.Tests.Infrastructure
     class Context : DbContext
     {
         public Context() {
-            Database.SetInitializer(new DatabaseInitializer());
+            Database.SetInitializer<Context>(new DatabaseInitializer());
         }
 
         public DbSet<Dog> Dogs { get; set; }
@@ -22,7 +23,7 @@ namespace Materialize.Tests.Infrastructure
         public DbSet<DogGroomer> Groomers { get; set; }
         public DbSet<Contract> Contracts { get; set; }
     }
-
+        
 
     class DatabaseInitializer
         : DropCreateDatabaseAlways<Context> // CreateDatabaseIfNotExists<Context>
