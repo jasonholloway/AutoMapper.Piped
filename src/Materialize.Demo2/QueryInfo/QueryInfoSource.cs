@@ -2,20 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Subjects;
-using System.Reactive;
 using System.Collections.Concurrent;
 
 namespace Materialize.Demo2.QueryInfo
 {
-    public class QueryInfoSource
+    public class QueryInfoSource : IDisposable
     {
         int _nextQueryID = 1;
         object _sync = new object();
 
         ISubject<IQueryInfo> _queryReceived = new Subject<IQueryInfo>();
         ConcurrentDictionary<int, IQueryInfo> _dQueries = new ConcurrentDictionary<int, IQueryInfo>();
-        
 
+        
         public ISnooper GetNewSnooper() {
             int nextQueryID;
 
@@ -26,7 +25,7 @@ namespace Materialize.Demo2.QueryInfo
             return new QuerySnooper(
                             nextQueryID,
                             qi => {
-                                _dQueries[qi.QueryID] = qi;
+                                _dQueries[qi.QueryID] = qi;                                
                                 _queryReceived.OnNext(qi);
                             });                
         }
@@ -39,6 +38,9 @@ namespace Materialize.Demo2.QueryInfo
             throw new NotImplementedException();
         }
 
+        public void Dispose() {
+            _queryReceived.OnCompleted();
+        }
     }
 
 

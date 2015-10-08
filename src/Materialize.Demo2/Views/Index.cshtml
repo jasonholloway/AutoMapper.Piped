@@ -8,15 +8,24 @@
 
         <script src="~/Scripts/jquery-2.1.4.min.js"></script>
         <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+        <script type="text/javascript" src="~/signalr/hubs"></script>
 
         <script>       
-            $(document).ready(function() {
+            var hubProxy = $.connection.queryInfoHub;
+
+            hubProxy.client.announceNewQueryInfo = function (i) {
+                console.log('New QueryInfo: ' + i);
+            }
+            
+            $(document).ready(function () {
                 $('#info').html('BLAHBLAHBLAH');
+            });
+            
+            $.connection.hub.logging = true;
+            $.connection.hub.start()
+                                .done(function () { console.log('Now connected, connection ID=' + $.connection.hub.id); })
+                                .fail(function () { console.log('Could not Connect!'); });
 
-                //set up signalr here
-                //...
-
-            })
         </script>
 
     </head>

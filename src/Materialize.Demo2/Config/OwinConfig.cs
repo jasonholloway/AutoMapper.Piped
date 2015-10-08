@@ -11,6 +11,17 @@ using Nancy;
 using Ninject;
 using Nancy.Bootstrappers.Ninject;
 using Ninject.Extensions.ChildKernel;
+using Microsoft.AspNet.SignalR;
+using Materialize.Demo2.QueryInfo;
+using Materialize.Demo2.Hubs;
+using Ninject.Activation;
+using Ninject.Activation.Blocks;
+using Ninject.Components;
+using Ninject.Modules;
+using Ninject.Parameters;
+using Ninject.Planning.Bindings;
+using Ninject.Syntax;
+using System.Reflection;
 
 [assembly: OwinStartup(typeof(Materialize.Demo2.Config.OwinConfig))]
 
@@ -20,34 +31,21 @@ namespace Materialize.Demo2.Config
     {
         public void Configuration(IAppBuilder app) 
         {
-            app.MapSignalR();
+            NinjectConfig.Register(app);
+            SignalRConfig.Register(app);
+            WebApiConfig.Register(app);
+            NancyConfig.Register(app);
             
-            var rootKernel = NinjectConfig.CreateRootKernel();
+            var kernel = (IKernel)app.Properties["kernel"];
+            
+            var queryInfoSource = kernel.Get<QueryInfoSource>();
+            var queryInfoHubContext = kernel.Get<IHubContext<IQueryInfoHub>>();
 
-            app.UseNinjectMiddleware(() => new ChildKernel(rootKernel));
-            
-            app.UseNinjectWebApi(WebApiConfig.GetHttpConfiguration());
-            
-            app.UseNancy(x => {
-                x.Bootstrapper = new NinjectNancyBootstrapperShim(new ChildKernel(rootKernel));
+            queryInfoSource.QueryReceived.Subscribe(qi => {
+                queryInfoHubContext.Clients.All.AnnounceNewQueryInfo(qi.QueryID);
             });
         }
     }
-
-
-
-    class NinjectNancyBootstrapperShim : NinjectNancyBootstrapper
-    {
-        IKernel _kernel;
-
-        public NinjectNancyBootstrapperShim(IKernel kernel) {
-            _kernel = kernel;
-        }
-        
-        protected override IKernel CreateRequestContainer(NancyContext context) {
-            return _kernel;
-        }
-    }
-
+    
 
 }
