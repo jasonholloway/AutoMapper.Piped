@@ -16,13 +16,9 @@ namespace Materialize.Demo2.Hubs
 
     public class QueryInfoHub : Hub<IQueryInfoHub>
     {
-        public override Task OnConnected() {
-            return base.OnConnected();
-        }
 
-        public override Task OnDisconnected(bool stopCalled) {
-            return base.OnDisconnected(stopCalled);
-        }
+        //get queryinfo for queryinfoid
+        //...
 
     }
 

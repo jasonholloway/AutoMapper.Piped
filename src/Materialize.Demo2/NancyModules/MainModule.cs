@@ -8,10 +8,11 @@ namespace Materialize.Demo2.NancyModules
 {
     public class MainModule : NancyModule
     {
-        public MainModule(QueryInfoSource queryInfoSource) {
+        public MainModule(QueryInfoSource queryInfoSource) 
+        {
             Get[""] = _ => View["Index.cshtml"];
 
-            Get["/query/{id}"] = p => "QueryID: " + p.id;
+            Get["/query/{id}"] = p => View["QueryInfo.cshtml", queryInfoSource.GetQueryInfo(p.id)];
         }
     }
 }

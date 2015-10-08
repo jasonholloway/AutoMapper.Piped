@@ -35,7 +35,7 @@ namespace Materialize.Demo2.QueryInfo
         }
 
         internal IQueryInfo GetQueryInfo(int queryID) {
-            throw new NotImplementedException();
+            return _dQueries[queryID];
         }
 
         public void Dispose() {

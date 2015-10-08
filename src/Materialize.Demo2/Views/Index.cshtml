@@ -14,7 +14,7 @@
             var hubProxy = $.connection.queryInfoHub;
 
             hubProxy.client.announceNewQueryInfo = function (i) {
-                console.log('New QueryInfo: ' + i);
+                $('#info').load('/query/' + i);
             }
             
             $(document).ready(function () {

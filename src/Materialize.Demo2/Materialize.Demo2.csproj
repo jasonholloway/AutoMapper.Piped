@@ -92,6 +92,10 @@
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Mono.Linq.Expressions, Version=1.2.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\Mono.Linq.Expressions.dll</HintPath>
+    </Reference>
     <Reference Include="Nancy, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Nancy.1.3.0\lib\net40\Nancy.dll</HintPath>
       <Private>True</Private>
@@ -228,6 +232,9 @@
   <ItemGroup>
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Content\main.css" />
+    <Content Include="Mono.Linq.Expressions.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />
     <Content Include="Scripts\jquery.signalR-2.2.0.js" />
@@ -235,7 +242,6 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Application.cs" />
     <Compile Include="Config\NancyConfig.cs" />
     <Compile Include="Config\NinjectConfig.cs" />
     <Compile Include="Config\OwinConfig.cs" />
@@ -269,6 +275,10 @@
     <ProjectReference Include="..\AutoMapper.Net4\AutoMapper.Net4.csproj">
       <Project>{8c955148-fa96-4f0d-880d-abb6770f54e9}</Project>
       <Name>AutoMapper.Net4</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Materialize.Demo\Materialize.Demo.csproj">
+      <Project>{94db1717-dc89-487f-816f-ce3a6e39dcb1}</Project>
+      <Name>Materialize.Demo</Name>
     </ProjectReference>
     <ProjectReference Include="..\Materialize.EF6\Materialize.EF6.csproj">
       <Project>{17079aef-66a9-49ab-8556-b753e170ef42}</Project>
