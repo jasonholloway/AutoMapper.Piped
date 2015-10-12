@@ -37,7 +37,7 @@ namespace Materialize.Reify.Parsing.Where
                                                 (LambdaExpression)((UnaryExpression)ctx.CallExp.Arguments[1]).Operand, 
                                                 tElem, 
                                                 upstreamStrategy,
-                                                ctx.MapContext.QueryRegime);
+                                                ctx.ReifyContext.SourceRegime);
                                 
                 if(predRebaseStrategy != null) {                                        
                     return CreateStrategy(  //we can prepend to source query!                        

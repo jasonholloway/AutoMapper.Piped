@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Materialize.Reify;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,10 @@ namespace Materialize.Tests.Infrastructure
             if(QueryFromClient != null) {
                 QueryFromClient(exQuery);
             }
+        }
+
+        void ISnooper.OnStrategized(IReifyStrategy strategy) {
+            //...
         }
 
         void ISnooper.OnQueryToServer(IQueryable query) {

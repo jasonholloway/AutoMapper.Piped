@@ -26,7 +26,7 @@ namespace Materialize.Tests.Infrastructure
         
 
     class DatabaseInitializer
-        : DropCreateDatabaseAlways<Context> // CreateDatabaseIfNotExists<Context>
+        : /*DropCreateDatabaseIfModelChanges<Context>*/  /*DropCreateDatabaseAlways<Context>*/ CreateDatabaseIfNotExists<Context>
     {
         protected override void Seed(Context context) {
             var data = new TestData();

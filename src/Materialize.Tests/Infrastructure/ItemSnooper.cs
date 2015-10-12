@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Materialize.Reify;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,10 @@ namespace Materialize.Tests.Infrastructure
                         
         void ISnooper.OnQueryFromClient(Expression exQuery) {
             QueryExpFromClient = exQuery;
+        }
+
+        void ISnooper.OnStrategized(IReifyStrategy strategy) {
+            //...
         }
 
         void ISnooper.OnQueryToServer(IQueryable query) {

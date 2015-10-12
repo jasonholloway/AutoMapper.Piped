@@ -28,7 +28,7 @@ namespace Materialize.Reify.Mapping.Translation
             if(typeMap != null 
                 && (typeMap.CustomProjection != null || typeMap.CustomMapper != null)) 
             {                
-                if(typeMap.CustomMapper != null || !ctx.QueryRegime.ServerAccepts(typeMap.CustomProjection)) 
+                if(typeMap.CustomMapper != null || !ctx.SourceRegime.ServerAccepts(typeMap.CustomProjection)) 
                 {
                     return base.CreateStrategy(
                                     typeof(FullFetchAndTransformStrategy<,>),

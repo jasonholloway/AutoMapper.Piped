@@ -37,7 +37,12 @@ namespace Materialize.Reify.Mapping.Collections
 
             return null;
         }
-                
+
+
+        public override IEnumerable<IReifyStrategy> UpstreamStrategies {
+            get { return new IReifyStrategy[] { _elemStrategy }; }
+        }
+
     }
 
 

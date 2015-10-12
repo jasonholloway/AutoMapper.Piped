@@ -12,31 +12,45 @@ namespace Materialize.Reify.Parsing
     class Parser
     {
         Expression _exBase;
-        MapContext _mapContext;
+        ReifyContext _reifyContext;
         IParseStrategySource _parseStrategies;
         
         public Parser(
             Expression exBase, 
-            MapContext mapContext,
+            ReifyContext reifyContext,
             IParseStrategySource parseStrategies) 
         {
             _exBase = exBase;
-            _mapContext = mapContext;
+            _reifyContext = reifyContext;
             _parseStrategies = parseStrategies;
         }
 
 
-        public IModifier Parse(Expression exSubject) 
+        public Result Parse(Expression exSubject) 
         {
             var parseContext = new ParseContext(
                                             exSubject, 
                                             _exBase,
-                                            _mapContext);
+                                            _reifyContext);
 
             var strategy = _parseStrategies.GetStrategy(parseContext);
 
-            return strategy.Parse(exSubject);
+            return new Result(
+                        strategy.Parse(exSubject),
+                        strategy);
         }
         
+
+        public struct Result
+        {
+            public readonly IModifier Modifier;
+            public readonly IReifyStrategy UsedStrategy;
+
+            public Result(IModifier modifier, IReifyStrategy usedStrategy) {
+                Modifier = modifier;
+                UsedStrategy = usedStrategy;
+            }
+        }
+
     }
 }

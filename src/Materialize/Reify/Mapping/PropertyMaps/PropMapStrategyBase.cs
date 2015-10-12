@@ -21,7 +21,11 @@ namespace Materialize.Reify.Mapping.PropertyMaps
         public PropMapStrategyBase(PropMapSpec[] propMapSpecs) {
             _propMapSpecs = propMapSpecs;
         }
-        
+
+
+        public override IEnumerable<IReifyStrategy> UpstreamStrategies {
+            get { return _propMapSpecs.Select(s => (IReifyStrategy)s.Strategy); }
+        }
 
 
         public override IRebaseStrategy GetRootRebaseStrategy(RootVector roots) {

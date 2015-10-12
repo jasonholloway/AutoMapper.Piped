@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Materialize.Types
 {
@@ -53,6 +55,43 @@ namespace Materialize.Types
             return t;
         }
 
+
+
+
+
+        static Regex _reGetBaseTypeName = new Regex("(.*)`");
+
+        public static string GetNiceName(this Type type) 
+        {
+            if(type.IsGenericType) {
+                var baseName = _reGetBaseTypeName.Match(type.Name).Groups[1].Value;
+
+                var sb = new StringBuilder(baseName);
+                sb.Append("<");
+
+                bool successor = false;
+
+                foreach(var typeArg in type.GetGenericArguments()) {
+                    if(successor) {
+                        sb.Append(", ");
+                    }
+
+                    sb.Append(typeArg.GetNiceName());
+
+                    successor = true;
+                }
+
+                sb.Append(">");
+
+                return sb.ToString();
+            }
+            else if(type.IsGenericTypeDefinition) {
+                throw new NotImplementedException();
+            }
+            else {
+                return type.Name;
+            }
+        }
         
 
 

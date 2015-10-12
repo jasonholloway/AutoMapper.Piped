@@ -18,7 +18,16 @@ namespace Materialize.Types
                             "{0} -> {1}",
                             SourceType.Name,
                             DestType.Name);
-        }        
+        }
+
+        public override bool Equals(object obj) {
+            return obj is TypeVector
+                    && TypeVectorEqualityComparer.Default.Equals(this, (TypeVector)obj);
+        }
+
+        public override int GetHashCode() {
+            return TypeVectorEqualityComparer.Default.GetHashCode(this);
+        }
     }
 
 

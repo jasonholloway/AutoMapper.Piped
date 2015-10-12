@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Materialize.Expressions
 {
-    internal static class ExpressionExtensions
+    public static class ExpressionExtensions
     {
         public static bool Contains(
             this Expression @this, 
@@ -42,6 +43,45 @@ namespace Materialize.Expressions
             return @this.Replace(ex => ex == exOld, exNew);
         }
         
+
+
+        public static Expression Simplify(this Expression @this) {
+            return new SimplifyVisitor().Visit(@this);
+        }
+
+
+        class SimplifyVisitor : ExpressionVisitor
+        {
+            protected override Expression VisitMember(MemberExpression node) {
+                var exNewUpstream = base.Visit(node.Expression);
+                
+                var exConstant = exNewUpstream as ConstantExpression;
+
+                if(exConstant != null) {
+                    object value = null;
+
+                    switch(node.Member.MemberType) {
+                        case MemberTypes.Field:
+                            value = ((FieldInfo)node.Member).GetValue(exConstant.Value);
+                            break;
+
+                        case MemberTypes.Property:
+                            value = ((PropertyInfo)node.Member).GetValue(exConstant.Value);
+                            break;
+
+                        default:
+                            throw new NotImplementedException();
+                    }
+
+                    return Expression.Constant(value);
+                }
+
+                return Expression.MakeMemberAccess(exNewUpstream, node.Member);
+            }
+        }
+
+
+
 
 
         class ContainsVisitor : ExpressionVisitor {

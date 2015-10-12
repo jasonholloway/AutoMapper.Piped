@@ -1,4 +1,5 @@
-﻿using Materialize.Reify.Mapping;
+﻿using AutoMapper;
+using Materialize.Reify.Mapping;
 using Materialize.Reify.Parsing;
 using Materialize.SourceRegimes;
 using Materialize.Types;
@@ -18,6 +19,7 @@ namespace Materialize.Reify
     internal interface IReifiable : IQueryProvider
     {
         event EventHandler<Expression> QueryFromClient;
+        event EventHandler<IReifyStrategy> Strategized;
         event EventHandler<IQueryable> QueryToServer;
         event EventHandler<IEnumerable> Fetched;
         event EventHandler<IEnumerable> Transformed;
@@ -38,6 +40,7 @@ namespace Materialize.Reify
         public abstract TResult Execute<TResult>(Expression expression);
 
         public event EventHandler<Expression> QueryFromClient;
+        public event EventHandler<IReifyStrategy> Strategized;
         public event EventHandler<IQueryable> QueryToServer;
         public event EventHandler<IEnumerable> Fetched;
         public event EventHandler<IEnumerable> Transformed;
@@ -46,6 +49,12 @@ namespace Materialize.Reify
         protected void OnQueryFromClient(Expression exQuery) {
             if(QueryFromClient != null) {
                 QueryFromClient(this, exQuery);
+            }
+        }
+
+        protected void OnStrategized(IReifyStrategy strategy) {
+            if(Strategized != null) {
+                Strategized(this, strategy);
             }
         }
 
@@ -119,19 +128,24 @@ namespace Materialize.Reify
         public override TResult Execute<TResult>(Expression exClientQuery) 
         {
             OnQueryFromClient(exClientQuery);
-
-            var mapContext = new MapContext(
-                                    _regimeSource.GetRegime(SourceQuery),
-                                    new TypeVector(typeof(IQueryable<TSource>), typeof(IQueryable<TDest>))
-                                    );
-
-            var parser = _parserFac.Create(BaseReifyQuery.Expression, mapContext);
             
-            var modifierStack = parser.Parse(exClientQuery);
-                                                            
+            var reifyContext = new ReifyContext(
+                                        new TypeVector(typeof(IQueryable<TSource>), typeof(IQueryable<TDest>)),
+                                        Mapper.Engine,
+                                        _regimeSource.GetRegime(SourceQuery),
+                                        true);
+            
+
+            var parser = _parserFac.Create(BaseReifyQuery.Expression, reifyContext);
+                        
+            var parsed = parser.Parse(exClientQuery);
+
+
+            OnStrategized(parsed.UsedStrategy);
+                                             
 
             //modifier stack rewrites the SourceQuery expression
-            var exQuery = modifierStack.Rewrite(SourceQuery.Expression);
+            var exQuery = parsed.Modifier.Rewrite(SourceQuery.Expression);
             
 
             //fetch from source; transform fetched via modifiers                                    
@@ -143,7 +157,7 @@ namespace Materialize.Reify
 
                 OnFetched(enFetched);
 
-                var transformed = modifierStack.Transform(enFetched);
+                var transformed = parsed.Modifier.Transform(enFetched);
                 
                 OnTransformed(transformed is IEnumerable
                                     ? (IEnumerable)transformed
@@ -158,7 +172,7 @@ namespace Materialize.Reify
                 var fetched = SourceQuery.Provider.Execute(exQuery);
                 OnFetched(new[] { fetched });
 
-                var transformed = (TResult)modifierStack.Transform(fetched);
+                var transformed = (TResult)parsed.Modifier.Transform(fetched);
                 OnTransformed(new[] { transformed });
 
                 return transformed;

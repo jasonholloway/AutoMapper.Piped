@@ -20,13 +20,24 @@ namespace Materialize.SourceRegimes
         public EF6Regime(DbContext dbContext) {
             _dbContext = dbContext;
         }
-
+        
         public bool ServerAccepts(Expression ex) {
             var tester = new ExpressionTester(_dbContext);
             return tester.Test(ex).Success;
         }
+
+
+        public override bool Equals(object obj) {
+            return obj is EF6Regime
+                    && _dbContext.GetType().Equals(((EF6Regime)obj)._dbContext.GetType());
+        }
+
+        public override int GetHashCode() {
+            return _dbContext.GetType().GetHashCode() + 7;
+        }
+
     }
-    
+
 
 
     class ExpressionTester

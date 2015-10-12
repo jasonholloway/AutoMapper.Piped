@@ -13,7 +13,9 @@ namespace Materialize.Reify.Parsing
     struct ParseContext
     {
         public readonly Expression SubjectExp;
-        public readonly MapContext MapContext;
+        public readonly ReifyContext ReifyContext;
+        
+        //public readonly MapContext MapContext;
 
         //---------------------------------------------------
         //Below fields not for keying: all derived from above
@@ -32,15 +34,14 @@ namespace Materialize.Reify.Parsing
         public ParseContext(
             Expression exSubject, 
             Expression exBase, 
-            MapContext mapContext) 
+            ReifyContext reifyContext) 
         {
             Debug.Assert(exSubject.Contains(exBase));
-            Debug.Assert(exBase.Type.GetEnumerableElementType() == mapContext.TypeVector.DestType.GetEnumerableElementType());
 
             SubjectExp = exSubject;
             BaseExp = exBase;
 
-            MapContext = mapContext;
+            ReifyContext = reifyContext;
 
             CallExp = SubjectExp as MethodCallExpression;
             Method = CallExp?.Method;
@@ -56,34 +57,30 @@ namespace Materialize.Reify.Parsing
         }
         
         public ParseContext Spawn(Expression exSubject) {
-            return new ParseContext(exSubject, BaseExp, MapContext);
+            return new ParseContext(exSubject, BaseExp, ReifyContext);
         }
         
     }
 
-
-
     
-
-
 
     class ParseContextEqualityComparer
         : IEqualityComparer<ParseContext>
     {
         public static readonly ParseContextEqualityComparer Default = new ParseContextEqualityComparer();
-
-        static readonly MapContextEqualityComparer _mapContextComp = MapContextEqualityComparer.Default;
+        
+        static readonly ReifyContextEqualityComparer _reifyContextComp = ReifyContextEqualityComparer.Default;
         static readonly IEqualityComparer<Expression> _subjectExpComparer = new CacheableQueryComparer();
 
         public bool Equals(ParseContext x, ParseContext y) {
-            return _mapContextComp.Equals(x.MapContext, y.MapContext)
+            return _reifyContextComp.Equals(x.ReifyContext, y.ReifyContext)
                     && x.IsMappingBase == y.IsMappingBase
                     && _subjectExpComparer.Equals(x.SubjectExp, y.SubjectExp);
         }
 
         public int GetHashCode(ParseContext obj) {
             return _subjectExpComparer.GetHashCode(obj.SubjectExp)
-                    ^ (_mapContextComp.GetHashCode(obj.MapContext) << 16);
+                    ^ (_reifyContextComp.GetHashCode(obj.ReifyContext) << 16);
         }
     }
 

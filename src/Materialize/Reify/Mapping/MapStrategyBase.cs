@@ -1,11 +1,14 @@
 ﻿using System;
 using Materialize.Reify.Rebasing;
 using Materialize.Reify.Parsing;
+using System.Collections.Generic;
+using System.Linq;
+using Materialize.Types;
 
 namespace Materialize.Reify.Mapping
 {
     abstract class MapStrategyBase<TOrig, TDest> 
-        : IMapStrategy
+        : ReifyStrategy, IMapStrategy
     {
         public Type SourceType {
             get { return typeof(TOrig); }
@@ -32,6 +35,8 @@ namespace Materialize.Reify.Mapping
         public virtual IRebaseStrategy GetRootRebaseStrategy(RootVector roots) {
             return null; // throw new NotImplementedException(); //should return null or throw more precisely-typed exception...
         }
+            
+
     }
 
 }

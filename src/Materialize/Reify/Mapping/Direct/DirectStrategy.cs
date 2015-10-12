@@ -6,6 +6,9 @@ using Materialize.Reify.Rebasing;
 
 namespace Materialize.Reify.Mapping.Direct
 {
+    /// <summary>
+    /// No mapping required: value is transferred directly
+    /// </summary>
     class DirectStrategy<TOrig, TDest>
         : MapStrategyBase<TOrig, TDest>
         where TOrig : TDest

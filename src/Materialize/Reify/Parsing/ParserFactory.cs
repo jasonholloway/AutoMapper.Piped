@@ -16,8 +16,8 @@ namespace Materialize.Reify.Parsing
             _parseStrategies = parseStrategies;
         }
         
-        public Parser Create(Expression exBase, MapContext mapContext) {
-            return new Parser(exBase, mapContext, _parseStrategies);
+        public Parser Create(Expression exBase, ReifyContext reifyContext) {
+            return new Parser(exBase, reifyContext, _parseStrategies);
         }
     }
 }

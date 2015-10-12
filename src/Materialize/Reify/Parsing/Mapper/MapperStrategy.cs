@@ -2,6 +2,7 @@
 using Materialize.Reify.Rebasing;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -9,8 +10,11 @@ using System.Reflection;
 
 namespace Materialize.Reify.Parsing.Mapper
 {
+    /// <summary>
+    /// Wraps tree of MapStrategies into a ParseStrategy
+    /// </summary>
     class MapperStrategy
-        : IParseStrategy
+        : ReifyStrategy, IParseStrategy
     {
         IMapStrategy _mapStrategy;
 
@@ -54,5 +58,14 @@ namespace Materialize.Reify.Parsing.Mapper
             
             return strategizer.Strategize(subject.Expression);
         }
+
+
+
+        public override IEnumerable<IReifyStrategy> UpstreamStrategies {
+            get {
+                return new IReifyStrategy[] { _mapStrategy };
+            }
+        }
+        
     }
 }

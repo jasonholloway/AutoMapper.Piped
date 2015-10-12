@@ -4,7 +4,7 @@ using System;
 
 namespace Materialize.Reify.Mapping
 {
-    internal interface IMapStrategy 
+    internal interface IMapStrategy : IReifyStrategy
     {
         Type SourceType { get; }
         Type FetchType { get; }

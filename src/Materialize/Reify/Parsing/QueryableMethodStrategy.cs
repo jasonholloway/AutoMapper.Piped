@@ -1,5 +1,7 @@
 ﻿using Materialize.Reify.Rebasing;
+using Materialize.Types;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
@@ -9,7 +11,7 @@ namespace Materialize.Reify.Parsing
     //Quietly does all the upstream-delegation-via-the-parser
 
     abstract class QueryableMethodStrategy<TSource, TDest>
-        : IParseStrategy
+        : ReifyStrategy, IParseStrategy
     {
         public QueryableMethodStrategy(IParseStrategy upstreamStrategy) 
         {
@@ -52,6 +54,13 @@ namespace Materialize.Reify.Parsing
 
             return UpstreamStrategy.GetRebaseStrategy(subject);
         }
+
+
+
+        public override IEnumerable<IReifyStrategy> UpstreamStrategies {
+            get { return new[] { UpstreamStrategy }; }
+        }
+
     }
 
 }

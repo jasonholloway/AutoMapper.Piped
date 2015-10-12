@@ -9,9 +9,13 @@ using System.Threading.Tasks;
 using Materialize.Reify.Rebasing;
 using Materialize.Reify.Parsing;
 using Materialize.Types;
+using System.ComponentModel;
 
 namespace Materialize.Reify.Mapping.Collections
 {
+    /// <summary>
+    /// Maps collections by delegating to an element MapStrategy; creates and populates target collection by chosen CollectionFactory
+    /// </summary>
     class CollectionStrategy<TOrig, TOrigElem, TMedElem, TDestElem, TDest>
         : CollectionStrategyBase<TOrig, TOrigElem, TDestElem, TDest>
         where TOrig : IEnumerable<TOrigElem>

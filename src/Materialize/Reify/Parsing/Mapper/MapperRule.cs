@@ -18,8 +18,13 @@ namespace Materialize.Reify.Parsing.Mapper
         public override IParseStrategy GetStrategy(ParseContext ctx) 
         {
             if(ctx.IsMappingBase) 
-            {                
-                var mapStrategy = _mapStrategies.GetStrategy(ctx.MapContext);
+            {
+                var mapContext = new MapContext(
+                                        ctx.ReifyContext.RootTypeVector,
+                                        ctx.ReifyContext);
+                
+                var mapStrategy = _mapStrategies.GetStrategy(mapContext);
+
                 return new MapperStrategy(mapStrategy);
             }
             

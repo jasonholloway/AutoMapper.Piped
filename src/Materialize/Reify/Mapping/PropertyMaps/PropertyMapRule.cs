@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Materialize.Tuples;
 using Materialize.TypeMaps;
+using Materialize.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,10 +73,10 @@ namespace Materialize.Reify.Mapping.PropertyMaps
             var tOrig = ((PropertyInfo)map.SourceMember).PropertyType;
             var tDest = map.DestinationPropertyType;
 
-            return _mapStrategySource.GetStrategy(
-                                            ctx.QueryRegime, 
-                                            tOrig, 
-                                            tDest);
+            return _mapStrategySource.GetStrategy(new MapContext(
+                                                        new TypeVector(tOrig, tDest),
+                                                        ctx.ReifyContext
+                                                        ));
         }
         
     }

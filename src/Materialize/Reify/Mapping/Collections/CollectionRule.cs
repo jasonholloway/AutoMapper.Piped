@@ -31,11 +31,10 @@ namespace Materialize.Reify.Mapping.Collections
                 
                 var tOrigElem = tOrig.GetEnumerableElementType();
                 var tDestElem = tDest.GetEnumerableElementType();
-                
-                var elemStrategy = _strategySource.GetStrategy(
-                                                        ctx.QueryRegime, 
-                                                        tOrigElem, 
-                                                        tDestElem);
+
+                var elemStrategy = _strategySource.GetStrategy(new MapContext(
+                                                                        new TypeVector(tOrigElem, tDestElem),
+                                                                        ctx.ReifyContext));
 
                 if(elemStrategy != null) {
                     if(elemStrategy.RewritesExpression) {

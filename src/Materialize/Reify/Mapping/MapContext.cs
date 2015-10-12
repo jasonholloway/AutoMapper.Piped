@@ -6,15 +6,20 @@ namespace Materialize.Reify.Mapping
 {
     internal struct MapContext
     {
-        public readonly ISourceRegime QueryRegime;
         public readonly TypeVector TypeVector;
-                
+        public readonly ReifyContext ReifyContext;
+        
+        public ISourceRegime SourceRegime {
+            get { return ReifyContext.SourceRegime; }
+        }
+
+
         public MapContext(
-            ISourceRegime queryRegime,
-            TypeVector typeVector)
-        {                                           
-            QueryRegime = queryRegime;
+            TypeVector typeVector,
+            ReifyContext reifyContext)
+        {                              
             TypeVector = typeVector;
+            ReifyContext = reifyContext;
         }        
     }
 
@@ -23,16 +28,15 @@ namespace Materialize.Reify.Mapping
         : IEqualityComparer<MapContext>
     {
         public static readonly MapContextEqualityComparer Default = new MapContextEqualityComparer();
-        static TypeVectorEqualityComparer _vectorComparer = TypeVectorEqualityComparer.Default;
-
+        
         public bool Equals(MapContext x, MapContext y) {
-            return ReferenceEquals(x.QueryRegime, y.QueryRegime)
-                    && _vectorComparer.Equals(x.TypeVector, y.TypeVector);
+            return x.TypeVector.Equals(y.TypeVector)
+                    && x.ReifyContext.Equals(y.ReifyContext);
         }
 
         public int GetHashCode(MapContext obj) {
-            return (obj.QueryRegime.GetHashCode() << 8) 
-                    ^ _vectorComparer.GetHashCode(obj.TypeVector);
+            return (obj.ReifyContext.GetHashCode() << 8) 
+                    ^ obj.TypeVector.GetHashCode();
         }
     }
 

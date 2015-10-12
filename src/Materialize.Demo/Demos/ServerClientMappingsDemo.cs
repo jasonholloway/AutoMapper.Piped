@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Materialize.Expressions;
 using Materialize.Tests.Infrastructure;
 using Mono.Linq.Expressions;
 using ObjectPrinter;

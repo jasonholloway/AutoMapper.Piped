@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace Materialize.Reify.Parsing
 {
-    interface IParseStrategy
+    interface IParseStrategy : IReifyStrategy
     {        
         Type SourceType { get; }
         Type FetchType { get; }

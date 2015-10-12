@@ -47,24 +47,15 @@ namespace Materialize.SourceRegimes
             });
 
         #endregion
-
-
-        //ConcurrentDictionary<Type, ISourceRegime> _dRegimeCache
-        //    = new ConcurrentDictionary<Type, ISourceRegime>();
-
+                
 
         public ISourceRegime GetRegime(IQueryable qySource) 
-        {
-            //NO CACHEING ALLOWED! Each DbContext needs a fresh regime
-            
+        {   
+            //NB: below can throw exceptions relating to DbContext construction - that is, related to EF config
             var dbContext = GetDbContext(qySource.Provider);
             
             if(dbContext != null) {
                 return new EF6Regime(dbContext);
-
-                //return _dRegimeCache.GetOrAdd(
-                //                        dbContext.GetType(),
-                //                        _ => new EF6Regime(dbContext));
             }
 
             return null;

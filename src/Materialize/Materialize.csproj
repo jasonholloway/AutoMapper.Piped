@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Materialize.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Materialize.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -46,6 +48,7 @@
     <Compile Include="Expressions\ExpressionExtensions.cs" />
     <Compile Include="Expressions\ExpressionHasher.cs" />
     <Compile Include="Exceptions.cs" />
+    <Compile Include="Reify\IReifyStrategy.cs" />
     <Compile Include="Reify\Mapping\Collections\CollectionStrategyBase.cs" />
     <Compile Include="Reify\Mapping\PropertyMaps\PropMapStrategyBase.cs" />
     <Compile Include="Reify\Parsing\CacheableQueryComparer.cs" />
@@ -64,6 +67,8 @@
     <Compile Include="Reify\Rebasing\StrategizerParts\Methods\EnumerableCount.cs" />
     <Compile Include="Reify\Rebasing\StrategizerParts\Methods\EnumerableWhere.cs" />
     <Compile Include="Reify\Rebasing\StrategizerParts\Methods\QueryableWhere.cs" />
+    <Compile Include="Reify\ReifyContext.cs" />
+    <Compile Include="Reify\ReifyStrategy.cs" />
     <Compile Include="SourceRegimes\ISourceRegimeProvider.cs" />
     <Compile Include="Types\EnumerableMethods.cs" />
     <Compile Include="Types\QueryableMethods.cs" />

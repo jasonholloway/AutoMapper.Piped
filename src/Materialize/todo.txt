@@ -1,6 +1,25 @@
 ﻿
 TO DO! ********************************************
 
+> Config class should be passed to MapAs (swallowing ISnooper reference). This would however affect strategy cache.
+	So... strategy cache must be keyed on config class too.
+
+	This will allow LinqPad, despite being external, to control strategization fully.
+
+
+> And of course, config values should be consolidated from static + per query config.
+	resolved config class will then affect cache, etc.
+
+	should also be able to specify TypeMaps 
+
+	
+	
+	
+	
+
+
+
+
 > before-and-after hooks should only apply after all filtering done.
 
 

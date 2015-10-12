@@ -22,6 +22,7 @@ namespace Materialize
             
             if(snooper != null) {
                 reifiable.QueryFromClient += new EventHandler<Expression>((o, ex) => snooper.OnQueryFromClient(ex));
+                reifiable.Strategized += new EventHandler<IReifyStrategy>((o, s) => snooper.OnStrategized(s));
                 reifiable.QueryToServer += new EventHandler<IQueryable>((o, qy) => snooper.OnQueryToServer(qy));
                 reifiable.Fetched += new EventHandler<IEnumerable>((o, en) => snooper.OnFetched(en));
                 reifiable.Transformed += new EventHandler<IEnumerable>((o, en) => snooper.OnTransformed(en));
