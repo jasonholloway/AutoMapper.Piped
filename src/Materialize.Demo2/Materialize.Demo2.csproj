@@ -51,6 +51,10 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="HtmlTags, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlTags.3.0.0.186\lib\4.0\HtmlTags.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
       <Private>True</Private>
@@ -171,6 +175,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -235,6 +240,7 @@
     <Content Include="Mono.Linq.Expressions.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\CollapsibleLists.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />
     <Content Include="Scripts\jquery.signalR-2.2.0.js" />
@@ -249,18 +255,26 @@
     <Compile Include="Config\SignalRConfig.cs" />
     <Compile Include="Config\WebApiConfig.cs" />
     <Compile Include="Controllers\DogsController.cs" />
-    <Compile Include="Hubs\QueryInfoHub.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="DataStructures\Tree.cs" />
+    <Compile Include="DataStructures\TreeExtensions.cs" />
+    <Compile Include="DataStructures\TreeNode.cs" />
+    <Compile Include="SignalR\ReportHub.cs" />
     <Compile Include="NancyModules\MainModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QueryInfo\IQueryInfo.cs" />
-    <Compile Include="QueryInfo\QueryInfoSource.cs" />
-    <Compile Include="QueryInfo\QuerySnooper.cs" />
+    <Compile Include="QueryInfo\IDSource.cs" />
+    <Compile Include="QueryInfo\SnooperSource.cs" />
+    <Compile Include="QueryInfo\Snooper.cs" />
+    <Compile Include="Reporting\QueryReport.cs" />
+    <Compile Include="Reporting\ReportRegistry.cs" />
+    <Compile Include="Reporting\StrategyReport.cs" />
+    <Compile Include="Views\HtmlHelperExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include="Views\Index.cshtml" />
     <Content Include="Scripts\jquery-2.1.4.min.map" />
-    <Content Include="Views\QueryInfo.cshtml" />
+    <Content Include="Views\Report.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -275,10 +289,6 @@
     <ProjectReference Include="..\AutoMapper.Net4\AutoMapper.Net4.csproj">
       <Project>{8c955148-fa96-4f0d-880d-abb6770f54e9}</Project>
       <Name>AutoMapper.Net4</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Materialize.Demo\Materialize.Demo.csproj">
-      <Project>{94db1717-dc89-487f-816f-ce3a6e39dcb1}</Project>
-      <Name>Materialize.Demo</Name>
     </ProjectReference>
     <ProjectReference Include="..\Materialize.EF6\Materialize.EF6.csproj">
       <Project>{17079aef-66a9-49ab-8556-b753e170ef42}</Project>

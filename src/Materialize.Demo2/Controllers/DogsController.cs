@@ -24,17 +24,17 @@ namespace Materialize.Demo2.Controllers
 
 
         Context _ctx = new Context();
-        QueryInfoSource _queryInfoSource;
+        SnooperSource _snooperSource;
 
-        public DogsController(QueryInfoSource queryInfoSource) {
-            _queryInfoSource = queryInfoSource;
+        public DogsController(SnooperSource snooperSource) {
+            _snooperSource = snooperSource;
         }
 
 
         [EnableQuery]
         public IQueryable<DogAndOwnerModel> Get() 
         {
-            var snooper = _queryInfoSource.GetNewSnooper();
+            var snooper = _snooperSource.GetNewSnooper();
 
             return _ctx.Dogs.MapAs<DogAndOwnerModel>(snooper);
         }

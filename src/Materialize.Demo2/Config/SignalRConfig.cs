@@ -1,4 +1,4 @@
-﻿using Materialize.Demo2.Hubs;
+﻿using Materialize.Demo2.SignalR;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Ninject;
@@ -21,8 +21,8 @@ namespace Materialize.Demo2.Config
             kernel.Bind<IConnectionManager>()
                     .ToMethod(_ => new ConnectionManager(GlobalHost.DependencyResolver));
 
-            kernel.Bind<IHubContext<IQueryInfoHub>>()
-                    .ToMethod(_ => GlobalHost.ConnectionManager.GetHubContext<IQueryInfoHub>("QueryInfoHub"));
+            kernel.Bind<IHubContext<IReportHubClient>>()
+                    .ToMethod(_ => GlobalHost.ConnectionManager.GetHubContext<IReportHubClient>("ReportHub"));
 
 
             app.MapSignalR(new HubConfiguration() {

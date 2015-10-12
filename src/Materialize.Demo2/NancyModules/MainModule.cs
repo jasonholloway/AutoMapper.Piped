@@ -1,4 +1,4 @@
-﻿using Materialize.Demo2.QueryInfo;
+﻿using Materialize.Demo2.Reporting;
 using Nancy;
 using System;
 using System.Collections.Generic;
@@ -8,11 +8,14 @@ namespace Materialize.Demo2.NancyModules
 {
     public class MainModule : NancyModule
     {
-        public MainModule(QueryInfoSource queryInfoSource) 
+        public MainModule(ReportRegistry reportRegistry) 
         {
             Get[""] = _ => View["Index.cshtml"];
 
-            Get["/query/{id}"] = p => View["QueryInfo.cshtml", queryInfoSource.GetQueryInfo(p.id)];
+            Get[@"/report/(?<id>\d+)"] = p => {
+                var v = View["Report.cshtml", reportRegistry.GetReport(p.id)];
+                return v;
+            };
         }
     }
 }

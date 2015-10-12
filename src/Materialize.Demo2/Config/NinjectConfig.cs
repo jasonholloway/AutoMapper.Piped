@@ -1,4 +1,4 @@
-﻿using Materialize.Demo2.Hubs;
+﻿using Materialize.Demo2.SignalR;
 using Materialize.Demo2.QueryInfo;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Infrastructure;
@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using Materialize.Demo2.Reporting;
 
 namespace Materialize.Demo2.Config
 {
@@ -19,8 +20,12 @@ namespace Materialize.Demo2.Config
         public static void Register(IAppBuilder app) 
         {
             var kernel = new StandardKernel();
+        
+            kernel.Bind<SnooperSource>()
+                    .ToSelf()
+                    .InSingletonScope();
 
-            kernel.Bind<QueryInfoSource>()
+            kernel.Bind<ReportRegistry>()
                     .ToSelf()
                     .InSingletonScope();
 

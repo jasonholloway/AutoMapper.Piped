@@ -11,14 +11,20 @@
         <script type="text/javascript" src="~/signalr/hubs"></script>
 
         <script>       
-            var hubProxy = $.connection.queryInfoHub;
+            var hub = $.connection.reportHub;
 
-            hubProxy.client.announceNewQueryInfo = function (i) {
-                $('#info').load('/query/' + i);
+            hub.client.announceNewReport = function (i) {
+                //var report = hub.getReport(i);               
+                $('#report').load('/report/' + i, function () {
+                                                        CollapsibleLists.apply();
+                                                    });
+
+
+
             }
             
             $(document).ready(function () {
-                $('#info').html('BLAHBLAHBLAH');
+                $('#report').html('Waiting for OData requests...');
             });
             
             $.connection.hub.logging = true;
@@ -30,6 +36,6 @@
 
     </head>
     <body>
-        <div id="info">Baaaaa</div>
+        <div id="report">Baaaaa</div>
     </body>
 </html>

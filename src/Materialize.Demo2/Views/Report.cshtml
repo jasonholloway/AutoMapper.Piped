@@ -1,0 +1,41 @@
+﻿@using Materialize.Demo2.Reporting
+@using Materialize.Demo2.Views
+@using HtmlTags.Extended.TagBuilders
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<QueryReport>
+
+<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?skin=desert"></script>
+<script src="~/Scripts/CollapsibleLists.js"></script>
+<script src="~/Scripts/jquery-2.1.4.min.js"></script>
+
+<script>
+    //$(CollapsibleLists.apply);
+</script>
+
+<div>
+    <h2>ID: @Model.ReportID</h2>
+</div>
+
+<div>
+    <h2>Query from Client</h2>
+    <pre class="prettyprint language-cs">@Model.QueryFromClient</pre>
+</div>
+
+<div>
+    <h2>IReifyStrategy Tree</h2>
+    @Html.TreeList(
+            Model.StrategyTree,
+            (s, tag) => tag.Append("h4", t => t.Text(s.Name)).Span(t => t.Text(s.Description))
+        ).AddClass("collapsibleList").Id("strategyTree").ToNancyHtmlString()
+</div>
+
+<div>
+    <h2>Query to Server</h2>
+    <pre class="prettyprint language-cs">@Model.QueryToServer</pre>
+</div>
+
+<div>
+    <h2>Strategy Cache</h2>
+    <ul>
+        ...
+    </ul>
+</div>

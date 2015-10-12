@@ -23,12 +23,14 @@ namespace Materialize.Demo2
             builder.EntitySet<DogAndOwnerModel>("Dogs"); //.EntityType.HasKey(o => o.Name);
 
             //builder.EntitySet<PersonWithPetsModel>("People");
+            
+            config.MapHttpAttributeRoutes();
 
             config.MapODataServiceRoute(
                         "OData",
                         "odata",
                         builder.GetEdmModel());
-                        
+            
             app.UseNinjectWebApi(config);
         }
 
