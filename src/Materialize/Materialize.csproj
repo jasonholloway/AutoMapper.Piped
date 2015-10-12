@@ -43,7 +43,7 @@
   <ItemGroup>
     <Compile Include="CollectionFactories\CollectionFactorySource.cs" />
     <Compile Include="CollectionFactories\ICollectionFactorySource.cs" />
-    <Compile Include="Config.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="Expressions\CustomExpressionVisitor.cs" />
     <Compile Include="Expressions\ExpressionExtensions.cs" />
     <Compile Include="Expressions\ExpressionHasher.cs" />

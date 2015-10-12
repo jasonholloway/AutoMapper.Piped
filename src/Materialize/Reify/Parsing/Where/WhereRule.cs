@@ -12,14 +12,9 @@ namespace Materialize.Reify.Parsing.Where
 {
     class WhereRule : QueryableMethodRule
     {
-        Config _config;
-
-
-        public WhereRule(IParseStrategySource strategySource, Config config)
-            : base(strategySource) 
-        {
-            _config = config;
-        }
+        
+        public WhereRule(IParseStrategySource strategySource)
+            : base(strategySource) { }
                 
 
         public override IParseStrategy GetStrategy(ParseContext ctx) 
@@ -47,7 +42,7 @@ namespace Materialize.Reify.Parsing.Where
                                     predRebaseStrategy);                        
                 }
 
-                if(_config.AllowClientSideFiltering) {
+                if(ctx.ReifyContext.AllowClientSideFiltering) {
                     return CreateStrategy(
                                     typeof(ClientOnlyWhereStrategy<>)
                                                         .MakeGenericType(tElem),
