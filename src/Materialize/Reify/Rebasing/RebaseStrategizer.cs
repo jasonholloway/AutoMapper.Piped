@@ -43,8 +43,8 @@ namespace Materialize.Reify.Rebasing
             
                     
 
-        public IRebaseStrategy Strategize(Expression exSubject) {
-            return Visit(exSubject);
+        public IRebaseStrategy Strategize(Expression exRebaseSubject) {
+            return Visit(exRebaseSubject);
         }
 
 

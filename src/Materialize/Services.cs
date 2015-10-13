@@ -60,7 +60,7 @@ namespace Materialize
             
             x.Register<ReifiableFactory>();
 
-            x.Register(new Options() {
+            x.Register(new MaterializeOptions() {
                                 AllowClientSideFiltering = false,
                                 MappingEngine = AutoMapper.Mapper.Engine
                             });

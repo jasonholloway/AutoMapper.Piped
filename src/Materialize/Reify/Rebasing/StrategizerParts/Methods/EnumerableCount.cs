@@ -8,6 +8,7 @@ namespace Materialize.Reify.Rebasing
 {
     partial class RebaseStrategizer
     {
+        [Obsolete]
         IRebaseStrategy EnumerableCount(MethodCallExpression exCall) 
         {
             var upstreamStrategy = Visit(exCall.Arguments[0]);

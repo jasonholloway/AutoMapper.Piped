@@ -51,11 +51,11 @@ namespace Materialize.Tests.Infrastructure
 
 
         public static void AllowClientSideFiltering(this IServiceRegistry x) {
-            x.Resolve<Config>().AllowClientSideFiltering = true;
+            x.Resolve<MaterializeOptions>().AllowClientSideFiltering = true;
         }
 
         public static void ForbidClientSideFiltering(this IServiceRegistry x) {
-            x.Resolve<Config>().AllowClientSideFiltering = false;
+            x.Resolve<MaterializeOptions>().AllowClientSideFiltering = false;
         }
                
 

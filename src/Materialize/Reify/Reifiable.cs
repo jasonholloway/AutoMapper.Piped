@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using Materialize.Reify.Mapping;
-using Materialize.Reify.Parsing;
+﻿using Materialize.Reify.Parsing;
 using Materialize.SourceRegimes;
 using Materialize.Types;
 using System;
@@ -31,7 +29,7 @@ namespace Materialize.Reify
 
         ISourceRegimeProvider _regimeSource;
         ParserFactory _parserFac;
-        Options _options;
+        MaterializeOptions _options;
         
 
         public IQueryable<TSource> SourceQuery { get; private set; }
@@ -42,7 +40,7 @@ namespace Materialize.Reify
             IQueryable<TSource> sourceQuery, 
             ISourceRegimeProvider regimeSource,
             ParserFactory parserFac,
-            Options options)
+            MaterializeOptions options)
         {
             SourceQuery = sourceQuery;
 

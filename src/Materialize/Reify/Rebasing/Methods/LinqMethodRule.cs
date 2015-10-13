@@ -103,10 +103,6 @@ namespace Materialize.Reify.Rebasing.Methods
                                         Expression.Parameter(RebasedElemType));
                 
                 var rootStrategy = UpstreamStrategy.GetRootStrategy(roots);
-
-                if(rootStrategy == null) {
-                    throw new UnableToRebaseException("Can't get RebaseStrategy for specified roots!");
-                }
                 
                 var bodyStrategizer = SpawnNestedStrategizer(x => {
                     x.AddRootStrategy(roots.OrigRoot, rootStrategy);

@@ -15,11 +15,19 @@ namespace Materialize
     }
 
 
-    public class UnableToRebaseException : MaterializationException
+    public class RebaseException : MaterializationException
     {
-        public UnableToRebaseException(string message)
+        public RebaseException(string message)
             : base(message) { }
     }
 
+    public class RebaseRootException : RebaseException
+    {
+        public RebaseRootException(string message)
+            : base(message) { }
+
+        public RebaseRootException(string pattern, params object[] args)
+            : this(string.Format(pattern, args)) { }
+    }
 
 }

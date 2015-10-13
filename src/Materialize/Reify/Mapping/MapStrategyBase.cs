@@ -33,10 +33,13 @@ namespace Materialize.Reify.Mapping
                  
 
         public virtual IRebaseStrategy GetRootRebaseStrategy(RootVector roots) {
-            return null; // throw new NotImplementedException(); //should return null or throw more precisely-typed exception...
+            throw new RebaseRootException(
+                            "{0} can't supply IRebaseStrategy for root vector ({1} -> {2})!", 
+                            this.GetType().GetNiceName(),
+                            roots.OrigRoot.Type.GetNiceName(),
+                            roots.RebasedRoot.Type.GetNiceName());
         }
             
-
     }
 
 }

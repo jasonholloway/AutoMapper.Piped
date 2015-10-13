@@ -8,9 +8,7 @@ using System.Reflection;
 
 namespace Materialize.Reify.Mapping.PropertyMaps
 {
-    /// <summary>
-    /// Mostly here to handle rebasing in common
-    /// </summary>
+
     abstract class PropMapStrategyBase<TOrig, TDest>
         : MapStrategyBase<TOrig, TDest>
     {
@@ -47,7 +45,8 @@ namespace Materialize.Reify.Mapping.PropertyMaps
 
             public PropMapRootRebaseStrategy(
                 PropMapStrategyBase<TOrig, TDest> mapStrategy,
-                RootVector roots) {
+                RootVector roots) 
+            {
                 _mapStrategy = mapStrategy;
                 _roots = roots;
 
@@ -64,11 +63,13 @@ namespace Materialize.Reify.Mapping.PropertyMaps
                 return _roots.RebasedRoot;
             }
 
-            public override IRebaseStrategy Expand(Expression exSubject) {
+            public override IRebaseStrategy Expand(Expression exSubject) 
+            {
                 var exMember = exSubject as MemberExpression;
 
                 if(exMember != null
-                    && exMember.Expression == _roots.OrigRoot) {
+                    && exMember.Expression == _roots.OrigRoot) 
+                {
                     PropMapSpec propSpec;
 
                     if(_dPropSpecsByDestMember.TryGetValue(exMember.Member, out propSpec)) {

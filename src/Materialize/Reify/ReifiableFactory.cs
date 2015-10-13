@@ -11,12 +11,12 @@ namespace Materialize.Reify
     {
         ISourceRegimeProvider _regimeSource;
         ParserFactory _parserFac;
-        Options _baseOptions;
+        MaterializeOptions _baseOptions;
 
         public ReifiableFactory(
             ISourceRegimeProvider regimeSource,
             ParserFactory parserFac,
-            Options baseOptions) 
+            MaterializeOptions baseOptions) 
         {
             _regimeSource = regimeSource;
             _parserFac = parserFac;
@@ -24,7 +24,7 @@ namespace Materialize.Reify
         }
 
 
-        public IReifiable<TDest> CreateReifiable<TDest>(IQueryable qySource, Options options) 
+        public IReifiable<TDest> CreateReifiable<TDest>(IQueryable qySource, MaterializeOptions options) 
         {
             var tOrigElem = qySource.ElementType;
             var tDestElem = typeof(TDest);

@@ -43,7 +43,7 @@
   <ItemGroup>
     <Compile Include="CollectionFactories\CollectionFactorySource.cs" />
     <Compile Include="CollectionFactories\ICollectionFactorySource.cs" />
-    <Compile Include="Options.cs" />
+    <Compile Include="MaterializeOptions.cs" />
     <Compile Include="Expressions\CustomExpressionVisitor.cs" />
     <Compile Include="Expressions\ExpressionExtensions.cs" />
     <Compile Include="Expressions\ExpressionHasher.cs" />
@@ -63,6 +63,7 @@
     <Compile Include="Reify\Rebasing\Methods\Rules\EnumerableUnary.cs" />
     <Compile Include="Reify\Rebasing\Methods\Rules\EnumerablePredicator.cs" />
     <Compile Include="Reify\Rebasing\Methods\Rules\QueryableWhere.cs" />
+    <Compile Include="Reify\Rebasing\RebaseStrategy.cs" />
     <Compile Include="Reify\Rebasing\StrategizerParts\Methods\EnumerableAny.cs" />
     <Compile Include="Reify\Rebasing\StrategizerParts\Methods\EnumerableCount.cs" />
     <Compile Include="Reify\Rebasing\StrategizerParts\Methods\EnumerableWhere.cs" />
@@ -110,7 +111,6 @@
     <Compile Include="Reify\Rebasing\IRebaseStrategy.cs" />
     <Compile Include="Reify\Rebasing\PassiveRebaseStrategy.cs" />
     <Compile Include="Reify\Rebasing\RebaseSubject.cs" />
-    <Compile Include="Reify\Rebasing\RebaseStrategy.cs" />
     <Compile Include="Reify\Rebasing\RootRebaseStrategy.cs" />
     <Compile Include="Reify\Rebasing\RootVector.cs" />
     <Compile Include="Reify\Rebasing\StrategizerParts\Constant.cs" />
@@ -172,6 +172,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Reify\Rebasing\about.txt" />
     <Content Include="todo.txt" />
   </ItemGroup>
   <ItemGroup />

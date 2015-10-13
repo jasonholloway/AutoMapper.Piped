@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using Materialize.Expressions;
+using Materialize.Reify.Rebasing;
 
 namespace Materialize.Reify.Mapping.Translation
 {
@@ -46,6 +47,22 @@ namespace Materialize.Reify.Mapping.Translation
                 //nothing to do here, as server-side projection should give us correct type
                 return obj;
             }
+        }
+
+        
+        public override IRebaseStrategy GetRootRebaseStrategy(RootVector roots) 
+        {
+            //generally shouldn't be able to rebase.
+
+            //only if very simple, reversible projection.
+
+            //should however return much better errors...
+
+
+
+            return base.GetRootRebaseStrategy(roots);
+                                  
+            //return new RootRebaseStrategy<TDest, TOrig>(ex => roots.RebasedRoot);
         }
 
 

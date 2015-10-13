@@ -8,7 +8,7 @@ using AutoMapper;
 
 namespace Materialize
 {
-    public class Options
+    public class MaterializeOptions
     {
         /// <summary>
         /// Emplaces a user-defined source regime, overriding the usual detection process
@@ -22,8 +22,9 @@ namespace Materialize
         public bool? AllowClientSideFiltering { get; set; }
 
 
-        internal Options MergeWith(Options baseOptions) {
-            return new Options() {
+        internal MaterializeOptions MergeWith(MaterializeOptions baseOptions) 
+        {
+            return new MaterializeOptions() {
                 SourceRegime = SourceRegime ?? baseOptions.SourceRegime,
                 MappingEngine = MappingEngine ?? baseOptions.MappingEngine,
                 Snooper = Snooper ?? baseOptions.Snooper,

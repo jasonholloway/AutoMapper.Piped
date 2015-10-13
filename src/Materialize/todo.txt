@@ -1,17 +1,25 @@
 ﻿
 TO DO! ********************************************
 
-> Config class should be passed to MapAs (swallowing ISnooper reference). This would however affect strategy cache.
-	So... strategy cache must be keyed on config class too.
 
-	This will allow LinqPad, despite being external, to control strategization fully.
+***************************************************************************
+> A REBASER CLASS PLEASE!
+	Will take an expression and an outer IParseStrategy.
+	It will handle expressions, so that individual layers don't have to.
+****************************************************************************
 
 
-> And of course, config values should be consolidated from static + per query config.
-	resolved config class will then affect cache, etc.
+> Rebasing should be done by some kind of visitor...
 
-	should also be able to specify TypeMaps 
+	but rebasing is done differently by mapping and parsing. Parsing rebases; mapping supplies root strategies.
 
+	And anyway, we already have a visitor: RebaseStrategizer (should be rebase visitor i reckon)
+	
+	And so, RebaseStrategizer should handle exceptions. Although, as part of that, root strategies are supplied by the mapping hierarchy.
+
+	The serving of root strategy is highly coupled with each strategy's innards, and so would seem to belong to each each class individually.
+	
+	
 	
 	
 	

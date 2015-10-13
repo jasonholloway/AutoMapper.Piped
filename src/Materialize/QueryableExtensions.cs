@@ -10,10 +10,10 @@ namespace Materialize
     {
 
         public static IQueryable<TDest> MapAs<TDest>(this IQueryable source) {
-            return source.MapAs<TDest>(new Options());
+            return source.MapAs<TDest>(new MaterializeOptions());
         }
 
-        public static IQueryable<TDest> MapAs<TDest>(this IQueryable source, Options options) 
+        public static IQueryable<TDest> MapAs<TDest>(this IQueryable source, MaterializeOptions options) 
         {
             var reifiableFac = MaterializeServices.Resolve<ReifiableFactory>();
 
@@ -27,7 +27,7 @@ namespace Materialize
 
         public static IQueryable<TDest> MapAs<TDest>(this IQueryable source, ISnooper snooper) 
         {
-            return source.MapAs<TDest>(new Options() {
+            return source.MapAs<TDest>(new MaterializeOptions() {
                                                 Snooper = snooper
                                                 });
             
