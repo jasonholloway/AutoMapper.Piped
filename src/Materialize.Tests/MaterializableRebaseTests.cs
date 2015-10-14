@@ -57,12 +57,19 @@ namespace Materialize.Tests
                 x.ForbidClientSideFiltering();
             });
 
-            Assert.Throws<MaterializationException>(() => {
+            Assert.Throws<RebaseException>(() => {
                 Dogs.MapAs<DogModel>()
-                        .Where(m => m.Name == "Rex")
-                        .First();
+                        .Where(m => m.Name == "Rex")                //currently failing cos server rejections handled differently (which is wrong)
+                        .ToArray();                                 //if an exception was raised by the mapstrtaegy, all would be fine here...
             });
         }
+
+
+        //fixing the above requires the server test to return an exception... which seems wrong, to be honest
+        //exceptions not as messangers, please.  
+
+
+
 
 
         [Fact]

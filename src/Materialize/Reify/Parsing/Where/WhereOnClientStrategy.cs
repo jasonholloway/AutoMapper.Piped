@@ -6,11 +6,11 @@ using System.Reflection;
 
 namespace Materialize.Reify.Parsing.Where
 {
-    class ClientOnlyWhereStrategy<TElem> 
+    class WhereOnClientStrategy<TElem> 
         : QueryableMethodStrategy<IEnumerable<TElem>, IEnumerable<TElem>>
     {
         
-        public ClientOnlyWhereStrategy(IParseStrategy upstreamStrategy)
+        public WhereOnClientStrategy(IParseStrategy upstreamStrategy)
             : base(upstreamStrategy) { }
                
 

@@ -9,6 +9,10 @@ namespace Materialize
         public MaterializationException(string message)
             : base(message) { }
 
+        public MaterializationException(string format, params object[] args)
+            : base(string.Format(format, args)) { }
+
+
         public MaterializationException(string message, Exception innerException) 
             : base(message, innerException) { }
         
@@ -19,6 +23,10 @@ namespace Materialize
     {
         public RebaseException(string message)
             : base(message) { }
+
+        public RebaseException(string message, Exception innerException)
+            : base(message, innerException) { }
+
     }
 
     public class RebaseRootException : RebaseException
