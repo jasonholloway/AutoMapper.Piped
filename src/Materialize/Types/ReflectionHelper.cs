@@ -55,6 +55,8 @@ namespace Materialize.Types
         public static MethodInfo GetGenMethod<TInst>(Expression<Action<TInst>> exAction) {
             return GetMethod(exAction).GetGenericMethodDefinition();
         }
+        
+
 
     }
 }

@@ -1,24 +1,62 @@
-﻿using System;
+﻿using Materialize.Reify.Parsing.Methods.Filters;
+using Materialize.Reify.Parsing.Methods.Partitioners;
+using Materialize.Reify.Parsing.Methods.Unaries;
+using Materialize.Types;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Materialize.Reify.Parsing.Methods
 {
-    abstract class MethodRule : ParseRule
+    class MethodRule : ParseRule
     {
+
+        delegate IMethodStrategizer MethodStrategizerFac(ParseContext ctx);
+
+        static IDictionary<MethodInfo, MethodStrategizerFac> _dStrategizerFacs
+            = new Dictionary<MethodInfo, MethodStrategizerFac>() {
+                { QueryableMethods.Skip, _ => new SimplePartitionerStrategizer() },
+                { QueryableMethods.Take, _ => new SimplePartitionerStrategizer() },
+                { QueryableMethods.Where, _ => new WhereStrategizer() },
+                { QueryableMethods.First, _ => new SimpleUnaryStrategizer() },
+                { QueryableMethods.Single, _ => new SimpleUnaryStrategizer() },
+                { QueryableMethods.Last, _ => new SimpleUnaryStrategizer() }
+            };
+
+
+        
+
         IParseStrategySource _parseStrategies;
+
 
         public MethodRule(IParseStrategySource parseStrategies) {
             _parseStrategies = parseStrategies;
         }
+                
 
-        protected IParseStrategy GetUpstreamStrategy(ParseContext ctx) 
+        public override IParseStrategy GetStrategy(ParseContext ctx) 
         {
-            var exUpstreamSubject = ctx.CallExp.Arguments.First();
-            var upstreamContext = ctx.Spawn(exUpstreamSubject);
+            MethodStrategizerFac fnMethodStrategizer = null;
 
-            return _parseStrategies.GetStrategy(upstreamContext);
+            if(_dStrategizerFacs.TryGetValue(ctx.MethodDef, out fnMethodStrategizer)) 
+            {
+                var strategizer = fnMethodStrategizer(ctx);
+
+                strategizer.Context = ctx;
+                strategizer.ParseStrategySource = _parseStrategies;
+
+                return strategizer.Strategize();
+            }
+            
+            throw new ParseException(
+                            "Can't find IMethodStrategizer factory for {0}", 
+                            ctx.MethodDef.GetNiceName());
         }
+
+
+
+
 
     }
 }

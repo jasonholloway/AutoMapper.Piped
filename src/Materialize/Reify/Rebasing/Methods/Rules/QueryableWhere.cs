@@ -9,7 +9,7 @@ namespace Materialize.Reify.Rebasing.Methods.Rules
     class QueryableWhereRule : LinqMethodRule
     {        
         public QueryableWhereRule() 
-            : base(new[] { QueryableMethods.WhereDef }) 
+            : base(new[] { QueryableMethods.Where }) 
             { }
         
 
@@ -20,7 +20,7 @@ namespace Materialize.Reify.Rebasing.Methods.Rules
             var exPred = GetPredicate(ctx.CallExp); 
             var predStrategy = ctx.StrategizePredicate(exPred);
 
-            var mRebasedWhere = QueryableMethods.WhereDef
+            var mRebasedWhere = QueryableMethods.Where
                                                     .MakeGenericMethod(ctx.RebasedElemType);
 
             return RootedStrategy(

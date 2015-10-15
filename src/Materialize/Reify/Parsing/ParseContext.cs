@@ -25,7 +25,7 @@ namespace Materialize.Reify.Parsing
         public readonly MethodCallExpression CallExp;
         public readonly MethodInfo Method;
         public readonly MethodInfo MethodDef;
-        public readonly Type[] TypeArgs;
+        public readonly Type[] MethodTypeArgs;
                 
         public bool IsMappingBase {
             get { return SubjectExp == BaseExp; }
@@ -48,11 +48,11 @@ namespace Materialize.Reify.Parsing
 
             if(Method != null && Method.IsGenericMethod) {
                 MethodDef = Method.GetGenericMethodDefinition();
-                TypeArgs = Method.GetGenericArguments();
+                MethodTypeArgs = Method.GetGenericArguments();
             }
             else {
                 MethodDef = null;
-                TypeArgs = Type.EmptyTypes;
+                MethodTypeArgs = Type.EmptyTypes;
             }
         }
         

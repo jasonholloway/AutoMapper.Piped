@@ -51,13 +51,18 @@
     <Compile Include="Reify\IReifyStrategy.cs" />
     <Compile Include="Reify\Mapping\Collections\CollectionStrategyBase.cs" />
     <Compile Include="Reify\Mapping\PropertyMaps\PropMapStrategyBase.cs" />
-    <Compile Include="Reify\Parsing\Methods\Aggregators\AggregatorRuleBase.cs" />
-    <Compile Include="Reify\Parsing\Methods\Aggregators\AggregatorRule.cs" />
+    <Compile Include="Reify\Parsing\Methods\Aggregators\CountParser.cs" />
     <Compile Include="Reify\Parsing\CacheableQueryComparer.cs" />
     <Compile Include="Expressions\ExpressionComparer.cs" />
     <Compile Include="Expressions\VoidExpressionVisitor.cs" />
     <Compile Include="Dependencies\LightInject\LightInject.cs" />
-    <Compile Include="Reify\Parsing\Methods\Filters\FilterRuleBase.cs" />
+    <Compile Include="Reify\Parsing\Methods\Filters\WhereParser.cs" />
+    <Compile Include="Reify\Parsing\Methods\Filters\FilterParserBase.cs" />
+    <Compile Include="Reify\Parsing\Methods\IMethodParser.cs" />
+    <Compile Include="Reify\Parsing\Methods\MethodParser.cs" />
+    <Compile Include="Reify\Parsing\Methods\Partitioners\PredicatedPartitionerParser.cs" />
+    <Compile Include="Reify\Parsing\Methods\Partitioners\SimplePartitionerParser.cs" />
+    <Compile Include="Reify\Parsing\Methods\Unaries\SimpleUnaryParser.cs" />
     <Compile Include="Reify\Rebasing\Methods\IMethodRebaseRule.cs" />
     <Compile Include="Reify\Rebasing\Methods\IParentRebaseStrategizer.cs" />
     <Compile Include="Reify\Rebasing\Methods\LinqMethodRule.cs" />
@@ -97,7 +102,6 @@
     <Compile Include="Reify\Parsing\ParseRuleRegistry.cs" />
     <Compile Include="Reify\Parsing\Parser.cs" />
     <Compile Include="Reify\Parsing\Methods\Partitioners\ServerSidePartitionerStrategy.cs" />
-    <Compile Include="Reify\Parsing\Methods\Partitioners\PartitionerRule.cs" />
     <Compile Include="Reify\Parsing\Methods\MethodRule.cs" />
     <Compile Include="Reify\Parsing\ParseModifier.cs" />
     <Compile Include="Reify\Parsing\ParseRule.cs" />
@@ -110,7 +114,6 @@
     <Compile Include="Reify\Parsing\Methods\Unaries\UnaryRule.cs" />
     <Compile Include="Reify\Parsing\Methods\Filters\WhereOnServerStrategy.cs" />
     <Compile Include="Reify\Parsing\Methods\Filters\WhereOnClientStrategy.cs" />
-    <Compile Include="Reify\Parsing\Methods\Filters\WhereRule.cs" />
     <Compile Include="Reify\Rebasing\IRebaseStrategy.cs" />
     <Compile Include="Reify\Rebasing\PassiveRebaseStrategy.cs" />
     <Compile Include="Reify\Rebasing\RebaseSubject.cs" />

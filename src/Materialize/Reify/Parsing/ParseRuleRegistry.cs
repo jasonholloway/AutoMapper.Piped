@@ -6,6 +6,7 @@ using Materialize.Reify.Parsing.Methods.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Materialize.Reify.Parsing.Methods;
 
 namespace Materialize.Reify.Parsing
 {
@@ -13,9 +14,10 @@ namespace Materialize.Reify.Parsing
     {
         static Type[] _ruleTypes = new[] {
                                         typeof(MapperRule), //should always be first
-                                        typeof(UnaryRule),
-                                        typeof(PartitionerRule),
-                                        typeof(WhereRule),
+                                        typeof(MethodRule)
+                                        //typeof(UnaryRule),
+                                        //typeof(PartitionerRule),
+                                        //typeof(WhereRule),
                                     };
 
 

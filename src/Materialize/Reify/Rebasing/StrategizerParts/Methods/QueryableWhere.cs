@@ -17,7 +17,7 @@ namespace Materialize.Reify.Rebasing
             var tRebasedElem = upstreamStrategy.TypeVector
                                                     .DestType.GetEnumerableElementType();
 
-            var mRebasedWhere = QueryableMethods.WhereDef
+            var mRebasedWhere = QueryableMethods.Where
                                                 .MakeGenericMethod(tRebasedElem);
 
 
