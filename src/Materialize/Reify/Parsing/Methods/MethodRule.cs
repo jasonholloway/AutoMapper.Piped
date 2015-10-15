@@ -27,10 +27,10 @@ namespace Materialize.Reify.Parsing.Methods
 
         
 
-        IParseStrategySource _parseStrategies;
+        ParseStrategySource _parseStrategies;
 
 
-        public MethodRule(IParseStrategySource parseStrategies) {
+        public MethodRule(ParseStrategySource parseStrategies) {
             _parseStrategies = parseStrategies;
         }
                 

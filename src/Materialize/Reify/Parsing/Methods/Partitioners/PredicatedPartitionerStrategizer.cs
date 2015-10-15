@@ -9,7 +9,7 @@ namespace Materialize.Reify.Parsing.Methods.Partitioners
 {
     //Skip and Take with predicates...
 
-    class PredicatedPartitionerParser : MethodStrategizer
+    class PredicatedPartitionerStrategizer : MethodStrategizer
     {        
         protected override IParseStrategy Strategize() 
         {            

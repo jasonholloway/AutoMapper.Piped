@@ -10,14 +10,11 @@ using Materialize.Reify.Parsing.Methods;
 
 namespace Materialize.Reify.Parsing
 {
-    class ParseRuleRegistry : IParseRuleRegistry
+    class ParseRuleRegistry
     {
         static Type[] _ruleTypes = new[] {
                                         typeof(MapperRule), //should always be first
                                         typeof(MethodRule)
-                                        //typeof(UnaryRule),
-                                        //typeof(PartitionerRule),
-                                        //typeof(WhereRule),
                                     };
 
 

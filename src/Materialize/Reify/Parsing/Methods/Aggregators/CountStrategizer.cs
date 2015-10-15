@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Materialize.Reify.Parsing.Methods.Aggregators
 {
-    abstract class CountParser : FilterParserBase
+    abstract class CountStrategizer : FilterStrategizerBase
     {
 
         protected override IParseStrategy Strategize() {

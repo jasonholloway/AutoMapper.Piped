@@ -13,12 +13,12 @@ namespace Materialize.Reify.Parsing
     {
         Expression _exBase;
         ReifyContext _reifyContext;
-        IParseStrategySource _parseStrategies;
+        ParseStrategySource _parseStrategies;
         
         public Parser(
             Expression exBase, 
             ReifyContext reifyContext,
-            IParseStrategySource parseStrategies) 
+            ParseStrategySource parseStrategies) 
         {
             _exBase = exBase;
             _reifyContext = reifyContext;

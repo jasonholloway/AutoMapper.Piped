@@ -25,7 +25,7 @@ namespace Materialize.Reify.Parsing.Methods
         }
 
 
-        public IParseStrategySource ParseStrategySource { get; set; }
+        public ParseStrategySource ParseStrategySource { get; set; }
         
         protected IParseStrategy UpstreamStrategy { get; private set; }
         protected MethodInfo MethodDef { get; private set; }

@@ -8,15 +8,15 @@ using System.Linq;
 
 namespace Materialize.Reify.Parsing
 {
-    class ParseStrategySource : IParseStrategySource
+    class ParseStrategySource
     {
-        IParseRuleRegistry _ruleRegistry;
+        ParseRuleRegistry _ruleRegistry;
 
         ConcurrentDictionary<ParseContext, IParseStrategy> _dStrategies
             = new ConcurrentDictionary<ParseContext, IParseStrategy>(ParseContextEqualityComparer.Default);
                 
 
-        public ParseStrategySource(IParseRuleRegistry ruleRegistry) {
+        public ParseStrategySource(ParseRuleRegistry ruleRegistry) {
             _ruleRegistry = ruleRegistry;
         }
 

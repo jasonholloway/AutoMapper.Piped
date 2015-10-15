@@ -9,7 +9,7 @@ namespace Materialize.Reify.Parsing.Methods
     interface IMethodStrategizer
     {
         ParseContext Context { set; }
-        IParseStrategySource ParseStrategySource { set; }
+        ParseStrategySource ParseStrategySource { set; }
 
         IParseStrategy Strategize();
     }

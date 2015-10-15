@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace Materialize.Reify.Parsing.Methods.Filters
 {
-    class WhereParser : FilterParserBase
+    class WhereStrategizer : FilterStrategizerBase
     {    
         protected override IParseStrategy Strategize() 
         {            

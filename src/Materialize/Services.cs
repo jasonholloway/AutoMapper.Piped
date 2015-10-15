@@ -54,8 +54,8 @@ namespace Materialize
             x.Register<IMapRuleRegistry, MapRuleRegistry>();
             x.Register<IMapStrategySource, MapStrategySource>();
 
-            x.Register<IParseStrategySource, ParseStrategySource>();
-            x.Register<IParseRuleRegistry, ParseRuleRegistry>();
+            x.Register<ParseStrategySource>();
+            x.Register<ParseRuleRegistry>();
             x.Register<ParserFactory>();
             
             x.Register<ReifiableFactory>();

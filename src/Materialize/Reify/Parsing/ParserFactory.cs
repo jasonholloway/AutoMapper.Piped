@@ -10,9 +10,9 @@ namespace Materialize.Reify.Parsing
 {
     class ParserFactory
     {
-        IParseStrategySource _parseStrategies;
+        ParseStrategySource _parseStrategies;
 
-        public ParserFactory(IParseStrategySource parseStrategies) {
+        public ParserFactory(ParseStrategySource parseStrategies) {
             _parseStrategies = parseStrategies;
         }
         

@@ -9,7 +9,7 @@ namespace Materialize.Reify.Parsing.Methods.Partitioners
 {
     //Simple Skip and Take...
 
-    class SimplePartitionerParser : MethodStrategizer
+    class SimplePartitionerStrategizer : MethodStrategizer
     {
 
         protected override IParseStrategy Strategize() 
