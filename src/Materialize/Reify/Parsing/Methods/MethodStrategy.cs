@@ -6,14 +6,14 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Materialize.Reify.Parsing
+namespace Materialize.Reify.Parsing.Methods
 {
     //Quietly does all the upstream-delegation-via-the-parser
 
-    abstract class QueryableMethodStrategy<TSource, TDest>
+    abstract class MethodStrategy<TSource, TDest>
         : ReifyStrategy, IParseStrategy
     {
-        public QueryableMethodStrategy(IParseStrategy upstreamStrategy) 
+        public MethodStrategy(IParseStrategy upstreamStrategy) 
         {
             SourceType = typeof(TSource);
             FetchType = typeof(TSource);

@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Materialize.Reify.Parsing.Unaries
+namespace Materialize.Reify.Parsing.Methods.Unaries
 {
-    class UnaryRule : QueryableMethodRule
+    class UnaryRule : MethodRule
     {
         static ISet<MethodInfo> _unaryMethods
             = new HashSet<MethodInfo>(new[] {

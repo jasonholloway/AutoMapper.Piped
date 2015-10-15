@@ -2,37 +2,26 @@
 TO DO! ********************************************
 
 
-***************************************************************************
-> A REBASER CLASS PLEASE!
-	Will take an expression and an outer IParseStrategy.
-	It will handle expressions, so that individual layers don't have to.
-****************************************************************************
+> Refactoring of parsing...
+	MethodParsers to be accessed by dictionary (cos we *always* key off methoddef...)
+	Each strategizer to be created as class: ie we key to factories
+	This will allow a hierarchy of shared functionality in the strategizers
 
 
-> Rebasing should be done by some kind of visitor...
-
-	but rebasing is done differently by mapping and parsing. Parsing rebases; mapping supplies root strategies.
-
-	And anyway, we already have a visitor: RebaseStrategizer (should be rebase visitor i reckon)
-	
-	And so, RebaseStrategizer should handle exceptions. Although, as part of that, root strategies are supplied by the mapping hierarchy.
-
-	The serving of root strategy is highly coupled with each strategy's innards, and so would seem to belong to each each class individually.
-	
-	
-	
-	
-	
-	
 
 
+
+
+
+> Split to new solution: AutoMapper.Piped
+	Problem of git history...
+	
+
+	
 
 
 > before-and-after hooks should only apply after all filtering done.
 
-
-> un-rebaseable predicates should either throw consistent exception
-  or cause all data to be brought forth first! - dependent on switch
 
 
 > Fancy demo project: OData! Info about each request...

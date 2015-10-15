@@ -5,19 +5,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Materialize.Reify.Parsing.Where
+namespace Materialize.Reify.Parsing.Methods.Filters
 {
     class WhereOnServerStrategy<TElem> 
-        : QueryableMethodStrategy<IEnumerable<TElem>, IEnumerable<TElem>>
+        : MethodStrategy<IEnumerable<TElem>, IEnumerable<TElem>>
     {
-        IRebaseStrategy _rebaseStrategy;
+        IRebaseStrategy _predRebaseStrategy;
 
         public WhereOnServerStrategy(
             IParseStrategy upstreamStrategy, 
-            IRebaseStrategy rebaseStrategy)
+            IRebaseStrategy predRebaseStrategy)
             : base(upstreamStrategy) 
         {
-            _rebaseStrategy = rebaseStrategy;
+            _predRebaseStrategy = predRebaseStrategy;
         }
                
 
@@ -33,7 +33,7 @@ namespace Materialize.Reify.Parsing.Where
                                                 Expression.Parameter(exSubject.Arguments[0].Type)
                                                 );
 
-            var exRebasedWhere = _rebaseStrategy.Rebase(exRebaseSubject);
+            var exRebasedWhere = _predRebaseStrategy.Rebase(exRebaseSubject);
 
             return new Modifier(upstreamMod, (MethodCallExpression)exRebasedWhere);
         }

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Materialize.EntityFramework6")]
+[assembly: AssemblyTitle("Materialize.Tests2")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Materialize.EntityFramework6")]
+[assembly: AssemblyProduct("Materialize.Tests2")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("17079aef-66a9-49ab-8556-b753e170ef42")]
+[assembly: Guid("1a4b6831-dce2-4a5f-a966-db3ee81400bc")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -35,7 +35,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
-[assembly: InternalsVisibleTo("Materialize.Tests")]
-[assembly: InternalsVisibleTo("Materialize.Tests2")]
-[assembly: InternalsVisibleTo("Materialize.Demo")]
 [assembly: InternalsVisibleTo("Materialize.Demo2")]

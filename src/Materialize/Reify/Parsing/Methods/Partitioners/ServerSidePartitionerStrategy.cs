@@ -6,17 +6,17 @@ using System.Reflection;
 using Materialize.Types;
 
 
-namespace Materialize.Reify.Parsing.Limiters
+namespace Materialize.Reify.Parsing.Methods.Partitioners
 {   
-    class ServerSideLimiterStrategy<TElem> 
-        : QueryableMethodStrategy<IEnumerable<TElem>, IEnumerable<TElem>>
+    class ServerSidePartitionerStrategy<TElem> 
+        : MethodStrategy<IEnumerable<TElem>, IEnumerable<TElem>>
     {
-        MethodInfo _mLimiterDef;
+        MethodInfo _mPartitionerDef;
 
-        public ServerSideLimiterStrategy(IParseStrategy upstreamStrategy, MethodInfo mLimiterDef)
+        public ServerSidePartitionerStrategy(IParseStrategy upstreamStrategy, MethodInfo mPartitionerDef)
             : base(upstreamStrategy) 
         {
-            _mLimiterDef = mLimiterDef;
+            _mPartitionerDef = mPartitionerDef;
         }
         
 
@@ -24,7 +24,7 @@ namespace Materialize.Reify.Parsing.Limiters
         {
             var count = (int)((ConstantExpression)ex.Arguments[1]).Value;
 
-            return new Modifier(upstreamMod, _mLimiterDef, count);
+            return new Modifier(upstreamMod, _mPartitionerDef, count);
         }
         
 

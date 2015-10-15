@@ -1,16 +1,16 @@
 ﻿using Materialize.Tests.Infrastructure;
+using NUnit.Framework;
 using Should;
-using Should.Core.Assertions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Xunit;
 
-namespace Materialize.Tests
-{    
-    class MaterializableQueryableMethodTests : TestClassBase
+namespace Materialize.Tests2
+{
+    [TestFixture]    
+    class ParsingMethods : TestClassBase
     {
-        public MaterializableQueryableMethodTests() 
+        public ParsingMethods() 
         {
             InitServices(x => x.EmplaceIntolerantSourceRegime());
 
@@ -39,7 +39,7 @@ namespace Materialize.Tests
 
 
 
-        [Fact]
+        [Test]
         public void First() {
             var first = Range(50, 100)
                             .First();
@@ -48,7 +48,7 @@ namespace Materialize.Tests
             Fetched.Count().ShouldEqual(1);     
         }
          
-        [Fact]
+        [Test]
         public void FirstThrows() {
             Assert.Throws<InvalidOperationException>(() => Range(199, 0).First());
         }
@@ -56,13 +56,13 @@ namespace Materialize.Tests
         
 
 
-        [Fact]
+        [Test]
         public void FirstOrDefault() {
             throw new NotImplementedException();
         }
 
 
-        [Fact]
+        [Test]
         public void Single() {
             var single = Range(10, 1)
                             .Single();
@@ -72,14 +72,14 @@ namespace Materialize.Tests
         }
 
 
-        [Fact]
+        [Test]
         public void SingleThrows() 
         {            
             Assert.Throws<InvalidOperationException>(() => Range(0, 10).Single());
         }
 
 
-        [Fact]
+        [Test]
         public void SingleOrDefault() 
         {
             var single = Range(1, 1)
@@ -91,7 +91,7 @@ namespace Materialize.Tests
 
 
 
-        [Fact]
+        [Test]
         public void SingleOrDefaultReturnsDefault() 
         {
             var result = Range(1, 0)
@@ -104,7 +104,7 @@ namespace Materialize.Tests
 
     
 
-        [Fact]
+        [Test]
         public void Last() {
             var last = Range(50, 100)
                             .Last();
@@ -113,18 +113,18 @@ namespace Materialize.Tests
             Fetched.Count().ShouldEqual(1);
         }
 
-        [Fact]
+        [Test]
         public void LastThrows() {
             Assert.Throws<InvalidOperationException>(() => Range(20, 0).Last());
         }
 
-        [Fact]
+        [Test]
         public void LastOrDefault() {
             throw new NotImplementedException();
         }
 
 
-        [Fact]
+        [Test]
         public void Take() 
         {
             var result = Range(100, 50)                            
@@ -142,7 +142,7 @@ namespace Materialize.Tests
                 
 
 
-        [Fact]
+        [Test]
         public void Skip() 
         {
             var result = Range(100, 50)
@@ -160,83 +160,16 @@ namespace Materialize.Tests
         }
 
 
-        [Fact]
+        [Test]
         public void Count() {
-            throw new NotImplementedException();
+            var count = Range(50, 100)
+                            .Count();
+
+            count.ShouldEqual(100);
         }
 
 
         
-
-        [Fact]
-        public void Where() {
-            InitServices(x => x.AllowClientSideFiltering());
-            
-            var result = Range(0, 50)
-                            .Where(s => s.Length == 1)
-                            .ToArray();
-
-            result.Length.ShouldEqual(10);
-
-            result.SequenceEqual(
-                            Enumerable.Range(0, 10).Select(i => i.ToString())
-                        ).ShouldBeTrue();            
-        }
-
-                       
-
-        [Fact]
-        public void WhereFirst() {
-            InitServices(x => x.EmplaceIntolerantSourceRegime());
-
-            InitMapper(x => {
-                x.CreateMap<int, float>()
-                    .ProjectUsing(i => 2F * i);
-            });
-            
-            var ints = Enumerable.Range(0, 100).AsQueryable();
-
-            var qyMapped = ints.MapAs<float>();
-
-            var taken = qyMapped.Where(f => f > 100F)
-                                .First();
-
-            taken.ShouldEqual(102F);
-
-            Assert.Throws<InvalidOperationException>(() => {
-                qyMapped.Where(f => false)
-                        .First();
-            });
-        }
-
-
-        [Fact]
-        public void WhereFirstOrDefault() {
-            InitServices(x => x.EmplaceIntolerantSourceRegime());
-
-            InitMapper(x => {
-                x.CreateMap<int, float>()
-                    .ProjectUsing(i => 2F * i);
-            });
-            
-            var ints = Enumerable.Range(0, 100).AsQueryable();
-
-            var qyMapped = ints.MapAs<float>();
-            
-            var result1 = qyMapped
-                            .Where(f => f > 100F)
-                            .FirstOrDefault();
-
-            result1.ShouldEqual(102F);
-
-
-            var result2 = qyMapped
-                            .Where(f => false)
-                            .FirstOrDefault();
-
-            result2.ShouldEqual(default(float));
-
-        }
 
 
 

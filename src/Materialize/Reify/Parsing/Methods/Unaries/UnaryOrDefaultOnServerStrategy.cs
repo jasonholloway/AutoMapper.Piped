@@ -6,10 +6,10 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 
-namespace Materialize.Reify.Parsing.Unaries
+namespace Materialize.Reify.Parsing.Methods.Unaries
 {
     class UnaryOrDefaultOnServerStrategy<TElem> 
-        : QueryableMethodStrategy<IEnumerable<TElem>, TElem>
+        : MethodStrategy<IEnumerable<TElem>, TElem>
     {
         MethodInfo _mUnaryDef;
 

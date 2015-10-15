@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Materialize.SourceRegimes;
+using Materialize.Types;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -32,7 +33,7 @@ namespace Materialize.Reify.Parsing
                 if(strategy != null) return strategy;
             }
 
-            throw new InvalidOperationException("No suitable IParseRule found!");
+            throw new ParseException("No accepting IParseRule found for method {0}!", ctx.Method.GetNiceName());
         }
                 
     }

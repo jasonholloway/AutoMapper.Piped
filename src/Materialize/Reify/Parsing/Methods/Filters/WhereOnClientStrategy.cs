@@ -4,10 +4,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Materialize.Reify.Parsing.Where
+namespace Materialize.Reify.Parsing.Methods.Filters
 {
     class WhereOnClientStrategy<TElem> 
-        : QueryableMethodStrategy<IEnumerable<TElem>, IEnumerable<TElem>>
+        : MethodStrategy<IEnumerable<TElem>, IEnumerable<TElem>>
     {
         
         public WhereOnClientStrategy(IParseStrategy upstreamStrategy)

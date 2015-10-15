@@ -4,15 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Materialize.Reify.Parsing.Limiters
+namespace Materialize.Reify.Parsing.Methods.Partitioners
 {
-    class LimiterRule : QueryableMethodRule
+    class PartitionerRule : MethodRule
     {
         static MethodInfo _mTakeGen = Refl.GetGenMethod(() => Queryable.Take<object>(null, 1));
         static MethodInfo _mSkipGen = Refl.GetGenMethod(() => Queryable.Skip<object>(null, 1));
         
 
-        public LimiterRule(IParseStrategySource parseStrategies)
+        public PartitionerRule(IParseStrategySource parseStrategies)
             : base(parseStrategies) { }
 
 
@@ -26,7 +26,7 @@ namespace Materialize.Reify.Parsing.Limiters
                 var upstreamStrategy = GetUpstreamStrategy(ctx);
 
                 return CreateStrategy(
-                                typeof(ServerSideLimiterStrategy<>).MakeGenericType(tElem),
+                                typeof(ServerSidePartitionerStrategy<>).MakeGenericType(tElem),
                                 upstreamStrategy,
                                 ctx.MethodDef);
             }

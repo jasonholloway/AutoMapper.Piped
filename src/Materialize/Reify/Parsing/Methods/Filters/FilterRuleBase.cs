@@ -5,14 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Materialize.Reify.Parsing
+namespace Materialize.Reify.Parsing.Methods.Filters
 {
-    abstract class QueryableMethodWithPredicateRule : QueryableMethodRule
+    abstract class FilterRuleBase : MethodRule
     {
-        public QueryableMethodWithPredicateRule(IParseStrategySource parseStrategies)
+        public FilterRuleBase(IParseStrategySource parseStrategies)
             : base(parseStrategies) { }
 
         
@@ -33,6 +31,14 @@ namespace Materialize.Reify.Parsing
                 public IRebaseStrategy RebaseStrategy;
                 public Exception Exception;
                 public bool RejectedByServer;
+
+                public bool Successful {
+                    get { return RebaseStrategy != null; }
+                }
+
+                public bool Errored {
+                    get { return Exception != null; }
+                }
             }
             
             
@@ -54,21 +60,20 @@ namespace Materialize.Reify.Parsing
                 bool serverAcceptible = TestAgainstServer(rebaseStrategy, rebaseSubject);
 
                 return new Result() {
-                            RebaseStrategy = rebaseStrategy,
+                            RebaseStrategy = serverAcceptible ? rebaseStrategy : null,
                             RejectedByServer = !serverAcceptible
                             };                
             }
-            
-                        
 
+
+
+            //to rebase, each predicate has to be packed within its own where clause,
+            //operating on IQueryable<TElem>. Only in this form can it be sent upstream to be rebased.  
             RebaseSubject GetRebaseSubject(LambdaExpression exPredLambda) 
             {   
                 var roots = new RootVector(
                                     Expression.Parameter(_upstreamStrategy.DestType, "enDest"),
                                     Expression.Parameter(_upstreamStrategy.SourceType, "enSource"));
-
-                //to rebase, each predicate has to be packed within its own where clause,
-                //operating on IQueryable<TElem>. Only in this form can it be sent upstream to be rebased.                               
 
                 var exSubject = Expression.Call(
                                             QueryableMethods.WhereDef.MakeGenericMethod(exPredLambda.Parameters.First().Type),
@@ -79,11 +84,11 @@ namespace Materialize.Reify.Parsing
             }
 
 
+            //to test, need to get example result, and package in lambda (can't pass unbound param)   
             bool TestAgainstServer(
                 IRebaseStrategy rebaseStrategy,
                 RebaseSubject subject) 
-            {
-                //to test, need to get example result, and package in lambda (can't pass unbound param)         
+            {      
                 var exTest = Expression.Lambda(
                                         rebaseStrategy.Rebase(subject.Expression),
                                         (ParameterExpression)subject.RootVectors[0].RebasedRoot);

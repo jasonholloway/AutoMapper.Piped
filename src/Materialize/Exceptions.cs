@@ -18,6 +18,21 @@ namespace Materialize
         
     }
 
+    public class ParseException : MaterializationException
+    {
+        public ParseException(string message)
+            : base(message) { }
+
+        public ParseException(string format, params object[] args)
+            : base(string.Format(format, args)) { }
+
+
+        public ParseException(string message, Exception innerException)
+            : base(message, innerException) { }
+
+    }
+
+
 
     public class RebaseException : MaterializationException
     {

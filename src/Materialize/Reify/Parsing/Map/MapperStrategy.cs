@@ -2,13 +2,11 @@
 using Materialize.Reify.Rebasing;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 
-namespace Materialize.Reify.Parsing.Mapper
+namespace Materialize.Reify.Parsing.Map
 {
     /// <summary>
     /// Wraps tree of MapStrategies into a ParseStrategy

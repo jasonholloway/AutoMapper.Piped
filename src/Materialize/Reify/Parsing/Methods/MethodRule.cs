@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Materialize.Reify.Parsing
+namespace Materialize.Reify.Parsing.Methods
 {
-    abstract class QueryableMethodRule : ParseRule
+    abstract class MethodRule : ParseRule
     {
         IParseStrategySource _parseStrategies;
 
-        public QueryableMethodRule(IParseStrategySource parseStrategies) {
+        public MethodRule(IParseStrategySource parseStrategies) {
             _parseStrategies = parseStrategies;
         }
 

@@ -1,8 +1,8 @@
 ﻿using Materialize.Dependencies;
-using Materialize.Reify.Parsing.Limiters;
-using Materialize.Reify.Parsing.Mapper;
-using Materialize.Reify.Parsing.Unaries;
-using Materialize.Reify.Parsing.Where;
+using Materialize.Reify.Parsing.Methods.Partitioners;
+using Materialize.Reify.Parsing.Map;
+using Materialize.Reify.Parsing.Methods.Unaries;
+using Materialize.Reify.Parsing.Methods.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,7 @@ namespace Materialize.Reify.Parsing
         static Type[] _ruleTypes = new[] {
                                         typeof(MapperRule), //should always be first
                                         typeof(UnaryRule),
-                                        typeof(LimiterRule),
+                                        typeof(PartitionerRule),
                                         typeof(WhereRule),
                                     };
 

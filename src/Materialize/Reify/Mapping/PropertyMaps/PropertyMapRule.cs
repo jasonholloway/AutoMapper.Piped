@@ -70,7 +70,7 @@ namespace Materialize.Reify.Mapping.PropertyMaps
 
         IMapStrategy DeduceStrategyForPropMap(MapContext ctx, PropertyMap map) 
         {
-            var tOrig = ((PropertyInfo)map.SourceMember).PropertyType;
+            var tOrig = map.SourceMember.GetMemberType();
             var tDest = map.DestinationPropertyType;
 
             return _mapStrategySource.GetStrategy(new MapContext(
