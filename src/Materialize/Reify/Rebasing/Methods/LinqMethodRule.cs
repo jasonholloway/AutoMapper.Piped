@@ -25,7 +25,7 @@ namespace Materialize.Reify.Rebasing.Methods
         
         IRebaseStrategy IMethodRebaseRule.CreateStrategy(
             MethodRebaseSubject ctx, 
-            IParentRebaseStrategizer parentStrategizer) 
+            IParentRebaser parentStrategizer) 
         {
             return CreateStrategy(new LinqMethodContext(ctx, parentStrategizer));
         }
@@ -67,11 +67,11 @@ namespace Materialize.Reify.Rebasing.Methods
                                     
             public readonly Type RebasedElemType;
 
-            IParentRebaseStrategizer _parentStrategizer;
+            IParentRebaser _parentStrategizer;
 
             public LinqMethodContext(
                 MethodRebaseSubject ctx,
-                IParentRebaseStrategizer parentStrategizer) 
+                IParentRebaser parentStrategizer) 
             {
                 _parentStrategizer = parentStrategizer;
                 
@@ -86,8 +86,8 @@ namespace Materialize.Reify.Rebasing.Methods
 
 
 
-            public RebaseStrategizer SpawnNestedStrategizer(Action<RebaseStrategizer.IRootStrategyRegistrar> fnRegistrar) {
-                return _parentStrategizer.SpawnNestedStrategizer(fnRegistrar);
+            public Rebaser SpawnNestedStrategizer(Action<Rebaser.IRootStrategyRegistrar> fnRegistrar) {
+                return _parentStrategizer.SpawnNestedVisitor(fnRegistrar);
             }
 
 
@@ -108,7 +108,7 @@ namespace Materialize.Reify.Rebasing.Methods
                     x.AddRootStrategy(roots.OrigRoot, rootStrategy);
                 });
 
-                var bodyStrategy = bodyStrategizer.Strategize(exPred.Body);
+                var bodyStrategy = bodyStrategizer.Rebase(exPred.Body);
                 var exRebasedParam = (ParameterExpression)roots.RebasedRoot;
 
                 TypeVector typeVector = new TypeVector(

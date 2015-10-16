@@ -9,7 +9,7 @@ using System.Reflection;
 namespace Materialize.Reify.Parsing.Methods.Unaries
 {
     class UnaryOnClientStrategy<TElem> 
-        : MethodStrategy<IEnumerable<TElem>, TElem>
+        : MethodStrategyBase<IEnumerable<TElem>, TElem>
     {
         static Dictionary<MethodInfo, MethodInfo> _dEnumerableMethodDefs
             = new Dictionary<MethodInfo, MethodInfo>() {

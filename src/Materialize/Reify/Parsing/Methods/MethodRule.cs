@@ -1,6 +1,8 @@
 ﻿using Materialize.Reify.Parsing.Methods.Filters;
 using Materialize.Reify.Parsing.Methods.Partitioners;
 using Materialize.Reify.Parsing.Methods.Unaries;
+using Materialize.Reify.Parsing.Methods.Quantifiers;
+using Materialize.Reify.Parsing.Methods.Aggregators;
 using Materialize.Types;
 using System;
 using System.Collections.Generic;
@@ -12,16 +14,20 @@ namespace Materialize.Reify.Parsing.Methods
     class MethodRule : ParseRule
     {
 
-        delegate IMethodStrategizer MethodStrategizerFac(ParseContext ctx);
+        delegate IMethodParser MethodParserFac(ParseContext ctx);
 
-        static IDictionary<MethodInfo, MethodStrategizerFac> _dStrategizerFacs
-            = new Dictionary<MethodInfo, MethodStrategizerFac>() {
-                { QueryableMethods.Skip, _ => new SimplePartitionerStrategizer() },
-                { QueryableMethods.Take, _ => new SimplePartitionerStrategizer() },
-                { QueryableMethods.Where, _ => new WhereStrategizer() },
-                { QueryableMethods.First, _ => new SimpleUnaryStrategizer() },
-                { QueryableMethods.Single, _ => new SimpleUnaryStrategizer() },
-                { QueryableMethods.Last, _ => new SimpleUnaryStrategizer() }
+        static IDictionary<MethodInfo, MethodParserFac> _dParserFacs
+            = new Dictionary<MethodInfo, MethodParserFac>() {
+                { QueryableMethods.Skip, _ => new PartitionerParser() },
+                { QueryableMethods.Take, _ => new PartitionerParser() },
+                { QueryableMethods.Where, _ => new WhereParser() },
+                { QueryableMethods.First, _ => new UnaryParser() },
+                { QueryableMethods.Single, _ => new UnaryParser() },
+                { QueryableMethods.Last, _ => new UnaryParser() },
+                { QueryableMethods.AnyPred, _ => new PredQuantifierParser() },
+                { QueryableMethods.All, _ => new PredQuantifierParser() },
+                { QueryableMethods.CountPred, _ => new PredCountParser() },
+                { QueryableMethods.Count, _ => new CountParser() }
             };
 
 
@@ -37,16 +43,16 @@ namespace Materialize.Reify.Parsing.Methods
 
         public override IParseStrategy GetStrategy(ParseContext ctx) 
         {
-            MethodStrategizerFac fnMethodStrategizer = null;
+            MethodParserFac fnParser = null;
 
-            if(_dStrategizerFacs.TryGetValue(ctx.MethodDef, out fnMethodStrategizer)) 
+            if(_dParserFacs.TryGetValue(ctx.MethodDef, out fnParser)) 
             {
-                var strategizer = fnMethodStrategizer(ctx);
+                var parser = fnParser(ctx);
 
-                strategizer.Context = ctx;
-                strategizer.ParseStrategySource = _parseStrategies;
+                parser.Context = ctx;
+                parser.ParseStrategySource = _parseStrategies;
 
-                return strategizer.Strategize();
+                return parser.Parse();
             }
             
             throw new ParseException(
@@ -54,9 +60,6 @@ namespace Materialize.Reify.Parsing.Methods
                             ctx.MethodDef.GetNiceName());
         }
 
-
-
-
-
+        
     }
 }

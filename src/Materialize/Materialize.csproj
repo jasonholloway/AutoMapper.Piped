@@ -51,31 +51,35 @@
     <Compile Include="Reify\IReifyStrategy.cs" />
     <Compile Include="Reify\Mapping\Collections\CollectionStrategyBase.cs" />
     <Compile Include="Reify\Mapping\PropertyMaps\PropMapStrategyBase.cs" />
-    <Compile Include="Reify\Parsing\Methods\Aggregators\CountStrategizer.cs" />
+    <Compile Include="Reify\Parsing\Methods\Aggregators\CountOnClientStrategy.cs" />
+    <Compile Include="Reify\Parsing\Methods\Aggregators\CountParser.cs" />
+    <Compile Include="Reify\Parsing\Methods\Aggregators\PredCountOnClientStrategy.cs" />
+    <Compile Include="Reify\Parsing\Methods\Aggregators\PredCountOnServerStrategy.cs" />
+    <Compile Include="Reify\Parsing\Methods\Aggregators\PredCountParser.cs" />
     <Compile Include="Reify\Parsing\CacheableQueryComparer.cs" />
     <Compile Include="Expressions\ExpressionComparer.cs" />
     <Compile Include="Expressions\VoidExpressionVisitor.cs" />
     <Compile Include="Dependencies\LightInject\LightInject.cs" />
-    <Compile Include="Reify\Parsing\Methods\Filters\WhereStrategizer.cs" />
-    <Compile Include="Reify\Parsing\Methods\Filters\FilterStrategizerBase.cs" />
-    <Compile Include="Reify\Parsing\Methods\IMethodStrategizer.cs" />
-    <Compile Include="Reify\Parsing\Methods\MethodStrategizer.cs" />
-    <Compile Include="Reify\Parsing\Methods\Partitioners\PredicatedPartitionerStrategizer.cs" />
-    <Compile Include="Reify\Parsing\Methods\Partitioners\SimplePartitionerStrategizer.cs" />
-    <Compile Include="Reify\Parsing\Methods\Unaries\SimpleUnaryStrategizer.cs" />
+    <Compile Include="Reify\Parsing\Methods\Aggregators\CountOnServerStrategy.cs" />
+    <Compile Include="Reify\Parsing\Methods\Filters\WhereParser.cs" />
+    <Compile Include="Reify\Parsing\Methods\Filters\FilterParserBase.cs" />
+    <Compile Include="Reify\Parsing\Methods\IMethodParser.cs" />
+    <Compile Include="Reify\Parsing\Methods\MethodParserBase.cs" />
+    <Compile Include="Reify\Parsing\Methods\Partitioners\PredPartitionerParser.cs" />
+    <Compile Include="Reify\Parsing\Methods\Partitioners\PartitionerParser.cs" />
+    <Compile Include="Reify\Parsing\Methods\Quantifiers\PredQuantifierParser.cs" />
+    <Compile Include="Reify\Parsing\Methods\Quantifiers\PredQuantifierOnServerStrategy.cs" />
+    <Compile Include="Reify\Parsing\Methods\Quantifiers\PredQuantifierOnClientStrategy.cs" />
+    <Compile Include="Reify\Parsing\Methods\Unaries\UnaryParser.cs" />
     <Compile Include="Reify\Rebasing\Methods\IMethodRebaseRule.cs" />
-    <Compile Include="Reify\Rebasing\Methods\IParentRebaseStrategizer.cs" />
+    <Compile Include="Reify\Rebasing\Methods\IParentRebaser.cs" />
     <Compile Include="Reify\Rebasing\Methods\LinqMethodRule.cs" />
-    <Compile Include="Reify\Rebasing\Methods\MethodRebaseStrategizer.cs" />
+    <Compile Include="Reify\Rebasing\Methods\MethodRebaser.cs" />
     <Compile Include="Reify\Rebasing\Methods\MethodRebaseSubject.cs" />
     <Compile Include="Reify\Rebasing\Methods\Rules\EnumerableUnary.cs" />
     <Compile Include="Reify\Rebasing\Methods\Rules\EnumerablePredicator.cs" />
-    <Compile Include="Reify\Rebasing\Methods\Rules\QueryableWhere.cs" />
+    <Compile Include="Reify\Rebasing\Methods\Rules\QueryablePredicator.cs" />
     <Compile Include="Reify\Rebasing\RebaseStrategy.cs" />
-    <Compile Include="Reify\Rebasing\StrategizerParts\Methods\EnumerableAny.cs" />
-    <Compile Include="Reify\Rebasing\StrategizerParts\Methods\EnumerableCount.cs" />
-    <Compile Include="Reify\Rebasing\StrategizerParts\Methods\EnumerableWhere.cs" />
-    <Compile Include="Reify\Rebasing\StrategizerParts\Methods\QueryableWhere.cs" />
     <Compile Include="Reify\ReifyContext.cs" />
     <Compile Include="Reify\ReifyStrategy.cs" />
     <Compile Include="SourceRegimes\ISourceRegimeProvider.cs" />
@@ -92,18 +96,18 @@
     <Compile Include="Reify\Mapping\IMapStrategySource.cs" />
     <Compile Include="Reify\Mapping\MapRuleBase.cs" />
     <Compile Include="Reify\Mapping\MapRuleRegistry.cs" />
-    <Compile Include="Reify\Parsing\Map\MapperRule.cs" />
-    <Compile Include="Reify\Parsing\Map\MapperStrategy.cs" />
+    <Compile Include="Reify\Parsing\Mapping\MapperRule.cs" />
+    <Compile Include="Reify\Parsing\Mapping\MapperStrategy.cs" />
     <Compile Include="Reify\Parsing\IParseRule.cs" />
     <Compile Include="Reify\Parsing\IParseStrategy.cs" />
     <Compile Include="Reify\Parsing\ParserFactory.cs" />
     <Compile Include="Reify\Parsing\ParseRuleRegistry.cs" />
     <Compile Include="Reify\Parsing\Parser.cs" />
-    <Compile Include="Reify\Parsing\Methods\Partitioners\ServerSidePartitionerStrategy.cs" />
+    <Compile Include="Reify\Parsing\Methods\Partitioners\PartitionerOnServerStrategy.cs" />
     <Compile Include="Reify\Parsing\Methods\MethodRule.cs" />
     <Compile Include="Reify\Parsing\ParseModifier.cs" />
     <Compile Include="Reify\Parsing\ParseRule.cs" />
-    <Compile Include="Reify\Parsing\Methods\MethodStrategy.cs" />
+    <Compile Include="Reify\Parsing\Methods\MethodStrategyBase.cs" />
     <Compile Include="Reify\Parsing\ParseStrategySource.cs" />
     <Compile Include="Reify\Parsing\ParseContext.cs" />
     <Compile Include="Reify\Parsing\Methods\Unaries\UnaryOnClientStrategy.cs" />
@@ -117,14 +121,14 @@
     <Compile Include="Reify\Rebasing\RebaseSubject.cs" />
     <Compile Include="Reify\Rebasing\RootRebaseStrategy.cs" />
     <Compile Include="Reify\Rebasing\RootVector.cs" />
-    <Compile Include="Reify\Rebasing\StrategizerParts\Constant.cs" />
-    <Compile Include="Reify\Rebasing\StrategizerParts\MemberAccess.cs" />
-    <Compile Include="Reify\Rebasing\StrategizerParts\Lambda.cs" />
-    <Compile Include="Reify\Rebasing\StrategizerParts\Unary.cs" />
-    <Compile Include="Reify\Rebasing\StrategizerParts\MethodCall.cs" />
-    <Compile Include="Reify\Rebasing\StrategizerParts\Binary.cs" />
-    <Compile Include="Reify\Rebasing\StrategizerParts\Parameter.cs" />
-    <Compile Include="Reify\Rebasing\RebaseStrategizer.cs" />
+    <Compile Include="Reify\Rebasing\RebaserParts\Constant.cs" />
+    <Compile Include="Reify\Rebasing\RebaserParts\MemberAccess.cs" />
+    <Compile Include="Reify\Rebasing\RebaserParts\Lambda.cs" />
+    <Compile Include="Reify\Rebasing\RebaserParts\Unary.cs" />
+    <Compile Include="Reify\Rebasing\RebaserParts\MethodCall.cs" />
+    <Compile Include="Reify\Rebasing\RebaserParts\Binary.cs" />
+    <Compile Include="Reify\Rebasing\RebaserParts\Parameter.cs" />
+    <Compile Include="Reify\Rebasing\Rebaser.cs" />
     <Compile Include="Reify\ReifiableFactory.cs" />
     <Compile Include="Dependencies\IServiceRegistry.cs" />
     <Compile Include="Dependencies\ServiceRegistry.cs" />
@@ -180,9 +184,7 @@
     <Content Include="Reify\Rebasing\about.txt" />
     <Content Include="todo.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Reify\Parsing\Methods\Quantifiers\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

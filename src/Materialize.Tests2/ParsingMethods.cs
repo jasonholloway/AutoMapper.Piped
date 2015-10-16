@@ -123,42 +123,7 @@ namespace Materialize.Tests2
             throw new NotImplementedException();
         }
 
-
-        [Test]
-        public void Take() 
-        {
-            var result = Range(100, 50)                            
-                            .Take(10)
-                            .ToArray();
-
-            Fetched.Count().ShouldEqual(result.Length);
-
-            result.Length.ShouldEqual(10);
-
-            result.SequenceEqual(
-                            Enumerable.Range(100, 10).Select(i => i.ToString())
-                        ).ShouldBeTrue();
-        }
-                
-
-
-        [Test]
-        public void Skip() 
-        {
-            var result = Range(100, 50)
-                            .Skip(10)
-                            .ToArray();
-
-
-            Fetched.Count().ShouldEqual(result.Length);
-
-            result.Length.ShouldEqual(40);
-
-            result.SequenceEqual(
-                            Enumerable.Range(110, 40).Select(i => i.ToString())
-                        ).ShouldBeTrue();
-        }
-
+        
 
         [Test]
         public void Count() {

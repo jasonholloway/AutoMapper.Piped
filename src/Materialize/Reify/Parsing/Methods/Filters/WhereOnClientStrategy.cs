@@ -7,7 +7,7 @@ using System.Reflection;
 namespace Materialize.Reify.Parsing.Methods.Filters
 {
     class WhereOnClientStrategy<TElem> 
-        : MethodStrategy<IEnumerable<TElem>, IEnumerable<TElem>>
+        : MethodStrategyBase<IEnumerable<TElem>, IEnumerable<TElem>>
     {
         
         public WhereOnClientStrategy(IParseStrategy upstreamStrategy)

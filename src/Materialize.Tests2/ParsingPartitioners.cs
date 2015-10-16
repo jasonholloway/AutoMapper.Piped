@@ -9,10 +9,10 @@ using System.Linq;
 namespace Materialize.Tests2
 {
     [TestFixture]    
-    class ParsingAggregators : TestClassBase
+    class ParsingPartitioners : TestClassBase
     {
-                
-        public ParsingAggregators() 
+        
+        public ParsingPartitioners() 
         {
             InitMapper(x => {
                 x.CreateMap<Source, Mapped>();
@@ -44,7 +44,7 @@ namespace Materialize.Tests2
             snooper.Fetched += (en => Fetched = en);
                         
             var ints = Enumerable.Range(start, count);
-            
+
             return ints.Select(i => new Source() { Value = i })
                             .AsQueryable()
                             .MapAs<Mapped>(snooper);
@@ -52,66 +52,64 @@ namespace Materialize.Tests2
 
 
 
-        
 
         [Test]
-        public void CountOnClient() {
-            InitServices(x => {
-                x.EmplaceIntolerantSourceRegime();
-                x.AllowClientSideFiltering();
-            });
-
-            var result = Range(0, 50)
-                            .Where(m => true)
-                            .Count();
-
-            Assert.That(result, Is.EqualTo(50));
-        }
-
-
-        [Test]
-        public void CountOnServer() {
+        public void TakeOnServer() {
             InitServices(x => {
                 x.EmplaceTolerantSourceRegime();
                 x.ForbidClientSideFiltering();
             });
 
-            var result = Range(0, 50)
-                            .Count();
+            var result = Range(100, 50)
+                            .Take(10)
+                            .ToArray();
 
-            Assert.That(result, Is.EqualTo(50));
+            Fetched.Count().ShouldEqual(result.Length);
+            
+            Assert.That(result.Select(m => m.Value), Is.EquivalentTo(Enumerable.Range(100, 10)));
         }
 
 
 
         [Test]
-        public void CountWithPredicateOnClient() {
-            InitServices(x => {
-                x.EmplaceIntolerantSourceRegime();
-                x.AllowClientSideFiltering();
-            }); 
-
-            var result = Range(0, 50)
-                            .Count(m => m.Value < 10);
-
-            Assert.That(result, Is.EqualTo(10));
-        }
-
-
-        [Test]
-        public void CountWithPredicateOnServer() {
+        public void SkipOnServer() {
             InitServices(x => {
                 x.EmplaceTolerantSourceRegime();
                 x.ForbidClientSideFiltering();
             });
 
-            var result = Range(0, 50)
-                            .Count(m => m.Value < 10);
-
-            Assert.That(result, Is.EqualTo(10));
+            var result = Range(100, 50)
+                            .Skip(10)
+                            .ToArray();
+            
+            Fetched.Count().ShouldEqual(result.Length);
+            
+            Assert.That(result.Select(m => m.Value), Is.EquivalentTo(Enumerable.Range(110, 40)));            
         }
 
-        
+
+
+        [Test]
+        public void TakeOnClient() {
+            InitServices(x => {
+                x.EmplaceIntolerantSourceRegime();
+                x.AllowClientSideFiltering();
+            });
+
+            throw new NotImplementedException();
+        }
+
+
+        [Test]
+        public void SkipOnClient() {
+            InitServices(x => {
+                x.EmplaceIntolerantSourceRegime();
+                x.AllowClientSideFiltering();
+            });
+
+            throw new NotImplementedException();
+        }
+                        
 
     }
 }

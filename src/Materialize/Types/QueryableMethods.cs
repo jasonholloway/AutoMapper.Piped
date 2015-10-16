@@ -30,5 +30,20 @@ namespace Materialize.Types
                                             () => Queryable.Last<object>(null));
 
 
+        public static MethodInfo All = Refl.GetGenMethod(
+                                            () => Queryable.All<object>(null, i => true));
+
+        public static MethodInfo AnyPred = Refl.GetGenMethod(
+                                            () => Queryable.Any<object>(null, i => true));
+
+
+
+        public static MethodInfo Count = Refl.GetGenMethod(
+                                            () => Queryable.Count<object>(null));
+
+        public static MethodInfo CountPred = Refl.GetGenMethod(
+                                            () => Queryable.Count<object>(null, i => true));
+
+
     }
 }

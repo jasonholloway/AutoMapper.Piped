@@ -9,7 +9,7 @@ using Materialize.Types;
 namespace Materialize.Reify.Parsing.Methods.Unaries
 {
     class UnaryOnServerStrategy<TElem> 
-        : MethodStrategy<IEnumerable<TElem>, TElem>
+        : MethodStrategyBase<IEnumerable<TElem>, TElem>
     {
         MethodInfo _mUnary;
         

@@ -91,6 +91,8 @@
     <Compile Include="Infrastructure\TestData.cs" />
     <Compile Include="ParsingCombinations.cs" />
     <Compile Include="ParsingAggregators.cs" />
+    <Compile Include="ParsingQuantifiers.cs" />
+    <Compile Include="ParsingPartitioners.cs" />
     <Compile Include="ParsingFilters.cs" />
     <Compile Include="ParsingMethods.cs" />
     <Compile Include="RebaseTests.cs" />

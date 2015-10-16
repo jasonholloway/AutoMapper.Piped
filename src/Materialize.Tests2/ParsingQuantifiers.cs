@@ -9,10 +9,10 @@ using System.Linq;
 namespace Materialize.Tests2
 {
     [TestFixture]    
-    class ParsingFilters : TestClassBase
+    class ParsingQuantifiers : TestClassBase
     {
         
-        public ParsingFilters() 
+        public ParsingQuantifiers() 
         {
             InitMapper(x => {
                 x.CreateMap<Source, Mapped>();
@@ -49,104 +49,102 @@ namespace Materialize.Tests2
                             .AsQueryable()
                             .MapAs<Mapped>(snooper);
         }
-               
+
 
 
         [Test]
-        public void WhereOnClient() {
+        public void AnyOnClient() {
+            throw new NotImplementedException();
+        }
+
+
+        [Test]
+        public void AnyOnServer() {
+            throw new NotImplementedException();
+        }
+
+
+
+
+        [Test]
+        public void AnyWithPredicateOnClient() {
             InitServices(x => {
                 x.EmplaceIntolerantSourceRegime();
                 x.AllowClientSideFiltering();
             });
 
             var result = Range(0, 50)
-                            .Where(m => m.Value < 10)
-                            .ToArray();
-            
-            Assert.That(result.Select(m => m.Value), Is.EquivalentTo(Enumerable.Range(0, 10)));            
+                            .Any(m => m.Value > 10);
+
+            Assert.That(result, Is.True);
+
+
+            result = Range(0, 50)
+                        .Any(m => m.Value > 50);
+
+            Assert.That(result, Is.False);
         }
 
 
-        [Test]           
-        public void WhereOnServer() {
+        [Test]
+        public void AnyWithPredicateOnServer() {
             InitServices(x => {
                 x.EmplaceTolerantSourceRegime();
                 x.ForbidClientSideFiltering();
             });
 
             var result = Range(0, 50)
-                            .Where(m => m.Value < 10)
-                            .ToArray();
-            
-            Assert.That(result.Select(m => m.Value), Is.EquivalentTo(Enumerable.Range(0, 10)));
+                            .Any(m => m.Value > 10);
+
+            Assert.That(result, Is.True);
+
+
+            result = Range(0, 50)
+                        .Any(m => m.Value > 50);
+
+            Assert.That(result, Is.False);
         }
 
-        
 
 
         [Test]
-        public void FirstWithPredicateOnClient() {
+        public void AllOnClient() {
             InitServices(x => {
                 x.EmplaceIntolerantSourceRegime();
                 x.AllowClientSideFiltering();
             });
 
             var result = Range(0, 50)
-                            .First(m => m.Value > 10)
-                            .Value;
+                            .All(m => m.Value < 60);
 
-            Assert.That(result, Is.EqualTo(11));
+            Assert.That(result, Is.True);
+
+
+            result = Range(0, 50)
+                        .All(m => m.Value > 50);
+
+            Assert.That(result, Is.False);
         }
 
 
         [Test]
-        public void FirstWithPredicateOnServer() {
+        public void AllOnServer() {
             InitServices(x => {
                 x.EmplaceTolerantSourceRegime();
                 x.ForbidClientSideFiltering();
             });
 
             var result = Range(0, 50)
-                            .First(m => m.Value > 10)
-                            .Value;
+                            .All(m => m.Value < 60);
 
-            Assert.That(result, Is.EqualTo(11));
+            Assert.That(result, Is.True);
+
+
+            result = Range(0, 50)
+                        .All(m => m.Value > 50);
+
+            Assert.That(result, Is.False);
         }
-
-
-        [Test]
-        public void LastWithPredicateOnClient() {
-            InitServices(x => {
-                x.EmplaceIntolerantSourceRegime();
-                x.AllowClientSideFiltering();
-            });
-
-            var result = Range(0, 50)
-                            .Last(m => m.Value < 10)
-                            .Value;
-
-            Assert.That(result, Is.EqualTo(9));
-        }
-
-
-        [Test]
-        public void LastWithPredicateOnServer() {
-            InitServices(x => {
-                x.EmplaceTolerantSourceRegime();
-                x.ForbidClientSideFiltering();
-            });
-
-            var result = Range(0, 50)
-                            .Last(m => m.Value < 10)
-                            .Value;
-
-            Assert.That(result, Is.EqualTo(9));
-        }
-
-
-
-
-
 
     }
 }

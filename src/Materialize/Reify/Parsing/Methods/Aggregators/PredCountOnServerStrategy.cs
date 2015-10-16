@@ -5,14 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Materialize.Reify.Parsing.Methods.Filters
+namespace Materialize.Reify.Parsing.Methods.Aggregators
 {
-    class WhereOnServerStrategy<TElem> 
-        : MethodStrategyBase<IEnumerable<TElem>, IEnumerable<TElem>>
+    class PredCountOnServerStrategy<TElem> 
+        : MethodStrategyBase<IEnumerable<TElem>, bool>
     {
         IRebaseStrategy _predRebaseStrategy;
 
-        public WhereOnServerStrategy(
+        public PredCountOnServerStrategy(
             IParseStrategy upstreamStrategy, 
             IRebaseStrategy predRebaseStrategy)
             : base(upstreamStrategy) 
@@ -33,36 +33,35 @@ namespace Materialize.Reify.Parsing.Methods.Filters
                                                 Expression.Parameter(exSubject.Arguments[0].Type)
                                                 );
 
-            var exRebasedWhere = _predRebaseStrategy.Rebase(exRebaseSubject);
+            var exRebasedQuantifier = _predRebaseStrategy.Rebase(exRebaseSubject);
             
-            return new Modifier(upstreamMod, (MethodCallExpression)exRebasedWhere);
+            return new Modifier(upstreamMod, (MethodCallExpression)exRebasedQuantifier);
         }
                        
 
-        class Modifier : ParseModifier<IEnumerable<TElem>, IEnumerable<TElem>>
-        {
-            MethodCallExpression _exRebasedWhere;
 
-            public Modifier(IModifier upstreamMod, MethodCallExpression exRebasedWhere)
+        class Modifier : ParseModifier<IEnumerable<TElem>, int>
+        {
+            MethodCallExpression _exRebasedQuantifier;
+
+            public Modifier(IModifier upstreamMod, MethodCallExpression exRebasedQuantifier)
                 : base(upstreamMod) 
             {
-                _exRebasedWhere = exRebasedWhere;
+                _exRebasedQuantifier = exRebasedQuantifier;
             }
             
 
             protected override Expression Rewrite(Expression exQuery) 
             {                
-                var exAppended = _exRebasedWhere.Replace(
-                                                    _exRebasedWhere.Arguments[0], 
-                                                    exQuery);
-                
-                return UpstreamRewrite(exAppended); //no rewrite, as nothing to do on server
+                return _exRebasedQuantifier.Replace(
+                                                _exRebasedQuantifier.Arguments[0], 
+                                                exQuery);
             }
 
 
-            protected override IEnumerable<TElem> Transform(object fetched) 
-            {                
-                return UpstreamTransform(fetched);
+            protected override int Transform(object fetched) 
+            {
+                return (int)fetched;
             }
 
         }

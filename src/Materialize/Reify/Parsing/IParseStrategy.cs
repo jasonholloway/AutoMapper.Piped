@@ -13,9 +13,11 @@ namespace Materialize.Reify.Parsing
         Type DestType { get; }
 
         bool FiltersFetchedSet { get; } //affects downstream possibilities...
+
+        IModifier Parse(Expression exSubject);
+
+        IRebaseStrategy RebaseToSourceType(RebaseSubject subject);
+        IRebaseStrategy RebaseToFetchType(RebaseSubject subject);
         
-        IRebaseStrategy GetRebaseStrategy(RebaseSubject subject);
-        
-        IModifier Parse(Expression exSubject);        
     }
 }

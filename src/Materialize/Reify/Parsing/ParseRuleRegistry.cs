@@ -1,6 +1,6 @@
 ﻿using Materialize.Dependencies;
 using Materialize.Reify.Parsing.Methods.Partitioners;
-using Materialize.Reify.Parsing.Map;
+using Materialize.Reify.Parsing.Mapping;
 using Materialize.Reify.Parsing.Methods.Unaries;
 using Materialize.Reify.Parsing.Methods.Filters;
 using System;

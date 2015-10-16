@@ -27,14 +27,7 @@ namespace Materialize.Reify.Mapping
                                     c => DeduceStrategy(c));
         }
 
-
-        //public IMapStrategy GetStrategy(ISourceRegime regime, Type tSource, Type tDest) {
-        //    return GetStrategy(new MapContext(
-        //                                regime,
-        //                                new TypeVector(tSource, tDest)));
-                        
-        //}
-
+        
 
         IMapStrategy DeduceStrategy(MapContext ctx) {            
             foreach(var rule in _ruleRegistry.Rules) {
@@ -44,14 +37,7 @@ namespace Materialize.Reify.Mapping
 
             throw new AutoMapperMappingException("Unsupported mapping!");
         }
-
-
-
-        //Once container is in place, this will be obsolete: container will be cleared on reset
-        public void Reset() {
-            _dStrategies.Clear();
-        }
-
+                
 
     }
 }

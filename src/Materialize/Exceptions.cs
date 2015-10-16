@@ -39,6 +39,9 @@ namespace Materialize
         public RebaseException(string message)
             : base(message) { }
 
+        public RebaseException(string format, params object[] args)
+            : base(format, args) { }
+
         public RebaseException(string message, Exception innerException)
             : base(message, innerException) { }
 
