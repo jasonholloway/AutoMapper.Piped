@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Materialize.Reify.Parsing.Methods.Quantifiers
 {
@@ -13,21 +11,30 @@ namespace Materialize.Reify.Parsing.Methods.Quantifiers
 
         protected override IParseStrategy Parse() 
         {
-            var predRebase = RebasePredicateToSourceType((UnaryExpression)CallExp.Arguments[1]);
-            
-            if(predRebase.Successful) { //prepend our quantifier to source query
-                return CreateStrategy(
-                            typeof(PredQuantifierOnServerStrategy<>).MakeGenericType(ElemType),
-                            UpstreamStrategy,
-                            predRebase.RebaseStrategy);
-            }
-            else if(AllowClientSideFiltering) { //apply our quantifier at end of transformation
+            if(UpstreamStrategy.FiltersFetchedSet) {
                 return CreateStrategy(
                             typeof(PredQuantifierOnClientStrategy<>).MakeGenericType(ElemType),
                             UpstreamStrategy);
             }
+            else {
+                var predRebase = RebasePredicateToSource((UnaryExpression)CallExp.Arguments[1]);
 
-            throw predRebase.GetException();
+                if(predRebase.Successful) { //prepend our quantifier to source query
+                    return CreateStrategy(
+                                typeof(PredQuantifierOnServerStrategy<>).MakeGenericType(ElemType),
+                                UpstreamStrategy,
+                                predRebase.RebaseStrategy);
+                }
+                else if(AllowClientSideFiltering) { //apply our quantifier at end of transformation
+                    return CreateStrategy(
+                                typeof(PredQuantifierOnClientStrategy<>).MakeGenericType(ElemType),
+                                UpstreamStrategy);
+                }
+
+                throw predRebase.GetException();
+            }
+
+
         }
 
     }

@@ -52,8 +52,8 @@ namespace Materialize.Demo2.QueryInfo
         {
             return new QueryReport(
                             null,
-                            _exQueryFromClient.Simplify().ToCSharpCode(),
-                            _exQueryToServer.Simplify().ToCSharpCode(),
+                            _exQueryFromClient?.Simplify().ToCSharpCode(),
+                            _exQueryToServer?.Simplify().ToCSharpCode(),
                             Tree.BuildFromCrawl(_strategy, s => s.UpstreamStrategies)
                                     .Project(s => new StrategyReport(
                                                             s.GetType().GetNiceName(), 

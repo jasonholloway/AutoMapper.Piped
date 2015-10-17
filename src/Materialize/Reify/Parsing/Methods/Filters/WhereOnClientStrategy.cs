@@ -6,8 +6,8 @@ using System.Reflection;
 
 namespace Materialize.Reify.Parsing.Methods.Filters
 {
-    class WhereOnClientStrategy<TElem> 
-        : MethodStrategyBase<IEnumerable<TElem>, IEnumerable<TElem>>
+    class WhereOnClientStrategy<TSource, TElem> 
+        : MethodStrategyBase<TSource, IQueryable<TElem>>
     {
         
         public WhereOnClientStrategy(IParseStrategy upstreamStrategy)
@@ -29,7 +29,7 @@ namespace Materialize.Reify.Parsing.Methods.Filters
             //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-            var fnPredicate = exPredicate.Compile(); //Nasty: no way to cache? Only if entire tree were cached further up...
+            //var fnPredicate = exPredicate.Compile(); //Nasty: no way to cache? Only if entire tree were cached further up...
                                                         //Nah: we could (and should) have a predicate-only auxiliary cache.                                                    
                                                         //specially for little compilations...
 
@@ -39,18 +39,18 @@ namespace Materialize.Reify.Parsing.Methods.Filters
 
                                                         //Names of parameters should also be stripped for the same reason.
 
-            return new Modifier(upstreamMod, fnPredicate);
+            return new Modifier(upstreamMod, exPredicate);
         }
                        
 
-        class Modifier : ParseModifier<IEnumerable<TElem>, IEnumerable<TElem>>
+        class Modifier : ParseModifier<IQueryable<TElem>, IQueryable<TElem>>
         {
-            Func<TElem, bool> _fnPredicate;
+            Expression<Func<TElem, bool>> _exPredicate;
 
-            public Modifier(IModifier upstreamMod, Func<TElem, bool> fnPredicate)
+            public Modifier(IModifier upstreamMod, Expression<Func<TElem, bool>> exPredicate)
                 : base(upstreamMod) 
             {
-                _fnPredicate = fnPredicate;
+                _exPredicate = exPredicate;
             }
             
 
@@ -59,10 +59,10 @@ namespace Materialize.Reify.Parsing.Methods.Filters
             }
 
 
-            protected override IEnumerable<TElem> Transform(object fetched) 
+            protected override IQueryable<TElem> Transform(object fetched) 
             {                
                 var transformed = UpstreamTransform(fetched);
-                return transformed.Where(_fnPredicate);
+                return transformed.Where(_exPredicate);
             }
 
         }

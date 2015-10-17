@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Materialize.Types
 {
-    static class EnumerableMethods
+    internal static class EnumerableMethods
     {
         public static MethodInfo Select = Refl.GetGenMethod(
                                                     () => Enumerable.Select<object, object>(null, i => i));

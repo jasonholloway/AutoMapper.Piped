@@ -11,20 +11,20 @@ namespace Materialize.Reify
 {
     struct ReifyContext
     {
-        public readonly TypeVector RootTypeVector;
         public readonly IMappingEngine MappingEngine;
         public readonly ISourceRegime SourceRegime;
+        public readonly Type MapDestType;
         public readonly bool AllowClientSideFiltering;
 
         public ReifyContext(
-            TypeVector rootTypeVector,
             IMappingEngine mappingEngine, 
-            ISourceRegime sourceRegime, 
+            ISourceRegime sourceRegime,
+            Type mapDestType, 
             bool allowClientFiltering) 
         {
-            RootTypeVector = rootTypeVector;
             MappingEngine = mappingEngine;
             SourceRegime = sourceRegime;
+            MapDestType = mapDestType;
             AllowClientSideFiltering = allowClientFiltering;
         }
 
@@ -45,17 +45,17 @@ namespace Materialize.Reify
         public static readonly ReifyContextEqualityComparer Default = new ReifyContextEqualityComparer();
 
         public bool Equals(ReifyContext x, ReifyContext y) {
-            return x.RootTypeVector.Equals(y.RootTypeVector)
-                    && x.MappingEngine.Equals(y.MappingEngine)
+            return x.MappingEngine.Equals(y.MappingEngine)
                     && x.SourceRegime.Equals(y.SourceRegime)
+                    && x.MapDestType.Equals(y.MapDestType)
                     && x.AllowClientSideFiltering.Equals(y.AllowClientSideFiltering);
         }
 
         public int GetHashCode(ReifyContext obj) {
-            return (obj.RootTypeVector.GetHashCode() << 24)
-                    + (obj.MappingEngine.GetHashCode() << 16)
-                    + (obj.SourceRegime.GetHashCode() << 1)
-                    + (obj.AllowClientSideFiltering ? 1 : 0);
+            return (obj.MapDestType.GetHashCode() << 24)
+                    ^ (obj.MappingEngine.GetHashCode() << 16)
+                    ^ (obj.SourceRegime.GetHashCode() << 1)
+                    ^ (obj.AllowClientSideFiltering ? 1 : 0);
         }
     }
     

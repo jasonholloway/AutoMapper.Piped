@@ -16,8 +16,6 @@ namespace Materialize.Reify.Parsing
 
         IModifier Parse(Expression exSubject);
 
-        IRebaseStrategy RebaseToSourceType(RebaseSubject subject);
-        IRebaseStrategy RebaseToFetchType(RebaseSubject subject);
-        
+        IRebaseStrategy RebaseToSource(RebaseSubject subject);        
     }
 }

@@ -45,16 +45,14 @@ namespace Materialize.Reify.Parsing.Methods.Filters
 
         
 
-        RebasePredicateResult RebasePredicate(
-            LambdaExpression exPredLambda, 
-            Func<IParseStrategy, RebaseSubject, IRebaseStrategy> fnRebase) 
+        protected RebasePredicateResult RebasePredicateToSource(LambdaExpression exPredLambda) 
         {
             var rebaseSubject = GetRebaseSubject(exPredLambda);
 
             IRebaseStrategy rebaseStrategy = null;
 
             try {
-                rebaseStrategy = fnRebase(UpstreamStrategy, rebaseSubject); // UpstreamStrategy.RebaseToSourceType(rebaseSubject);
+                rebaseStrategy = UpstreamStrategy.RebaseToSource(rebaseSubject); // UpstreamStrategy.RebaseToSourceType(rebaseSubject);
             }
             catch(RebaseException ex) {
                 return new RebasePredicateResult() {
@@ -71,17 +69,13 @@ namespace Materialize.Reify.Parsing.Methods.Filters
 
         }
             
-
-        protected RebasePredicateResult RebasePredicateToSourceType(LambdaExpression exPredLambda) {
-            return RebasePredicate(exPredLambda, (u, s) => u.RebaseToSourceType(s));        
-        }
         
-        protected RebasePredicateResult RebasePredicateToSourceType(UnaryExpression exPredQuotedLambda) {
+        protected RebasePredicateResult RebasePredicateToSource(UnaryExpression exPredQuotedLambda) {
             if(exPredQuotedLambda.NodeType == ExpressionType.Quote) {
-                return RebasePredicateToSourceType((LambdaExpression)exPredQuotedLambda.Operand);
+                return RebasePredicateToSource((LambdaExpression)exPredQuotedLambda.Operand);
             }
 
-            throw new InvalidOperationException();
+            throw new ArgumentException("Should be quote!", nameof(exPredQuotedLambda));
         }
         
 

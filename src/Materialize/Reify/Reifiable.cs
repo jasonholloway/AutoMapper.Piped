@@ -24,7 +24,7 @@ namespace Materialize.Reify
     class Reifiable<TSource, TDest> : IReifiable<TDest>
     {
         static PropertyInfo _baseReifyQueryProp = typeof(Reifiable<TSource, TDest>)
-                                                        .GetProperty("BaseReifyQuery");
+                                                        .GetProperty(nameof(BaseReifyQuery));
 
 
         ISourceRegimeProvider _regimeSource;
@@ -74,13 +74,16 @@ namespace Materialize.Reify
             OnQueryFromClient(exClientQuery);
             
             var reifyContext = new ReifyContext(
-                                        new TypeVector(typeof(IQueryable<TSource>), typeof(IQueryable<TDest>)),
                                         _options.MappingEngine,
                                         _options.SourceRegime ?? _regimeSource.GetRegime(SourceQuery),
+                                        typeof(TDest),
                                         (bool)_options.AllowClientSideFiltering);
             
 
-            var parser = _parserFac.Create(BaseReifyQuery.Expression, reifyContext);
+            var parser = _parserFac.Create(
+                                        BaseReifyQuery.Expression, 
+                                        typeof(IQueryable<TSource>), 
+                                        reifyContext);
                         
             var parsed = parser.Parse(exClientQuery);
 

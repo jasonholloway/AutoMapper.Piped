@@ -1,5 +1,6 @@
 ﻿using Materialize.Reify.Mapping;
 using Materialize.Reify.Rebasing;
+using Materialize.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,13 +20,25 @@ namespace Materialize.Reify.Parsing.Mapping
         {
             if(ctx.IsMappingBase) 
             {
+                var mapDestType = ctx.ReifyContext.MapDestType;
+
+                var sourceType = ctx.SourceType;
+                var destType = (typeof(IQueryable).IsAssignableFrom(sourceType)         //GRIM!
+                                && !typeof(IQueryable).IsAssignableFrom(mapDestType))
+                                        ? typeof(IQueryable<>).MakeGenericType(mapDestType)
+                                        : mapDestType;
+                
                 var mapContext = new MapContext(
-                                        ctx.ReifyContext.RootTypeVector,
+                                        new TypeVector(sourceType, destType),
                                         ctx.ReifyContext);
                 
                 var mapStrategy = _mapStrategies.GetStrategy(mapContext);
-
-                return new MapperStrategy(mapStrategy);
+                
+                return CreateStrategy(
+                            typeof(MapperStrategy<,>).MakeGenericType(
+                                                            sourceType, 
+                                                            destType),
+                            mapStrategy);
             }
             
             return null;

@@ -60,10 +60,10 @@ namespace Materialize.Tests2
             });
 
             var result = Range(0, 50)
-                            .Where(m => m.Value < 10)
+                            .Where(m => m.Value < 10 && m.Value > 5)
                             .ToArray();
             
-            Assert.That(result.Select(m => m.Value), Is.EquivalentTo(Enumerable.Range(0, 10)));            
+            Assert.That(result.Select(m => m.Value), Is.EquivalentTo(Enumerable.Range(6, 4)));            
         }
 
 
@@ -75,10 +75,10 @@ namespace Materialize.Tests2
             });
 
             var result = Range(0, 50)
-                            .Where(m => m.Value < 10)
+                            .Where(m => m.Value < 10 && m.Value > 5)
                             .ToArray();
             
-            Assert.That(result.Select(m => m.Value), Is.EquivalentTo(Enumerable.Range(0, 10)));
+            Assert.That(result.Select(m => m.Value), Is.EquivalentTo(Enumerable.Range(6, 4)));
         }
 
         

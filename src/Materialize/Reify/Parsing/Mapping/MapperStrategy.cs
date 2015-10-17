@@ -11,7 +11,7 @@ namespace Materialize.Reify.Parsing.Mapping
     /// <summary>
     /// Wraps tree of MapStrategies into a ParseStrategy
     /// </summary>
-    class MapperStrategy
+    class MapperStrategy<TSource, TDest>
         : ReifyStrategy, IParseStrategy
     {
         IMapStrategy _mapStrategy;
@@ -22,15 +22,15 @@ namespace Materialize.Reify.Parsing.Mapping
 
 
         public Type SourceType {
-            get { return _mapStrategy.SourceType; }
+            get { return typeof(TSource); } 
         }
 
         public Type FetchType {
-            get { return _mapStrategy.FetchType; }
+            get { return _mapStrategy.FetchType; } //fetch type is intriguing, upstream sets it?
         }
         
         public Type DestType {
-            get { return _mapStrategy.TransformedType; }
+            get { return typeof(TDest); }
         }
 
         public bool FiltersFetchedSet {
@@ -43,7 +43,7 @@ namespace Materialize.Reify.Parsing.Mapping
         }
 
         
-        public IRebaseStrategy RebaseToSourceType(RebaseSubject subject) 
+        public IRebaseStrategy RebaseToSource(RebaseSubject subject) 
         {
             var rebaser = new Rebaser(x => {
                                     foreach(var rv in subject.RootVectors) {
@@ -55,13 +55,7 @@ namespace Materialize.Reify.Parsing.Mapping
             
             return rebaser.Rebase(subject.Expression);
         }
-
-        public IRebaseStrategy RebaseToFetchType(RebaseSubject subject) 
-        {
-            throw new NotImplementedException();
-        }
-
-
+        
 
         public override IEnumerable<IReifyStrategy> UpstreamStrategies {
             get {

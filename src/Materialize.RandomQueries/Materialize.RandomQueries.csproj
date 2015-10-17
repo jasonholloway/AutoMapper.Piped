@@ -45,6 +45,7 @@
     <Compile Include="Appenders\PartitionAppender.cs" />
     <Compile Include="Appenders\WhereAppender.cs" />
     <Compile Include="Bits\Rand.cs" />
+    <Compile Include="Predicator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomQueryProvider.cs" />
   </ItemGroup>
@@ -53,6 +54,9 @@
       <Project>{f8a1b543-0b7f-40aa-907d-775cdb36ce7f}</Project>
       <Name>Materialize</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Predicators\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

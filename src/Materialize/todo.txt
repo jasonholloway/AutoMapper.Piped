@@ -2,64 +2,20 @@
 TO DO! ********************************************
 
 
+
+
 	Parser -> ParseStrategySource -> MapperRule -> MapperStrategy -> IModifier
 
 	Parser -> ParseStrategySource -> MethodRule -> WhereStrategizer -> WhereOnClientStrategy -> IModifier
-
-
-
-> At the mo, can't rebase filters to be applicable on FetchType. PROBLEM. This much better than rebasing all the way to source, which may anyway be impossible. Though, with EF, if you can rebase that far, you almost certainly can rebase to source, as opacity is precluded from server. Not as big an issue as I thought.
 	
-	How about, though, with quantifiers such as Any()? These again should have predicates rebasable to Source if they
-	can putatively reach Fetched. Though this won't work in the case of intervening filters. 
 
-	Could intervening filters modify predicates? Seems slightly ghastly, like. Though this is in fact a general, reappearing
-	problem. Rebasing types is one thing - a difficult but somewhat solved problem - but rebasing set constraints... crikey.
-
-	There is some connection though, at least abstractly. A type parameter in one place is not the same in another.
-	The type is merely a recognised token for a set member, and the meaning of the token changes with the definition
-	of the set. At the moment this issue is sidestepped by an explicit hack: don't attempt rebase if we know there is
-	an intervening filter (as warned by upstream classes).
-
-	The Mapping layer would have nothing to do with this, as it is only concerned with type changes. Applied filters by the
-	parser would be concerned however.
-
-	** First of all, the designated predicate would be rebased to the correct type domain; then it would be combined 
-		with the preexisting predicate (somehow). Obviously would help here if there were an abstract filter in play,
-		rather than all these concrete expressions.
-
-		All predicated filters can be represented by a Where expression, plus some kind of modifying appendage.
-
-	** But *rebasing* the set definitions would cause duplication. As for there to be something to rebase to means
-		that there must be a downstream filter in place.
-
-	How about (IDEA II) this: make TFetched more explicit, i.e. a typearg on all parse strategies (at the mo it is
-	only of concern to map strategies). As it happens, FetchType is alrerady available to all parse strategies.
-
-	The next step is to somehow rebase back to FetchType. This is, I fear, utterly impossible. Well, it's the concern
-	of each intervening layer in turn, obvs. So they are the judge of its impossiblity. If we can rebase to this,
-	then quantifiers such as All(pred) can append to the source query, and short-circuit any upstream transformations.
-		
-	GAAAAAAAH! Can't apply filter to non-edm type, obviously, as members are inaccessible. Shite. There goes that.
-	
-	A filter applied to the fetch type would have to be prepended to the client, which takes away its usefulness.
-	But, again: if we can rebase to the fetch type, then the source type is not far away. EF insists on transitivity
-	on its side.
-
-	But, again again: is prepending a predicate correct when there are already filters about? After all, naively,
-	the filtering is supposed to be done last, and we are instead prepending it before everything! But as a limitation
-	this shouldn't really matter: limitations can be applied in any order. As long as nothing positive is done
-	to the set in the intervening time. Positive like what? 
-
-	So if we can rebase our predicate to the start, it is fine to apply it there. And it's fine to short-circuit
-	all subsequent modifications. But only if the predicate's thus rebasable! But that's the user's problem.
-		 
+> In parsing, strategizers and rules are really at same level, have same function.
+	Would seem neater to have specialised StrategyCondition classes - or *rules?*
 
 
 
-
-
-
+> Add T4 template to test project, will create 50 random queries, and test result against the same applied to an enumeration. These will all appear in test explorer, and will be refreshable. SourceRegime used should also be
+  random (although this latter will give different results each time: not so good!)
 
 
 > Should all would-be prependers of predicates to the source query be aware of clientside filtering?

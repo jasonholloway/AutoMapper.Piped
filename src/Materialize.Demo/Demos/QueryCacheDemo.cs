@@ -125,7 +125,7 @@ Don't quite know as yet...
             }
 
 
-            var parseStrategies = MaterializeServices.Resolve<IParseStrategySource>();
+            var parseStrategies = MaterializeServices.Resolve<ParseStrategySource>();
 
 
 

@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Materialize.Types
 {
-    static class QueryableMethods
+    internal static class QueryableMethods
     {
         public static MethodInfo Select = Refl.GetGenMethod(
                                             () => Queryable.Select<object, object>(null, i => i));

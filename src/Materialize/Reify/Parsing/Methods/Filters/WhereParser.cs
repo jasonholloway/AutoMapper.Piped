@@ -9,17 +9,17 @@ namespace Materialize.Reify.Parsing.Methods.Filters
     {    
         protected override IParseStrategy Parse() 
         {            
-            var predRebase = RebasePredicateToSourceType((UnaryExpression)CallExp.Arguments[1]);
+            var predRebase = RebasePredicateToSource((UnaryExpression)CallExp.Arguments[1]);
             
             if(predRebase.Successful) { //we can prepend to source query!
                 return CreateStrategy(                          
-                            typeof(WhereOnServerStrategy<>).MakeGenericType(ElemType),
+                            typeof(WhereOnServerStrategy<,>).MakeGenericType(SourceType, ElemType),
                             UpstreamStrategy,
                             predRebase.RebaseStrategy);
             }
             else if(AllowClientSideFiltering) {
                 return CreateStrategy(
-                            typeof(WhereOnClientStrategy<>).MakeGenericType(ElemType),
+                            typeof(WhereOnClientStrategy<,>).MakeGenericType(SourceType, ElemType),
                             UpstreamStrategy);
             }
 

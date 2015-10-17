@@ -16,7 +16,7 @@ namespace Materialize.Reify.Parsing.Methods
         public MethodStrategyBase(IParseStrategy upstreamStrategy) 
         {
             SourceType = typeof(TSource);
-            FetchType = typeof(TSource);
+            FetchType = upstreamStrategy.FetchType;
             DestType = typeof(TDest);
             UpstreamStrategy = upstreamStrategy;
         }
@@ -46,26 +46,16 @@ namespace Materialize.Reify.Parsing.Methods
         
 
         //by default, behaves as though nothing to rebase here - but this will often be right        
-        public virtual IRebaseStrategy RebaseToSourceType(RebaseSubject subject) 
+        public virtual IRebaseStrategy RebaseToSource(RebaseSubject subject) 
         {
             Debug.Assert(
                 subject.RootVectors.Single().OrigRoot.Type == DestType, 
                 "Bad rebase attempted in parse layer!");
 
-            return UpstreamStrategy.RebaseToSourceType(subject);
+            return UpstreamStrategy.RebaseToSource(subject);
         }
 
-
-        public virtual IRebaseStrategy RebaseToFetchType(RebaseSubject subject) 
-        {
-            Debug.Assert(
-                subject.RootVectors.Single().OrigRoot.Type == DestType,
-                "Bad rebase attempted in parse layer!");
-
-            return UpstreamStrategy.RebaseToFetchType(subject);
-        }
-
-
+        
 
 
         public override IEnumerable<IReifyStrategy> UpstreamStrategies {

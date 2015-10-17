@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Materialize.Demo</RootNamespace>
     <AssemblyName>Materialize.Demo</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -90,6 +90,10 @@
     <ProjectReference Include="..\Materialize.EF6\Materialize.EF6.csproj">
       <Project>{17079aef-66a9-49ab-8556-b753e170ef42}</Project>
       <Name>Materialize.EF6</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Materialize.Tests2\Materialize.Tests2.csproj">
+      <Project>{1a4b6831-dce2-4a5f-a966-db3ee81400bc}</Project>
+      <Name>Materialize.Tests2</Name>
     </ProjectReference>
     <ProjectReference Include="..\Materialize\Materialize.csproj">
       <Project>{f8a1b543-0b7f-40aa-907d-775cdb36ce7f}</Project>

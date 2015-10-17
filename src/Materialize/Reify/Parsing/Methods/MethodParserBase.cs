@@ -18,7 +18,8 @@ namespace Materialize.Reify.Parsing.Methods
             set {
                 _ctx = value;
                 MethodDef = value.MethodDef;
-                ElemType = value.MethodTypeArgs.First();
+                SourceType = value.SourceType;
+                ElemType = value.MethodTypeArgs.First(); //could also get this from element of dest type
                 CallExp = value.CallExp;
                 AllowClientSideFiltering = value.ReifyContext.AllowClientSideFiltering;
             }
@@ -30,6 +31,7 @@ namespace Materialize.Reify.Parsing.Methods
         protected IParseStrategy UpstreamStrategy { get; private set; }
 
         protected MethodInfo MethodDef { get; private set; }
+        protected Type SourceType { get; private set; }
         protected Type ElemType { get; private set; }       
         protected MethodCallExpression CallExp { get; private set; }
         protected bool AllowClientSideFiltering { get; private set; }
@@ -50,7 +52,11 @@ namespace Materialize.Reify.Parsing.Methods
 
         IParseStrategy GetUpstreamStrategy(ParseContext ctx) {
             var exUpstreamSubject = ctx.CallExp.Arguments.First();
-            var upstreamContext = ctx.Spawn(exUpstreamSubject);
+            var upstreamContext = ctx.Spawn(exUpstreamSubject, SourceType); //SourceType passed upwards may change here, eg in projections(?)
+                                                                            //depends on rewriting...
+                                                                            //First() could do this, but to do so would need to know fair bit about
+                                                                            //upstream behaviour first... a vicious circle.
+                                                                            //So in practice this will never change between layers (I suspect)
 
             return ParseStrategySource.GetStrategy(upstreamContext);
         }

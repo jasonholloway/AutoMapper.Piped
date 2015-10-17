@@ -39,7 +39,7 @@ namespace Materialize.RandomQueries
                 var app = GetRandomAppender(ctx);
                 ex = app.Append(ex);
                 ctx = app.GetResultContext();
-            } while(Rand.FromProbability(0.8));
+            } while(Rand.FromProbability(0.5));
 
             return ex;
         }

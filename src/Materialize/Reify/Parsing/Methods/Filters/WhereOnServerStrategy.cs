@@ -7,8 +7,8 @@ using System.Linq.Expressions;
 
 namespace Materialize.Reify.Parsing.Methods.Filters
 {
-    class WhereOnServerStrategy<TElem> 
-        : MethodStrategyBase<IEnumerable<TElem>, IEnumerable<TElem>>
+    class WhereOnServerStrategy<TSource, TElem> 
+        : MethodStrategyBase<TSource, IQueryable<TElem>>
     {
         IRebaseStrategy _predRebaseStrategy;
 
@@ -39,7 +39,7 @@ namespace Materialize.Reify.Parsing.Methods.Filters
         }
                        
 
-        class Modifier : ParseModifier<IEnumerable<TElem>, IEnumerable<TElem>>
+        class Modifier : ParseModifier<IQueryable<TElem>, IQueryable<TElem>>
         {
             MethodCallExpression _exRebasedWhere;
 
@@ -50,17 +50,20 @@ namespace Materialize.Reify.Parsing.Methods.Filters
             }
             
 
-            protected override Expression Rewrite(Expression exQuery) 
+            protected override Expression Rewrite(Expression exSource) 
             {                
-                var exAppended = _exRebasedWhere.Replace(
+                //stitch rebased where expression onto passed source query
+                //and pass on...
+
+                var exStitched = _exRebasedWhere.Replace(
                                                     _exRebasedWhere.Arguments[0], 
-                                                    exQuery);
+                                                    exSource);
                 
-                return UpstreamRewrite(exAppended); //no rewrite, as nothing to do on server
+                return UpstreamRewrite(exStitched);
             }
 
 
-            protected override IEnumerable<TElem> Transform(object fetched) 
+            protected override IQueryable<TElem> Transform(object fetched) 
             {                
                 return UpstreamTransform(fetched);
             }

@@ -12,15 +12,18 @@ namespace Materialize.Reify.Parsing
     class Parser
     {
         Expression _exBase;
+        Type _sourceType;
         ReifyContext _reifyContext;
         ParseStrategySource _parseStrategies;
         
         public Parser(
             Expression exBase, 
+            Type sourceType,
             ReifyContext reifyContext,
             ParseStrategySource parseStrategies) 
         {
             _exBase = exBase;
+            _sourceType = sourceType;
             _reifyContext = reifyContext;
             _parseStrategies = parseStrategies;
         }
@@ -31,6 +34,7 @@ namespace Materialize.Reify.Parsing
             var parseContext = new ParseContext(
                                             exSubject, 
                                             _exBase,
+                                            _sourceType,
                                             _reifyContext);
 
             var strategy = _parseStrategies.GetStrategy(parseContext);

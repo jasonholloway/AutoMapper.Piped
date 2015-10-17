@@ -70,6 +70,7 @@
     <Compile Include="Reify\Parsing\Methods\Quantifiers\PredQuantifierParser.cs" />
     <Compile Include="Reify\Parsing\Methods\Quantifiers\PredQuantifierOnServerStrategy.cs" />
     <Compile Include="Reify\Parsing\Methods\Quantifiers\PredQuantifierOnClientStrategy.cs" />
+    <Compile Include="Reify\Parsing\Methods\Quantifiers\QuantifierParser.cs" />
     <Compile Include="Reify\Parsing\Methods\Unaries\UnaryParser.cs" />
     <Compile Include="Reify\Rebasing\Methods\IMethodRebaseRule.cs" />
     <Compile Include="Reify\Rebasing\Methods\IParentRebaser.cs" />
@@ -181,6 +182,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="notes.txt" />
     <Content Include="Reify\Rebasing\about.txt" />
     <Content Include="todo.txt" />
   </ItemGroup>

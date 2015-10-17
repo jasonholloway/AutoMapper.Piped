@@ -10,6 +10,8 @@ namespace Materialize.Reify.Parsing.Methods.Quantifiers
     {
         protected override IParseStrategy Parse() 
         {            
+            //UpstreamStrategy.FiltersFetchedSet 
+
             if(UpstreamStrategy.FiltersFetchedSet) {
                 //client side
                 throw new NotImplementedException();

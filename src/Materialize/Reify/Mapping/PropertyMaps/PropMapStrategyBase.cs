@@ -31,7 +31,7 @@ namespace Materialize.Reify.Mapping.PropertyMaps
                 return new PropMapRootRebaseStrategy(this, roots);
             }
 
-            throw new NotImplementedException();
+            return base.GetRootRebaseStrategy(roots);
         }
 
 

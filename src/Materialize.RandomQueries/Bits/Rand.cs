@@ -13,10 +13,10 @@ namespace Materialize.RandomQueries.Bits
         public static TItem FromList<TItem>(params TItem[] items) 
         {
             if(!items.Any()) {
-                throw new InvalidOperationException();
+                return default(TItem);
             }
 
-            return items[_r.Next(0, items.Length - 1)];
+            return items[_r.Next(0, items.Length)];
         }
 
 
@@ -30,7 +30,7 @@ namespace Materialize.RandomQueries.Bits
                 throw new ArgumentOutOfRangeException("dProb");
             }
 
-            return _r.NextDouble() < (dProb * double.MaxValue);
+            return _r.NextDouble() < dProb;
         }
 
 

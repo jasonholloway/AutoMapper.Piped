@@ -13,14 +13,14 @@ namespace Materialize.Reify.Parsing
     struct ParseContext
     {
         public readonly Expression SubjectExp;
-        public readonly ReifyContext ReifyContext;
+        public readonly ReifyContext ReifyContext;        
         
-        //public readonly MapContext MapContext;
-
         //---------------------------------------------------
         //Below fields not for keying: all derived from above
 
         public readonly Expression BaseExp; //even though variable, will never be mistaken for anything else...
+
+        public readonly Type SourceType;
 
         public readonly MethodCallExpression CallExp;
         public readonly MethodInfo Method;
@@ -34,15 +34,16 @@ namespace Materialize.Reify.Parsing
         public ParseContext(
             Expression exSubject, 
             Expression exBase, 
+            Type sourceType,
             ReifyContext reifyContext) 
         {
             Debug.Assert(exSubject.Contains(exBase));
 
             SubjectExp = exSubject;
             BaseExp = exBase;
-
+            SourceType = sourceType;
             ReifyContext = reifyContext;
-
+            
             CallExp = SubjectExp as MethodCallExpression;
             Method = CallExp?.Method;
 
@@ -56,8 +57,8 @@ namespace Materialize.Reify.Parsing
             }
         }
         
-        public ParseContext Spawn(Expression exSubject) {
-            return new ParseContext(exSubject, BaseExp, ReifyContext);
+        public ParseContext Spawn(Expression exSubject, Type sourceType) {
+            return new ParseContext(exSubject, BaseExp, sourceType, ReifyContext);
         }
         
     }
@@ -74,12 +75,14 @@ namespace Materialize.Reify.Parsing
 
         public bool Equals(ParseContext x, ParseContext y) {
             return _reifyContextComp.Equals(x.ReifyContext, y.ReifyContext)
+                    && x.SourceType.Equals(y.SourceType)
                     && x.IsMappingBase == y.IsMappingBase
                     && _subjectExpComparer.Equals(x.SubjectExp, y.SubjectExp);
         }
 
         public int GetHashCode(ParseContext obj) {
             return _subjectExpComparer.GetHashCode(obj.SubjectExp)
+                    ^ (obj.SourceType.GetHashCode() << 7)
                     ^ (_reifyContextComp.GetHashCode(obj.ReifyContext) << 16);
         }
     }

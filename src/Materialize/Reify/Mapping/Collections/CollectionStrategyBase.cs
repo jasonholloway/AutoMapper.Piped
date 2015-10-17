@@ -33,9 +33,9 @@ namespace Materialize.Reify.Mapping.Collections
             
             if(roots.TypeVector.Equals(new TypeVector(typeof(TDestElem), typeof(TOrigElem)))) {
                 return _elemStrategy.GetRootRebaseStrategy(roots);
-            }                                                       
+            }
 
-            return null;
+            return base.GetRootRebaseStrategy(roots);
         }
 
 

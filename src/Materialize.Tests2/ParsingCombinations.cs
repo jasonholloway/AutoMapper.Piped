@@ -36,9 +36,45 @@ namespace Materialize.Tests2
 
 
 
-        
-        
-               
+
+
+
+
+
+        class Source
+        {
+            public int Value;
+        }
+
+        class Mapped
+        {
+            public int Value;
+        }
+
+
+        [Test]
+        public void WhereAll() {
+            InitServices(x => {
+                x.ForbidClientSideFiltering();
+            });
+
+            InitMapper(x => {
+                x.CreateMap<Source, Mapped>();
+            });
+
+            var qy = Enumerable.Range(0, 100)
+                                .Select(i => new Source() { Value = i })
+                                .AsQueryable();
+
+            var result = qy.MapAs<Mapped>()
+                            .Where(m => m.Value > 50)
+                            .All(m => m.Value > 70);
+
+            Assert.That(result, Is.False);
+        }
+
+
+
 
         [Test]
         public void WhereFirst() {

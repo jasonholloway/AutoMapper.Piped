@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace Materialize.Types
 {
-    static class Refl
+    internal static class Refl
     {
         public static Type GetMemberType(MemberInfo member) {
             if(member is PropertyInfo) {

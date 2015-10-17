@@ -1,0 +1,74 @@
+﻿
+
+
+> ParseStrategy source types are currently a bit of a mess. 
+	ParseStrategies: like matryoshka dolls.
+
+	Therefore, their source types aren't the type that couples them to their immediate upstream
+	strategy. Instead, the source type refers to the very first input, before delegation upstream
+	is done, before the initial rewriting even.
+
+	So, I need to see what source type is used for, in practice. Nothing, it seems. Only rebasing.
+
+	SourceType is to be set from outside. It definitely, definitely shouldn't be set from upstream, rather the opposite.
+
+	FetchType: should parser care? Well, as long as parsing has to do with rewriting and transforming,
+	it's a very relevant concept.
+
+	Of course, the whole fetching over a gap thing could be encapsulated withing MapperStrategy. Parsing would thereafter
+	be agnostic as to how it was actually getting the realised data.
+
+	We could clear FetchType away from the world of IParseStrategy, but to do so would forbid us from affecting
+	the cardinality/multiplicity at the point of fetching. This is a very reasonable tactic in our arsenal.
+	(although any such change could surely be done at source, and consequent mapping operations could reflect
+	the changed multiplicity?) Yet a change in multiplicity is sometimes coupled with a filter, and here we have to
+	detect whether the filter's predicate can be rebased to the source type domain. And to detect this, we need to
+	pass it by our upstream feeders: they have control over our tactics. As it is, we immediately delegate upstream,
+	and to do this we must have already stated our type expectations. We can't then decide afterwards to change the 
+	type we want from above... 
+
+	All in all, a sneaky appending of a first(), then an even more sneaky repackaging of this into an array at
+	transformation, is irreplacable. But do we want an explicit fetch type? No harm, except for in the brittle
+	stubborness of an old concept.
+
+	*****************************************************************************
+
+	There could be a lot going for leaving mapping to the mapping layer. It would make more conceptual sense. 
+
+	It woud fit the traditional query set-up, as in "leave upstream to fend for itself, let us deal with what
+	we receive." Yet our mission here is no this. Instead each query clause must be given the chance to interfere
+	with what is upstream: this is how we effect our magic. Each posterior must affect the anterior. Roles are
+	reversed. Following the tack of "leave the upstream alone", and being ignorant of fetching (we would instead
+	just rewrite before, and transform after) robs us of our possibility.
+
+	******************************************************************************
+
+	Type mapping thus becomes part of parsing. Parsers may also change the type. And so the TypeVector needs
+	to be put in ParseContext.
+
+
+	But, again against the old conception, how does the parser know what types to map? Surely from delegating
+	inwards to its MapAs participle... rather than knowing transcendentally beforehand, via Reifiable's shim.
+
+	Reifiable doesn't know what the overall query will return, as that is down to any projections within the
+	query itself (such as, for instance, MapAs<T>()!) 
+
+	So, outer clauses would have to initially delegate upwards to know the full typevector (which itself would be
+	affected by upstream strategization). What would they initially know? Their dest type and destelem - these must
+	match the method typeargs. The source type, however, would seem to be inherited from above, as it is determined
+	by the base expression, whatever that is. So we know the source type transcendentally.
+
+	What's the problem then? The problem's in pre-defining an entire typevector. SourceType is set from the start.
+	Then the outermost clause is processed (after a depth-first delegation) and it knows its own output: it sets its
+	own DestType. No overall typevector is ever pre-determined. ParseContext only keeps the SourceType.
+
+	*******************************************************************************
+
+	What about the case of chained MapAs<> functions? Sounds mad, like, but syntactically legitimate.
+
+	I s'pose two Reifiables would be created... would actually work.
+
+
+
+
+
