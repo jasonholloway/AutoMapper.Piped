@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace Materialize.Reify.Parsing.Methods.Aggregators
 {
-    class PredCountParser : FilterParserBase
+    class PredCountHandler : FilterHandlerBase
     {
         protected override IParseStrategy Strategize() 
         {

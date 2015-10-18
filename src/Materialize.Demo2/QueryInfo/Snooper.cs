@@ -39,6 +39,10 @@ namespace Materialize.Demo2.QueryInfo
             _exQueryToServer = query.Expression;
         }
 
+        void ISnooper.OnQueryToServer(Expression exQuery) {
+            _exQueryToServer = exQuery;
+        }
+
         void ISnooper.OnFetched(IEnumerable enFetched) {
             //...
         }

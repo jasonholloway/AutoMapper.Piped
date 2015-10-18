@@ -11,6 +11,7 @@ namespace Materialize.Tests.Infrastructure
     {
         public Expression QueryExpFromClient { get; private set; }
         public IQueryable QueryToServer { get; private set; }
+        public Expression QueryExpToServer { get; private set; }
         public object[] Fetched { get; private set; }
         public object[] Transformed { get; private set; }
                         
@@ -24,6 +25,10 @@ namespace Materialize.Tests.Infrastructure
 
         void ISnooper.OnQueryToServer(IQueryable query) {
             QueryToServer = query;
+        }
+
+        void ISnooper.OnQueryToServer(Expression exQuery) {
+            QueryExpToServer = exQuery;
         }
 
         void ISnooper.OnFetched(IEnumerable enFetched) {

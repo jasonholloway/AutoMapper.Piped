@@ -18,16 +18,16 @@ namespace Materialize.Reify.Parsing.Methods
 
         static IDictionary<MethodInfo, MethodHandlerFac> _dHandlerFacs
             = new Dictionary<MethodInfo, MethodHandlerFac>() {
-                { QueryableMethods.Skip, _ => new PartitionerParser() },
-                { QueryableMethods.Take, _ => new PartitionerParser() },
-                { QueryableMethods.Where, _ => new WhereParser() },
-                { QueryableMethods.First, _ => new UnaryParser() },
-                { QueryableMethods.Single, _ => new UnaryParser() },
-                { QueryableMethods.Last, _ => new UnaryParser() },
-                { QueryableMethods.AnyPred, _ => new PredQuantifierParser() },
-                { QueryableMethods.All, _ => new PredQuantifierParser() },
-                { QueryableMethods.CountPred, _ => new PredCountParser() },
-                { QueryableMethods.Count, _ => new CountParser() }
+                { QueryableMethods.Skip, _ => new PartitionerHandler() },
+                { QueryableMethods.Take, _ => new PartitionerHandler() },
+                { QueryableMethods.Where, _ => new WhereHandler() },
+                { QueryableMethods.First, _ => new UnaryHandler() },
+                { QueryableMethods.Single, _ => new UnaryHandler() },
+                { QueryableMethods.Last, _ => new UnaryHandler() },
+                { QueryableMethods.AnyPred, _ => new PredQuantifierHandler() },
+                { QueryableMethods.All, _ => new PredQuantifierHandler() },
+                { QueryableMethods.CountPred, _ => new PredCountHandler() },
+                { QueryableMethods.Count, _ => new CountHandler() }
             };
 
 

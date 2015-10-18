@@ -83,7 +83,7 @@ namespace Materialize.Reify.Mapping.Collections
             protected override TDest Transform(IEnumerable<TMedElem> fetched) {
                 var transformedElems = fetched
                                         .Select(elem => _elemModifier.Transform(elem));
-
+                
                 return (TDest)_collFactory(transformedElems);
             }
         }

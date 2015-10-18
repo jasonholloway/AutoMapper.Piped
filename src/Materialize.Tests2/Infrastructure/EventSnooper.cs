@@ -30,6 +30,10 @@ namespace Materialize.Tests.Infrastructure
             }
         }
 
+        void ISnooper.OnQueryToServer(Expression exQuery) {
+            //...
+        }
+
         void ISnooper.OnFetched(IEnumerable enFetched) {
             if(Fetched != null) {
                 Fetched(enFetched.Cast<object>());

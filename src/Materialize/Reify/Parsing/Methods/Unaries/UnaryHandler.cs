@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Materialize.Reify.Parsing.Methods.Unaries
 {
-    class UnaryParser : MethodHandlerBase
+    class UnaryHandler : MethodHandlerBase
     {
         protected override IParseStrategy Strategize() 
         {            

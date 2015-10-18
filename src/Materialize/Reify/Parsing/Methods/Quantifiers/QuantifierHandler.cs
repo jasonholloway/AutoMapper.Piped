@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Materialize.Reify.Parsing.Methods.Quantifiers
 {
-    class QuantifierParser : MethodHandlerBase
+    class QuantifierHandler : MethodHandlerBase
     {
         protected override IParseStrategy Strategize() 
         {            

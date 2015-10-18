@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Materialize.Reify.Parsing.Methods.Aggregators
 {
-    class CountParser : MethodHandlerBase
+    class CountHandler : MethodHandlerBase
     {
         protected override IParseStrategy Strategize() 
         {

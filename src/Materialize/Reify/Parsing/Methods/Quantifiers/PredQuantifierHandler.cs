@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace Materialize.Reify.Parsing.Methods.Quantifiers
 {
-    class PredQuantifierParser : FilterParserBase
+    class PredQuantifierHandler : FilterHandlerBase
     {
 
         protected override IParseStrategy Strategize() 

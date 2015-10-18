@@ -9,11 +9,48 @@ TO DO! ********************************************
 	Parser -> ParseStrategySource -> MethodRule -> WhereStrategizer -> WhereOnClientStrategy -> IModifier
 	
 
+
+********************************************************************************************************
+> Now we are transforming IQueryables it seems... so why don't we just rewrite expressions? Or rather, as that is exactly
+	what we are doing... we could get client-side transformation query by snooping on EnumerableQuery populated by mapping.
+
+	to do this, collectionfactory needs to somehow emplace a snooped EnumerableQuery each time...
+
+	the outer mapstrategy does it, usually CollectionMap, though this isn't always the case!
+
+	But, if the overall contraption yields an IQueryable, couldn't this just be sampled post facto?
+	Would work, but not in case of unaries, which yield no IQueryable.
+
+	Yet these limiting unaries are solely to do with parsing. The mapper IParseStrategy is therefore a likely spot
+	to spy on the inner mapping machinery's yielded queryable.
+
+
+
+	CollectionStrategy currently packages up all enumerables into new collections. Laudable.
+	But this means eager realisation of source query... We are mapping from IQueryable to IQueryable:
+	shouldn't there be a special mapping rule for this? I think this is very, very reasonable.
+
+	If there were a special IQueryable collection rule, then the entire reification would become one big
+	queryable chain, all the way through, and only realised at the last moment.
+
+	But the problem with this lovely vision is that some clauses certainly can't be sent to the source server.
+
+	We do need to realise in the middle. So all is currently well and good, except for the fact that Reifiable
+	forces our results to a concrete enumerable, before passing to transformation! Transformation itself is
+	supposed to achieve this.
+
+
+
+
+
+
+
+
+**********************************************************************************************************
+
+
 > In parsing, strategizers and rules are really at same level, have same function.
 	Would seem neater to have specialised StrategyCondition classes - or *rules?*
-
-
-> Parse strategies shouldn't be explicitly setting fetch type in ctors....
 
 > Changes of cardinality elsewhere are currently ignored in parsing
 

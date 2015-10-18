@@ -99,12 +99,28 @@ namespace Materialize.Reify
             if(typeof(IQueryable).IsAssignableFrom(exQuery.Type)) {
                 var query = SourceQuery.Provider.CreateQuery(exQuery);
                 OnQueryToServer(query);
+                OnQueryToServer(exQuery);
 
-                var enFetched = (IEnumerable)query;
+                //var fetched = SourceQuery.Provider.Execute<IEnumerable>(exQuery);
 
-                OnFetched(enFetched);
+                //OnFetched(fetched);
 
-                var transformed = parsed.Modifier.Transform(enFetched);
+                //CollectionStrategy should do the realisation of IQueryable for us!!!
+                //ie don't need to manually execute here. Should just pass IQueryable
+                //into transformation.
+
+                //this works, but it takes our oversight of fetching away from us...
+
+                //*****************************************************************************************************
+                //**** WOULD BE BEST IF... ****************************************************************************
+                //      we manually realised to an EnumerableQuery container here
+                //      and put in a special collection rule whereby IQueryables weren't unnecessarily realised
+
+                // ALSO: Passing query straight through opens the door to non-safe clauses being appended...
+                // Everything at the transformation stage should be safe, unrestricted by the regime of the source query.
+
+
+                var transformed = parsed.Modifier.Transform(query); // fetched);
                 
                 OnTransformed(transformed is IEnumerable
                                     ? (IEnumerable)transformed
@@ -113,8 +129,7 @@ namespace Materialize.Reify
                 return (TResult)transformed;
             }
             else {
-                //no simple way to implement QueryToServer hook
-                //when expression is fed directly to Execute by unary method
+                OnQueryToServer(exQuery);
 
                 var fetched = SourceQuery.Provider.Execute(exQuery);
                 OnFetched(new[] { fetched });
@@ -147,6 +162,10 @@ namespace Materialize.Reify
 
         void OnQueryToServer(IQueryable query) {
             _options.Snooper?.OnQueryToServer(query);
+        }
+
+        void OnQueryToServer(Expression exQuery) {
+            _options.Snooper?.OnQueryToServer(exQuery);
         }
 
         void OnFetched(IEnumerable elems) {

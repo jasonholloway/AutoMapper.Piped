@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 
 namespace Materialize.Reify.Parsing.Methods.Filters
 {
-    abstract class FilterParserBase : MethodParserBase
+    abstract class FilterHandlerBase : MethodHandlerBase
     {   
 
         protected class RebasePredicateResult
