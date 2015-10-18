@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace Materialize.Reify.Parsing.Methods.Aggregators
 {
-    class CountParser : MethodParserBase
+    class CountParser : MethodHandlerBase
     {
-        protected override IParseStrategy Parse() 
+        protected override IParseStrategy Strategize() 
         {
             if(UpstreamStrategy.FiltersFetchedSet) {
                 return CreateStrategy(
-                            typeof(CountOnClientStrategy<>).MakeGenericType(ElemType),
+                            typeof(CountOnClientStrategy<,>).MakeGenericType(SourceType, ElemType),
                             UpstreamStrategy);
             }
             else {
                 return CreateStrategy(
-                            typeof(CountOnServerStrategy<>).MakeGenericType(ElemType),
+                            typeof(CountOnServerStrategy<,>).MakeGenericType(SourceType, ElemType),
                             UpstreamStrategy);
             }            
         }

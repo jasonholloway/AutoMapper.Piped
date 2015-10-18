@@ -8,16 +8,18 @@ using Materialize.Types;
 
 namespace Materialize.Reify.Parsing.Methods.Aggregators
 {
-    class CountOnServerStrategy<TElem> 
-        : MethodStrategyBase<IEnumerable<TElem>, int>
+    //as always, no awareness here of changes to cardinality elsewhere...
+
+    class CountOnServerStrategy<TSource, TElem> 
+        : MethodStrategyBase<TSource, int>
     {
         MethodInfo _mCount; 
 
         public CountOnServerStrategy(IParseStrategy upstreamStrategy)
             : base(upstreamStrategy) 
         { 
-            FetchType = UpstreamStrategy.FetchType.GetEnumerableElementType();
-            _mCount = QueryableMethods.Count.MakeGenericMethod(FetchType);
+            _mCount = QueryableMethods.Count
+                            .MakeGenericMethod(FetchType.GetEnumerableElementType());
         }
 
         
@@ -28,7 +30,7 @@ namespace Materialize.Reify.Parsing.Methods.Aggregators
         
 
 
-        class Modifier : ParseModifier<IEnumerable<TElem>, int>
+        class Modifier : ParseModifier<IQueryable<TElem>, int>
         {
             MethodInfo _mCount;
 
@@ -39,15 +41,14 @@ namespace Materialize.Reify.Parsing.Methods.Aggregators
             }
                         
 
-            protected override Expression Rewrite(Expression exSourceQuery) 
-            {
-                var exUpstream = UpstreamRewrite(exSourceQuery);
-                
+            protected override Expression Rewrite(Expression exSourceQuery) {
+                var exUpstream = UpstreamRewrite(exSourceQuery);                
                 return Expression.Call(_mCount, exUpstream);
             }
 
 
             protected override int Transform(object fetched) {
+                //no upstream delegation here: placing rule guarantees no intervening filtering
                 return (int)fetched;
             }
         }

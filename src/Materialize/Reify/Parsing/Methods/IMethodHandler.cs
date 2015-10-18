@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Materialize.Reify.Parsing.Methods
 {
-    interface IMethodParser
+    interface IMethodHandler
     {
         ParseContext Context { set; }
         ParseStrategySource ParseStrategySource { set; }
 
-        IParseStrategy Parse();
+        IParseStrategy Strategize();
     }
 }

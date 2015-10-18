@@ -1,21 +1,18 @@
 ﻿using Materialize.Dependencies;
-using Materialize.Reify.Parsing.Methods.Partitioners;
 using Materialize.Reify.Parsing.Mapping;
-using Materialize.Reify.Parsing.Methods.Unaries;
-using Materialize.Reify.Parsing.Methods.Filters;
+using Materialize.Reify.Parsing.Methods;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Materialize.Reify.Parsing.Methods;
 
 namespace Materialize.Reify.Parsing
 {
     class ParseRuleRegistry
     {
-        static Type[] _ruleTypes = new[] {
-                                        typeof(MapperRule), //should always be first
-                                        typeof(MethodRule)
-                                    };
+        static Type[] _ruleTypes = {
+                            typeof(MapperRule), //should always be first!
+                            typeof(MethodRule)
+                        };
 
 
         Lazy<IParseRule[]> _lzRules;

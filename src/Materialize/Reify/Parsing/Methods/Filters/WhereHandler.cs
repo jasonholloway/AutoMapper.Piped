@@ -5,9 +5,9 @@ using System.Linq.Expressions;
 
 namespace Materialize.Reify.Parsing.Methods.Filters
 {
-    class WhereParser : FilterParserBase
+    class WhereHandler : FilterHandlerBase
     {    
-        protected override IParseStrategy Parse() 
+        protected override IParseStrategy Strategize() 
         {            
             var predRebase = RebasePredicateToSource((UnaryExpression)CallExp.Arguments[1]);
             

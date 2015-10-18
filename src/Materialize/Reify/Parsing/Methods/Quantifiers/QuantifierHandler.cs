@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Materialize.Reify.Parsing.Methods.Quantifiers
 {
-    class QuantifierParser : MethodParserBase
+    class QuantifierParser : MethodHandlerBase
     {
-        protected override IParseStrategy Parse() 
+        protected override IParseStrategy Strategize() 
         {            
             //UpstreamStrategy.FiltersFetchedSet 
 

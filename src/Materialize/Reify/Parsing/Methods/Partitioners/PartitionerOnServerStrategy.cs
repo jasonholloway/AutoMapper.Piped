@@ -8,15 +8,15 @@ using Materialize.Types;
 
 namespace Materialize.Reify.Parsing.Methods.Partitioners
 {   
-    class PartitionerOnServerStrategy<TElem> 
-        : MethodStrategyBase<IEnumerable<TElem>, IEnumerable<TElem>>
+    class PartitionerOnServerStrategy<TSource, TElem> 
+        : MethodStrategyBase<TSource, IQueryable<TElem>>
     {
-        MethodInfo _mPartitionerDef;
+        MethodInfo _mPartitioner;
 
         public PartitionerOnServerStrategy(IParseStrategy upstreamStrategy, MethodInfo mPartitionerDef)
             : base(upstreamStrategy) 
         {
-            _mPartitionerDef = mPartitionerDef;
+            _mPartitioner = mPartitionerDef.MakeGenericMethod(typeof(TElem));
         }
         
 
@@ -24,40 +24,35 @@ namespace Materialize.Reify.Parsing.Methods.Partitioners
         {
             var count = (int)((ConstantExpression)ex.Arguments[1]).Value;
 
-            return new Modifier(upstreamMod, _mPartitionerDef, count);
+            return new Modifier(upstreamMod, _mPartitioner, count);
         }
         
 
-
-        class Modifier : ParseModifier<IEnumerable<TElem>, IEnumerable<TElem>>
+        class Modifier : ParseModifier<IQueryable<TElem>, IQueryable<TElem>>
         {
-            MethodInfo _mLimiterDef;
+            MethodInfo _mPartitioner;
             int _count;
 
-            public Modifier(IModifier upstreamMod, MethodInfo mLimiterDef, int count)
+            public Modifier(IModifier upstreamMod, MethodInfo mPartitioner, int count)
                 : base(upstreamMod) 
             {
-                _mLimiterDef = mLimiterDef;
+                _mPartitioner = mPartitioner;
                 _count = count;
             }
             
 
             protected override Expression Rewrite(Expression exSourceQuery) 
             {
-                var exInst = UpstreamRewrite(exSourceQuery);
-
-                var mLimiter = _mLimiterDef.MakeGenericMethod(
-                                            exInst.Type.GetEnumerableElementType());
-
+                var exUpstream = UpstreamRewrite(exSourceQuery);
+                
                 return Expression.Call(
-                                    mLimiter, 
-                                    exInst, 
+                                    _mPartitioner, 
+                                    exUpstream, 
                                     Expression.Constant(_count));
             }
 
 
-            protected override IEnumerable<TElem> Transform(object fetched) 
-            {
+            protected override IQueryable<TElem> Transform(object fetched) {
                 return UpstreamTransform(fetched);
             }
         }

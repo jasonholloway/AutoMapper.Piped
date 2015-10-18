@@ -9,7 +9,7 @@ namespace Materialize.Reify.Parsing.Methods.Aggregators
 {
     class PredCountParser : FilterParserBase
     {
-        protected override IParseStrategy Parse() 
+        protected override IParseStrategy Strategize() 
         {
             //This is all wrong!
             //Upstream filters will mess this up as is
@@ -20,13 +20,13 @@ namespace Materialize.Reify.Parsing.Methods.Aggregators
 
             if(predRebase.Successful) { //prepend our quantifier to source query
                 return CreateStrategy(
-                            typeof(PredCountOnServerStrategy<>).MakeGenericType(ElemType),
+                            typeof(PredCountOnServerStrategy<,>).MakeGenericType(SourceType, ElemType),
                             UpstreamStrategy,
                             predRebase.RebaseStrategy);
             }
             else if(AllowClientSideFiltering) { //apply our quantifier at end of transformation
                 return CreateStrategy(
-                            typeof(PredCountOnClientStrategy<>).MakeGenericType(ElemType),
+                            typeof(PredCountOnClientStrategy<,>).MakeGenericType(SourceType, ElemType),
                             UpstreamStrategy);
             }
 

@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Materialize.Reify.Parsing.Methods
 {
-    abstract class MethodParserBase : IMethodParser
+    abstract class MethodHandlerBase : IMethodHandler
     {
         ParseContext _ctx;
         
@@ -37,13 +37,13 @@ namespace Materialize.Reify.Parsing.Methods
         protected bool AllowClientSideFiltering { get; private set; }
 
 
-        IParseStrategy IMethodParser.Parse() 
+        IParseStrategy IMethodHandler.Strategize() 
         {
             UpstreamStrategy = GetUpstreamStrategy(Context);
-            return Parse();
+            return Strategize();
         }
 
-        protected abstract IParseStrategy Parse();
+        protected abstract IParseStrategy Strategize();
 
 
 

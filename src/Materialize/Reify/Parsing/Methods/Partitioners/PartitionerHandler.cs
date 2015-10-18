@@ -7,22 +7,22 @@ using System.Reflection;
 
 namespace Materialize.Reify.Parsing.Methods.Partitioners
 {
-    //Skip and Take with predicates...
+    //Simple Skip and Take...
 
-    class PredPartitionerParser : MethodParserBase
-    {        
-        protected override IParseStrategy Parse() 
+    class PartitionerParser : MethodHandlerBase
+    {
+
+        protected override IParseStrategy Strategize() 
         {            
             if(UpstreamStrategy.FiltersFetchedSet) {
                 //client-side
                 throw new NotImplementedException();
             }
             else {
-                //server-side, inc. attempt at rebasing
-
-
-
-                throw new NotImplementedException();
+                return CreateStrategy(
+                            typeof(PartitionerOnServerStrategy<,>).MakeGenericType(SourceType, ElemType),
+                            UpstreamStrategy,
+                            MethodDef);
             }
         }
 

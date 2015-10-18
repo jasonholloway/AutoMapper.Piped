@@ -8,14 +8,11 @@ using Materialize.Types;
 
 namespace Materialize.Reify.Parsing.Methods.Aggregators
 {
-    class CountOnClientStrategy<TElem> 
-        : MethodStrategyBase<IEnumerable<TElem>, int>
+    class CountOnClientStrategy<TSource, TElem> 
+        : MethodStrategyBase<TSource, int>
     {
         public CountOnClientStrategy(IParseStrategy upstreamStrategy)
-            : base(upstreamStrategy) 
-        { 
-            FetchType = UpstreamStrategy.FetchType.GetEnumerableElementType();
-        }
+            : base(upstreamStrategy) { }
 
         
         protected override IModifier Parse(IModifier upstreamMod, MethodCallExpression ex) 
@@ -24,21 +21,19 @@ namespace Materialize.Reify.Parsing.Methods.Aggregators
         }
         
 
-
-        class Modifier : ParseModifier<IEnumerable<TElem>, int>
+        class Modifier : ParseModifier<IQueryable<TElem>, int>
         {
             public Modifier(IModifier upstreamMod)
                 : base(upstreamMod) { }
                                     
 
-            protected override Expression Rewrite(Expression exSourceQuery) 
-            {
+            protected override Expression Rewrite(Expression exSourceQuery) {
                 return UpstreamRewrite(exSourceQuery);
             }
-
-
-            protected override int Transform(object fetched) {
-                return ((IEnumerable<TElem>)fetched).Count();
+            
+            protected override int Transform(object fetched) {                
+                var transformed = UpstreamTransform(fetched);
+                return transformed.Count();
             }
         }
 

@@ -7,8 +7,8 @@ using System.Linq.Expressions;
 
 namespace Materialize.Reify.Parsing.Methods.Aggregators
 {
-    class PredCountOnServerStrategy<TElem> 
-        : MethodStrategyBase<IEnumerable<TElem>, bool>
+    class PredCountOnServerStrategy<TSource, TElem> 
+        : MethodStrategyBase<TSource, bool>
     {
         IRebaseStrategy _predRebaseStrategy;
 
@@ -19,48 +19,39 @@ namespace Materialize.Reify.Parsing.Methods.Aggregators
         {
             _predRebaseStrategy = predRebaseStrategy;
         }
-               
-
-        public override bool FiltersFetchedSet {
-            get { return false; }
-        }
-
+                      
 
         protected override IModifier Parse(IModifier upstreamMod, MethodCallExpression exSubject) 
         {
-            var exRebaseSubject = exSubject.Replace( //Don't even think this is necessary, as strategy will be in place, regardless of the expression type.
-                                                exSubject.Arguments[0],
-                                                Expression.Parameter(exSubject.Arguments[0].Type)
-                                                );
-
-            var exRebasedQuantifier = _predRebaseStrategy.Rebase(exRebaseSubject);
+            var exRebasedCall = (MethodCallExpression)_predRebaseStrategy.Rebase(exSubject);
             
-            return new Modifier(upstreamMod, (MethodCallExpression)exRebasedQuantifier);
+            return new Modifier(upstreamMod, exRebasedCall);
         }
                        
 
 
-        class Modifier : ParseModifier<IEnumerable<TElem>, int>
+        class Modifier : ParseModifier<IQueryable<TElem>, int>
         {
-            MethodCallExpression _exRebasedQuantifier;
+            MethodCallExpression _exRebasedCall;
 
-            public Modifier(IModifier upstreamMod, MethodCallExpression exRebasedQuantifier)
+            public Modifier(IModifier upstreamMod, MethodCallExpression exRebasedCall)
                 : base(upstreamMod) 
             {
-                _exRebasedQuantifier = exRebasedQuantifier;
+                _exRebasedCall = exRebasedCall;
             }
             
 
             protected override Expression Rewrite(Expression exQuery) 
             {                
-                return _exRebasedQuantifier.Replace(
-                                                _exRebasedQuantifier.Arguments[0], 
-                                                exQuery);
+                //as usual, no care about upstream changes to cardinality
+
+                return _exRebasedCall.Replace(
+                                        _exRebasedCall.Arguments[0], 
+                                        exQuery);
             }
 
 
-            protected override int Transform(object fetched) 
-            {
+            protected override int Transform(object fetched) {
                 return (int)fetched;
             }
 

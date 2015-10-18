@@ -7,8 +7,8 @@ using System.Linq.Expressions;
 
 namespace Materialize.Reify.Parsing.Methods.Quantifiers
 {
-    class PredQuantifierOnServerStrategy<TElem> 
-        : MethodStrategyBase<IEnumerable<TElem>, bool>
+    class PredQuantifierOnServerStrategy<TSource, TElem> 
+        : MethodStrategyBase<TSource, bool>
     {
         IRebaseStrategy _predRebaseStrategy;
 
@@ -19,28 +19,19 @@ namespace Materialize.Reify.Parsing.Methods.Quantifiers
         {
             _predRebaseStrategy = predRebaseStrategy;
         }
-               
-
-        public override bool FiltersFetchedSet {
-            get { return false; }
-        }
+        
 
 
         protected override IModifier Parse(IModifier upstreamMod, MethodCallExpression exSubject) 
         {
-            var exRebaseSubject = exSubject.Replace( //Don't even think this is necessary, as strategy will be in place, regardless of the expression type.
-                                                exSubject.Arguments[0],
-                                                Expression.Parameter(exSubject.Arguments[0].Type)
-                                                );
-
-            var exRebasedQuantifier = _predRebaseStrategy.Rebase(exRebaseSubject);
+            var exRebasedQuantifier = _predRebaseStrategy.Rebase(exSubject);
             
             return new Modifier(upstreamMod, (MethodCallExpression)exRebasedQuantifier);
         }
                        
 
 
-        class Modifier : ParseModifier<IEnumerable<TElem>, bool>
+        class Modifier : ParseModifier<IQueryable<TElem>, bool>
         {
             MethodCallExpression _exRebasedQuantifier;
 
@@ -59,8 +50,7 @@ namespace Materialize.Reify.Parsing.Methods.Quantifiers
             }
 
 
-            protected override bool Transform(object fetched) 
-            {
+            protected override bool Transform(object fetched) {
                 return (bool)fetched;
             }
 

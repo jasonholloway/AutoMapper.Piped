@@ -14,10 +14,10 @@ namespace Materialize.Reify.Parsing.Methods
     class MethodRule : ParseRule
     {
 
-        delegate IMethodParser MethodParserFac(ParseContext ctx);
+        delegate IMethodHandler MethodHandlerFac(ParseContext ctx);
 
-        static IDictionary<MethodInfo, MethodParserFac> _dParserFacs
-            = new Dictionary<MethodInfo, MethodParserFac>() {
+        static IDictionary<MethodInfo, MethodHandlerFac> _dHandlerFacs
+            = new Dictionary<MethodInfo, MethodHandlerFac>() {
                 { QueryableMethods.Skip, _ => new PartitionerParser() },
                 { QueryableMethods.Take, _ => new PartitionerParser() },
                 { QueryableMethods.Where, _ => new WhereParser() },
@@ -43,16 +43,16 @@ namespace Materialize.Reify.Parsing.Methods
 
         public override IParseStrategy GetStrategy(ParseContext ctx) 
         {
-            MethodParserFac fnParser = null;
+            MethodHandlerFac fnHandlerFac = null;
 
-            if(_dParserFacs.TryGetValue(ctx.MethodDef, out fnParser)) 
+            if(_dHandlerFacs.TryGetValue(ctx.MethodDef, out fnHandlerFac)) 
             {
-                var parser = fnParser(ctx);
+                var handler = fnHandlerFac(ctx);
 
-                parser.Context = ctx;
-                parser.ParseStrategySource = _parseStrategies;
+                handler.Context = ctx;
+                handler.ParseStrategySource = _parseStrategies;
 
-                return parser.Parse();
+                return handler.Strategize();
             }
             
             throw new ParseException(

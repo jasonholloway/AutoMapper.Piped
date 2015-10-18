@@ -13,6 +13,9 @@ TO DO! ********************************************
 	Would seem neater to have specialised StrategyCondition classes - or *rules?*
 
 
+> Parse strategies shouldn't be explicitly setting fetch type in ctors....
+
+> Changes of cardinality elsewhere are currently ignored in parsing
 
 > Add T4 template to test project, will create 50 random queries, and test result against the same applied to an enumeration. These will all appear in test explorer, and will be refreshable. SourceRegime used should also be
   random (although this latter will give different results each time: not so good!)

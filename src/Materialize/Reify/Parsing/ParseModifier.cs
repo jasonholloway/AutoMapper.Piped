@@ -8,9 +8,6 @@ using System.Threading.Tasks;
 
 namespace Materialize.Reify.Parsing
 {   
-    //*****************************************************
-    //FASCINATING: TUpstreamOut should always == TSource! *
-    //*****************************************************
 
     abstract class ParseModifier<TUpstreamOut, TDest> 
         : IModifier

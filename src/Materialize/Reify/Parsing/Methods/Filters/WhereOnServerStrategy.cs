@@ -28,12 +28,7 @@ namespace Materialize.Reify.Parsing.Methods.Filters
 
         protected override IModifier Parse(IModifier upstreamMod, MethodCallExpression exSubject) 
         {
-            var exRebaseSubject = exSubject.Replace( //Don't even think this is necessary, as strategy will be in place, regardless of the expression type.
-                                                exSubject.Arguments[0],
-                                                Expression.Parameter(exSubject.Arguments[0].Type)
-                                                );
-
-            var exRebasedWhere = _predRebaseStrategy.Rebase(exRebaseSubject);
+            var exRebasedWhere = _predRebaseStrategy.Rebase(exSubject);
             
             return new Modifier(upstreamMod, (MethodCallExpression)exRebasedWhere);
         }
@@ -52,9 +47,6 @@ namespace Materialize.Reify.Parsing.Methods.Filters
 
             protected override Expression Rewrite(Expression exSource) 
             {                
-                //stitch rebased where expression onto passed source query
-                //and pass on...
-
                 var exStitched = _exRebasedWhere.Replace(
                                                     _exRebasedWhere.Arguments[0], 
                                                     exSource);

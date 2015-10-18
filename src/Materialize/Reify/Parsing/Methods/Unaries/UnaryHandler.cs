@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Materialize.Reify.Parsing.Methods.Unaries
 {
-    class UnaryParser : MethodParserBase
+    class UnaryParser : MethodHandlerBase
     {
-        protected override IParseStrategy Parse() 
+        protected override IParseStrategy Strategize() 
         {            
             if(UpstreamStrategy.FiltersFetchedSet) {
                 return CreateStrategy(

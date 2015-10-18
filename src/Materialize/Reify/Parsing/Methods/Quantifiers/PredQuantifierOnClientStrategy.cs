@@ -8,49 +8,58 @@ using System.Reflection;
 
 namespace Materialize.Reify.Parsing.Methods.Quantifiers
 {
-    class PredQuantifierOnClientStrategy<TElem> 
-        : MethodStrategyBase<IEnumerable<TElem>, IEnumerable<TElem>>
+    class PredQuantifierOnClientStrategy<TSource, TElem> 
+        : MethodStrategyBase<TSource, bool>
     {
-        public PredQuantifierOnClientStrategy(IParseStrategy upstreamStrategy)
-            : base(upstreamStrategy) { }
-                
+        delegate bool Applicator(IQueryable<TElem> input, Expression<Func<TElem, bool>> predicate);
+        
+        Applicator _fnApply = null;
+
+
+        public PredQuantifierOnClientStrategy(IParseStrategy upstreamStrategy, MethodInfo mQuantifier)
+            : base(upstreamStrategy) 
+        {
+            _fnApply = CompileApplicator(mQuantifier);             
+        }
+            
+        
+        
+        Applicator CompileApplicator(MethodInfo mQuantifier) 
+        {
+            var exInput = Expression.Parameter(typeof(IQueryable<TElem>));
+            var exPredicate = Expression.Parameter(typeof(Expression<Func<TElem, bool>>));
+
+            var exLambda = Expression.Lambda<Applicator>(
+                                        Expression.Call(
+                                                    mQuantifier,
+                                                    exInput,
+                                                    exPredicate),
+                                        exInput,
+                                        exPredicate);
+
+            return exLambda.Compile();
+        }
+
+
+
 
         protected override IModifier Parse(IModifier upstreamMod, MethodCallExpression exSubject) 
         {
-            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            //GHASTLY!!!!!!!!!!!!!!!!!!!!!!!
-            //have to parameterize... but this will do for demo
+            var exPredicate = (Expression<Func<TElem, bool>>)((UnaryExpression)exSubject.Arguments[1]).Operand;
 
-            var tElem = exSubject.Arguments[0].Type.GetEnumerableElementType();
-
-            var exParam = Expression.Parameter(typeof(IEnumerable<>).MakeGenericType(tElem));
-
-            var mEnumerableQuantifier = EnumerableMethods
-                                            .GetFromQueryableMethod(exSubject.Method.GetGenericMethodDefinition())
-                                            .MakeGenericMethod(tElem);                                                            
-            
-            var exLambda = Expression.Lambda<Func<IEnumerable<TElem>, bool>>(
-                                        Expression.Call(
-                                                    mEnumerableQuantifier,
-                                                    exParam,
-                                                    ((UnaryExpression)exSubject.Arguments[1]).Operand
-                                                    ),
-                                        exParam);
-
-            var fnQuantifier = exLambda.Compile();
-                        
-            return new Modifier(upstreamMod, fnQuantifier);
+            return new Modifier(upstreamMod, inp => _fnApply(inp, exPredicate));
         }
                        
 
-        class Modifier : ParseModifier<IEnumerable<TElem>, bool>
-        {
-            Func<IEnumerable<TElem>, bool> _fnQuantifier;
 
-            public Modifier(IModifier upstreamMod, Func<IEnumerable<TElem>, bool> fnQuantifier)
+        class Modifier : ParseModifier<IQueryable<TElem>, bool>
+        {
+            Func<IQueryable<TElem>, bool> _fnApply;
+
+            public Modifier(IModifier upstreamMod, Func<IQueryable<TElem>, bool> fnApply)
                 : base(upstreamMod) 
             {
-                _fnQuantifier = fnQuantifier;
+                _fnApply = fnApply;
             }
             
 
@@ -62,7 +71,7 @@ namespace Materialize.Reify.Parsing.Methods.Quantifiers
             protected override bool Transform(object fetched) 
             {                
                 var transformed = UpstreamTransform(fetched);
-                return _fnQuantifier((IEnumerable<TElem>)fetched);
+                return _fnApply(transformed);
             }
 
         }
