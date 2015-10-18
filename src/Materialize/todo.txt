@@ -10,6 +10,58 @@ TO DO! ********************************************
 	
 
 
+> Could there be some kind of paging behaviour in fetching? Not really. We absolutely can't guarantee the equality of our source.
+	We need to fetch the entire set at once!
+
+	But there will be laziness in transformation, if not fetching. That is, post-fetch preparations will only be applied when
+	the results are enumerated. Maybe we need a hook point after transformation, to allow after-map hooks to bite.
+
+> Mapping strategies need to be changed to work with queryables
+
+	but only if they take em. Makes most immediate sense with outermost collection, tis true.
+
+	But as soon as the outer collection selects into element-land, then our nice IQueryables are gone.
+
+	We could perhaps pass expressions throughout. But then, as we'd have to be doing with compiling expressions
+	for *each* query, down from the snoopable form into executable code, gashness. 
+
+	Plus points: would present all transformations in one general form, coequal with source transformations.
+	A step towards a more elegant approach.
+
+	The clientside expression built could be cached somehow. Most simply, it would just be executed each time against
+	an EnumerableQuery. This would work quickly.
+
+	In the future, we could parametrize and cache.
+
+	Expressions wouldn't then have to do with IQueryables. They would relate to enumerations and concrete types. There would
+	be no inner queryprovider, only a cached compiler, which would run the produced method against the fetched enumerable.
+
+	It would also supply requisite parameters from the source query - that is, it would present extracted constants as parameters
+	to the lambda.
+
+	Could we make do temporarily without parameterization and cacheing? Well, yes, but it would be ugly. So be it.
+
+	********************************************************************************************************************
+
+	Would there be a role then for the collectionfactory? Well, yes, as the eventually-compiled lambda will need to 
+	materialize to collections as of old.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ********************************************************************************************************
 > Now we are transforming IQueryables it seems... so why don't we just rewrite expressions? Or rather, as that is exactly
 	what we are doing... we could get client-side transformation query by snooping on EnumerableQuery populated by mapping.

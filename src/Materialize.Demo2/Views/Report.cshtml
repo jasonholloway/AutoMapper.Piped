@@ -16,12 +16,12 @@
 </div>
 
 <div>
-    <h2>Query from Client</h2>
+    <h2>Incoming Query</h2>
     <pre class="prettyprint language-cs">@Model.QueryFromClient</pre>
 </div>
 
 <div>
-    <h2>IReifyStrategy Tree</h2>
+    <h2>Strategization</h2>
     @Html.TreeList(
             Model.StrategyTree,
             (s, tag) => tag.Append("h4", t => t.Text(s.Name)).Span(t => t.Text(s.Description))
@@ -29,7 +29,12 @@
 </div>
 
 <div>
-    <h2>Query to Server</h2>
+    <h2>Source Query</h2>
     <pre class="prettyprint language-cs">@Model.QueryToServer</pre>
+</div>
+
+<div>
+    <h2>Transformation Query</h2>
+    <pre class="prettyprint language-cs">@*@Model.QueryToServer*@</pre>
 </div>
 

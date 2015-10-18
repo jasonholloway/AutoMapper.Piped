@@ -43,7 +43,7 @@ namespace Materialize.Reify.Mapping.Collections
                 
         
 
-        class Mapper : MapperModifier<IEnumerable<TOrigElem>, IEnumerable<TMedElem>, TDest>
+        class Mapper : MapperModifier<IQueryable<TOrigElem>, IQueryable<TMedElem>, TDest>
         {
             static MethodInfo _mQueryableSelect = Refl.GetMethod(() => Queryable.Select(null, (Expression<Func<TOrigElem, TMedElem>>)null));
             static MethodInfo _mEnumerableSelect = Refl.GetMethod(() => Enumerable.Select(null, (Func<TOrigElem, TMedElem>)null));
@@ -70,8 +70,8 @@ namespace Materialize.Reify.Mapping.Collections
                 
                 return Expression.Call(
                                     exQuery.Type.IsQueryable()
-                                        ? _mQueryableSelect
-                                        : _mEnumerableSelect,
+                                                    ? _mQueryableSelect
+                                                    : _mEnumerableSelect,
                                     exQuery,
                                     Expression.Lambda(
                                                 typeof(Func<TOrigElem, TMedElem>),
@@ -80,7 +80,7 @@ namespace Materialize.Reify.Mapping.Collections
                                     );
             }
                         
-            protected override TDest Transform(IEnumerable<TMedElem> fetched) {
+            protected override TDest Transform(IQueryable<TMedElem> fetched) {
                 var transformedElems = fetched
                                         .Select(elem => _elemModifier.Transform(elem));
                 

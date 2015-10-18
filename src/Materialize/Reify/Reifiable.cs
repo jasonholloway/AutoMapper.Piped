@@ -69,6 +69,15 @@ namespace Materialize.Reify
 
 
 
+        
+        static IQueryable PackageAsQueryable(Type tElem, IEnumerable items) 
+        {            
+            var tCont = typeof(EnumerableQuery<>).MakeGenericType(tElem);
+            return (IQueryable)Activator.CreateInstance(tCont, items);
+        }
+
+
+
         public TResult Execute<TResult>(Expression exClientQuery) 
         {
             OnQueryFromClient(exClientQuery);
@@ -86,8 +95,7 @@ namespace Materialize.Reify
                                         reifyContext);
                         
             var parsed = parser.Parse(exClientQuery);
-
-
+            
             OnStrategized(parsed.UsedStrategy);
                                              
 
@@ -97,30 +105,16 @@ namespace Materialize.Reify
 
             //fetch from source; transform fetched via modifiers                                    
             if(typeof(IQueryable).IsAssignableFrom(exQuery.Type)) {
-                var query = SourceQuery.Provider.CreateQuery(exQuery);
-                OnQueryToServer(query);
+                //var query = SourceQuery.Provider.CreateQuery(exQuery);
+                //OnQueryToServer(query);
                 OnQueryToServer(exQuery);
 
-                //var fetched = SourceQuery.Provider.Execute<IEnumerable>(exQuery);
-
-                //OnFetched(fetched);
-
-                //CollectionStrategy should do the realisation of IQueryable for us!!!
-                //ie don't need to manually execute here. Should just pass IQueryable
-                //into transformation.
-
-                //this works, but it takes our oversight of fetching away from us...
-
-                //*****************************************************************************************************
-                //**** WOULD BE BEST IF... ****************************************************************************
-                //      we manually realised to an EnumerableQuery container here
-                //      and put in a special collection rule whereby IQueryables weren't unnecessarily realised
-
-                // ALSO: Passing query straight through opens the door to non-safe clauses being appended...
-                // Everything at the transformation stage should be safe, unrestricted by the regime of the source query.
-
-
-                var transformed = parsed.Modifier.Transform(query); // fetched);
+                var enFetched = SourceQuery.Provider.Execute<IEnumerable>(exQuery);
+                OnFetched(enFetched);
+                
+                var qyFetched = PackageAsQueryable(exQuery.Type.GetEnumerableElementType(), enFetched);
+                
+                var transformed = (IQueryable)parsed.Modifier.Transform(qyFetched); // fetched);
                 
                 OnTransformed(transformed is IEnumerable
                                     ? (IEnumerable)transformed
