@@ -9,7 +9,11 @@ namespace Materialize.Reify
 {
     interface IModifier
     {
-        Expression Rewrite(Expression exQuery); 
+        Expression FetchMod(Expression exFetch);
+        Expression TransformMod(Expression exTransform);
+
+
+        [Obsolete]
         object Transform(object fetched);
     }
 }

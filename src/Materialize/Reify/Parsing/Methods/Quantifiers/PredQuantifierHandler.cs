@@ -1,5 +1,6 @@
 ﻿using Materialize.Reify.Parsing.Methods.Filters;
 using Materialize.Reify.Rebasing;
+using Materialize.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Linq.Expressions;
 
 namespace Materialize.Reify.Parsing.Methods.Quantifiers
 {
-    class PredQuantifierHandler : FilterHandlerBase
+    class PredQuantifierHandler : RebasingHandlerBase
     {
 
         protected override IParseStrategy Strategize() 
@@ -36,7 +37,7 @@ namespace Materialize.Reify.Parsing.Methods.Quantifiers
             return CreateStrategy(
                         typeof(PredQuantifierOnClientStrategy<,>).MakeGenericType(SourceType, ElemType),
                         UpstreamStrategy,
-                        CallExp.Method);
+                        MethodDef);            
         }
 
 
@@ -44,7 +45,8 @@ namespace Materialize.Reify.Parsing.Methods.Quantifiers
             return CreateStrategy(
                         typeof(PredQuantifierOnServerStrategy<,>).MakeGenericType(SourceType, ElemType),
                         UpstreamStrategy,
-                        rebaseStrategy);
+                        rebaseStrategy,
+                        MethodDef);
         }
 
 

@@ -1,4 +1,5 @@
 ﻿using Materialize.CollectionFactories;
+using Materialize.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,9 +50,38 @@ namespace Materialize.Reify.Mapping.Collections
                 _elemModifier = elemStrategy.CreateModifier();
             }
             
-            public override Expression Rewrite(Expression exSource) {
+            protected override Expression FetchMod(Expression exSource) {
                 return exSource;
             }
+
+
+
+            protected override Expression TransformMod(Expression exFetched) {
+
+                var exProjParam = Expression.Parameter(typeof(TOrigElem));
+
+                var exProjLambda = Expression.Lambda<Func<TOrigElem, TDestElem>>(
+                                                _elemModifier.TransformMod(exProjParam),
+                                                exProjParam);
+
+                var exEnum = Expression.Call(
+                                    EnumerableMethods.Select.MakeGenericMethod(typeof(TOrigElem), typeof(TDestElem)),
+                                    exFetched,
+                                    exProjLambda);
+
+                return Expression.Convert(
+                            Expression.Call(
+                                    Expression.Constant(_collFactory),
+                                    "Invoke",
+                                    null,
+                                    exEnum),
+                            typeof(TDest));
+            }
+
+
+
+
+
 
             protected override TDest Transform(IEnumerable<TOrigElem> fetched) {
                 var transformedElems = fetched

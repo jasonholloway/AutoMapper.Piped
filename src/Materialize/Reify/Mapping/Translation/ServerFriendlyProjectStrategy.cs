@@ -37,11 +37,17 @@ namespace Materialize.Reify.Mapping.Translation
                 _exProject = exProject;
             }
 
-            public override Expression Rewrite(Expression exSource) {
+            protected override Expression FetchMod(Expression exSource) {
                 return _exProject.Body.Replace(
                                         _exProject.Parameters.First(), 
                                         exSource);                           
             }
+
+
+            protected override Expression TransformMod(Expression exFetched) {
+                return exFetched;
+            }
+
 
             protected override TDest Transform(TDest obj) {
                 //nothing to do here, as server-side projection should give us correct type

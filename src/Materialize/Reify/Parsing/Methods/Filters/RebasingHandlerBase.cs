@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 
 namespace Materialize.Reify.Parsing.Methods.Filters
 {
-    abstract class FilterHandlerBase : MethodHandlerBase
+    abstract class RebasingHandlerBase : MethodHandlerBase
     {   
 
         protected class RebasePredicateResult
@@ -43,16 +43,13 @@ namespace Materialize.Reify.Parsing.Methods.Filters
         }
             
 
-        
 
-        protected RebasePredicateResult RebasePredicateToSource(LambdaExpression exPredLambda) 
+        protected RebasePredicateResult RebaseToSource(RebaseSubject subject) 
         {
-            var rebaseSubject = GetRebaseSubject(exPredLambda);
-
             IRebaseStrategy rebaseStrategy = null;
 
             try {
-                rebaseStrategy = UpstreamStrategy.RebaseToSource(rebaseSubject); // UpstreamStrategy.RebaseToSourceType(rebaseSubject);
+                rebaseStrategy = UpstreamStrategy.RebaseToSource(subject); // UpstreamStrategy.RebaseToSourceType(rebaseSubject);
             }
             catch(RebaseException ex) {
                 return new RebasePredicateResult() {
@@ -60,22 +57,29 @@ namespace Materialize.Reify.Parsing.Methods.Filters
                 };
             }
 
-            bool serverAcceptible = TestAgainstServer(rebaseStrategy, rebaseSubject);
+            bool serverAcceptible = TestAgainstServer(rebaseStrategy, subject);
 
             return new RebasePredicateResult() {
                 RebaseStrategy = serverAcceptible ? rebaseStrategy : null,
                 RejectedByServer = !serverAcceptible
             };
+        }
 
+
+
+        protected RebasePredicateResult RebasePredicateToSource(LambdaExpression exPredicate) 
+        {
+            var subject = GetPredicateRebaseSubject(exPredicate);
+            return RebaseToSource(subject);
         }
             
         
-        protected RebasePredicateResult RebasePredicateToSource(UnaryExpression exPredQuotedLambda) {
-            if(exPredQuotedLambda.NodeType == ExpressionType.Quote) {
-                return RebasePredicateToSource((LambdaExpression)exPredQuotedLambda.Operand);
+        protected RebasePredicateResult RebasePredicateToSource(UnaryExpression exPredicate) {
+            if(exPredicate.NodeType == ExpressionType.Quote) {
+                return RebasePredicateToSource((LambdaExpression)exPredicate.Operand);
             }
 
-            throw new ArgumentException("Should be quote!", nameof(exPredQuotedLambda));
+            throw new ArgumentException("Should be quote!", nameof(exPredicate));
         }
         
 
@@ -87,18 +91,13 @@ namespace Materialize.Reify.Parsing.Methods.Filters
 
         //to rebase, each predicate has to be packed within its own where clause,
         //operating on IQueryable<TElem>. Only in this form can it be sent upstream to be rebased.  
-        RebaseSubject GetRebaseSubject(LambdaExpression exPredLambda) 
+        RebaseSubject GetPredicateRebaseSubject(LambdaExpression exPredicate) 
         {   
             var roots = new RootVector(
-                                Expression.Parameter(UpstreamStrategy.DestType, "enDest"),
-                                Expression.Parameter(UpstreamStrategy.SourceType, "enSource"));
-
-            var exSubject = Expression.Call(
-                                        MethodDef.MakeGenericMethod(exPredLambda.Parameters.First().Type), //this is somewhat nasty! relies on filter method having predicate as second arg
-                                        roots.OrigRoot,
-                                        exPredLambda);
-
-            return new RebaseSubject(exSubject, roots);
+                                exPredicate.Parameters.Single(),
+                                Expression.Parameter(UpstreamStrategy.SourceType.GetEnumerableElementType(), "s"));
+            
+            return new RebaseSubject(exPredicate, roots);
         }
 
 

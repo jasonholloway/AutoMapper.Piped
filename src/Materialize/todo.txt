@@ -10,6 +10,18 @@ TO DO! ********************************************
 	
 
 
+
+> CollectionFactories should rewrite rather than giving us actual collections...
+
+
+> Rebasing now has to flip between enumerable and queryable
+	It will generally start from enumerable, and want to be rebased to a source-side queryable.
+	The mapping layer is the point at which this rebasing of collection type should be done.
+	* THIS HAS BEEN SIDESTEPPED BY REBASING PREDICATE LAMBDAS RATHER THAN ENTIRE MULTIPLES 
+		the idea was otherwise to get central bridging collection strategy to offer a rebase root
+		that would expand to replace sequence methods... but this would be unrewarding, straight-forward toil.
+
+
 > Could there be some kind of paging behaviour in fetching? Not really. We absolutely can't guarantee the equality of our source.
 	We need to fetch the entire set at once!
 
@@ -46,7 +58,10 @@ TO DO! ********************************************
 	Would there be a role then for the collectionfactory? Well, yes, as the eventually-compiled lambda will need to 
 	materialize to collections as of old.
 
+	We will lose much of our string typing from modifiers. Perhaps this can be a good thing? Base classes will still assert
+	types of expressions.
 
+	Outermost collection mapper will append to IEnumerable parameter.
 
 
 

@@ -89,11 +89,17 @@ namespace Materialize.Reify.Parsing.Methods.Unaries
             }            
         
                 
-            protected override Expression Rewrite(Expression exSourceQuery) 
+            protected override Expression FetchMod(Expression exSourceQuery) 
             {
-                return UpstreamRewrite(exSourceQuery);
+                return UpstreamFetchMod(exSourceQuery);
             }
-            
+
+
+            protected override Expression TransformMod(Expression exQuery) {
+                throw new NotImplementedException();
+            }
+
+
             protected override TElem Transform(object fetched) 
             {
                 var transformed = UpstreamTransform(fetched);

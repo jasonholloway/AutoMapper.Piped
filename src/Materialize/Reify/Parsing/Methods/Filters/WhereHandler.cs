@@ -1,21 +1,23 @@
-﻿using System;
+﻿using Materialize.Reify.Rebasing;
+using Materialize.Types;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
 namespace Materialize.Reify.Parsing.Methods.Filters
 {
-    class WhereHandler : FilterHandlerBase
+    class WhereHandler : RebasingHandlerBase
     {    
         protected override IParseStrategy Strategize() 
-        {            
-            var predRebase = RebasePredicateToSource((UnaryExpression)CallExp.Arguments[1]);
+        {
+            var rebased = RebasePredicateToSource((UnaryExpression)CallExp.Arguments[1]);
             
-            if(predRebase.Successful) { //we can prepend to source query!
+            if(rebased.Successful) {
                 return CreateStrategy(                          
                             typeof(WhereOnServerStrategy<,>).MakeGenericType(SourceType, ElemType),
                             UpstreamStrategy,
-                            predRebase.RebaseStrategy);
+                            rebased.RebaseStrategy);
             }
             else if(AllowClientSideFiltering) {
                 return CreateStrategy(
@@ -23,7 +25,7 @@ namespace Materialize.Reify.Parsing.Methods.Filters
                             UpstreamStrategy);
             }
 
-            throw predRebase.GetException();
+            throw rebased.GetException();
         }
     }
 }

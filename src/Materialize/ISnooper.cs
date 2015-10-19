@@ -13,9 +13,12 @@ namespace Materialize
     {
         void OnQueryFromClient(Expression exQuery);
         void OnStrategized(IReifyStrategy strategy);
-        void OnQueryToServer(IQueryable query);
-        void OnQueryToServer(Expression exQuery);        
+
+        void OnFetch(IQueryable query);
+        void OnFetch(Expression exQuery);        
         void OnFetched(IEnumerable enFetched);
+
+        void OnTransform(Expression exTransform);
         void OnTransformed(IEnumerable enTransformed);
     }
 }

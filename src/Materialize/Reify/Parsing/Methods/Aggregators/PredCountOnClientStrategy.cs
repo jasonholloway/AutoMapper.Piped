@@ -23,7 +23,7 @@ namespace Materialize.Reify.Parsing.Methods.Aggregators
         }
                        
 
-        class Modifier : ParseModifier<IQueryable<TElem>, int>
+        class Modifier : ParseModifier<IEnumerable<TElem>, int>
         {
             Expression<Func<TElem, bool>> _exPredicate;
 
@@ -33,15 +33,25 @@ namespace Materialize.Reify.Parsing.Methods.Aggregators
                 _exPredicate = exPredicate;
             }
             
-            protected override Expression Rewrite(Expression exQuery) {
-                return UpstreamRewrite(exQuery);
+            protected override Expression FetchMod(Expression exQuery) {
+                return UpstreamFetchMod(exQuery);
             }
-            
+
+
+            protected override Expression TransformMod(Expression exQuery) {
+                return Expression.Call(
+                            EnumerableMethods.CountPred.MakeGenericMethod(typeof(TElem)),
+                            UpstreamTransformMod(exQuery),
+                            _exPredicate);
+            }
+
 
             protected override int Transform(object fetched) 
             {
-                var transformed = UpstreamTransform(fetched);
-                return transformed.Count(_exPredicate);
+                throw new NotImplementedException();
+
+                //var transformed = UpstreamTransform(fetched);
+                //return transformed.Count(_exPredicate);
             }
 
         }

@@ -18,9 +18,9 @@ namespace Materialize.Demo2.QueryInfo
         IObserver<QueryReport> _reports;
 
         Expression _exQueryFromClient;
-        Expression _exQueryToServer;
+        Expression _exFetch;
         IReifyStrategy _strategy;
-
+        Expression _exTransform;
 
         public Snooper(IObserver<QueryReport> reports) {
             _reports = reports;
@@ -35,17 +35,23 @@ namespace Materialize.Demo2.QueryInfo
             _strategy = strategy;
         }
 
-        void ISnooper.OnQueryToServer(IQueryable query) {
-            _exQueryToServer = query.Expression;
+        void ISnooper.OnFetch(IQueryable query) {
+            _exFetch = query.Expression;
         }
 
-        void ISnooper.OnQueryToServer(Expression exQuery) {
-            _exQueryToServer = exQuery;
+        void ISnooper.OnFetch(Expression exQuery) {
+            _exFetch = exQuery;
         }
 
         void ISnooper.OnFetched(IEnumerable enFetched) {
             //...
         }
+
+
+        public void OnTransform(Expression exTransform) {
+            _exTransform = exTransform;
+        }
+
 
         void ISnooper.OnTransformed(IEnumerable enTransformed) {
             _reports.OnNext(RenderReport());
@@ -57,13 +63,14 @@ namespace Materialize.Demo2.QueryInfo
             return new QueryReport(
                             null,
                             _exQueryFromClient?.Simplify().ToCSharpCode(),
-                            _exQueryToServer?.Simplify().ToCSharpCode(),
+                            _exFetch?.Simplify().ToCSharpCode(),
+                            _exTransform.Simplify().ToCSharpCode(),
                             Tree.BuildFromCrawl(_strategy, s => s.UpstreamStrategies)
                                     .Project(s => new StrategyReport(
                                                             s.GetType().GetNiceName(), 
                                                             "Description..."))
                             );
         }
-        
+
     }
 }

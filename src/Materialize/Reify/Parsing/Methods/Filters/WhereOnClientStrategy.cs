@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Materialize.Types;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -7,7 +8,7 @@ using System.Reflection;
 namespace Materialize.Reify.Parsing.Methods.Filters
 {
     class WhereOnClientStrategy<TSource, TElem> 
-        : MethodStrategyBase<TSource, IQueryable<TElem>>
+        : MethodStrategyBase<TSource, IEnumerable<TElem>>
     {
         
         public WhereOnClientStrategy(IParseStrategy upstreamStrategy)
@@ -27,7 +28,7 @@ namespace Materialize.Reify.Parsing.Methods.Filters
         }
                        
 
-        class Modifier : ParseModifier<IQueryable<TElem>, IQueryable<TElem>>
+        class Modifier : ParseModifier<IEnumerable<TElem>, IEnumerable<TElem>>
         {
             Expression<Func<TElem, bool>> _exPredicate;
 
@@ -38,15 +39,26 @@ namespace Materialize.Reify.Parsing.Methods.Filters
             }
             
 
-            protected override Expression Rewrite(Expression exQuery) {
-                return UpstreamRewrite(exQuery); //no rewrite, as nothing to do on server
+            protected override Expression FetchMod(Expression exQuery) {
+                return UpstreamFetchMod(exQuery);
             }
 
 
-            protected override IQueryable<TElem> Transform(object fetched) 
-            {                
-                var transformed = UpstreamTransform(fetched);
-                return transformed.Where(_exPredicate);
+            protected override Expression TransformMod(Expression exQuery) {                
+                return Expression.Call(
+                            EnumerableMethods.Where.MakeGenericMethod(typeof(TElem)),
+                            UpstreamTransformMod(exQuery),
+                            _exPredicate);
+            }
+
+
+
+            protected override IEnumerable<TElem> Transform(object fetched) 
+            {
+                throw new NotImplementedException();
+
+                //var transformed = UpstreamTransform(fetched);
+                //return transformed.Where(_exPredicate);
             }
 
         }

@@ -8,15 +8,43 @@ using System.Linq.Expressions;
 namespace Materialize.Reify.Mapping
 {    
 
-    abstract class MapperModifier<TOrig, TMed, TDest>
+    abstract class MapperModifier<TSource, TFetch, TDest>
         : IModifier
     {        
-        public abstract Expression Rewrite(Expression exSource);
-        protected abstract TDest Transform(TMed fetched);
+        protected abstract Expression FetchMod(Expression exSource);
+        protected abstract Expression TransformMod(Expression exFetched);
 
-        object IModifier.Transform(object fetched) {
-            return Transform((TMed)fetched);
+                
+        Expression IModifier.FetchMod(Expression exFetch) {
+            Debug.Assert(typeof(TSource).IsAssignableFrom(exFetch.Type));
+
+            var exModded = FetchMod(exFetch);
+
+            Debug.Assert(typeof(TFetch).IsAssignableFrom(exModded.Type));
+
+            return exModded;
         }
+
+
+        Expression IModifier.TransformMod(Expression exTransform) {
+            Debug.Assert(typeof(TFetch).IsAssignableFrom(exTransform.Type));
+
+            var exModded = TransformMod(exTransform);
+
+            Debug.Assert(typeof(TDest).IsAssignableFrom(exModded.Type));
+
+            return exModded;
+        }
+
+
+        [Obsolete]
+        protected abstract TDest Transform(TFetch fetched);
+
+        [Obsolete]
+        object IModifier.Transform(object fetched) {
+            return Transform((TFetch)fetched);
+        }
+        
 
     }
 

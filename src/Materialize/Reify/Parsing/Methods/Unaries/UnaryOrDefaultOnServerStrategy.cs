@@ -49,15 +49,22 @@ namespace Materialize.Reify.Parsing.Methods.Unaries
             }
             
 
-            protected override Expression Rewrite(Expression exSourceQuery) 
+            protected override Expression FetchMod(Expression exSourceQuery) 
             {
-                var exInst = UpstreamRewrite(exSourceQuery);
+                var exInst = UpstreamFetchMod(exSourceQuery);
 
                 var mUnary = _mUnaryDef.MakeGenericMethod(
                                                 exInst.Type.GetEnumerableElementType());
 
                 return Expression.Call(mUnary, exInst);
             }
+
+
+
+            protected override Expression TransformMod(Expression exQuery) {
+                throw new NotImplementedException();
+            }
+
 
 
             protected override TElem Transform(object fetched) 

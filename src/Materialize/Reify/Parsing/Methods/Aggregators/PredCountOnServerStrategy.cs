@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Materialize.Types;
 
 namespace Materialize.Reify.Parsing.Methods.Aggregators
 {
@@ -23,32 +24,42 @@ namespace Materialize.Reify.Parsing.Methods.Aggregators
 
         protected override IModifier Parse(IModifier upstreamMod, MethodCallExpression exSubject) 
         {
-            var exRebasedCall = (MethodCallExpression)_predRebaseStrategy.Rebase(exSubject);
+            var exSubjectPredicate = ((UnaryExpression)exSubject.Arguments[1]).Operand;
+
+            var exRebasedPredicate = (LambdaExpression)_predRebaseStrategy.Rebase(exSubjectPredicate);
             
-            return new Modifier(upstreamMod, exRebasedCall);
+            return new Modifier(upstreamMod, exRebasedPredicate);
         }
                        
 
 
-        class Modifier : ParseModifier<IQueryable<TElem>, int>
+        class Modifier : ParseModifier<IEnumerable<TElem>, int>
         {
-            MethodCallExpression _exRebasedCall;
+            LambdaExpression _exRebasedPredicate;
 
-            public Modifier(IModifier upstreamMod, MethodCallExpression exRebasedCall)
+            public Modifier(IModifier upstreamMod, LambdaExpression exRebasedPredicate)
                 : base(upstreamMod) 
             {
-                _exRebasedCall = exRebasedCall;
+                _exRebasedPredicate = exRebasedPredicate;
             }
             
 
-            protected override Expression Rewrite(Expression exQuery) 
-            {                
+            protected override Expression FetchMod(Expression exQuery) 
+            {
                 //as usual, no care about upstream changes to cardinality
+                //intervening filtering is just ignored!!!!!!
 
-                return _exRebasedCall.Replace(
-                                        _exRebasedCall.Arguments[0], 
-                                        exQuery);
+                return Expression.Call(
+                                    EnumerableMethods.CountPred.MakeGenericMethod(exQuery.Type.GetEnumerableElementType()),
+                                    exQuery, //UpstreamFetchMod(exQuery), //!!!! cuts short !!!!!
+                                    _exRebasedPredicate);                
             }
+
+
+            protected override Expression TransformMod(Expression exQuery) {
+                return exQuery;
+            }
+
 
 
             protected override int Transform(object fetched) {

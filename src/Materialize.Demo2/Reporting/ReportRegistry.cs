@@ -22,7 +22,8 @@ namespace Materialize.Demo2.Reporting
                 report = new QueryReport(
                                 _idSource.GetNextID(),
                                 report.QueryFromClient,
-                                report.QueryToServer,
+                                report.FetchExpression,
+                                report.TransformExpression,
                                 report.StrategyTree);
             }
             

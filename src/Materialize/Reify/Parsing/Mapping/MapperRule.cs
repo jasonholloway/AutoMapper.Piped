@@ -23,10 +23,8 @@ namespace Materialize.Reify.Parsing.Mapping
                 var mapDestType = ctx.ReifyContext.MapDestType;
 
                 var sourceType = ctx.SourceType;
-                var destType = (typeof(IQueryable).IsAssignableFrom(sourceType)         //GRIM!
-                                && !typeof(IQueryable).IsAssignableFrom(mapDestType))
-                                        ? typeof(IQueryable<>).MakeGenericType(mapDestType)
-                                        : mapDestType;
+
+                var destType = typeof(IEnumerable<>).MakeGenericType(mapDestType); //sometimes this will not be ienumerable, but singular...
                 
                 var mapContext = new MapContext(
                                         new TypeVector(sourceType, destType),

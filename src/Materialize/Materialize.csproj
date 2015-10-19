@@ -62,7 +62,7 @@
     <Compile Include="Dependencies\LightInject\LightInject.cs" />
     <Compile Include="Reify\Parsing\Methods\Aggregators\CountOnServerStrategy.cs" />
     <Compile Include="Reify\Parsing\Methods\Filters\WhereHandler.cs" />
-    <Compile Include="Reify\Parsing\Methods\Filters\FilterHandlerBase.cs" />
+    <Compile Include="Reify\Parsing\Methods\Filters\RebasingHandlerBase.cs" />
     <Compile Include="Reify\Parsing\Methods\IMethodHandler.cs" />
     <Compile Include="Reify\Parsing\Methods\MethodHandlerBase.cs" />
     <Compile Include="Reify\Parsing\Methods\Partitioners\PredPartitionerHandler.cs" />

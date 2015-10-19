@@ -44,7 +44,6 @@ namespace Materialize.Expressions
         }
         
 
-
         public static Expression Simplify(this Expression @this) {
             return new SimplifyVisitor().Visit(@this);
         }

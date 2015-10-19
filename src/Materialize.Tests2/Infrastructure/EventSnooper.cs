@@ -24,13 +24,13 @@ namespace Materialize.Tests.Infrastructure
             //...
         }
 
-        void ISnooper.OnQueryToServer(IQueryable query) {
+        void ISnooper.OnFetch(IQueryable query) {
             if(QueryToServer != null) {
                 QueryToServer(query);
             }
         }
 
-        void ISnooper.OnQueryToServer(Expression exQuery) {
+        void ISnooper.OnFetch(Expression exQuery) {
             //...
         }
 
@@ -46,5 +46,8 @@ namespace Materialize.Tests.Infrastructure
             }
         }
 
+        public void OnTransform(Expression exTransform) {
+            //...
+        }
     }
 }

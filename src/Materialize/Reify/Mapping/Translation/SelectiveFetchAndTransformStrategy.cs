@@ -105,7 +105,7 @@ namespace Materialize.Reify.Mapping.Translation
                 _dataType = dataType;
             }
 
-            public override Expression Rewrite(Expression exSource) {
+            protected override Expression FetchMod(Expression exSource) {
                 return Expression.MemberInit(
                                     Expression.New(_dataType.Type),
                                     BuildBindings(exSource)
@@ -126,6 +126,13 @@ namespace Materialize.Reify.Mapping.Translation
 
 
             }
+
+
+
+            protected override Expression TransformMod(Expression exFetched) {
+                throw new NotImplementedException();
+            }
+
 
 
             protected override TDest Transform(TMed fetched) {

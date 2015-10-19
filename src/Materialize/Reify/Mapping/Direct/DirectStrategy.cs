@@ -40,9 +40,16 @@ namespace Materialize.Reify.Mapping.Direct
                 _ctx = ctx;
             }
 
-            public override Expression Rewrite(Expression exOrig) {
+            protected override Expression FetchMod(Expression exOrig) {
                 return exOrig;
             }
+            
+            protected override Expression TransformMod(Expression exFetched) {
+                return exFetched;
+            }
+
+
+
 
             protected override TDest Transform(TOrig fetched) {
                 return (TDest)fetched;

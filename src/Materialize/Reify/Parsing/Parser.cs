@@ -48,9 +48,9 @@ namespace Materialize.Reify.Parsing
         public struct Result
         {
             public readonly IModifier Modifier;
-            public readonly IReifyStrategy UsedStrategy;
+            public readonly IParseStrategy UsedStrategy;
 
-            public Result(IModifier modifier, IReifyStrategy usedStrategy) {
+            public Result(IModifier modifier, IParseStrategy usedStrategy) {
                 Modifier = modifier;
                 UsedStrategy = usedStrategy;
             }

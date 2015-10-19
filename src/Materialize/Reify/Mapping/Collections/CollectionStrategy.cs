@@ -43,7 +43,7 @@ namespace Materialize.Reify.Mapping.Collections
                 
         
 
-        class Mapper : MapperModifier<IQueryable<TOrigElem>, IQueryable<TMedElem>, TDest>
+        class Mapper : MapperModifier<IEnumerable<TOrigElem>, IEnumerable<TMedElem>, TDest>
         {
             static MethodInfo _mQueryableSelect = Refl.GetMethod(() => Queryable.Select(null, (Expression<Func<TOrigElem, TMedElem>>)null));
             static MethodInfo _mEnumerableSelect = Refl.GetMethod(() => Enumerable.Select(null, (Func<TOrigElem, TMedElem>)null));
@@ -63,24 +63,49 @@ namespace Materialize.Reify.Mapping.Collections
             }
 
 
-            public override Expression Rewrite(Expression exQuery) 
+            protected override Expression FetchMod(Expression exFetch) 
             {
                 var exInParam = Expression.Parameter(typeof(TOrigElem));
-                var exLambdaBody = _elemModifier.Rewrite(exInParam);
+                var exLambdaBody = _elemModifier.FetchMod(exInParam);
                 
                 return Expression.Call(
-                                    exQuery.Type.IsQueryable()
+                                    exFetch.Type.IsQueryable()
                                                     ? _mQueryableSelect
                                                     : _mEnumerableSelect,
-                                    exQuery,
+                                    exFetch,
                                     Expression.Lambda(
                                                 typeof(Func<TOrigElem, TMedElem>),
                                                 exLambdaBody,
                                                 exInParam)
                                     );
             }
-                        
-            protected override TDest Transform(IQueryable<TMedElem> fetched) {
+
+
+            protected override Expression TransformMod(Expression exTransform) 
+            {
+                var exProjParam = Expression.Parameter(typeof(TMedElem));
+
+                var exProjLambda = Expression.Lambda<Func<TMedElem, TDestElem>>(
+                                                _elemModifier.TransformMod(exProjParam),
+                                                exProjParam);
+                
+                var exEnum = Expression.Call(
+                                    EnumerableMethods.Select.MakeGenericMethod(typeof(TMedElem), typeof(TDestElem)),
+                                    exTransform,
+                                    exProjLambda);
+
+                return Expression.Convert(
+                            Expression.Call(
+                                    Expression.Constant(_collFactory),
+                                    "Invoke",
+                                    null,
+                                    exEnum),
+                            typeof(TDest));
+            }
+
+
+
+            protected override TDest Transform(IEnumerable<TMedElem> fetched) {
                 var transformedElems = fetched
                                         .Select(elem => _elemModifier.Transform(elem));
                 

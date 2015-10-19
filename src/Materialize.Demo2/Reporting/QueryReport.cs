@@ -6,18 +6,21 @@ namespace Materialize.Demo2.Reporting
     {
         public readonly int? ReportID;
         public readonly string QueryFromClient;
-        public readonly string QueryToServer;
+        public readonly string FetchExpression;
+        public readonly string TransformExpression;
         public readonly Tree<StrategyReport> StrategyTree;
 
         public QueryReport(
             int? reportID,
             string queryFromClient,
-            string queryToServer,
+            string fetchExpression,
+            string transformExpression,
             Tree<StrategyReport> strategyTree) 
         {
             ReportID = reportID;
             QueryFromClient = queryFromClient;
-            QueryToServer = queryToServer;
+            FetchExpression = fetchExpression;
+            TransformExpression = transformExpression;
             StrategyTree = strategyTree;
         }
         

@@ -9,7 +9,7 @@ using Materialize.Types;
 namespace Materialize.Reify.Parsing.Methods.Partitioners
 {   
     class PartitionerOnServerStrategy<TSource, TElem> 
-        : MethodStrategyBase<TSource, IQueryable<TElem>>
+        : MethodStrategyBase<TSource, IEnumerable<TElem>>
     {
         MethodInfo _mPartitioner;
 
@@ -28,7 +28,7 @@ namespace Materialize.Reify.Parsing.Methods.Partitioners
         }
         
 
-        class Modifier : ParseModifier<IQueryable<TElem>, IQueryable<TElem>>
+        class Modifier : ParseModifier<IEnumerable<TElem>, IEnumerable<TElem>>
         {
             MethodInfo _mPartitioner;
             int _count;
@@ -41,9 +41,9 @@ namespace Materialize.Reify.Parsing.Methods.Partitioners
             }
             
 
-            protected override Expression Rewrite(Expression exSourceQuery) 
+            protected override Expression FetchMod(Expression exSourceQuery) 
             {
-                var exUpstream = UpstreamRewrite(exSourceQuery);
+                var exUpstream = UpstreamFetchMod(exSourceQuery);
                 
                 return Expression.Call(
                                     _mPartitioner, 
@@ -52,8 +52,15 @@ namespace Materialize.Reify.Parsing.Methods.Partitioners
             }
 
 
-            protected override IQueryable<TElem> Transform(object fetched) {
-                return UpstreamTransform(fetched);
+            protected override Expression TransformMod(Expression exQuery) {
+                return UpstreamTransformMod(exQuery);
+            }
+
+
+
+            protected override IEnumerable<TElem> Transform(object fetched) {
+                throw new NotImplementedException();
+                //return UpstreamTransform(fetched);
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using Materialize.Tests.Model;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
@@ -10,7 +11,9 @@ namespace Materialize.Tests.Infrastructure
 
     class Context : DbContext
     {
-        public Context() {
+        static Lazy<DbConnection> _lzConn = new Lazy<DbConnection>(() => Effort.DbConnectionFactory.CreatePersistent("dfg"));
+
+        public Context() : base(_lzConn.Value, false) {
             Database.SetInitializer<Context>(new DatabaseInitializer());
         }
 

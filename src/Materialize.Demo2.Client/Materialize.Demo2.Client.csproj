@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IntolerantSourceRegime.cs" />
     <Compile Include="ReportRelay.cs" />
     <Compile Include="SnooperFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

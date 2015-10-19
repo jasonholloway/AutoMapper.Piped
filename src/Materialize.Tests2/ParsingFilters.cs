@@ -17,7 +17,7 @@ namespace Materialize.Tests2
             InitMapper(x => {
                 x.CreateMap<Source, Mapped>();
             });
-
+            
             Fetched = Enumerable.Empty<object>();
         }
 

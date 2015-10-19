@@ -56,18 +56,36 @@ namespace Materialize.Reify.Mapping.PropertyMaps
                                                                         ).ToArray();
             }
             
-            public override Expression Rewrite(Expression exSource) 
+            protected override Expression FetchMod(Expression exSource) 
             {
                 return Expression.MemberInit(
                                         Expression.New(_projType),
                                         _memberSpecs.Select(m => Expression.Bind(
                                                                         m.ProjectedField,
-                                                                        m.Mapper.Rewrite(
+                                                                        m.Mapper.FetchMod(
                                                                             Expression.MakeMemberAccess(exSource, m.PropertyMap.SourceMember))
                                                                         )
                                                             ).ToArray());
             }
-                        
+
+
+            protected override Expression TransformMod(Expression exFetched) {
+                return Expression.MemberInit(
+                            Expression.New(typeof(TDest)),
+                            _memberSpecs.Select(m => {
+                                    return Expression.Bind(
+                                                m.PropertyMap.DestinationProperty.MemberInfo, 
+                                                m.Mapper.TransformMod(
+                                                            Expression.MakeMemberAccess(exFetched, m.ProjectedField)
+                                                ));
+                                }).ToArray()
+                            );
+            }
+
+
+
+
+
             protected override TDest Transform(TMed obj) 
             {
                 //should use more elegant per-strategy-compiled ctor + binders

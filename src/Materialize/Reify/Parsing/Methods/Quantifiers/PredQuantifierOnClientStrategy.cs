@@ -11,67 +11,60 @@ namespace Materialize.Reify.Parsing.Methods.Quantifiers
     class PredQuantifierOnClientStrategy<TSource, TElem> 
         : MethodStrategyBase<TSource, bool>
     {
-        delegate bool Applicator(IQueryable<TElem> input, Expression<Func<TElem, bool>> predicate);
-        
-        Applicator _fnApply = null;
+        MethodInfo _mEnQuantifier;
 
 
-        public PredQuantifierOnClientStrategy(IParseStrategy upstreamStrategy, MethodInfo mQuantifier)
+        public PredQuantifierOnClientStrategy(IParseStrategy upstreamStrategy, MethodInfo mQyQuantifierDef)
             : base(upstreamStrategy) 
         {
-            _fnApply = CompileApplicator(mQuantifier);             
+            var mEnQuantifierDef = EnumerableMethods.GetFromQueryableMethod(mQyQuantifierDef);
+            _mEnQuantifier = mEnQuantifierDef.MakeGenericMethod(typeof(TElem));
         }
             
-        
-        
-        Applicator CompileApplicator(MethodInfo mQuantifier) 
-        {
-            var exInput = Expression.Parameter(typeof(IQueryable<TElem>));
-            var exPredicate = Expression.Parameter(typeof(Expression<Func<TElem, bool>>));
-
-            var exLambda = Expression.Lambda<Applicator>(
-                                        Expression.Call(
-                                                    mQuantifier,
-                                                    exInput,
-                                                    exPredicate),
-                                        exInput,
-                                        exPredicate);
-
-            return exLambda.Compile();
-        }
-
-
 
 
         protected override IModifier Parse(IModifier upstreamMod, MethodCallExpression exSubject) 
         {
             var exPredicate = (Expression<Func<TElem, bool>>)((UnaryExpression)exSubject.Arguments[1]).Operand;
 
-            return new Modifier(upstreamMod, inp => _fnApply(inp, exPredicate));
+            return new Modifier(upstreamMod, _mEnQuantifier, exPredicate);
         }
                        
 
 
-        class Modifier : ParseModifier<IQueryable<TElem>, bool>
+        class Modifier : ParseModifier<IEnumerable<TElem>, bool>
         {
-            Func<IQueryable<TElem>, bool> _fnApply;
+            Expression<Func<TElem, bool>> _exPredicate;
+            MethodInfo _mEnQuantifier;
 
-            public Modifier(IModifier upstreamMod, Func<IQueryable<TElem>, bool> fnApply)
+            public Modifier(IModifier upstreamMod, MethodInfo mEnQuantifier, Expression<Func<TElem, bool>> exPredicate)
                 : base(upstreamMod) 
             {
-                _fnApply = fnApply;
+                _mEnQuantifier = mEnQuantifier;
+                _exPredicate = exPredicate;
             }
             
 
-            protected override Expression Rewrite(Expression exQuery) {
-                return UpstreamRewrite(exQuery);
+            protected override Expression FetchMod(Expression exSource) {
+                return UpstreamFetchMod(exSource);
             }
 
 
+            protected override Expression TransformMod(Expression exFetched) {
+                return Expression.Call(
+                                _mEnQuantifier,
+                                UpstreamTransformMod(exFetched),
+                                _exPredicate);
+            }
+
+
+
             protected override bool Transform(object fetched) 
-            {                
-                var transformed = UpstreamTransform(fetched);
-                return _fnApply(transformed);
+            {
+                throw new NotImplementedException();
+
+                //var transformed = UpstreamTransform(fetched);
+                //return _fnApply(transformed);
             }
 
         }

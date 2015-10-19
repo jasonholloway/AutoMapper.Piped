@@ -21,20 +21,32 @@ namespace Materialize.Reify.Parsing.Methods.Aggregators
         }
         
 
-        class Modifier : ParseModifier<IQueryable<TElem>, int>
+        class Modifier : ParseModifier<IEnumerable<TElem>, int>
         {
             public Modifier(IModifier upstreamMod)
                 : base(upstreamMod) { }
                                     
 
-            protected override Expression Rewrite(Expression exSourceQuery) {
-                return UpstreamRewrite(exSourceQuery);
+            protected override Expression FetchMod(Expression exSourceQuery) {
+                return UpstreamFetchMod(exSourceQuery);
             }
-            
-            protected override int Transform(object fetched) {                
-                var transformed = UpstreamTransform(fetched);
-                return transformed.Count();
+
+
+            protected override Expression TransformMod(Expression exQuery) {
+                return Expression.Call(
+                            EnumerableMethods.Count.MakeGenericMethod(typeof(TElem)),
+                            UpstreamTransformMod(exQuery));
             }
+
+
+
+            protected override int Transform(object fetched) {
+                throw new NotImplementedException();
+                  
+                //var transformed = UpstreamTransform(fetched);
+                //return transformed.Count();
+            }
+
         }
 
     }

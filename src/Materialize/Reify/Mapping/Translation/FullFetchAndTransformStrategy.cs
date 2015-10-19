@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using JH.DynaType;
+using Materialize.Expressions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,14 +15,12 @@ namespace Materialize.Reify.Mapping.Translation
         : MapStrategyBase<TOrig, TDest>
     {
         MapContext _ctx;
-        Func<TOrig, TDest> _fnTransform;
+        Expression<Func<TOrig, TDest>> _exProjection;
         
         public FullFetchAndTransformStrategy(MapContext ctx, TypeMap typeMap) 
         {
-            //no intermediate tuple: just return the full type, and project from it to the destination type, please
-
             _ctx = ctx;
-            _fnTransform = (Func<TOrig, TDest>)typeMap.CustomProjection.Compile();
+            _exProjection = (Expression<Func<TOrig, TDest>>)typeMap.CustomProjection;
         }
 
         public override Type FetchType {
@@ -33,26 +32,35 @@ namespace Materialize.Reify.Mapping.Translation
         }
 
         public override IModifier CreateModifier() {
-            return new Mapper(_ctx, _fnTransform);
+            return new Mapper(_ctx, _exProjection);
         }
 
         
         class Mapper : MapperModifier<TOrig, TOrig, TDest>
         {
             MapContext _ctx;
-            Func<TOrig, TDest> _fnTransform;
+            Expression<Func<TOrig, TDest>> _exProjection;
 
-            public Mapper(MapContext ctx, Func<TOrig, TDest> fnTransform) {
+            public Mapper(MapContext ctx, Expression<Func<TOrig, TDest>> exProjection) {
                 _ctx = ctx;
-                _fnTransform = fnTransform;
+                _exProjection = exProjection;
             }
             
-            public override Expression Rewrite(Expression exSource) {
+            protected override Expression FetchMod(Expression exSource) {
                 return exSource;
             }
-            
+
+
+            protected override Expression TransformMod(Expression exFetched) {
+                return _exProjection.Body.Replace(
+                                            _exProjection.Parameters.Single(),
+                                            exFetched);
+            }
+
+
             protected override TDest Transform(TOrig fetched) {
-                return _fnTransform(fetched);
+                throw new NotImplementedException();
+                //return _fnTransform(fetched);
             }
 
         }

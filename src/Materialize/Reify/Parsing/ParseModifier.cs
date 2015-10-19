@@ -19,15 +19,36 @@ namespace Materialize.Reify.Parsing
         }
 
 
-        protected abstract Expression Rewrite(Expression exQuery);
+        protected abstract Expression FetchMod(Expression exQuery);
 
-        protected Expression UpstreamRewrite(Expression exQuery) {
-            return _upstreamMod.Rewrite(exQuery);
+        protected Expression UpstreamFetchMod(Expression exQuery) {
+            return _upstreamMod.FetchMod(exQuery);
         }
 
-        Expression IModifier.Rewrite(Expression exQuery) {
-            return Rewrite(exQuery);
+        Expression IModifier.FetchMod(Expression exQuery) {
+            return FetchMod(exQuery);
         }
+
+
+
+
+        protected abstract Expression TransformMod(Expression exQuery);
+
+        protected Expression UpstreamTransformMod(Expression exQuery) {
+            return _upstreamMod.TransformMod(exQuery);
+        }
+
+        Expression IModifier.TransformMod(Expression exQuery) {
+            return TransformMod(exQuery);
+        }
+
+
+
+
+
+
+
+
 
 
         protected abstract TDest Transform(object fetched);

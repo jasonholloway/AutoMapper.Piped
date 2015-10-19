@@ -41,9 +41,14 @@ namespace Materialize.Reify.Parsing.Methods.Aggregators
             }
                         
 
-            protected override Expression Rewrite(Expression exSourceQuery) {
-                var exUpstream = UpstreamRewrite(exSourceQuery);                
+            protected override Expression FetchMod(Expression exSourceQuery) {
+                var exUpstream = UpstreamFetchMod(exSourceQuery);                
                 return Expression.Call(_mCount, exUpstream);
+            }
+
+
+            protected override Expression TransformMod(Expression exQuery) {
+                throw new NotImplementedException();
             }
 
 
