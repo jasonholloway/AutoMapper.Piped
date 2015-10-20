@@ -11,10 +11,10 @@ namespace Materialize.Tests.Infrastructure
     {
         public event Action<Expression> QueryFromClient;
         public event Action<IQueryable> QueryToServer;
-        public event Action<IEnumerable<object>> Fetched;
-        public event Action<IEnumerable<object>> Transformed;
+        public event Action<object> Fetched;
+        public event Action<object> Transformed;
                         
-        void ISnooper.OnQueryFromClient(Expression exQuery) {
+        void ISnooper.OnQuery(Expression exQuery) {
             if(QueryFromClient != null) {
                 QueryFromClient(exQuery);
             }
@@ -23,26 +23,20 @@ namespace Materialize.Tests.Infrastructure
         void ISnooper.OnStrategized(IReifyStrategy strategy) {
             //...
         }
-
-        void ISnooper.OnFetch(IQueryable query) {
-            if(QueryToServer != null) {
-                QueryToServer(query);
-            }
-        }
-
+        
         void ISnooper.OnFetch(Expression exQuery) {
             //...
         }
 
-        void ISnooper.OnFetched(IEnumerable enFetched) {
+        void ISnooper.OnFetched(object fetched) {
             if(Fetched != null) {
-                Fetched(enFetched.Cast<object>());
+                Fetched(fetched);
             }
         }
 
-        void ISnooper.OnTransformed(IEnumerable enTransformed) {
+        void ISnooper.OnTransformed(object transformed) {
             if(Transformed != null) {
-                Transformed(enTransformed.Cast<object>());
+                Transformed(transformed);
             }
         }
 

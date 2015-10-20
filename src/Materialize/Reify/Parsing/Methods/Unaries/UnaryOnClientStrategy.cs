@@ -86,25 +86,33 @@ namespace Materialize.Reify.Parsing.Methods.Unaries
                 : base(upstreamMod) 
             {
                 _fnEnumUnary = fnEnumUnary;
-            }            
-        
-                
-            protected override Expression FetchMod(Expression exSourceQuery) 
-            {
-                return UpstreamFetchMod(exSourceQuery);
             }
 
 
-            protected override Expression TransformMod(Expression exQuery) {
+            
+
+            protected override Expression ClientTransform(Expression exTransform) {
                 throw new NotImplementedException();
             }
 
 
-            protected override TElem Transform(object fetched) 
-            {
-                var transformed = UpstreamTransform(fetched);
-                return _fnEnumUnary(transformed);
-            }
+
+            //protected override Expression FetchMod(Expression exSourceQuery) 
+            //{
+            //    return UpstreamFetchMod(exSourceQuery);
+            //}
+
+
+            //protected override Expression TransformMod(Expression exQuery) {
+            //    throw new NotImplementedException();
+            //}
+
+
+            //protected override TElem Transform(object fetched) 
+            //{
+            //    var transformed = UpstreamTransform(fetched);
+            //    return _fnEnumUnary(transformed);
+            //}
         }
 
     }

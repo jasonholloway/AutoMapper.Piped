@@ -23,8 +23,9 @@ namespace Materialize.Reify.Parsing.Methods.Quantifiers
         {
             _predRebaseStrategy = predRebaseStrategy;
             _mQyQuantifier = mQyQuantifierDef.MakeGenericMethod(typeof(TSource).GetEnumerableElementType());
+
+            FetchType = typeof(bool);
         }
-        
 
 
         protected override IModifier Parse(IModifier upstreamMod, MethodCallExpression exSubject) 
@@ -49,26 +50,40 @@ namespace Materialize.Reify.Parsing.Methods.Quantifiers
                 _mQyQuantifier = mQyQuantifier;
                 _exRebasedPredicate = exRebasedPredicate;
             }
-            
+                        
 
-            protected override Expression FetchMod(Expression exQuery) 
-            {
+            protected override Expression ServerProject(Expression exQuery) {
                 return Expression.Call(
                                     _mQyQuantifier,
-                                    exQuery,
+                                    exQuery, //short-circuit
                                     _exRebasedPredicate);
             }
 
-
-            protected override Expression TransformMod(Expression exQuery) {
-                return exQuery;
+            protected override Expression ClientTransform(Expression exTransform) {
+                return exTransform; //short-circuit
             }
 
 
 
-            protected override bool Transform(object fetched) {
-                return (bool)fetched;
-            }
+
+            //protected override Expression FetchMod(Expression exQuery) 
+            //{
+            //    return Expression.Call(
+            //                        _mQyQuantifier,
+            //                        exQuery,
+            //                        _exRebasedPredicate);
+            //}
+
+
+            //protected override Expression TransformMod(Expression exQuery) {
+            //    return exQuery;
+            //}
+
+
+
+            //protected override bool Transform(object fetched) {
+            //    return (bool)fetched;
+            //}
 
         }
 

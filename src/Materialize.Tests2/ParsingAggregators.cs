@@ -3,6 +3,7 @@ using Materialize.Tests.Model;
 using NUnit.Framework;
 using Should;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -41,7 +42,7 @@ namespace Materialize.Tests2
         IQueryable<Mapped> Range(int start, int count) 
         {
             var snooper = new EventSnooper();
-            snooper.Fetched += (en => Fetched = en);
+            snooper.Fetched += (f => Fetched = (IEnumerable<object>)f);
                         
             var ints = Enumerable.Range(start, count);
             

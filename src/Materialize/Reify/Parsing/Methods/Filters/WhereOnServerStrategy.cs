@@ -46,33 +46,44 @@ namespace Materialize.Reify.Parsing.Methods.Filters
             {
                 _exRebasedPredicate = exRebasedPredicate;
             }
+
             
 
-            protected override Expression FetchMod(Expression exSource) 
-            {                
-                //var exStitched = _exRebasedPredicate.Replace(
-                //                                    _exRebasedPredicate.Arguments[0], 
-                //                                    exSource);
+            protected override Expression ServerFilter(Expression exQuery) {                
+                return Expression.Call(
+                                    QueryableMethods.Where.MakeGenericMethod(exQuery.Type.GetEnumerableElementType()),
+                                    UpstreamServerFilter(exQuery),
+                                    _exRebasedPredicate);
+            }
+            
 
-                var exWhere = Expression.Call(
-                                            QueryableMethods.Where.MakeGenericMethod(exSource.Type.GetEnumerableElementType()),
-                                            exSource,
-                                            _exRebasedPredicate);
+
+
+            //protected override Expression FetchMod(Expression exSource) 
+            //{                
+            //    //var exStitched = _exRebasedPredicate.Replace(
+            //    //                                    _exRebasedPredicate.Arguments[0], 
+            //    //                                    exSource);
+
+            //    var exWhere = Expression.Call(
+            //                                QueryableMethods.Where.MakeGenericMethod(exSource.Type.GetEnumerableElementType()),
+            //                                exSource,
+            //                                _exRebasedPredicate);
                 
-                return UpstreamFetchMod(exWhere);
-            }
+            //    return UpstreamFetchMod(exWhere);
+            //}
 
 
-            protected override Expression TransformMod(Expression exQuery) {
-                return UpstreamTransformMod(exQuery);
-            }
+            //protected override Expression TransformMod(Expression exQuery) {
+            //    return UpstreamTransformMod(exQuery);
+            //}
 
 
 
-            protected override IEnumerable<TElem> Transform(object fetched) 
-            {                
-                return UpstreamTransform(fetched);
-            }
+            //protected override IEnumerable<TElem> Transform(object fetched) 
+            //{                
+            //    return UpstreamTransform(fetched);
+            //}
 
         }
 

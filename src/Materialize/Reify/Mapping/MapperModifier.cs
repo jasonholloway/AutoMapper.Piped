@@ -10,8 +10,52 @@ namespace Materialize.Reify.Mapping
 
     abstract class MapperModifier<TSource, TFetch, TDest>
         : IModifier
-    {        
+    {
+
+        protected abstract Expression ServerFilter(Expression exQuery);
+        protected abstract Expression ServerProject(Expression exQuery);
+        protected abstract Expression ClientTransform(Expression exTransform);
+
+
+
+        Expression IModifier.ServerFilter(Expression exQuery) {
+            Debug.Assert(typeof(TSource).IsAssignableFrom(exQuery.Type));
+
+            return ServerFilter(exQuery);
+        }
+
+
+        Expression IModifier.ServerProject(Expression exQuery) {
+            var exRewritten =  ServerProject(exQuery);
+
+            Debug.Assert(typeof(TFetch).IsAssignableFrom(exRewritten.Type));
+
+            return exRewritten;
+        }
+
+
+        Expression IModifier.ClientTransform(Expression exTransform) {
+            Debug.Assert(typeof(TFetch).IsAssignableFrom(exTransform.Type));
+
+            var exRewritten = ClientTransform(exTransform);
+
+            Debug.Assert(typeof(TDest).IsAssignableFrom(exRewritten.Type));
+
+            return exRewritten;
+        }
+
+
+
+
+
+
+
+
+
+        [Obsolete]
         protected abstract Expression FetchMod(Expression exSource);
+
+        [Obsolete]
         protected abstract Expression TransformMod(Expression exFetched);
 
                 

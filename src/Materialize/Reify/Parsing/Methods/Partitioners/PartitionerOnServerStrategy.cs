@@ -39,29 +39,15 @@ namespace Materialize.Reify.Parsing.Methods.Partitioners
                 _mPartitioner = mPartitioner;
                 _count = count;
             }
-            
 
-            protected override Expression FetchMod(Expression exSourceQuery) 
-            {
-                var exUpstream = UpstreamFetchMod(exSourceQuery);
-                
-                return Expression.Call(
-                                    _mPartitioner, 
-                                    exUpstream, 
+
+            protected override Expression ServerFilter(Expression exQuery) {                
+                return Expression.Call(         //this could also be hooked on projection, but would have to safely treat incoming leg...
+                                    _mPartitioner,
+                                    UpstreamServerFilter(exQuery),
                                     Expression.Constant(_count));
             }
-
-
-            protected override Expression TransformMod(Expression exQuery) {
-                return UpstreamTransformMod(exQuery);
-            }
-
-
-
-            protected override IEnumerable<TElem> Transform(object fetched) {
-                throw new NotImplementedException();
-                //return UpstreamTransform(fetched);
-            }
+            
         }
 
     }

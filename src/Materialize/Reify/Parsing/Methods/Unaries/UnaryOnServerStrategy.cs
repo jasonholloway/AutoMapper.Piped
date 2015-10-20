@@ -37,30 +37,51 @@ namespace Materialize.Reify.Parsing.Methods.Unaries
             {
                 _mUnary = mUnary;
             }
-            
 
-            protected override Expression FetchMod(Expression exSourceQuery) 
-            {
-                var exInst = UpstreamFetchMod(exSourceQuery);
-                
-                return Expression.Call(_mUnary, exInst);
+
+            protected override Expression ServerFilter(Expression exQuery) {
+                throw new NotImplementedException();
             }
 
+            protected override Expression ServerProject(Expression exQuery) {
+                throw new NotImplementedException();
+            }
 
-            protected override Expression TransformMod(Expression exQuery) {
+            protected override Expression ClientTransform(Expression exTransform) {
                 throw new NotImplementedException();
             }
 
 
-            protected override TElem Transform(object fetched) { 
-                //need to package in enumerable to pass upstream
-                var rFetched = Array.CreateInstance(fetched.GetType(), 1);
-                rFetched.SetValue(fetched, 0);
 
-                var transformed = UpstreamTransform(rFetched);
+            //protected override Expression FetchMod(Expression exSourceQuery) 
+            //{
+            //    var exInst = UpstreamFetchMod(exSourceQuery);
                 
-                return transformed.Single();
-            }
+            //    return Expression.Call(_mUnary, exInst);
+            //}
+
+
+            //protected override Expression TransformMod(Expression exQuery) 
+            //{                
+            //    return Expression.Call(
+            //                EnumerableMethods.Single.MakeGenericMethod(typeof(TElem)),
+            //                UpstreamTransformMod(
+            //                    Expression.NewArrayInit(exQuery.Type, exQuery))
+            //                );                
+            //}
+                        
+
+
+            //protected override TElem Transform(object fetched) {
+            //    throw new NotImplementedException();
+            //    ////need to package in enumerable to pass upstream
+            //    //var rFetched = Array.CreateInstance(fetched.GetType(), 1);
+            //    //rFetched.SetValue(fetched, 0);
+
+            //    //var transformed = UpstreamTransform(rFetched);
+                
+            //    //return transformed.Single();
+            //}
         }
 
     }

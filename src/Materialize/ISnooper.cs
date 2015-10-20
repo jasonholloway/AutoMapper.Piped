@@ -11,14 +11,14 @@ namespace Materialize
 {
     public interface ISnooper
     {
-        void OnQueryFromClient(Expression exQuery);
-        void OnStrategized(IReifyStrategy strategy);
+        void OnQuery(Expression exQuery);
 
-        void OnFetch(IQueryable query);
-        void OnFetch(Expression exQuery);        
-        void OnFetched(IEnumerable enFetched);
+        void OnStrategized(IReifyStrategy strategy);
+        
+        void OnFetch(Expression exFetch);        
+        void OnFetched(object fetched);
 
         void OnTransform(Expression exTransform);
-        void OnTransformed(IEnumerable enTransformed);
+        void OnTransformed(object transformed);
     }
 }

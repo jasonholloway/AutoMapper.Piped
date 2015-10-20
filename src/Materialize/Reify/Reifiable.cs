@@ -30,6 +30,7 @@ namespace Materialize.Reify
         ISourceRegimeProvider _regimeSource;
         ParserFactory _parserFac;
         MaterializeOptions _options;
+        ISnooper _snoop;
         
 
         public IQueryable<TSource> SourceQuery { get; private set; }
@@ -53,6 +54,7 @@ namespace Materialize.Reify
             _regimeSource = regimeSource;
             _parserFac = parserFac;
             _options = options;
+            _snoop = options.Snooper;
         }
         
 
@@ -102,89 +104,46 @@ namespace Materialize.Reify
         class Fetcher<TFetch, TDest> : Fetcher
         {
             IModifier _mod;
-            ISnooper _snooper;
+            ISnooper _snoop;
 
             public Fetcher(IModifier mod, ISnooper snooper) {
                 _mod = mod;
-                _snooper = snooper;
+                _snoop = snooper;
             }
 
             public override object FetchFrom(IQueryable qySource) 
             {
-                //modifier stack rewrites the SourceQuery expression
-                var exFetch = _mod.FetchMod(qySource.Expression);
-                
-                //fetch from source; transform fetched via modifiers                                    
-                if(typeof(IQueryable).IsAssignableFrom(exFetch.Type)) {
-                    var qyFetch = qySource.Provider.CreateQuery(exFetch);
-
-                    _snooper?.OnFetch(qyFetch);
-                    _snooper?.OnFetch(exFetch);
-
-                    var fetched = (TFetch)(object)(IEnumerable)qyFetch;
-                    _snooper?.OnFetched((IEnumerable)fetched);
+                var exFetch = _mod.FetchMod(qySource.Expression);                
+                _snoop?.OnFetch(exFetch);
+                                
+                var fetched = qySource.Provider.Execute<TFetch>(exFetch);
+                _snoop?.OnFetched(fetched);
 
 
-                    var exTransformParam = Expression.Parameter(typeof(IEnumerable<>)
-                                                                    .MakeGenericType(qyFetch.ElementType),
-                                                                    "fetched");
+                var exParam = Expression.Parameter(typeof(TFetch), "fetched");
 
-                    var exTransformBody = _mod.TransformMod(exTransformParam);
-                    _snooper?.OnTransform(exTransformBody);
+                var exBody = _mod.TransformMod(exParam);
+                _snoop?.OnTransform(exBody);
 
+                var exFnTransform = Expression.Lambda<Func<TFetch, TDest>>(exBody, exParam);
 
-                    var exFnTransform = Expression.Lambda<Func<TFetch, TDest>>(
-                                                    exTransformBody,
-                                                    exTransformParam);
+                var fnTransform = exFnTransform.Compile();
 
-                    var fnTransform = exFnTransform.Compile();
+                var transformed = fnTransform(fetched);
+                _snoop?.OnTransformed(transformed);
 
-                    var transformed = fnTransform(fetched);
-                                        
-                    _snooper?.OnTransformed(transformed is IEnumerable
-                                                ? (IEnumerable)transformed
-                                                : new[] { transformed });
-
-                    return transformed;
-                }
-                else {
-                    throw new NotImplementedException();
-
-                    //OnQueryToServer(exFetch);
-
-                    //var fetched = SourceQuery.Provider.Execute(exFetch);
-                    //OnFetched(new[] { fetched });
-
-                    //var transformed = (TResult)parsed.Modifier.Transform(fetched);
-                    //OnTransformed(new[] { transformed });
-
-                    //return transformed;
-                }
+                return transformed;                
             }
-
-
-
-            void OnQueryToServer(IQueryable query) {
-                _snooper?.OnFetch(query);
-            }
-
-            void OnQueryToServer(Expression exQuery) {
-                _snooper?.OnFetch(exQuery);
-            }
-
-            void OnFetched(IEnumerable elems) {
-                _snooper?.OnFetched(elems);
-            }
-
-
         }
 
 
 
 
-        public TResult Execute<TResult>(Expression exClientQuery) 
+        //modifier stack rewrites the SourceQuery expression
+        //then compiles and executes transformation
+        public TResult Execute<TResult>(Expression exQuery) 
         {
-            OnQueryFromClient(exClientQuery);
+            _snoop?.OnQuery(exQuery);
             
             var reifyContext = new ReifyContext(
                                         _options.MappingEngine,
@@ -198,9 +157,8 @@ namespace Materialize.Reify
                                         typeof(IQueryable<TSource>), 
                                         reifyContext);
                         
-            var parsed = parser.Parse(exClientQuery);
-            
-            OnStrategized(parsed.UsedStrategy);
+            var parsed = parser.Parse(exQuery);
+            _snoop?.OnStrategized(parsed.UsedStrategy);
 
 
             var fetcher = Fetcher.Create(parsed, _options.Snooper);
@@ -214,26 +172,7 @@ namespace Materialize.Reify
             //Just delegate via refl to typed method...
             throw new NotImplementedException();
         }
-
-
-
-
-        #region Snooper stuff
         
-        void OnQueryFromClient(Expression exQuery) {
-            _options.Snooper?.OnQueryFromClient(exQuery);
-        }
-
-        void OnStrategized(IReifyStrategy strategy) {
-            _options.Snooper?.OnStrategized(strategy);
-        }
-
-        void OnTransformed(IEnumerable elems) {
-            _options.Snooper?.OnTransformed(elems);
-        }
-
-        #endregion
-
 
     }
 

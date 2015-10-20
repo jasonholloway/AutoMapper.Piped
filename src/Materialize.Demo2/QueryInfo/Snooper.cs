@@ -27,23 +27,19 @@ namespace Materialize.Demo2.QueryInfo
         }
 
         
-        void ISnooper.OnQueryFromClient(Expression exQuery) {
+        void ISnooper.OnQuery(Expression exQuery) {
             _exQueryFromClient = exQuery;
         }
 
         void ISnooper.OnStrategized(IReifyStrategy strategy) {
             _strategy = strategy;
         }
-
-        void ISnooper.OnFetch(IQueryable query) {
-            _exFetch = query.Expression;
-        }
-
+        
         void ISnooper.OnFetch(Expression exQuery) {
             _exFetch = exQuery;
         }
 
-        void ISnooper.OnFetched(IEnumerable enFetched) {
+        void ISnooper.OnFetched(object fetched) {
             //...
         }
 
@@ -53,7 +49,7 @@ namespace Materialize.Demo2.QueryInfo
         }
 
 
-        void ISnooper.OnTransformed(IEnumerable enTransformed) {
+        void ISnooper.OnTransformed(object transformed) {
             _reports.OnNext(RenderReport());
         }
         

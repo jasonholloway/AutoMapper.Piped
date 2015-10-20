@@ -60,12 +60,18 @@ namespace Materialize.Reify.Mapping.PropertyMaps
             {
                 return Expression.MemberInit(
                                         Expression.New(_projType),
-                                        _memberSpecs.Select(m => Expression.Bind(
-                                                                        m.ProjectedField,
-                                                                        m.Mapper.FetchMod(
-                                                                            Expression.MakeMemberAccess(exSource, m.PropertyMap.SourceMember))
-                                                                        )
-                                                            ).ToArray());
+                                        _memberSpecs.Select(m => {
+
+                                            var exMemberValue = m.Mapper.FetchMod(
+                                                                            Expression.MakeMemberAccess(exSource, m.PropertyMap.SourceMember));
+
+                                            return Expression.Bind(
+                                                        m.ProjectedField,
+                                                        exMemberValue
+                                                        //m.Mapper.FetchMod(
+                                                        //    Expression.MakeMemberAccess(exSource, m.PropertyMap.SourceMember))
+                                                        );
+                                        }).ToArray());
             }
 
 

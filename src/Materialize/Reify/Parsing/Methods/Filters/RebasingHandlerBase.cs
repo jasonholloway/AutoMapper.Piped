@@ -101,14 +101,17 @@ namespace Materialize.Reify.Parsing.Methods.Filters
         }
 
 
-        //to test, need to get example result, and package in lambda (can't pass unbound param)   
         bool TestAgainstServer(
             IRebaseStrategy rebaseStrategy,
             RebaseSubject subject) 
-        {      
-            var exTest = Expression.Lambda(
-                                    rebaseStrategy.Rebase(subject.Expression),
+        {            
+            var exTest = rebaseStrategy.Rebase(subject.Expression);
+               
+            if(!(exTest is LambdaExpression)) { //to test, need to get example result, and package in lambda (can't pass unbound param)
+                exTest = Expression.Lambda(
+                                    exTest,
                                     (ParameterExpression)subject.RootVectors[0].RebasedRoot);
+            }
 
             return Context.ReifyContext.SourceRegime.ServerAccepts(exTest);
         }

@@ -25,27 +25,37 @@ namespace Materialize.Reify.Parsing.Methods.Aggregators
         {
             public Modifier(IModifier upstreamMod)
                 : base(upstreamMod) { }
-                                    
 
-            protected override Expression FetchMod(Expression exSourceQuery) {
-                return UpstreamFetchMod(exSourceQuery);
-            }
-
-
-            protected override Expression TransformMod(Expression exQuery) {
+            
+            protected override Expression ClientTransform(Expression exTransform) {
                 return Expression.Call(
                             EnumerableMethods.Count.MakeGenericMethod(typeof(TElem)),
-                            UpstreamTransformMod(exQuery));
+                            UpstreamClientTransform(exTransform));
             }
 
 
 
-            protected override int Transform(object fetched) {
-                throw new NotImplementedException();
+
+
+            //protected override Expression FetchMod(Expression exSourceQuery) {
+            //    return UpstreamFetchMod(exSourceQuery);
+            //}
+
+
+            //protected override Expression TransformMod(Expression exQuery) {
+            //    return Expression.Call(
+            //                EnumerableMethods.Count.MakeGenericMethod(typeof(TElem)),
+            //                UpstreamTransformMod(exQuery));
+            //}
+
+
+
+            //protected override int Transform(object fetched) {
+            //    throw new NotImplementedException();
                   
-                //var transformed = UpstreamTransform(fetched);
-                //return transformed.Count();
-            }
+            //    //var transformed = UpstreamTransform(fetched);
+            //    //return transformed.Count();
+            //}
 
         }
 

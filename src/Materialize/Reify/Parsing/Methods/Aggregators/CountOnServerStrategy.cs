@@ -17,9 +17,11 @@ namespace Materialize.Reify.Parsing.Methods.Aggregators
 
         public CountOnServerStrategy(IParseStrategy upstreamStrategy)
             : base(upstreamStrategy) 
-        { 
+        {
+            FetchType = typeof(int);
+
             _mCount = QueryableMethods.Count
-                            .MakeGenericMethod(FetchType.GetEnumerableElementType());
+                            .MakeGenericMethod(UpstreamStrategy.FetchType.GetEnumerableElementType());
         }
 
         
@@ -39,23 +41,40 @@ namespace Materialize.Reify.Parsing.Methods.Aggregators
             {
                 _mCount = mCount;
             }
-                        
 
-            protected override Expression FetchMod(Expression exSourceQuery) {
-                var exUpstream = UpstreamFetchMod(exSourceQuery);                
-                return Expression.Call(_mCount, exUpstream);
+
+
+            protected override Expression ServerFilter(Expression exQuery) {
+                var exUpstreamRewritten = UpstreamServerFilter(exQuery);
+                return Expression.Call(_mCount, exUpstreamRewritten);
+            }
+
+            protected override Expression ServerProject(Expression exQuery) {
+                return exQuery; //short-circuit
+            }
+
+            protected override Expression ClientTransform(Expression exTransform) {
+                return exTransform; //short-circuit
             }
 
 
-            protected override Expression TransformMod(Expression exQuery) {
-                throw new NotImplementedException();
-            }
 
 
-            protected override int Transform(object fetched) {
-                //no upstream delegation here: placing rule guarantees no intervening filtering
-                return (int)fetched;
-            }
+            //protected override Expression FetchMod(Expression exSourceQuery) {
+            //    var exUpstream = UpstreamFetchMod(exSourceQuery);                
+            //    return Expression.Call(_mCount, exUpstream);
+            //}
+
+
+            //protected override Expression TransformMod(Expression exQuery) {
+            //    return exQuery;
+            //}
+            
+
+            //protected override int Transform(object fetched) {
+            //    //no upstream delegation here: placing rule guarantees no intervening filtering
+            //    return (int)fetched;
+            //}
         }
 
     }

@@ -37,29 +37,40 @@ namespace Materialize.Reify.Parsing.Methods.Filters
             {
                 _exPredicate = exPredicate;
             }
+
             
 
-            protected override Expression FetchMod(Expression exQuery) {
-                return UpstreamFetchMod(exQuery);
-            }
-
-
-            protected override Expression TransformMod(Expression exQuery) {                
+            protected override Expression ClientTransform(Expression exTransform) {
                 return Expression.Call(
                             EnumerableMethods.Where.MakeGenericMethod(typeof(TElem)),
-                            UpstreamTransformMod(exQuery),
+                            UpstreamClientTransform(exTransform),
                             _exPredicate);
             }
 
 
 
-            protected override IEnumerable<TElem> Transform(object fetched) 
-            {
-                throw new NotImplementedException();
 
-                //var transformed = UpstreamTransform(fetched);
-                //return transformed.Where(_exPredicate);
-            }
+            //protected override Expression FetchMod(Expression exQuery) {
+            //    return UpstreamFetchMod(exQuery);
+            //}
+
+
+            //protected override Expression TransformMod(Expression exQuery) {                
+            //    return Expression.Call(
+            //                EnumerableMethods.Where.MakeGenericMethod(typeof(TElem)),
+            //                UpstreamTransformMod(exQuery),
+            //                _exPredicate);
+            //}
+
+
+
+            //protected override IEnumerable<TElem> Transform(object fetched) 
+            //{
+            //    throw new NotImplementedException();
+
+            //    //var transformed = UpstreamTransform(fetched);
+            //    //return transformed.Where(_exPredicate);
+            //}
 
         }
 

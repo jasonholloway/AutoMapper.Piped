@@ -16,24 +16,20 @@ namespace Materialize.Tests.Infrastructure
         public object[] Fetched { get; private set; }
         public object[] Transformed { get; private set; }
                         
-        void ISnooper.OnQueryFromClient(Expression exQuery) {
+        void ISnooper.OnQuery(Expression exQuery) {
             QueryExpFromClient = exQuery;
         }
 
         void ISnooper.OnStrategized(IReifyStrategy strategy) {
             //...
         }
-
-        void ISnooper.OnFetch(IQueryable query) {
-            QueryToServer = query;
-        }
-
+        
         void ISnooper.OnFetch(Expression exQuery) {
             FetchExpression = exQuery;
         }
 
-        void ISnooper.OnFetched(IEnumerable enFetched) {
-            Fetched = enFetched.Cast<object>().ToArray();
+        void ISnooper.OnFetched(object fetched) {
+            Fetched = ((IEnumerable)fetched).Cast<object>().ToArray();
         }
 
         void ISnooper.OnTransform(Expression exTransform) {
@@ -41,8 +37,8 @@ namespace Materialize.Tests.Infrastructure
         }
 
 
-        void ISnooper.OnTransformed(IEnumerable enTransformed) {
-            Transformed = enTransformed.Cast<object>().ToArray();
+        void ISnooper.OnTransformed(object transformed) {
+            Transformed = ((IEnumerable)transformed).Cast<object>().ToArray();
         }
 
     }

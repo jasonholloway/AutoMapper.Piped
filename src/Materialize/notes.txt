@@ -1,6 +1,95 @@
 ﻿
 
 
+> A DREAM
+	Ideally would distil various clauses into formal graph before simplifying the same graph, rearranging its parts,
+	and reconstituting as bound query expressions.
+
+	Each transformation would relate to a type domain - a graph with a root type.
+
+	Each transformation (or at least most of them) would do something to this domain. And each transformation would have some
+	responsibility for rebasing between these abstract domains.
+
+	But the domain isn't just the rooted type graph, it's also the accumuluated stack of predicates that limit its values.
+
+	The types and the predicates are tightly bound. Predicates are only in terms of instances, and limit the root node aspectually. Each non-multiple type graph detail is a clarifying of the central multiple node in profile.
+
+	A projection of the type root is therefore a translation to another set
+
+	And a SelectMany? Is a projection merely, albeit one that also changes the power(?) of the set. Certainly can't guarantee
+	its similar cardinality. But really, it is the concrete relation between the domains that is impassible - their actual structure - rather than the abstract notion of cardinality. A simple projection is passible, can be simply rebased if
+	the projection is transparent. 
+
+	So we start with a simple list of tranformative elements, one after the other and in situ - that is, not randomly thrown together, but all in a meaningful chain. But from these elements we work out the spaces they demarcate - each one is a boundary between two zones, which zones now become the elements. The initial transformations become relations between substantive things. Space becomes gelid, is sliced into cuboid lumps.
+
+	The most complicated domain boundary is that spanned by the mapping projections.
+
+	But given all of this, all we want is the source, and the dest, and the relations between them. Intervening stages retreat out of view, dissolve into dusk. Two opposite landmasses, connected by taut, complicated strings. But these strings are necessarily tangled. And these tangles are themselves gelid lumps. So the intervening stages aren't to be relegated, but appreciated instead as the objects of our work, the messy fixtures to be simplified.
+
+	We would then clean up here, and rationalise in a nicer, more hygienic space.
+
+	Seems that both the individual strings linking projections and more general differences, such as power, etc, are important in strategization. The strings are needed to ascertain transparency, and to in some cases simplify away intervening spaces (as mere stepping stones, say). That is to say that the strings feed into the qualities, which are then used in the higher-level orchestration of parts.
+
+	For the thousandth time, this all sounds like what we already have in place. EXCEPT for the fact that the strategies are brittly nestled. No rearranging them. They each have their (semi-)arbitrary spot, and won't be relinquishing it soon.
+	Some can be shortcircuited, it is true.
+
+	But already we have the notion of type domains, between which predcates can be rebased. 
+
+	These domains don't at the moment touch on in-place constraints, however.
+
+	***********************************************************************************************
+
+	Would maybe be nice if there were three(!) rewriting passes. Two on server side, and one on the client.
+
+	The first would be a kind of 'pre' pass, before any projections or mapping operations. This would be the PreFilter pass.
+
+	Then there would be the Mapping pass.
+
+	Then there would be the client-side transrm pass.
+
+	-> an opening up of placement possibilities. Instead of being forced to operate in reverse, could append source-domain filters
+		in the correct order. Simplification.
+
+
+	The three passes:
+		SourceFilter
+		SourceProject
+		LocalTransform
+
+
+	Various modifiers therefore need rewriting, hey-ho.
+
+
+	*************************************************************************************************
+
+	But what about our reliance on flags to tell us what filtering goes on above?
+
+	A DREAM #2:
+		Instead of rewriting actual expressions, the strategies could place transformations onto hooks, that could then be inspected downstream. No filters in place on LocalTransform? then we can hook our own filters onto SourceFilter, if the predicate can be rebased. 
+
+		In which case it wouldn't be a matter of programmerly discipline to flag up certain situations for the benefit of unknown others, but an actual act of inspection by the class concerned. Actions made public, so all can see, and 'sort themselves out'.
+		
+		****
+
+		Strategies would emplace these hooked modifiers in a pattern to their liking, and there they would hang for the duration.
+
+		Or rather, a *strategizer* would do the hanging, decorating the tree, etc.
+
+	************************************************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 > ParseStrategy source types are currently a bit of a mess. 
 	ParseStrategies: like matryoshka dolls.
 

@@ -18,6 +18,7 @@ namespace Materialize.Reify.Parsing.Methods.Aggregators
             IRebaseStrategy predRebaseStrategy)
             : base(upstreamStrategy) 
         {
+            FetchType = typeof(int);
             _predRebaseStrategy = predRebaseStrategy;
         }
                       
@@ -42,29 +43,42 @@ namespace Materialize.Reify.Parsing.Methods.Aggregators
             {
                 _exRebasedPredicate = exRebasedPredicate;
             }
+
             
-
-            protected override Expression FetchMod(Expression exQuery) 
-            {
-                //as usual, no care about upstream changes to cardinality
-                //intervening filtering is just ignored!!!!!!
-
+            protected override Expression ServerProject(Expression exQuery) {
                 return Expression.Call(
                                     EnumerableMethods.CountPred.MakeGenericMethod(exQuery.Type.GetEnumerableElementType()),
-                                    exQuery, //UpstreamFetchMod(exQuery), //!!!! cuts short !!!!!
-                                    _exRebasedPredicate);                
+                                    exQuery, //short-circuit
+                                    _exRebasedPredicate);
+            }
+
+            protected override Expression ClientTransform(Expression exTransform) {
+                return exTransform; //short-circuit
             }
 
 
-            protected override Expression TransformMod(Expression exQuery) {
-                return exQuery;
-            }
+
+            //protected override Expression FetchMod(Expression exQuery) 
+            //{
+            //    //as usual, no care about upstream changes to cardinality
+            //    //intervening filtering is just ignored!!!!!!
+
+            //    return Expression.Call(
+            //                        EnumerableMethods.CountPred.MakeGenericMethod(exQuery.Type.GetEnumerableElementType()),
+            //                        exQuery, //UpstreamFetchMod(exQuery), //!!!! cuts short !!!!!
+            //                        _exRebasedPredicate);                
+            //}
+
+
+            //protected override Expression TransformMod(Expression exQuery) {
+            //    return exQuery;
+            //}
 
 
 
-            protected override int Transform(object fetched) {
-                return (int)fetched;
-            }
+            //protected override int Transform(object fetched) {
+            //    return (int)fetched;
+            //}
 
         }
 

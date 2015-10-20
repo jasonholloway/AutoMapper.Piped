@@ -1,19 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Materialize.Reify
 {
     interface IModifier
     {
-        Expression FetchMod(Expression exFetch);
-        Expression TransformMod(Expression exTransform);
+        Expression ServerFilter(Expression exQuery);
+        Expression ServerProject(Expression exQuery);                
+        Expression ClientTransform(Expression exTransform);
 
 
-        [Obsolete]
-        object Transform(object fetched);
+
+
+
+
+        //[Obsolete]
+        //Expression FetchMod(Expression exFetch);
+        
+        //[Obsolete]
+        //Expression TransformMod(Expression exTransform);
+        
+        //[Obsolete]
+        //object Transform(object fetched);
     }
 }

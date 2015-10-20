@@ -225,6 +225,10 @@ namespace Materialize.SourceRegimes
                         TypeUsage typeUsage = null;                        
                         GetTypeUsageFromClrType(converter, exParam.Type, out typeUsage);
 
+                        if(typeUsage == null) {
+                            throw new NotSupportedException("EF6Regime tried to bind parameter of non-EDM type");
+                        }
+
                         PushBindingScope(converter, exParam, CreateDbNullExpression(typeUsage)); //bind param to null DbExpression - type, not value, is tested
                     }
                 }

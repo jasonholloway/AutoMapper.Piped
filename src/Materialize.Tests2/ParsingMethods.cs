@@ -28,7 +28,7 @@ namespace Materialize.Tests2
 
         IQueryable<string> Range(int start, int count) {
             var snooper = new EventSnooper();
-            snooper.Fetched += (en => Fetched = en);
+            snooper.Fetched += (f => Fetched = (IEnumerable<object>)f);
                         
             var ints = Enumerable.Range(start, count);
             return ints.AsQueryable().MapAs<string>(snooper);

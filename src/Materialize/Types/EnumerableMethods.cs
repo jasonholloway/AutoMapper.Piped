@@ -29,6 +29,9 @@ namespace Materialize.Types
         public static MethodInfo CountPred = Refl.GetGenMethod(
                                                            () => Enumerable.Count<object>(null, i => true));
 
+        public static MethodInfo Single = Refl.GetGenMethod(
+                                                    () => Enumerable.Single<object>(null));
+
 
 
 
