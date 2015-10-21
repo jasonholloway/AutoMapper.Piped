@@ -53,7 +53,7 @@ namespace Materialize.Reify.Mapping.Translation
 
                        
 
-            var reifierType = typeof(Reifier<>).MakeGenericType(typeof(TOrig), typeof(TDest), _dataType.Type);
+            var reifierType = typeof(Modifier<>).MakeGenericType(typeof(TOrig), typeof(TDest), _dataType.Type);
             
             _fnCreateModifier = Expression.Lambda<Func<IModifier>>( //will opt out of this for ios
                                                         Expression.New(
@@ -95,22 +95,36 @@ namespace Materialize.Reify.Mapping.Translation
 
 
 
-        class Reifier<TMed> : MapperModifier<TOrig, TMed, TDest>
+        class Modifier<TMed> : MapperModifier<TOrig, TMed, TDest>
         {
             MapContext _ctx;
             DataType _dataType;
 
-            public Reifier(MapContext ctx, DataType dataType) {
+            public Modifier(MapContext ctx, DataType dataType) {
                 _ctx = ctx;
                 _dataType = dataType;
             }
 
-            protected override Expression FetchMod(Expression exSource) {
+
+            protected override Expression ServerProject(Expression exQuery) {
                 return Expression.MemberInit(
                                     Expression.New(_dataType.Type),
-                                    BuildBindings(exSource)
+                                    BuildBindings(exQuery)
                                     );
             }
+
+            protected override Expression ClientTransform(Expression exTransform) {
+                throw new NotImplementedException();
+            }
+
+
+
+            //protected override Expression FetchMod(Expression exSource) {
+            //    return Expression.MemberInit(
+            //                        Expression.New(_dataType.Type),
+            //                        BuildBindings(exSource)
+            //                        );
+            //}
 
             MemberBinding[] BuildBindings(Expression exSource) {
 
@@ -129,60 +143,60 @@ namespace Materialize.Reify.Mapping.Translation
 
 
 
-            protected override Expression TransformMod(Expression exFetched) {
-                throw new NotImplementedException();
-            }
+            //protected override Expression TransformMod(Expression exFetched) {
+            //    throw new NotImplementedException();
+            //}
 
 
 
-            protected override TDest Transform(TMed fetched) {
+            //protected override TDest Transform(TMed fetched) {
 
-                //how do we know what our input streams are? Strategy should build up array of maps for us to
-                //iterate through. Every member with a rule to be mapped.
+            //    //how do we know what our input streams are? Strategy should build up array of maps for us to
+            //    //iterate through. Every member with a rule to be mapped.
 
-                //yet we rely on AutoMapper's config. No enumerating PropertyInfos for us, oh no!
+            //    //yet we rely on AutoMapper's config. No enumerating PropertyInfos for us, oh no!
                 
-                //but for projections, propertymaps are cleared, helpfully. 
+            //    //but for projections, propertymaps are cleared, helpfully. 
 
-                //our projection has inputs, yes...? 
-
-
+            //    //our projection has inputs, yes...? 
 
 
 
 
 
-                //reform all our input streams (that is, each field of our mediate type)
 
-                //use them to feed our projection, which will be executed here
 
-                //This is obvs horrible implementation...
+            //    //reform all our input streams (that is, each field of our mediate type)
 
-                var dest = (TDest)Activator.CreateInstance<TDest>();
+            //    //use them to feed our projection, which will be executed here
+
+            //    //This is obvs horrible implementation...
+
+            //    var dest = (TDest)Activator.CreateInstance<TDest>();
                 
-                //now bind reformed input streams to dest object
+            //    //now bind reformed input streams to dest object
                 
-                //but if projection opaquely requires entire original as parameter, then 
-                //we shouldn't use mediating type. Should just return original type?
-                //Nah, cos our input streams may be transformed. Basically, just fall back on
-                //property mapping behaviour, where mediation is used if children dictate it,
-                //but otherwise just return plain type. 
+            //    //but if projection opaquely requires entire original as parameter, then 
+            //    //we shouldn't use mediating type. Should just return original type?
+            //    //Nah, cos our input streams may be transformed. Basically, just fall back on
+            //    //property mapping behaviour, where mediation is used if children dictate it,
+            //    //but otherwise just return plain type. 
 
-                //When projection just leaves plain type in place, however, there will be no
-                //propmaps or owt. Definitely distinct strategies here.
+            //    //When projection just leaves plain type in place, however, there will be no
+            //    //propmaps or owt. Definitely distinct strategies here.
 
 
-                //Types of proj strats:
-                //  > FetchWholeAndProjectStrategy
-                //      - if no inputs use intermediate types, and projection needs full source entity
-                //  > EdmFriendlyProjectStrategy
-                //      - can be stitched in directly, mostly
-                //  > MediateFetchAndProjectStrategy
-                //      - if only some props needed, bind only those streams into mediate type
-                //      - if input streams weird, then need mediate type anyway
+            //    //Types of proj strats:
+            //    //  > FetchWholeAndProjectStrategy
+            //    //      - if no inputs use intermediate types, and projection needs full source entity
+            //    //  > EdmFriendlyProjectStrategy
+            //    //      - can be stitched in directly, mostly
+            //    //  > MediateFetchAndProjectStrategy
+            //    //      - if only some props needed, bind only those streams into mediate type
+            //    //      - if input streams weird, then need mediate type anyway
 
-                return dest;
-            }
+            //    return dest;
+            //}
         }
 
 

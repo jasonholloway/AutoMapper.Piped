@@ -113,7 +113,10 @@ namespace Materialize.Reify
 
             public override object FetchFrom(IQueryable qySource) 
             {
-                var exFetch = _mod.FetchMod(qySource.Expression);                
+                var exFetch = _mod.ServerFilter(qySource.Expression);
+                exFetch = _mod.ServerProject(exFetch);
+
+                //var exFetch = _mod.FetchMod(qySource.Expression);                
                 _snoop?.OnFetch(exFetch);
                                 
                 var fetched = qySource.Provider.Execute<TFetch>(exFetch);
@@ -122,7 +125,8 @@ namespace Materialize.Reify
 
                 var exParam = Expression.Parameter(typeof(TFetch), "fetched");
 
-                var exBody = _mod.TransformMod(exParam);
+                //var exBody = _mod.TransformMod(exParam);
+                var exBody = _mod.ClientTransform(exParam);
                 _snoop?.OnTransform(exBody);
 
                 var exFnTransform = Expression.Lambda<Func<TFetch, TDest>>(exBody, exParam);

@@ -12,9 +12,17 @@ namespace Materialize.Reify.Mapping
         : IModifier
     {
 
-        protected abstract Expression ServerFilter(Expression exQuery);
-        protected abstract Expression ServerProject(Expression exQuery);
-        protected abstract Expression ClientTransform(Expression exTransform);
+        protected virtual Expression ServerFilter(Expression exQuery) {
+            return exQuery;
+        }
+
+        protected virtual Expression ServerProject(Expression exQuery) {
+            return exQuery;
+        }
+
+        protected virtual Expression ClientTransform(Expression exTransform) {
+            return exTransform;
+        }
 
 
 
@@ -52,42 +60,42 @@ namespace Materialize.Reify.Mapping
 
 
 
-        [Obsolete]
-        protected abstract Expression FetchMod(Expression exSource);
+        //[Obsolete]
+        //protected abstract Expression FetchMod(Expression exSource);
 
-        [Obsolete]
-        protected abstract Expression TransformMod(Expression exFetched);
+        //[Obsolete]
+        //protected abstract Expression TransformMod(Expression exFetched);
 
                 
-        Expression IModifier.FetchMod(Expression exFetch) {
-            Debug.Assert(typeof(TSource).IsAssignableFrom(exFetch.Type));
+        //Expression IModifier.FetchMod(Expression exFetch) {
+        //    Debug.Assert(typeof(TSource).IsAssignableFrom(exFetch.Type));
 
-            var exModded = FetchMod(exFetch);
+        //    var exModded = FetchMod(exFetch);
 
-            Debug.Assert(typeof(TFetch).IsAssignableFrom(exModded.Type));
+        //    Debug.Assert(typeof(TFetch).IsAssignableFrom(exModded.Type));
 
-            return exModded;
-        }
-
-
-        Expression IModifier.TransformMod(Expression exTransform) {
-            Debug.Assert(typeof(TFetch).IsAssignableFrom(exTransform.Type));
-
-            var exModded = TransformMod(exTransform);
-
-            Debug.Assert(typeof(TDest).IsAssignableFrom(exModded.Type));
-
-            return exModded;
-        }
+        //    return exModded;
+        //}
 
 
-        [Obsolete]
-        protected abstract TDest Transform(TFetch fetched);
+        //Expression IModifier.TransformMod(Expression exTransform) {
+        //    Debug.Assert(typeof(TFetch).IsAssignableFrom(exTransform.Type));
 
-        [Obsolete]
-        object IModifier.Transform(object fetched) {
-            return Transform((TFetch)fetched);
-        }
+        //    var exModded = TransformMod(exTransform);
+
+        //    Debug.Assert(typeof(TDest).IsAssignableFrom(exModded.Type));
+
+        //    return exModded;
+        //}
+
+
+        //[Obsolete]
+        //protected abstract TDest Transform(TFetch fetched);
+
+        //[Obsolete]
+        //object IModifier.Transform(object fetched) {
+        //    return Transform((TFetch)fetched);
+        //}
         
 
     }

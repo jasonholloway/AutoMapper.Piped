@@ -49,24 +49,18 @@ namespace Materialize.Reify.Mapping.Collections
                 _collFactory = collFactory;
                 _elemModifier = elemStrategy.CreateModifier();
             }
-            
-            protected override Expression FetchMod(Expression exSource) {
-                return exSource;
-            }
 
-
-
-            protected override Expression TransformMod(Expression exFetched) {
-
+            protected override Expression ClientTransform(Expression exTransform) 
+            {
                 var exProjParam = Expression.Parameter(typeof(TOrigElem));
 
                 var exProjLambda = Expression.Lambda<Func<TOrigElem, TDestElem>>(
-                                                _elemModifier.TransformMod(exProjParam),
+                                                _elemModifier.ClientTransform(exProjParam),
                                                 exProjParam);
 
                 var exEnum = Expression.Call(
                                     EnumerableMethods.Select.MakeGenericMethod(typeof(TOrigElem), typeof(TDestElem)),
-                                    exFetched,
+                                    exTransform,
                                     exProjLambda);
 
                 return Expression.Convert(
@@ -83,12 +77,12 @@ namespace Materialize.Reify.Mapping.Collections
 
 
 
-            protected override TDest Transform(IEnumerable<TOrigElem> fetched) {
-                var transformedElems = fetched
-                                        .Select(elem => _elemModifier.Transform(elem));
+            //protected override TDest Transform(IEnumerable<TOrigElem> fetched) {
+            //    var transformedElems = fetched
+            //                            .Select(elem => _elemModifier.Transform(elem));
 
-                return (TDest)_collFactory(transformedElems); //wrap into proper destination collection type
-            }
+            //    return (TDest)_collFactory(transformedElems); //wrap into proper destination collection type
+            //}
         }
                         
 

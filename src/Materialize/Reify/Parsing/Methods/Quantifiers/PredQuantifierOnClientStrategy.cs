@@ -43,29 +43,40 @@ namespace Materialize.Reify.Parsing.Methods.Quantifiers
                 _mEnQuantifier = mEnQuantifier;
                 _exPredicate = exPredicate;
             }
+
             
 
-            protected override Expression FetchMod(Expression exSource) {
-                return UpstreamFetchMod(exSource);
-            }
-
-
-            protected override Expression TransformMod(Expression exFetched) {
+            protected override Expression ClientTransform(Expression exTransform) {
                 return Expression.Call(
                                 _mEnQuantifier,
-                                UpstreamTransformMod(exFetched),
+                                UpstreamClientTransform(exTransform),
                                 _exPredicate);
             }
 
 
 
-            protected override bool Transform(object fetched) 
-            {
-                throw new NotImplementedException();
 
-                //var transformed = UpstreamTransform(fetched);
-                //return _fnApply(transformed);
-            }
+            //protected override Expression FetchMod(Expression exSource) {
+            //    return UpstreamFetchMod(exSource);
+            //}
+
+
+            //protected override Expression TransformMod(Expression exFetched) {
+            //    return Expression.Call(
+            //                    _mEnQuantifier,
+            //                    UpstreamTransformMod(exFetched),
+            //                    _exPredicate);
+            //}
+
+
+
+            //protected override bool Transform(object fetched) 
+            //{
+            //    throw new NotImplementedException();
+
+            //    //var transformed = UpstreamTransform(fetched);
+            //    //return _fnApply(transformed);
+            //}
 
         }
 

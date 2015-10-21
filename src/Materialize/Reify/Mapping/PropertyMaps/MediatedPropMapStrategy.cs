@@ -55,15 +55,16 @@ namespace Materialize.Reify.Mapping.PropertyMaps
                                                                         m.Spec.Strategy.CreateModifier())
                                                                         ).ToArray();
             }
-            
-            protected override Expression FetchMod(Expression exSource) 
+
+
+            protected override Expression ServerProject(Expression exQuery) 
             {
                 return Expression.MemberInit(
                                         Expression.New(_projType),
                                         _memberSpecs.Select(m => {
 
-                                            var exMemberValue = m.Mapper.FetchMod(
-                                                                            Expression.MakeMemberAccess(exSource, m.PropertyMap.SourceMember));
+                                            var exMemberValue = m.Mapper.ServerProject(
+                                                                            Expression.MakeMemberAccess(exQuery, m.PropertyMap.SourceMember));
 
                                             return Expression.Bind(
                                                         m.ProjectedField,
@@ -75,14 +76,14 @@ namespace Materialize.Reify.Mapping.PropertyMaps
             }
 
 
-            protected override Expression TransformMod(Expression exFetched) {
+            protected override Expression ClientTransform(Expression exTransform) {
                 return Expression.MemberInit(
                             Expression.New(typeof(TDest)),
                             _memberSpecs.Select(m => {
                                     return Expression.Bind(
                                                 m.PropertyMap.DestinationProperty.MemberInfo, 
-                                                m.Mapper.TransformMod(
-                                                            Expression.MakeMemberAccess(exFetched, m.ProjectedField)
+                                                m.Mapper.ClientTransform(
+                                                            Expression.MakeMemberAccess(exTransform, m.ProjectedField)
                                                 ));
                                 }).ToArray()
                             );
@@ -92,23 +93,23 @@ namespace Materialize.Reify.Mapping.PropertyMaps
 
 
 
-            protected override TDest Transform(TMed obj) 
-            {
-                //should use more elegant per-strategy-compiled ctor + binders
-                //...
+            //protected override TDest Transform(TMed obj) 
+            //{
+            //    //should use more elegant per-strategy-compiled ctor + binders
+            //    //...
 
-                var dest = Activator.CreateInstance<TDest>();
+            //    var dest = Activator.CreateInstance<TDest>();
 
-                foreach(var memberSpec in _memberSpecs) {
-                    var memberValue = memberSpec.ProjectedField.GetValue(obj);
+            //    foreach(var memberSpec in _memberSpecs) {
+            //        var memberValue = memberSpec.ProjectedField.GetValue(obj);
 
-                    var transformedValue = memberSpec.Mapper.Transform(memberValue);
+            //        var transformedValue = memberSpec.Mapper.Transform(memberValue);
                     
-                    memberSpec.PropertyMap.DestinationProperty.SetValue(dest, transformedValue);
-                }
+            //        memberSpec.PropertyMap.DestinationProperty.SetValue(dest, transformedValue);
+            //    }
 
-                return dest;
-            }
+            //    return dest;
+            //}
 
             struct MemberReifySpec
             {

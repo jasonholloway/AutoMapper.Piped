@@ -59,7 +59,7 @@ namespace Materialize.Reify.Mapping.PropertyMaps
                                                                     exSource,
                                                                     sourceMember);
 
-                                var exMappedInput = subMapper.FetchMod(exInput);
+                                var exMappedInput = subMapper.ServerProject(exInput);
 
                                 return Expression.Bind(
                                                     destMember,
@@ -67,26 +67,23 @@ namespace Materialize.Reify.Mapping.PropertyMaps
                             }).ToArray();
             }
 
-
-            protected override Expression FetchMod(Expression exSource) {
+            protected override Expression ServerProject(Expression exQuery) {
                 return Expression.MemberInit( //should handle custom ctors etc.
                                     Expression.New(typeof(TDest).GetConstructors().First()),
-                                    BuildBindings(exSource)
+                                    BuildBindings(exQuery)
                                     );
             }
 
 
 
-            protected override Expression TransformMod(Expression exFetched) {
-                return exFetched;
-            }
+            //protected override Expression TransformMod(Expression exFetched) {
+            //    return exFetched;
+            //}
+            
 
-
-
-
-            protected override TDest Transform(TDest obj) {
-                return obj;
-            }
+            //protected override TDest Transform(TDest obj) {
+            //    return obj;
+            //}
 
         }
 

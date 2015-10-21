@@ -9,7 +9,7 @@ using Materialize.Types;
 namespace Materialize.Reify.Parsing.Methods.Aggregators
 {
     class PredCountOnServerStrategy<TSource, TElem> 
-        : MethodStrategyBase<TSource, bool>
+        : MethodStrategyBase<TSource, int>
     {
         IRebaseStrategy _predRebaseStrategy;
 

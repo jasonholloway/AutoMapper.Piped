@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using Should;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,6 +11,8 @@ namespace Materialize.Tests2
     [TestFixture]    
     class ParsingMethods : TestClassBase
     {
+        private object f;
+
         public ParsingMethods() 
         {
             InitServices(x => x.EmplaceIntolerantSourceRegime());
@@ -28,7 +31,7 @@ namespace Materialize.Tests2
 
         IQueryable<string> Range(int start, int count) {
             var snooper = new EventSnooper();
-            snooper.Fetched += (f => Fetched = (IEnumerable<object>)f);
+            snooper.Fetched += (f => Fetched = f is IEnumerable ? (IEnumerable<object>)f : new[] { f });
                         
             var ints = Enumerable.Range(start, count);
             return ints.AsQueryable().MapAs<string>(snooper);

@@ -20,7 +20,7 @@ namespace Materialize.Reify.Parsing.Methods.Partitioners
             }
             else {
                 return CreateStrategy(
-                            typeof(PartitionerOnServerStrategy<,>).MakeGenericType(SourceType, ElemType),
+                            typeof(PartitionerOnServerStrategy<,,>).MakeGenericType(SourceType, SourceType.GetEnumerableElementType(), ElemType),
                             UpstreamStrategy,
                             MethodDef);
             }

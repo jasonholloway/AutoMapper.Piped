@@ -40,55 +40,54 @@ namespace Materialize.Reify.Mapping.Collections
         public override IModifier CreateModifier() {
             return new Mapper(_collFactory, _elemStrategy);
         }
-                
-        
+
+
 
         class Mapper : MapperModifier<IEnumerable<TOrigElem>, IEnumerable<TMedElem>, TDest>
         {
             static MethodInfo _mQueryableSelect = Refl.GetMethod(() => Queryable.Select(null, (Expression<Func<TOrigElem, TMedElem>>)null));
             static MethodInfo _mEnumerableSelect = Refl.GetMethod(() => Enumerable.Select(null, (Func<TOrigElem, TMedElem>)null));
-            
+
 
             CollectionFactory _collFactory;
             IMapStrategy _elemStrategy;
             IModifier _elemModifier;
-            
+
             public Mapper(
-                CollectionFactory collFactory, 
-                IMapStrategy elemStrategy) 
-            {
+                CollectionFactory collFactory,
+                IMapStrategy elemStrategy) {
                 _collFactory = collFactory;
                 _elemStrategy = elemStrategy;
                 _elemModifier = elemStrategy.CreateModifier();
             }
 
-
-            protected override Expression FetchMod(Expression exFetch) 
+            
+            protected override Expression ServerProject(Expression exQuery) 
             {
                 var exInParam = Expression.Parameter(typeof(TOrigElem));
-                var exLambdaBody = _elemModifier.FetchMod(exInParam);
-                
+                var exLambdaBody = _elemModifier.ServerProject(exInParam);
+
                 return Expression.Call(
-                                    exFetch.Type.IsQueryable()
-                                                    ? _mQueryableSelect
-                                                    : _mEnumerableSelect,
-                                    exFetch,
-                                    Expression.Lambda(
-                                                typeof(Func<TOrigElem, TMedElem>),
-                                                exLambdaBody,
-                                                exInParam)
-                                    );
+                            exQuery.Type.IsQueryable()
+                                        ? _mQueryableSelect
+                                        : _mEnumerableSelect,
+                            exQuery,
+                            Expression.Lambda(
+                                        typeof(Func<TOrigElem, TMedElem>),
+                                        exLambdaBody,
+                                        exInParam)
+                            );
             }
 
 
-            protected override Expression TransformMod(Expression exTransform) 
+            protected override Expression ClientTransform(Expression exTransform) 
             {
                 var exProjParam = Expression.Parameter(typeof(TMedElem));
 
                 var exProjLambda = Expression.Lambda<Func<TMedElem, TDestElem>>(
-                                                _elemModifier.TransformMod(exProjParam),
+                                                _elemModifier.ClientTransform(exProjParam),
                                                 exProjParam);
-                
+
                 var exEnum = Expression.Call(
                                     EnumerableMethods.Select.MakeGenericMethod(typeof(TMedElem), typeof(TDestElem)),
                                     exTransform,
@@ -103,15 +102,68 @@ namespace Materialize.Reify.Mapping.Collections
                             typeof(TDest));
             }
 
-
-
-            protected override TDest Transform(IEnumerable<TMedElem> fetched) {
-                var transformedElems = fetched
-                                        .Select(elem => _elemModifier.Transform(elem));
-                
-                return (TDest)_collFactory(transformedElems);
-            }
         }
+
+
+
+
+
+
+        //    protected override Expression FetchMod(Expression exFetch) 
+        //    {
+        //        var exInParam = Expression.Parameter(typeof(TOrigElem));
+        //        var exLambdaBody = _elemModifier.FetchMod(exInParam);
+                
+        //        return Expression.Call(
+        //                            exFetch.Type.IsQueryable()
+        //                                            ? _mQueryableSelect
+        //                                            : _mEnumerableSelect,
+        //                            exFetch,
+        //                            Expression.Lambda(
+        //                                        typeof(Func<TOrigElem, TMedElem>),
+        //                                        exLambdaBody,
+        //                                        exInParam)
+        //                            );
+        //    }
+
+
+
+
+
+
+
+
+        //    protected override Expression TransformMod(Expression exTransform) 
+        //    {
+        //        var exProjParam = Expression.Parameter(typeof(TMedElem));
+
+        //        var exProjLambda = Expression.Lambda<Func<TMedElem, TDestElem>>(
+        //                                        _elemModifier.TransformMod(exProjParam),
+        //                                        exProjParam);
+                
+        //        var exEnum = Expression.Call(
+        //                            EnumerableMethods.Select.MakeGenericMethod(typeof(TMedElem), typeof(TDestElem)),
+        //                            exTransform,
+        //                            exProjLambda);
+
+        //        return Expression.Convert(
+        //                    Expression.Call(
+        //                            Expression.Constant(_collFactory),
+        //                            "Invoke",
+        //                            null,
+        //                            exEnum),
+        //                    typeof(TDest));
+        //    }
+
+
+
+        //    protected override TDest Transform(IEnumerable<TMedElem> fetched) {
+        //        var transformedElems = fetched
+        //                                .Select(elem => _elemModifier.Transform(elem));
+                
+        //        return (TDest)_collFactory(transformedElems);
+        //    }
+        //}
         
     }
 

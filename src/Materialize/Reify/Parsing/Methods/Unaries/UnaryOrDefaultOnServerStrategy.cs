@@ -47,35 +47,52 @@ namespace Materialize.Reify.Parsing.Methods.Unaries
             {
                 _mUnaryDef = mUnaryDef;
             }
-            
-
-            protected override Expression FetchMod(Expression exSourceQuery) 
-            {
-                var exInst = UpstreamFetchMod(exSourceQuery);
-
-                var mUnary = _mUnaryDef.MakeGenericMethod(
-                                                exInst.Type.GetEnumerableElementType());
-
-                return Expression.Call(mUnary, exInst);
-            }
 
 
-
-            protected override Expression TransformMod(Expression exQuery) {
+            protected override Expression ServerFilter(Expression exQuery) {
                 throw new NotImplementedException();
+                return base.ServerFilter(exQuery);
+            }
+
+            protected override Expression ServerProject(Expression exQuery) {
+                throw new NotImplementedException();
+                return base.ServerProject(exQuery);
+            }
+
+            protected override Expression ClientTransform(Expression exTransform) {
+                throw new NotImplementedException();
+                return base.ClientTransform(exTransform);
             }
 
 
 
-            protected override TElem Transform(object fetched) 
-            {
-                var rFetched = Array.CreateInstance(fetched.GetType(), 1);
-                rFetched.SetValue(fetched, 0);
+            //protected override Expression FetchMod(Expression exSourceQuery) 
+            //{
+            //    var exInst = UpstreamFetchMod(exSourceQuery);
 
-                var transformed = UpstreamTransform(rFetched);
+            //    var mUnary = _mUnaryDef.MakeGenericMethod(
+            //                                    exInst.Type.GetEnumerableElementType());
+
+            //    return Expression.Call(mUnary, exInst);
+            //}
+
+
+
+            //protected override Expression TransformMod(Expression exQuery) {
+            //    throw new NotImplementedException();
+            //}
+
+
+
+            //protected override TElem Transform(object fetched) 
+            //{
+            //    var rFetched = Array.CreateInstance(fetched.GetType(), 1);
+            //    rFetched.SetValue(fetched, 0);
+
+            //    var transformed = UpstreamTransform(rFetched);
                 
-                return transformed.Single();
-            }
+            //    return transformed.Single();
+            //}
         }
 
     }

@@ -21,7 +21,7 @@ namespace Materialize.Reify.Parsing.Methods.Aggregators
             FetchType = typeof(int);
 
             _mCount = QueryableMethods.Count
-                            .MakeGenericMethod(UpstreamStrategy.FetchType.GetEnumerableElementType());
+                            .MakeGenericMethod(UpstreamStrategy.SourceType.GetEnumerableElementType());
         }
 
         

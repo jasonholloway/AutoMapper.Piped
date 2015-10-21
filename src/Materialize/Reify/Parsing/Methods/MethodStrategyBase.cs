@@ -49,7 +49,7 @@ namespace Materialize.Reify.Parsing.Methods
         public virtual IRebaseStrategy RebaseToSource(RebaseSubject subject) 
         {
             Debug.Assert(
-                subject.RootVectors.Single().OrigRoot.Type == DestType, 
+                subject.RootVectors.Single().OrigRoot.Type == DestType.GetEnumerableElementType(), 
                 "Bad rebase attempted in parse layer!");
 
             return UpstreamStrategy.RebaseToSource(subject);

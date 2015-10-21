@@ -45,23 +45,33 @@ namespace Materialize.Reify.Mapping.Translation
                 _ctx = ctx;
                 _exProjection = exProjection;
             }
-            
-            protected override Expression FetchMod(Expression exSource) {
-                return exSource;
-            }
 
 
-            protected override Expression TransformMod(Expression exFetched) {
+            protected override Expression ClientTransform(Expression exTransform) {
                 return _exProjection.Body.Replace(
                                             _exProjection.Parameters.Single(),
-                                            exFetched);
+                                            exTransform);
             }
 
 
-            protected override TDest Transform(TOrig fetched) {
-                throw new NotImplementedException();
-                //return _fnTransform(fetched);
-            }
+
+
+            //protected override Expression FetchMod(Expression exSource) {
+            //    return exSource;
+            //}
+
+
+            //protected override Expression TransformMod(Expression exFetched) {
+            //    return _exProjection.Body.Replace(
+            //                                _exProjection.Parameters.Single(),
+            //                                exFetched);
+            //}
+
+
+            //protected override TDest Transform(TOrig fetched) {
+            //    throw new NotImplementedException();
+            //    //return _fnTransform(fetched);
+            //}
 
         }
 

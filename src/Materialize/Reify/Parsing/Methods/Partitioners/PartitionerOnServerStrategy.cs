@@ -8,7 +8,7 @@ using Materialize.Types;
 
 namespace Materialize.Reify.Parsing.Methods.Partitioners
 {   
-    class PartitionerOnServerStrategy<TSource, TElem> 
+    class PartitionerOnServerStrategy<TSource, TSourceElem, TElem> 
         : MethodStrategyBase<TSource, IEnumerable<TElem>>
     {
         MethodInfo _mPartitioner;
@@ -16,7 +16,7 @@ namespace Materialize.Reify.Parsing.Methods.Partitioners
         public PartitionerOnServerStrategy(IParseStrategy upstreamStrategy, MethodInfo mPartitionerDef)
             : base(upstreamStrategy) 
         {
-            _mPartitioner = mPartitionerDef.MakeGenericMethod(typeof(TElem));
+            _mPartitioner = mPartitionerDef.MakeGenericMethod(typeof(TSourceElem));
         }
         
 
