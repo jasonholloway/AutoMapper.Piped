@@ -1,0 +1,9 @@
+﻿
+Predicates limiting the AutoMapped queryable should be shifted onto the server where possible. 
+
+This requires back-translation, so as to represent the given predicate in terms of pre-map, server-side types.
+
+This is rebasing, and it will often be impossible, as not all changes applied through reification are cleanly reversible. Where it is achievable, it is done by stepping through each stage of reification backwards, allowing each layer to ~rebase~ the predicate in its own small way. 
+
+*******************************************
+

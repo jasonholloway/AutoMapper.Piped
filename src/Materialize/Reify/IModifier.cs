@@ -7,20 +7,6 @@ namespace Materialize.Reify
     {
         Expression ServerFilter(Expression exQuery);
         Expression ServerProject(Expression exQuery);                
-        Expression ClientTransform(Expression exTransform);
-
-
-
-
-
-
-        //[Obsolete]
-        //Expression FetchMod(Expression exFetch);
-        
-        //[Obsolete]
-        //Expression TransformMod(Expression exTransform);
-        
-        //[Obsolete]
-        //object Transform(object fetched);
+        Expression ClientTransform(Expression exTransform);        
     }
 }

@@ -1,10 +1,10 @@
 ﻿using Materialize.CollectionFactories;
 using Materialize.Dependencies;
 using Materialize.Tuples;
-using Materialize.Reify;
-using Materialize.Reify.Mapping;
-using Materialize.Reify.Parsing;
-using Materialize.Reify.Rebasing;
+using Materialize.Reify2;
+using Materialize.Reify2.Mapping;
+using Materialize.Reify2.Parsing;
+using Materialize.Reify2.Rebasing;
 using Materialize.SourceRegimes;
 using Materialize.TypeMaps;
 using System;
