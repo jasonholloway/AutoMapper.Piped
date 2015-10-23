@@ -9,21 +9,15 @@ namespace Materialize.Reify2.Elements
 {
     class FilterElement<TElem> : ElementBase
     {
-        public Expression<Predicate<TElem>> Predicate { get; private set; }
+        public Expression<Func<TElem, bool>> Predicate { get; private set; }
         
 
-        public FilterElement(Expression<Predicate<TElem>> predicate) 
-            : base(ElementType.Filter) {
+        public FilterElement(Expression<Func<TElem, bool>> predicate) 
+            : base(ElementType.Filter) 
+        {
+            OutType = typeof(IQueryable<TElem>);
             Predicate = predicate;
         }
-
-
-
-
-
-
-
-
 
     }
 }

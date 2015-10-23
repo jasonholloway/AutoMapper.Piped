@@ -3,39 +3,34 @@ using System.Collections.Generic;
 using System.Linq;
 using Materialize.SourceRegimes;
 using Materialize.Reify2.Mapping;
-using Materialize.Reify2.Parsing;
 
 namespace Materialize.Reify2
 {
     internal class ReifiableFactory
     {
         ISourceRegimeProvider _regimeSource;
-        ParserFactory _parserFac;
+        MapperWriterSource _mapperWriterSource;
         MaterializeOptions _baseOptions;
 
         public ReifiableFactory(
             ISourceRegimeProvider regimeSource,
-            ParserFactory parserFac,
+            MapperWriterSource mapperWriterSource,
             MaterializeOptions baseOptions) 
         {
             _regimeSource = regimeSource;
-            _parserFac = parserFac;
+            _mapperWriterSource = mapperWriterSource;
             _baseOptions = baseOptions;
         }
 
 
-        public IReifiable<TDest> CreateReifiable<TDest>(IQueryable qySource, MaterializeOptions options) 
+        public IReifiable CreateReifiable(IQueryable qySource, MaterializeOptions options) 
         {
-            var tOrigElem = qySource.ElementType;
-            var tDestElem = typeof(TDest);
-            
-            return (IReifiable<TDest>)Activator.CreateInstance(
-                                                    typeof(Reifiable<,>)
-                                                                .MakeGenericType(tOrigElem, tDestElem),
-                                                    qySource,
-                                                    _regimeSource,
-                                                    _parserFac,
-                                                    options.MergeWith(_baseOptions));
+            return (IReifiable)Activator.CreateInstance(
+                                            typeof(Reifiable<>).MakeGenericType(qySource.ElementType),
+                                            qySource,
+                                            _regimeSource,
+                                            _mapperWriterSource,
+                                            options.MergeWith(_baseOptions));
         }
 
     }

@@ -1,10 +1,9 @@
-﻿using Materialize.Reify2.Parsing;
-using Materialize.Reify2.Rebasing;
+﻿using Materialize.Reify2.Rebasing;
 using System;
 
 namespace Materialize.Reify2.Mapping
 {
-    internal interface IMapStrategy : IReifyStrategy
+    internal interface IMapStrategy
     {
         Type SourceType { get; }
         Type FetchType { get; }
@@ -13,7 +12,7 @@ namespace Materialize.Reify2.Mapping
         bool FetchesToTuple { get; }
         bool RewritesExpression { get; }
 
-        IModifier CreateModifier();
+        IMapperWriter CreateWriter();
 
         IRebaseStrategy GetRootRebaseStrategy(RootVector roots);
     }

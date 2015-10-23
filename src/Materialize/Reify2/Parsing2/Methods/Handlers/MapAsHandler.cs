@@ -1,4 +1,5 @@
 ﻿using Materialize.Reify2.Elements;
+using Materialize.Reify2.Mapping;
 using Materialize.SourceRegimes;
 using Materialize.Types;
 using System;
@@ -12,6 +13,7 @@ namespace Materialize.Reify2.Parsing2.Methods.Handlers
 {
     class MapAsHandler : SequenceMethodHandler
     {
+        
         protected override IEnumerable<IElement> InnerRespond() 
         {
             var elPrev = UpstreamElements.Last();
@@ -19,39 +21,58 @@ namespace Materialize.Reify2.Parsing2.Methods.Handlers
             var regime = elPrev.OutRegime;
 
             var inElemType = elPrev.OutType.GetEnumerableElementType();            
-            var mappedElemType = Subject.MethodTypeArgs.Single();
-            var mappedType = typeof(IQueryable<>).MakeGenericType(mappedElemType);
+            var outElemType = Subject.MethodTypeArgs.Single();
+            var outType = typeof(IQueryable<>).MakeGenericType(outElemType);
 
 
-            //run the mapping engine
-            //generate mapping projection
-            //...
+            var mapperWriter = GetMapperWriter(inElemType, outElemType);
 
-
-            var inType = elPrev.OutType;
-            var medType = typeof(IQueryable<object>);
-            var medElemType = typeof(object);
-
-
+            var exServerProjection = GetServerProjection(mapperWriter);
+            var exClientProjection = GetClientProjection(mapperWriter);
+            
             //yield bounded data projector
             yield return (IElement)Activator.CreateInstance(
-                                            typeof(BoundaryProjectorElement<,>).MakeGenericType(inElemType, medElemType),
-                                            Expression.Lambda(
-                                                        typeof(Func<,>).MakeGenericType(inElemType, medElemType),
-                                                        Expression.Default(medElemType),
-                                                        Expression.Parameter(inElemType)),
+                                            typeof(BoundaryProjectorElement<,>).MakeGenericType(inElemType, mapperWriter.FetchType),
+                                            exServerProjection,
                                             new TolerantRegime());
                         
-            //yield transformer            
-            
+            //yield transformer                        
             yield return (IElement)Activator.CreateInstance(
-                                            typeof(ProjectorElement<,>).MakeGenericType(medElemType, mappedElemType),
-                                            Expression.Lambda(
-                                                        typeof(Func<,>).MakeGenericType(medElemType, mappedElemType),
-                                                        Expression.Default(mappedElemType),
-                                                        Expression.Parameter(medElemType)
-                                                        ));
+                                            typeof(ProjectorElement<,>).MakeGenericType(mapperWriter.FetchType, outElemType),
+                                            exClientProjection);
+        }
+
+
+
+        
+        IMapperWriter GetMapperWriter(Type tFrom, Type tTo) {
+            var writerSource = Subject.ReifyContext.MapperWriterSource;
+            var vector = new TypeVector(tFrom, tTo);
+
+            return writerSource.GetWriter(Subject.ReifyContext, vector);
+        }
+
+
+        LambdaExpression GetServerProjection(IMapperWriter mapperWriter) {
+            var exParam = Expression.Parameter(mapperWriter.SourceType, "x");
+
+            return Expression.Lambda(
+                            mapperWriter.ServerRewrite(exParam),
+                            exParam);
 
         }
+
+
+        LambdaExpression GetClientProjection(IMapperWriter mapperWriter) {
+            var exParam = Expression.Parameter(mapperWriter.FetchType, "x");
+
+            return Expression.Lambda(
+                            mapperWriter.ClientRewrite(exParam),
+                            exParam);
+        }
+
+
+
+
     }
 }

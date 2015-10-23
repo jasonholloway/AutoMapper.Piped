@@ -34,7 +34,7 @@ namespace Materialize.Reify2.Parsing2.Methods
 
         static IDictionary<MethodInfo, HandlerFactory> _dParsers
             = new Dictionary<MethodInfo, HandlerFactory>() {
-                { Refl.GetGenMethod<IQueryable<int>>(q => q.MapAs<int>()), s => ParseHandler.Create<MapAsHandler>(s) },
+                { QueryableMethods.MapAs, s => ParseHandler.Create<MapAsHandler>(s) },
                 { QueryableMethods.Skip, null },
                 { QueryableMethods.Take, null },
                 { QueryableMethods.Where, s => ParseHandler.Create<WhereHandler>(s) },

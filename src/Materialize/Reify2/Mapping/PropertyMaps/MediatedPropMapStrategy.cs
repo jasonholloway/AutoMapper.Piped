@@ -31,16 +31,16 @@ namespace Materialize.Reify2.Mapping.PropertyMaps
             get { return _projTypeInfo.Type; }
         }
         
-        public override IModifier CreateModifier() {            
+        public override IMapperWriter CreateWriter() {            
             var mapperType = typeof(Mapper<>).MakeGenericType(typeof(TOrig), typeof(TDest), _projTypeInfo.Type);
-            return (IModifier)Activator.CreateInstance(mapperType, _projTypeInfo);
+            return (IMapperWriter)Activator.CreateInstance(mapperType, _projTypeInfo);
         }
 
 
 
 
 
-        class Mapper<TMed> : MapperModifier<TOrig, TMed, TDest>
+        class Mapper<TMed> : MapperWriter<TOrig, TMed, TDest>
         {
             Type _projType;
             MemberReifySpec[] _memberSpecs;            
@@ -52,18 +52,18 @@ namespace Materialize.Reify2.Mapping.PropertyMaps
                 _memberSpecs = projTypeInfo.Members.Select(m => new MemberReifySpec(
                                                                         m.Spec.PropMap,
                                                                         m.ProjectedField,
-                                                                        m.Spec.Strategy.CreateModifier())
+                                                                        m.Spec.Strategy.CreateWriter())
                                                                         ).ToArray();
             }
 
 
-            protected override Expression ServerProject(Expression exQuery) 
+            protected override Expression ServerRewrite(Expression exQuery) 
             {
                 return Expression.MemberInit(
                                         Expression.New(_projType),
                                         _memberSpecs.Select(m => {
 
-                                            var exMemberValue = m.Mapper.ServerProject(
+                                            var exMemberValue = m.Mapper.ServerRewrite(
                                                                             Expression.MakeMemberAccess(exQuery, m.PropertyMap.SourceMember));
 
                                             return Expression.Bind(
@@ -76,13 +76,13 @@ namespace Materialize.Reify2.Mapping.PropertyMaps
             }
 
 
-            protected override Expression ClientTransform(Expression exTransform) {
+            protected override Expression ClientRewrite(Expression exTransform) {
                 return Expression.MemberInit(
                             Expression.New(typeof(TDest)),
                             _memberSpecs.Select(m => {
                                     return Expression.Bind(
                                                 m.PropertyMap.DestinationProperty.MemberInfo, 
-                                                m.Mapper.ClientTransform(
+                                                m.Mapper.ClientRewrite(
                                                             Expression.MakeMemberAccess(exTransform, m.ProjectedField)
                                                 ));
                                 }).ToArray()
@@ -115,9 +115,9 @@ namespace Materialize.Reify2.Mapping.PropertyMaps
             {
                 public readonly PropertyMap PropertyMap;
                 public readonly FieldInfo ProjectedField;
-                public readonly IModifier Mapper;
+                public readonly IMapperWriter Mapper;
 
-                public MemberReifySpec(PropertyMap propMap, FieldInfo projField, IModifier mapper) {
+                public MemberReifySpec(PropertyMap propMap, FieldInfo projField, IMapperWriter mapper) {
                     PropertyMap = propMap;
                     ProjectedField = projField;
                     Mapper = mapper;

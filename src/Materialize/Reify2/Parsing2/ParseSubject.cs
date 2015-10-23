@@ -61,22 +61,21 @@ namespace Materialize.Reify2.Parsing2
 
     
 
-    class ParseContextEqualityComparer
+    class ParseSubjectEqualityComparer
         : IEqualityComparer<ParseSubject>
     {
-        public static readonly ParseContextEqualityComparer Default = new ParseContextEqualityComparer();
+        public static readonly ParseSubjectEqualityComparer Default = new ParseSubjectEqualityComparer();
         
         static readonly ReifyContextEqualityComparer _reifyContextComp = ReifyContextEqualityComparer.Default;
-        static readonly IEqualityComparer<Expression> _subjectExpComparer = new CacheableQueryComparer();
 
         public bool Equals(ParseSubject x, ParseSubject y) {
             return _reifyContextComp.Equals(x.ReifyContext, y.ReifyContext)
                     && x.IsMappingBase == y.IsMappingBase
-                    && _subjectExpComparer.Equals(x.SubjectExp, y.SubjectExp);
+                    && x.SubjectExp.IsFormallyEquivalentTo(y.SubjectExp);
         }
 
         public int GetHashCode(ParseSubject obj) {
-            return _subjectExpComparer.GetHashCode(obj.SubjectExp)
+            return obj.SubjectExp.GetFormalHashCode()
                     ^ (_reifyContextComp.GetHashCode(obj.ReifyContext) << 16);
         }
     }

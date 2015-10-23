@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Materialize.Reify2.Rebasing;
-using Materialize.Reify2.Parsing;
 using Materialize.Types;
 
 namespace Materialize.Reify2.Mapping.Collections
@@ -37,11 +36,7 @@ namespace Materialize.Reify2.Mapping.Collections
 
             return base.GetRootRebaseStrategy(roots);
         }
-
-
-        public override IEnumerable<IReifyStrategy> UpstreamStrategies {
-            get { return new IReifyStrategy[] { _elemStrategy }; }
-        }
+                
 
     }
 

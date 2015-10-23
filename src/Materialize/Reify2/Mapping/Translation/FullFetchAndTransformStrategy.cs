@@ -31,12 +31,12 @@ namespace Materialize.Reify2.Mapping.Translation
             get { return false; }
         }
 
-        public override IModifier CreateModifier() {
+        public override IMapperWriter CreateWriter() {
             return new Mapper(_ctx, _exProjection);
         }
 
         
-        class Mapper : MapperModifier<TOrig, TOrig, TDest>
+        class Mapper : MapperWriter<TOrig, TOrig, TDest>
         {
             MapContext _ctx;
             Expression<Func<TOrig, TDest>> _exProjection;
@@ -47,7 +47,7 @@ namespace Materialize.Reify2.Mapping.Translation
             }
 
 
-            protected override Expression ClientTransform(Expression exTransform) {
+            protected override Expression ClientRewrite(Expression exTransform) {
                 return _exProjection.Body.Replace(
                                             _exProjection.Parameters.Single(),
                                             exTransform);

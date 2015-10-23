@@ -7,6 +7,7 @@ namespace Materialize.Reify2.Elements
 {
     class ProjectorElement<TBefore, TAfter> : ElementBase
     {
+
         public Expression<Func<TBefore, TAfter>> Projection { get; private set; }
                 
 

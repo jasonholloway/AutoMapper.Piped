@@ -16,7 +16,7 @@ namespace Materialize.Reify2.Mapping.Translation
         MapContext _ctx;
         LambdaExpression _exProject;
         DataType _dataType;
-        Func<IModifier> _fnCreateModifier;
+        Func<IMapperWriter> _fnCreateModifier;
 
         public SelectiveFetchAndTransformStrategy(MapContext ctx, TypeMap typeMap) 
         {
@@ -55,7 +55,7 @@ namespace Materialize.Reify2.Mapping.Translation
 
             var reifierType = typeof(Modifier<>).MakeGenericType(typeof(TOrig), typeof(TDest), _dataType.Type);
             
-            _fnCreateModifier = Expression.Lambda<Func<IModifier>>( //will opt out of this for ios
+            _fnCreateModifier = Expression.Lambda<Func<IMapperWriter>>( //will opt out of this for ios
                                                         Expression.New(
                                                                     reifierType.GetConstructors().First(),
                                                                     Expression.Constant(_ctx),
@@ -70,7 +70,7 @@ namespace Materialize.Reify2.Mapping.Translation
         }
 
 
-        public override IModifier CreateModifier() {
+        public override IMapperWriter CreateWriter() {
             return _fnCreateModifier();
         }
 
@@ -95,7 +95,7 @@ namespace Materialize.Reify2.Mapping.Translation
 
 
 
-        class Modifier<TMed> : MapperModifier<TOrig, TMed, TDest>
+        class Modifier<TMed> : MapperWriter<TOrig, TMed, TDest>
         {
             MapContext _ctx;
             DataType _dataType;
@@ -106,14 +106,14 @@ namespace Materialize.Reify2.Mapping.Translation
             }
 
 
-            protected override Expression ServerProject(Expression exQuery) {
+            protected override Expression ServerRewrite(Expression exQuery) {
                 return Expression.MemberInit(
                                     Expression.New(_dataType.Type),
                                     BuildBindings(exQuery)
                                     );
             }
 
-            protected override Expression ClientTransform(Expression exTransform) {
+            protected override Expression ClientRewrite(Expression exTransform) {
                 throw new NotImplementedException();
             }
 

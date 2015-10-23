@@ -1,6 +1,5 @@
 ﻿using System;
 using Materialize.Reify2.Rebasing;
-using Materialize.Reify2.Parsing;
 using System.Collections.Generic;
 using System.Linq;
 using Materialize.Types;
@@ -8,7 +7,7 @@ using Materialize.Types;
 namespace Materialize.Reify2.Mapping
 {
     abstract class MapStrategyBase<TOrig, TDest> 
-        : ReifyStrategy, IMapStrategy
+        : IMapStrategy
     {
         public Type SourceType {
             get { return typeof(TOrig); }
@@ -29,7 +28,7 @@ namespace Materialize.Reify2.Mapping
             get { return true; }
         }
         
-        public abstract IModifier CreateModifier();
+        public abstract IMapperWriter CreateWriter();
                  
 
         public virtual IRebaseStrategy GetRootRebaseStrategy(RootVector roots) {

@@ -41,3 +41,4 @@ using System.Runtime.InteropServices;
 [assembly: InternalsVisibleTo("Materialize.Demo")]
 [assembly: InternalsVisibleTo("Materialize.Demo2")]
 [assembly: InternalsVisibleTo("Materialize.RandomQueries")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]

@@ -4,12 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Materialize.Reify2.Rebasing;
-using Materialize.Reify2.Parsing;
 using Materialize.Types;
-using System.ComponentModel;
 
 namespace Materialize.Reify2.Mapping.Collections
 {
@@ -37,13 +32,13 @@ namespace Materialize.Reify2.Mapping.Collections
             get { return typeof(IEnumerable<TMedElem>); }
         }
         
-        public override IModifier CreateModifier() {
+        public override IMapperWriter CreateWriter() {
             return new Mapper(_collFactory, _elemStrategy);
         }
 
 
 
-        class Mapper : MapperModifier<IEnumerable<TOrigElem>, IEnumerable<TMedElem>, TDest>
+        class Mapper : MapperWriter<IEnumerable<TOrigElem>, IEnumerable<TMedElem>, TDest>
         {
             static MethodInfo _mQueryableSelect = Refl.GetMethod(() => Queryable.Select(null, (Expression<Func<TOrigElem, TMedElem>>)null));
             static MethodInfo _mEnumerableSelect = Refl.GetMethod(() => Enumerable.Select(null, (Func<TOrigElem, TMedElem>)null));
@@ -51,21 +46,21 @@ namespace Materialize.Reify2.Mapping.Collections
 
             CollectionFactory _collFactory;
             IMapStrategy _elemStrategy;
-            IModifier _elemModifier;
+            IMapperWriter _elemModifier;
 
             public Mapper(
                 CollectionFactory collFactory,
                 IMapStrategy elemStrategy) {
                 _collFactory = collFactory;
                 _elemStrategy = elemStrategy;
-                _elemModifier = elemStrategy.CreateModifier();
+                _elemModifier = elemStrategy.CreateWriter();
             }
 
             
-            protected override Expression ServerProject(Expression exQuery) 
+            protected override Expression ServerRewrite(Expression exQuery) 
             {
                 var exInParam = Expression.Parameter(typeof(TOrigElem));
-                var exLambdaBody = _elemModifier.ServerProject(exInParam);
+                var exLambdaBody = _elemModifier.ServerRewrite(exInParam);
 
                 return Expression.Call(
                             exQuery.Type.IsQueryable()
@@ -80,12 +75,12 @@ namespace Materialize.Reify2.Mapping.Collections
             }
 
 
-            protected override Expression ClientTransform(Expression exTransform) 
+            protected override Expression ClientRewrite(Expression exTransform) 
             {
                 var exProjParam = Expression.Parameter(typeof(TMedElem));
 
                 var exProjLambda = Expression.Lambda<Func<TMedElem, TDestElem>>(
-                                                _elemModifier.ClientTransform(exProjParam),
+                                                _elemModifier.ClientRewrite(exProjParam),
                                                 exProjParam);
 
                 var exEnum = Expression.Call(

@@ -1,4 +1,7 @@
-﻿using Materialize.Reify2.Parsing2;
+﻿using Materialize.Expressions;
+using Materialize.Reify2.Mapping;
+using Materialize.Reify2.Parsing2;
+using Materialize.Reify2.QueryWriting;
 using Materialize.SourceRegimes;
 using Materialize.Types;
 using System;
@@ -13,43 +16,48 @@ namespace Materialize.Reify2
     //Reifiables are mostly QueryProviders, serving ReifyQueries
     //As such, they orchestrate query-parsing, fetching and transformation, via a stack of modifiers.
 
-        
-    internal interface IReifiable<TMap> : IQueryProvider
+    interface IReifiable : IQueryProvider
+    { }
+
+
+    class Reifiable<TElem> : IReifiable
     {
-        IQueryable<TMap> BaseReifyQuery { get; }
-    }
-    
+        //static PropertyInfo _baseReifyQueryProp = typeof(Reifiable<TSource, TMap>)
+        //                                                .GetProperty(nameof(BaseReifyQuery));
 
 
-    class Reifiable<TSource, TMap> : IReifiable<TMap>
-    {
-        static PropertyInfo _baseReifyQueryProp = typeof(Reifiable<TSource, TMap>)
-                                                        .GetProperty(nameof(BaseReifyQuery));
-
-
-        ISourceRegimeProvider _regimeSource;
+        ISourceRegimeProvider _regimeSourceProv;
+        MapperWriterSource _mapperWriterSource;
         MaterializeOptions _options;
         ISnooper _snoop;
         
+        IQueryable<TElem> _qySource;
 
-        public IQueryable<TSource> SourceQuery { get; private set; }
-        public IQueryable<TMap> BaseReifyQuery { get; private set; }
-
+        
+        //public IQueryable<TElem> SourceQuery { get; private set; }
+        //public IQueryable<TMap> BaseReifyQuery { get; private set; }
+        
 
         public Reifiable(
-            IQueryable<TSource> sourceQuery, 
-            ISourceRegimeProvider regimeSource,
+            IQueryable<TElem> sourceQuery, 
+            ISourceRegimeProvider regimeSourceProv,
+            MapperWriterSource mapperWriterSource,
             MaterializeOptions options)
         {
-            SourceQuery = sourceQuery;
+            _qySource = sourceQuery;
 
-            BaseReifyQuery = CreateQuery<TMap>(
-                                    Expression.MakeMemberAccess(
-                                                Expression.Constant(this), 
-                                                _baseReifyQueryProp)
-                                    );
+            //SourceQuery = sourceQuery;
+            
+            //_baseExp = Expression.Parameter(typeof(TElem), "source");
 
-            _regimeSource = regimeSource;
+            //BaseReifyQuery = CreateQuery<TMap>(
+            //                        Expression.MakeMemberAccess(
+            //                                    Expression.Constant(this), 
+            //                                    _baseReifyQueryProp)
+            //                        );
+
+            _regimeSourceProv = regimeSourceProv;
+            _mapperWriterSource = mapperWriterSource;
             _options = options;
             _snoop = options.Snooper;
         }
@@ -69,114 +77,138 @@ namespace Materialize.Reify2
 
 
         
-        static IQueryable PackageAsQueryable(Type tElem, IEnumerable items) 
-        {            
-            var tCont = typeof(EnumerableQuery<>).MakeGenericType(tElem);
-            return (IQueryable)Activator.CreateInstance(tCont, items);
-        }
+        //static IQueryable PackageAsQueryable(Type tElem, IEnumerable items) 
+        //{            
+        //    var tCont = typeof(EnumerableQuery<>).MakeGenericType(tElem);
+        //    return (IQueryable)Activator.CreateInstance(tCont, items);
+        //}
 
 
 
 
 
-        abstract class Fetcher
-        {
-            public abstract object FetchFrom(IQueryable qySource);
+        //abstract class Fetcher
+        //{
+        //    public abstract object FetchFrom(IQueryable qySource);
 
-            public static Fetcher Create(/*Parser.Result*/ dynamic parseResult, ISnooper snooper = null) 
-            {
-                var tFetcher = typeof(Fetcher<,>).MakeGenericType(
-                                                        typeof(TSource),
-                                                        typeof(TMap),
-                                                        parseResult.UsedStrategy.FetchType,
-                                                        parseResult.UsedStrategy.DestType);
+        //    public static Fetcher Create(/*Parser.Result*/ dynamic parseResult, ISnooper snooper = null) 
+        //    {
+        //        var tFetcher = typeof(Fetcher<,>).MakeGenericType(
+        //                                                typeof(TSource),
+        //                                                typeof(TMap),
+        //                                                parseResult.UsedStrategy.FetchType,
+        //                                                parseResult.UsedStrategy.DestType);
 
-                return (Fetcher)Activator.CreateInstance(
-                                                    tFetcher,
-                                                    parseResult.Modifier,
-                                                    snooper); 
-            }
-        }
+        //        return (Fetcher)Activator.CreateInstance(
+        //                                            tFetcher,
+        //                                            parseResult.Modifier,
+        //                                            snooper); 
+        //    }
+        //}
         
-        class Fetcher<TFetch, TDest> : Fetcher
-        {
-            IModifier _mod;
-            ISnooper _snoop;
+        //class Fetcher<TFetch, TDest> : Fetcher
+        //{
+        //    IModifier _mod;
+        //    ISnooper _snoop;
 
-            public Fetcher(IModifier mod, ISnooper snooper) {
-                _mod = mod;
-                _snoop = snooper;
-            }
+        //    public Fetcher(IModifier mod, ISnooper snooper) {
+        //        _mod = mod;
+        //        _snoop = snooper;
+        //    }
 
-            public override object FetchFrom(IQueryable qySource) 
-            {
-                var exFetch = _mod.ServerFilter(qySource.Expression);
-                exFetch = _mod.ServerProject(exFetch);
+        //    public override object FetchFrom(IQueryable qySource) 
+        //    {
+        //        var exFetch = _mod.ServerFilter(qySource.Expression);
+        //        exFetch = _mod.ServerProject(exFetch);
 
-                //var exFetch = _mod.FetchMod(qySource.Expression);                
-                _snoop?.OnFetch(exFetch);
+        //        //var exFetch = _mod.FetchMod(qySource.Expression);                
+        //        _snoop?.OnFetch(exFetch);
                                 
-                var fetched = qySource.Provider.Execute<TFetch>(exFetch);
-                _snoop?.OnFetched(fetched);
+        //        var fetched = qySource.Provider.Execute<TFetch>(exFetch);
+        //        _snoop?.OnFetched(fetched);
 
 
-                var exParam = Expression.Parameter(typeof(TFetch), "fetched");
+        //        var exParam = Expression.Parameter(typeof(TFetch), "fetched");
 
-                //var exBody = _mod.TransformMod(exParam);
-                var exBody = _mod.ClientTransform(exParam);
-                _snoop?.OnTransform(exBody);
+        //        //var exBody = _mod.TransformMod(exParam);
+        //        var exBody = _mod.ClientTransform(exParam);
+        //        _snoop?.OnTransform(exBody);
 
-                var exFnTransform = Expression.Lambda<Func<TFetch, TDest>>(exBody, exParam);
+        //        var exFnTransform = Expression.Lambda<Func<TFetch, TDest>>(exBody, exParam);
 
-                var fnTransform = exFnTransform.Compile();
+        //        var fnTransform = exFnTransform.Compile();
 
-                var transformed = fnTransform(fetched);
-                _snoop?.OnTransformed(transformed);
+        //        var transformed = fnTransform(fetched);
+        //        _snoop?.OnTransformed(transformed);
 
-                return transformed;                
-            }
-        }
+        //        return transformed;                
+        //    }
+        //}
 
 
 
 
         //modifier stack rewrites the SourceQuery expression
         //then compiles and executes transformation
+
+
+
+
+                
+
+
         public TResult Execute<TResult>(Expression exQuery) 
         {
+            if(!exQuery.Contains(_qySource.Expression)) {
+                throw new InvalidOperationException("Bad query expression passed to Reifiable.Execute!");
+            }
+
             _snoop?.OnQuery(exQuery);
             
-            var reifyContext = new ReifyContext(
-                                        _options.MappingEngine,
-                                        _options.SourceRegime ?? _regimeSource.GetRegime(SourceQuery),
-                                        (bool)_options.AllowClientSideFiltering);
+            var ctx = new ReifyContext(
+                            _options.MappingEngine,
+                            _options.SourceRegime ?? _regimeSourceProv.GetRegime(_qySource),
+                            _mapperWriterSource,
+                            _options.AllowClientSideFiltering ?? false);
+            
+            var subject = new ParseSubject(exQuery, _qySource.Expression, ctx);
 
-            var parseSubject = new ParseSubject(
-                                        exQuery,
-                                        BaseReifyQuery.Expression,
-                                        reifyContext);
+            var elements = SplitElements(Parser.Parse(subject));
 
-            var elements = Parser.Parse(parseSubject);
+                        
+            var exServerQuery = QueryWriter.Write(_qySource.Expression, elements.ServerElements);
+
+            
+
+            //need to insert client transformation here...
+
+
+            var fetched = _qySource.Provider.Execute<TResult>(exServerQuery);
+
+            return fetched;
+
+            //Squi
+
 
             throw new NotImplementedException();
 
 
 
 
-            dynamic _parserFac = null;
+            //dynamic _parserFac = null;
 
-            var parser = _parserFac.Create(
-                                        BaseReifyQuery.Expression, 
-                                        typeof(IQueryable<TSource>), 
-                                        reifyContext);
+            //var parser = _parserFac.Create(
+            //                            BaseReifyQuery.Expression, 
+            //                            typeof(IQueryable<TSource>), 
+            //                            reifyContext);
                         
-            var parsed = parser.Parse(exQuery);
-            _snoop?.OnStrategized(parsed.UsedStrategy);
+            //var parsed = parser.Parse(exQuery);
+            ////_snoop?.OnStrategized(parsed.UsedStrategy);
 
 
-            var fetcher = Fetcher.Create(parsed, _options.Snooper);
+            //var fetcher = Fetcher.Create(parsed, _options.Snooper);
 
-            return (TResult)(object)fetcher.FetchFrom(SourceQuery);
+            //return (TResult)(object)fetcher.FetchFrom(SourceQuery);
         }
 
 
@@ -185,7 +217,41 @@ namespace Materialize.Reify2
             //Just delegate via refl to typed method...
             throw new NotImplementedException();
         }
-        
+
+
+
+
+
+
+        static Elements SplitElements(IEnumerable<IElement> els) {
+            var serverEls = new List<IElement>();
+            var clientEls = new List<IElement>();
+
+            bool afterGap = false;
+
+            foreach(var el in els) {
+                if(afterGap) clientEls.Add(el);
+                else serverEls.Add(el);
+
+                afterGap = afterGap | el.ElementType.HasFlag(ElementType.RegimeBoundary);
+            }
+
+            return new Elements(serverEls, clientEls);
+        }
+
+        struct Elements
+        {
+            public readonly IEnumerable<IElement> ServerElements;
+            public readonly IEnumerable<IElement> ClientElements;
+
+            public Elements(IEnumerable<IElement> serverEls, IEnumerable<IElement> clientEls) {
+                ServerElements = serverEls;
+                ClientElements = clientEls;
+            }
+        }
+
+
+
 
     }
 

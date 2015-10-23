@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Materialize.Reify2.Mapping;
 using Materialize.SourceRegimes;
 using Materialize.Types;
 using System;
@@ -13,15 +14,18 @@ namespace Materialize.Reify2
     {
         public readonly IMappingEngine MappingEngine;
         public readonly ISourceRegime SourceRegime;
+        public readonly MapperWriterSource MapperWriterSource;
         public readonly bool AllowClientSideFiltering;
-
+        
         public ReifyContext(
             IMappingEngine mappingEngine, 
             ISourceRegime sourceRegime,
+            MapperWriterSource mapperWriterSource,
             bool allowClientFiltering) 
         {
             MappingEngine = mappingEngine;
             SourceRegime = sourceRegime;
+            MapperWriterSource = mapperWriterSource;
             AllowClientSideFiltering = allowClientFiltering;
         }
 

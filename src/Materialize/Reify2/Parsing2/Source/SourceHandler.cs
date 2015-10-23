@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Materialize.Reify2.Parsing2
+namespace Materialize.Reify2.Parsing2.Source
 {
     class SourceHandler : ParseHandler
     {

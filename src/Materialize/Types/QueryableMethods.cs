@@ -7,6 +7,10 @@ namespace Materialize.Types
 {
     internal static class QueryableMethods
     {
+        public static MethodInfo MapAs = Refl.GetGenMethod(
+                                            () => QueryableExtensions.MapAs<object>(null));
+
+
         public static MethodInfo Select = Refl.GetGenMethod(
                                             () => Queryable.Select<object, object>(null, i => i));
 

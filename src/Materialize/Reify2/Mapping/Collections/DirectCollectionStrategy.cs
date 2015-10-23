@@ -32,30 +32,30 @@ namespace Materialize.Reify2.Mapping.Collections
             get { return false; }
         }
 
-        public override IModifier CreateModifier() {
+        public override IMapperWriter CreateWriter() {
             return new Mapper(_ctx, _collFactory, _elemStrategy);
         }
                 
         
 
-        class Mapper : MapperModifier<IEnumerable<TOrigElem>, IEnumerable<TOrigElem>, TDest>
+        class Mapper : MapperWriter<IEnumerable<TOrigElem>, IEnumerable<TOrigElem>, TDest>
         {
             MapContext _ctx;
             CollectionFactory _collFactory;
-            IModifier _elemModifier;
+            IMapperWriter _elemModifier;
 
             public Mapper(MapContext ctx, CollectionFactory collFactory, IMapStrategy elemStrategy) {
                 _ctx = ctx;
                 _collFactory = collFactory;
-                _elemModifier = elemStrategy.CreateModifier();
+                _elemModifier = elemStrategy.CreateWriter();
             }
 
-            protected override Expression ClientTransform(Expression exTransform) 
+            protected override Expression ClientRewrite(Expression exTransform) 
             {
                 var exProjParam = Expression.Parameter(typeof(TOrigElem));
 
                 var exProjLambda = Expression.Lambda<Func<TOrigElem, TDestElem>>(
-                                                _elemModifier.ClientTransform(exProjParam),
+                                                _elemModifier.ClientRewrite(exProjParam),
                                                 exProjParam);
 
                 var exEnum = Expression.Call(

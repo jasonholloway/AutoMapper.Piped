@@ -3,7 +3,6 @@ using Materialize.Dependencies;
 using Materialize.Tuples;
 using Materialize.Reify2;
 using Materialize.Reify2.Mapping;
-using Materialize.Reify2.Parsing;
 using Materialize.Reify2.Rebasing;
 using Materialize.SourceRegimes;
 using Materialize.TypeMaps;
@@ -54,10 +53,12 @@ namespace Materialize
             x.Register<IMapRuleRegistry, MapRuleRegistry>();
             x.Register<IMapStrategySource, MapStrategySource>();
 
-            x.Register<ParseStrategySource>();
-            x.Register<ParseRuleRegistry>();
-            x.Register<ParserFactory>();
-            
+            //x.Register<ParseStrategySource>();
+            //x.Register<ParseRuleRegistry>();
+            //x.Register<ParserFactory>();
+
+            x.Register<MapperWriterSource>();
+
             x.Register<ReifiableFactory>();
 
             x.Register(new MaterializeOptions() {

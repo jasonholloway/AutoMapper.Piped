@@ -31,13 +31,13 @@ namespace Materialize.Reify2.Mapping.PropertyMaps
         }
         
 
-        public override IModifier CreateModifier() {
+        public override IMapperWriter CreateWriter() {
             return new Mapper(_ctx, _propMapSpecs);
         }
 
 
 
-        class Mapper : MapperModifier<TOrig, TDest, TDest>
+        class Mapper : MapperWriter<TOrig, TDest, TDest>
         {
             MapContext _ctx;
             IEnumerable<PropMapSpec> _propSpecs;
@@ -53,13 +53,13 @@ namespace Materialize.Reify2.Mapping.PropertyMaps
                             spec => {
                                 var sourceMember = spec.PropMap.SourceMember;
                                 var destMember = spec.PropMap.DestinationProperty.MemberInfo;
-                                var subMapper = spec.Strategy.CreateModifier(); //this should be cached in strategy...
+                                var subMapper = spec.Strategy.CreateWriter(); //this should be cached in strategy...
 
                                 var exInput = Expression.MakeMemberAccess(
                                                                     exSource,
                                                                     sourceMember);
 
-                                var exMappedInput = subMapper.ServerProject(exInput);
+                                var exMappedInput = subMapper.ServerRewrite(exInput);
 
                                 return Expression.Bind(
                                                     destMember,
@@ -67,7 +67,7 @@ namespace Materialize.Reify2.Mapping.PropertyMaps
                             }).ToArray();
             }
 
-            protected override Expression ServerProject(Expression exQuery) {
+            protected override Expression ServerRewrite(Expression exQuery) {
                 return Expression.MemberInit( //should handle custom ctors etc.
                                     Expression.New(typeof(TDest).GetConstructors().First()),
                                     BuildBindings(exQuery)

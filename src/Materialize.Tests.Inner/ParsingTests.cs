@@ -1,6 +1,10 @@
 ﻿using Materialize.Reify2;
 using Materialize.Reify2.Elements;
+using Materialize.Reify2.Mapping;
 using Materialize.Reify2.Parsing2;
+using Materialize.Tests.Inner.Fakes;
+using Materialize.Types;
+using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -12,9 +16,26 @@ namespace Materialize.Tests.Inner
     [TestFixture]
     public class ParsingTests
     {
-        
+        ReifyContext _reifyContext;
+
+        public ParsingTests() {
+            var mapperWriterSource = new MapperWriterSource(new MapStrategySourceFake());
+            _reifyContext = new ReifyContext(null, null, mapperWriterSource, true);
+        }
+
+
+        ParseSubject GetSubject<TSourceElem>(Expression<Func<IQueryable<TSourceElem>, object>> exLambda) {
+            return new ParseSubject(exLambda.Body, exLambda.Parameters.Single(), _reifyContext);
+        }
+
+
+
+
+
+
+
         [Test]
-        public void SourceIsParsedToElement() 
+        public void SourceIsParsedToSourceElement() 
         {
             var subject = GetSubject<int>(s => s);
 
@@ -27,7 +48,7 @@ namespace Materialize.Tests.Inner
 
 
         [Test]
-        public void MapAsIsParsedToTwoElements() 
+        public void MapAsIsParsedToTwoProjectorElements() 
         {
             var subject = GetSubject<int>(s => s.MapAs<float>());
 
@@ -40,24 +61,22 @@ namespace Materialize.Tests.Inner
             Assert.That(elements.Last().OutType, Is.EqualTo(subject.SubjectExp.Type));
         }
 
+        
 
 
-
-
-
-
-        ParseSubject GetSubject<TSourceElem>(Expression<Func<IQueryable<TSourceElem>, object>> exLambda) 
+        [Test]
+        public void WhereIsParsedToFilterElement() 
         {
-            var context = new ReifyContext(null, null, false);
-            return new ParseSubject(exLambda.Body, exLambda.Parameters.Single(), context);
+            var subject = GetSubject<int>(s => s.Where(i => true));
+
+            var elements = Parser.Parse(subject).ToArray();
+
+            Assert.That(elements, Has.Length.EqualTo(2));
+            Assert.That(elements[0].ElementType, Is.EqualTo(ElementType.Source));
+            Assert.That(elements[1].ElementType, Is.EqualTo(ElementType.Filter));
+            Assert.That(elements.Last().OutType, Is.EqualTo(subject.SubjectExp.Type));
         }
-
-
-        LambdaExpression GetLambda<TSource>(Expression<Func<TSource, object>> exLambda) {
-            return exLambda;
-        }
-
-
+        
 
     }
 }

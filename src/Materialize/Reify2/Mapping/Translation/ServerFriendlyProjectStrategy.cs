@@ -23,13 +23,13 @@ namespace Materialize.Reify2.Mapping.Translation
             get { return typeof(TDest); }
         }
         
-        public override IModifier CreateModifier() {
+        public override IMapperWriter CreateWriter() {
             return new Mapper(_exProject);
         }
         
 
 
-        class Mapper : MapperModifier<TOrig, TDest, TDest>
+        class Mapper : MapperWriter<TOrig, TDest, TDest>
         {
             LambdaExpression _exProject;
 
@@ -38,7 +38,7 @@ namespace Materialize.Reify2.Mapping.Translation
             }
 
 
-            protected override Expression ServerProject(Expression exQuery) {
+            protected override Expression ServerRewrite(Expression exQuery) {
                 return _exProject.Body.Replace(
                                         _exProject.Parameters.First(),
                                         exQuery);

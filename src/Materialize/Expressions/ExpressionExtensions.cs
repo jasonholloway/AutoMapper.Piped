@@ -49,6 +49,18 @@ namespace Materialize.Expressions
         }
 
 
+        public static bool IsFormallyEquivalentTo(this Expression @this, Expression comparand) {
+            return new FormalComparer().Equals(@this, comparand);
+        }
+
+        public static int GetFormalHashCode(this Expression @this) {
+            return new FormalComparer().GetHashCode(@this);
+        }
+
+
+
+
+
         class SimplifyVisitor : ExpressionVisitor
         {
             protected override Expression VisitMember(MemberExpression node) {
@@ -118,8 +130,18 @@ namespace Materialize.Expressions
                 }
 
                 return base.Visit(node);
+            }            
+        }
+
+
+
+        class FormalComparer : ExpressionComparer
+        {
+            public FormalComparer() {
+                CompareConstants = ConstantComparison.ByTypeOnly;
+                CompareLambdaNames = NameComparison.None;
+                CompareParameterNames = NameComparison.None;
             }
-            
         }
 
     }

@@ -13,7 +13,7 @@ namespace Materialize
     {
         void OnQuery(Expression exQuery);
 
-        void OnStrategized(IReifyStrategy strategy);
+        //void OnStrategized(IReifyStrategy strategy);
         
         void OnFetch(Expression exFetch);        
         void OnFetched(object fetched);
