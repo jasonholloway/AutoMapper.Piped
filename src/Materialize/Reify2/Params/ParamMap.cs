@@ -29,6 +29,10 @@ namespace Materialize.Reify2.Params
             get { return _dItems.Keys; }
         }
         
+        public IEnumerable<Func<Expression, Expression>> Accessors {
+            get { return _dItems.Values.Select(i => i.Accessor); }
+        }
+
 
         public Func<Expression, Expression> TryGetAccessor(ParameterExpression param) {
             Item item = null;

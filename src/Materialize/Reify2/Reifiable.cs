@@ -1,6 +1,7 @@
 ﻿using Materialize.Expressions;
 using Materialize.Reify2.Compiling;
 using Materialize.Reify2.Mapping;
+using Materialize.Reify2.Params;
 using Materialize.Reify2.Parsing2;
 using Materialize.SourceRegimes;
 using Materialize.Types;
@@ -222,6 +223,11 @@ namespace Materialize.Reify2
 
 
 
+        Reifier BuildReifier(Expression exQuery) {
+            throw new NotImplementedException();
+        }
+
+
 
 
 
@@ -241,13 +247,37 @@ namespace Materialize.Reify2
                             _options.SourceRegime ?? _regimeSourceProv.GetRegime(_qySource),
                             _mapperWriterSource,
                             _options.AllowClientSideFiltering ?? false);
+
+
+
+            //reifier to be cached here, obvs
+
+
+            var reifierFac = new ReifierFactory();
             
-
-            //parameterize here
-            //...
+            var reifier = reifierFac.Build(exQuery, ctx);
 
 
-            var subject = new ParseSubject(exQuery, _qySource.Expression, ctx);
+
+
+            //EXECUTION
+            return (TResult)reifier.Execute(exQuery);
+
+
+
+
+
+
+            //need to package all up into a Reifier
+            //Reifiable potentially summons a suitable Reifier 
+
+            //Each Reifier has its canonical expression, which is the source expression with constants nullified
+
+            
+            var parameterized = Parameterizer.Parameterize(exQuery);
+
+
+            var subject = new ParseSubject(parameterized.Expression, _qySource.Expression, ctx);
 
 
             var ops = Parser.ParseAndPackage(subject);

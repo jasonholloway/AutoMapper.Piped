@@ -17,6 +17,12 @@ namespace Materialize.Types
             return typeof(IQueryable).IsAssignableFrom(@this);
         }
 
+
+        public static object GetDefaultValue(this Type @this) {
+            return DefaultValueFactory.GetForType(@this);
+        }
+
+
         
         public static Type GetEnumerableElementType(this Type @this) 
         {            
