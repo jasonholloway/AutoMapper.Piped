@@ -14,7 +14,7 @@ namespace Materialize.Reify2.Parsing2.Methods
     static class MethodParser
     {
 
-        public static IEnumerable<IElement> Parse(ParseSubject subject) 
+        public static IEnumerable<IOperation> Parse(ParseSubject subject) 
         {
             Debug.Assert(subject.SubjectExp is MethodCallExpression);
 

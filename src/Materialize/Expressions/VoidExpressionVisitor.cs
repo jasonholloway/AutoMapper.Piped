@@ -178,7 +178,7 @@ namespace Materialize.Expressions
         }
 
         protected virtual void VisitLambda(LambdaExpression lambda) {
-            Visit(lambda.Body);
+            Visit(lambda.Body);            
         }
 
         protected virtual void VisitNew(NewExpression nex) {

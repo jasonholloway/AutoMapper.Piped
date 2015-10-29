@@ -20,9 +20,9 @@ namespace Materialize.Tests.Infrastructure
             QueryExpFromClient = exQuery;
         }
 
-        void ISnooper.OnStrategized(IReifyStrategy strategy) {
-            //...
-        }
+        //void ISnooper.OnStrategized(IReifyStrategy strategy) {
+        //    //...
+        //}
         
         void ISnooper.OnFetch(Expression exQuery) {
             FetchExpression = exQuery;

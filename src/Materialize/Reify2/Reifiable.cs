@@ -1,7 +1,7 @@
 ﻿using Materialize.Expressions;
+using Materialize.Reify2.Compiling;
 using Materialize.Reify2.Mapping;
 using Materialize.Reify2.Parsing2;
-using Materialize.Reify2.QueryWriting;
 using Materialize.SourceRegimes;
 using Materialize.Types;
 using System;
@@ -76,7 +76,7 @@ namespace Materialize.Reify2
 
 
 
-        
+
         //static IQueryable PackageAsQueryable(Type tElem, IEnumerable items) 
         //{            
         //    var tCont = typeof(EnumerableQuery<>).MakeGenericType(tElem);
@@ -91,8 +91,7 @@ namespace Materialize.Reify2
         //{
         //    public abstract object FetchFrom(IQueryable qySource);
 
-        //    public static Fetcher Create(/*Parser.Result*/ dynamic parseResult, ISnooper snooper = null) 
-        //    {
+        //    public static Fetcher Create(/*Parser.Result*/ dynamic parseResult, ISnooper snooper = null) {
         //        var tFetcher = typeof(Fetcher<,>).MakeGenericType(
         //                                                typeof(TSource),
         //                                                typeof(TMap),
@@ -102,10 +101,10 @@ namespace Materialize.Reify2
         //        return (Fetcher)Activator.CreateInstance(
         //                                            tFetcher,
         //                                            parseResult.Modifier,
-        //                                            snooper); 
+        //                                            snooper);
         //    }
         //}
-        
+
         //class Fetcher<TFetch, TDest> : Fetcher
         //{
         //    IModifier _mod;
@@ -116,14 +115,13 @@ namespace Materialize.Reify2
         //        _snoop = snooper;
         //    }
 
-        //    public override object FetchFrom(IQueryable qySource) 
-        //    {
+        //    public override object FetchFrom(IQueryable qySource) {
         //        var exFetch = _mod.ServerFilter(qySource.Expression);
         //        exFetch = _mod.ServerProject(exFetch);
 
         //        //var exFetch = _mod.FetchMod(qySource.Expression);                
         //        _snoop?.OnFetch(exFetch);
-                                
+
         //        var fetched = qySource.Provider.Execute<TFetch>(exFetch);
         //        _snoop?.OnFetched(fetched);
 
@@ -141,7 +139,7 @@ namespace Materialize.Reify2
         //        var transformed = fnTransform(fetched);
         //        _snoop?.OnTransformed(transformed);
 
-        //        return transformed;                
+        //        return transformed;
         //    }
         //}
 
@@ -153,8 +151,81 @@ namespace Materialize.Reify2
 
 
 
+        abstract class Executor
+        {
+            protected IQueryable SourceQuery { get; private set; }
+            protected IEnumerable<IOperation> ServerSteps { get; private set; }
+            protected IEnumerable<IOperation> ClientSteps { get; private set; }
 
+            public abstract object Execute();
+
+            public static Executor Create(IQueryable qySource, LinkedList<IOperation> ops) 
+            {
+                var spec = BuildExecSpec(ops);
+
+                var executor = (Executor)Activator.CreateInstance(
+                                            typeof(Executor<,,>).MakeGenericType(
+                                                                        typeof(TElem), 
+                                                                        spec.SourceType, 
+                                                                        spec.FetchType, 
+                                                                        spec.DestType));
+                executor.SourceQuery = qySource;
+                executor.ServerSteps = spec.ServerSteps;
+                executor.ClientSteps = spec.ClientSteps;
+
+                return executor;
+            }
+        }
+
+
+        class Executor<TSource, TFetch, TDest> : Executor
+        {
+            public override object Execute() 
+            {                
+                var exServerQuery = QueryWriter.Write(
+                                                SourceQuery.Expression, 
+                                                ServerSteps);
                 
+                var fetched = SourceQuery.Provider.Execute<TFetch>(exServerQuery);
+
+
+
+                var exInput = Expression.Parameter(typeof(TFetch), "fetched");
+                          
+                var exTransform = TransformWriter.Write(exInput, ClientSteps);
+
+                var fnTransform = Expression.Lambda<Func<TFetch, TDest>>(
+                                                exTransform,
+                                                exInput
+                                                ).Compile();
+                
+                var transformed = fnTransform(fetched);
+                
+                return fetched;                                
+            }
+        }
+
+
+        //need to assemble into a cacheable lump by parsing through elements
+        //instead of knotting myself by limiting myself to various restrictive structures,
+        //could instead make a nice doubly-linked list implementation...
+
+        //each step would have a site, and through the site would be able to access before and after steps.
+
+        //the eventual visitor could then go through the structure, recursively but linearly. 
+
+
+
+
+
+        
+
+
+
+
+
+
+
 
 
         public TResult Execute<TResult>(Expression exQuery) 
@@ -171,23 +242,62 @@ namespace Materialize.Reify2
                             _mapperWriterSource,
                             _options.AllowClientSideFiltering ?? false);
             
+
+            //parameterize here
+            //...
+
+
             var subject = new ParseSubject(exQuery, _qySource.Expression, ctx);
 
-            var elements = SplitElements(Parser.Parse(subject));
 
-                        
-            var exServerQuery = QueryWriter.Write(_qySource.Expression, elements.ServerElements);
+            var ops = Parser.ParseAndPackage(subject);
+
+
+            //optimize ops here
+            //....
+            
+            var executor = Executor.Create(
+                                    _qySource, 
+                                    ops);
+            
+            return (TResult)executor.Execute();
+
+
+
+            //create Executor class here...
+
+
+
+            //in writing the source query and compiling the transformation, need to figure out the source type, the fetch type, and the destination type
+            //these are all found 
+
+
+            //The original query comes in, and we need to supply the mapping projections...
+            //this is already done by Parser. At this point, these projections are in place
+            //and are just to be optimised/executed
+
+
+            //at the moment, I'm struggling with the inelegancy of execution.
+            //it seems, to me at least, that fetching should be done as part of parsing.
+
+            //Execute() would trigger this, then receive the results.
+            //The parser would:
+            //  populate a 1D buffer of steps (i.e. a list!)
+
+            //The Executor would:
+            //  traverse this list of steps, writing the source query, fetching and
+            //  transforming via compilation.
+
+            //  the runner would work out the fetch type, somehow...
+            //  The OutType preceding the new source regime would determine the fetch type.
 
             
+            
 
-            //need to insert client transformation here...
 
 
-            var fetched = _qySource.Provider.Execute<TResult>(exServerQuery);
 
-            return fetched;
 
-            //Squi
 
 
             throw new NotImplementedException();
@@ -223,31 +333,52 @@ namespace Materialize.Reify2
 
 
 
-        static Elements SplitElements(IEnumerable<IElement> els) {
-            var serverEls = new List<IElement>();
-            var clientEls = new List<IElement>();
+        //from parsed specs, need to form ExecutionSpec
+
+
+
+        static ExecSpec BuildExecSpec(IEnumerable<IOperation> steps) {
+            var serverSteps = new List<IOperation>();
+            var clientSteps = new List<IOperation>();
 
             bool afterGap = false;
 
-            foreach(var el in els) {
-                if(afterGap) clientEls.Add(el);
-                else serverEls.Add(el);
+            foreach(var step in steps) {
+                if(afterGap) clientSteps.Add(step);
+                else serverSteps.Add(step);
 
-                afterGap = afterGap | el.ElementType.HasFlag(ElementType.RegimeBoundary);
+                afterGap = afterGap | step.OpType.HasFlag(OpType.RegimeBoundary);
             }
 
-            return new Elements(serverEls, clientEls);
+            return new ExecSpec(serverSteps, clientSteps);
         }
 
-        struct Elements
+        struct ExecSpec
         {
-            public readonly IEnumerable<IElement> ServerElements;
-            public readonly IEnumerable<IElement> ClientElements;
+            public readonly IEnumerable<IOperation> ServerSteps;
+            public readonly IEnumerable<IOperation> ClientSteps;
 
-            public Elements(IEnumerable<IElement> serverEls, IEnumerable<IElement> clientEls) {
-                ServerElements = serverEls;
-                ClientElements = clientEls;
+            public ExecSpec(
+                IEnumerable<IOperation> serverSteps, 
+                IEnumerable<IOperation> clientSteps)
+            {
+                ServerSteps = serverSteps;
+                ClientSteps = clientSteps;
             }
+
+            
+            public Type SourceType {
+                get { return ServerSteps.First().OutType; }
+            }
+            
+            public Type FetchType {
+                get { return ServerSteps.Last().OutType; }
+            }
+
+            public Type DestType {
+                get { return ClientSteps.Last().OutType; }
+            }
+
         }
 
 

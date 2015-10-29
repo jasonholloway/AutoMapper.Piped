@@ -1,4 +1,4 @@
-﻿using Materialize.Reify2.Elements;
+﻿using Materialize.Reify2.Operations;
 using Materialize.Types;
 using System;
 using System.Collections.Generic;
@@ -11,13 +11,13 @@ namespace Materialize.Reify2.Parsing2.Methods.Handlers
 {
     class WhereHandler : SequenceMethodHandler
     {
-        protected override IEnumerable<IElement> InnerRespond() 
+        protected override IEnumerable<IOperation> InnerRespond() 
         {
-            var type = UpstreamElements.Last().OutType;
+            var type = UpstreamSteps.Last().OutType;
             var elemType = type.GetEnumerableElementType();
 
-            yield return (IElement)Activator.CreateInstance(
-                                            typeof(FilterElement<>).MakeGenericType(elemType),
+            yield return (IOperation)Activator.CreateInstance(
+                                            typeof(FilterOp<>).MakeGenericType(elemType),
                                             Expression.Lambda(
                                                     typeof(Func<,>).MakeGenericType(elemType, typeof(bool)),
                                                     Expression.Constant(true),

@@ -1,5 +1,5 @@
 ﻿using Materialize.Reify2;
-using Materialize.Reify2.Elements;
+using Materialize.Reify2.Operations;
 using Materialize.Reify2.Mapping;
 using Materialize.Reify2.Parsing2;
 using Materialize.Tests.Inner.Fakes;
@@ -35,46 +35,47 @@ namespace Materialize.Tests.Inner
 
 
         [Test]
-        public void SourceIsParsedToSourceElement() 
+        public void SourceIsParsedToSourceStep() 
         {
             var subject = GetSubject<int>(s => s);
 
-            var elements = Parser.Parse(subject).ToArray();
+            var steps = Parser.Parse(subject).ToArray();
 
-            Assert.That(elements, Has.Length.EqualTo(1));
-            Assert.That(elements[0].ElementType, Is.EqualTo(ElementType.Source));
-            Assert.That(elements.Last().OutType, Is.EqualTo(subject.SubjectExp.Type));
+            Assert.That(steps, Has.Length.EqualTo(1));
+            Assert.That(steps[0].OpType, Is.EqualTo(OpType.Source));
+            Assert.That(steps.Last().OutType, Is.EqualTo(subject.SubjectExp.Type));
         }
 
 
         [Test]
-        public void MapAsIsParsedToTwoProjectorElements() 
+        public void MapAsIsParsedToProjectionsAndTransition() 
         {
             var subject = GetSubject<int>(s => s.MapAs<float>());
 
-            var elements = Parser.Parse(subject).ToArray();
+            var steps = Parser.Parse(subject).ToArray();
 
-            Assert.That(elements, Has.Length.EqualTo(3));
-            Assert.That(elements[0].ElementType, Is.EqualTo(ElementType.Source));
-            Assert.That(elements[1].ElementType, Is.EqualTo(ElementType.Projector | ElementType.RegimeBoundary));
-            Assert.That(elements[2].ElementType, Is.EqualTo(ElementType.Projector));
-            Assert.That(elements.Last().OutType, Is.EqualTo(subject.SubjectExp.Type));
+            Assert.That(steps, Has.Length.EqualTo(4));
+            Assert.That(steps[0].OpType, Is.EqualTo(OpType.Source));
+            Assert.That(steps[1].OpType, Is.EqualTo(OpType.Projector));
+            Assert.That(steps[2].OpType, Is.EqualTo(OpType.RegimeBoundary));
+            Assert.That(steps[3].OpType, Is.EqualTo(OpType.Projector));
+            Assert.That(steps.Last().OutType, Is.EqualTo(subject.SubjectExp.Type));
         }
 
         
 
 
         [Test]
-        public void WhereIsParsedToFilterElement() 
+        public void WhereIsParsedToFilterStep() 
         {
             var subject = GetSubject<int>(s => s.Where(i => true));
 
-            var elements = Parser.Parse(subject).ToArray();
+            var steps = Parser.Parse(subject).ToArray();
 
-            Assert.That(elements, Has.Length.EqualTo(2));
-            Assert.That(elements[0].ElementType, Is.EqualTo(ElementType.Source));
-            Assert.That(elements[1].ElementType, Is.EqualTo(ElementType.Filter));
-            Assert.That(elements.Last().OutType, Is.EqualTo(subject.SubjectExp.Type));
+            Assert.That(steps, Has.Length.EqualTo(2));
+            Assert.That(steps[0].OpType, Is.EqualTo(OpType.Source));
+            Assert.That(steps[1].OpType, Is.EqualTo(OpType.Filter));
+            Assert.That(steps.Last().OutType, Is.EqualTo(subject.SubjectExp.Type));
         }
         
 

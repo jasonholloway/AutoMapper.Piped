@@ -49,10 +49,10 @@ namespace Materialize.SourceRegimes
         #endregion
                 
 
-        public ISourceRegime GetRegime(IQueryable qySource) 
+        public ISourceRegime GetRegime(IQueryable qy) 
         {   
             //NB: below can throw exceptions relating to DbContext construction - that is, related to EF config
-            var dbContext = GetDbContext(qySource.Provider);
+            var dbContext = GetDbContext(qy.Provider);
             
             if(dbContext != null) {
                 return new EF6Regime(dbContext);

@@ -68,6 +68,7 @@
     <Compile Include="Fakes\MapStrategyFake.cs" />
     <Compile Include="Fakes\MapStrategySourceFake.cs" />
     <Compile Include="MappingTests.cs" />
+    <Compile Include="ParameterizingTests.cs" />
     <Compile Include="QueryWritingTests.cs" />
     <Compile Include="ParsingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

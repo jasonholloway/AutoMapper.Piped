@@ -1,4 +1,4 @@
-﻿using Materialize.Reify2.Elements;
+﻿using Materialize.Reify2.Operations;
 using Materialize.Reify2.Mapping;
 using Materialize.SourceRegimes;
 using Materialize.Types;
@@ -14,9 +14,9 @@ namespace Materialize.Reify2.Parsing2.Methods.Handlers
     class MapAsHandler : SequenceMethodHandler
     {
         
-        protected override IEnumerable<IElement> InnerRespond() 
+        protected override IEnumerable<IOperation> InnerRespond() 
         {
-            var elPrev = UpstreamElements.Last();
+            var elPrev = UpstreamSteps.Last();
 
             var regime = elPrev.OutRegime;
 
@@ -31,14 +31,16 @@ namespace Materialize.Reify2.Parsing2.Methods.Handlers
             var exClientProjection = GetClientProjection(mapperWriter);
             
             //yield bounded data projector
-            yield return (IElement)Activator.CreateInstance(
-                                            typeof(BoundaryProjectorElement<,>).MakeGenericType(inElemType, mapperWriter.FetchType),
-                                            exServerProjection,
-                                            new TolerantRegime());
-                        
+            yield return (IOperation)Activator.CreateInstance(
+                                            typeof(ProjectorOp<,>).MakeGenericType(inElemType, mapperWriter.FetchType),
+                                            exServerProjection);
+
+            //yield fetch step            
+            yield return new FetchOp(new TolerantRegime());
+
             //yield transformer                        
-            yield return (IElement)Activator.CreateInstance(
-                                            typeof(ProjectorElement<,>).MakeGenericType(mapperWriter.FetchType, outElemType),
+            yield return (IOperation)Activator.CreateInstance(
+                                            typeof(ProjectorOp<,>).MakeGenericType(mapperWriter.FetchType, outElemType),
                                             exClientProjection);
         }
 

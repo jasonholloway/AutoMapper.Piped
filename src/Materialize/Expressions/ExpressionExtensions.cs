@@ -31,8 +31,7 @@ namespace Materialize.Expressions
             Predicate<Expression> fnTest, 
             Expression exNew) 
         {
-            var visitor = new ReplacerVisitor(fnTest, exNew);
-            return visitor.Visit(@this);
+            return @this.Replace(fnTest, _ => exNew);
         }
 
         public static Expression Replace(
@@ -43,6 +42,26 @@ namespace Materialize.Expressions
             return @this.Replace(ex => ex == exOld, exNew);
         }
         
+        public static Expression Replace(
+            this Expression @this,
+            Predicate<Expression> fnTest,
+            Func<Expression, Expression> fnReplace) 
+        {
+            var visitor = new ReplacerVisitor(fnTest, fnReplace);
+            return visitor.Visit(@this);
+        }
+
+
+
+        public static void ForEach(
+            this Expression @this,
+            Action<Expression> fn) 
+        {
+            new EnumeratorVisitor(fn).Visit(@this);
+        }
+
+
+
 
         public static Expression Simplify(this Expression @this) {
             return new SimplifyVisitor().Visit(@this);
@@ -117,21 +136,40 @@ namespace Materialize.Expressions
         class ReplacerVisitor : ExpressionVisitor
         {
             Predicate<Expression> _fnTest;
-            Expression _exNew;
+            Func<Expression, Expression> _fnReplace;
 
-            public ReplacerVisitor(Predicate<Expression> fnTest, Expression exNew) {
+            public ReplacerVisitor(Predicate<Expression> fnTest, Func<Expression, Expression> fnReplace) {
                 _fnTest = fnTest;
-                _exNew = exNew;
+                _fnReplace = fnReplace;
             }
 
             public override Expression Visit(Expression node) {
                 if(_fnTest(node)) {
-                    return _exNew;
+                    return _fnReplace(node);
                 }
 
                 return base.Visit(node);
             }            
         }
+
+
+        class EnumeratorVisitor : ExpressionVisitor
+        {
+            Action<Expression> _fn;
+
+            public EnumeratorVisitor(Action<Expression> fn) {
+                _fn = fn;
+            }
+
+            public override Expression Visit(Expression node) {
+                _fn(node);
+                return base.Visit(node);
+            }
+        }
+
+
+        
+
 
 
 

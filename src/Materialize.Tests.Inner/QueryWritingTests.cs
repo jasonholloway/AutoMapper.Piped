@@ -1,8 +1,8 @@
 ﻿using Materialize.Expressions;
 using Materialize.Reify2;
-using Materialize.Reify2.Elements;
+using Materialize.Reify2.Compiling;
+using Materialize.Reify2.Operations;
 using Materialize.Reify2.Parsing2;
-using Materialize.Reify2.QueryWriting;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -16,15 +16,15 @@ namespace Materialize.Tests.Inner
     {
         
         [Test]
-        public void SourceElementWrittenAsBaseQuery() 
+        public void SourceStepWrittenAsBaseQuery() 
         {
-            var elements = new IElement[] {
-                                    new SourceElement<int>(null)
-                                    };
+            var steps = new IOperation[] {
+                            new SourceOp<int>(null)
+                            };
 
             var exBase = Expression.Parameter(typeof(IQueryable<int>));
 
-            var exQuery = QueryWriter.Write(exBase, elements);
+            var exQuery = QueryWriter.Write(exBase, steps);
 
             Assert.That(exQuery, Is.EqualTo(exBase));            
         }
@@ -32,36 +32,36 @@ namespace Materialize.Tests.Inner
 
 
         [Test]
-        public void FilterElementWritten() 
+        public void FilterStepWritten() 
         {
             var exLambda = GetLambda<IQueryable<int>>(q => q.Where(i => i % 2 == 1));
             
-            var elements = new IElement[] {
-                                    new SourceElement<int>(null),
-                                    new FilterElement<int>(i => i % 2 == 1)
-                                    };
+            var steps = new IOperation[] {
+                                new SourceOp<int>(null),
+                                new FilterOp<int>(i => i % 2 == 1)
+                                };
 
             var exQuery = QueryWriter.Write(
                                         exLambda.Parameters.Single(),
-                                        elements);
+                                        steps);
 
             Assert.That(exQuery.IsFormallyEquivalentTo(exLambda.Body));
         }
 
 
         [Test]
-        public void ProjectorElementWritten() 
+        public void ProjectorStepWritten() 
         {
             var exLambda = GetLambda<IQueryable<int>>(q => q.Select(i => 15F * i));
 
-            var elements = new IElement[] {
-                                    new SourceElement<int>(null),
-                                    new ProjectorElement<int, float>(i => 15F * i)
-                                    };
+            var steps = new IOperation[] {
+                                new SourceOp<int>(null),
+                                new ProjectorOp<int, float>(i => 15F * i)
+                                };
 
             var exQuery = QueryWriter.Write(
                                         exLambda.Parameters.Single(),
-                                        elements);
+                                        steps);
 
             Assert.That(exQuery.IsFormallyEquivalentTo(exLambda.Body));
         }

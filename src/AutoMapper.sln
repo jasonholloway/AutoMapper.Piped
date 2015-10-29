@@ -39,9 +39,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Materialize.Demo2", "Materi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Materialize.Demo2.Client", "Materialize.Demo2.Client\Materialize.Demo2.Client.csproj", "{27F82C5D-E7AB-4200-8194-464D58CE5A16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Materialize.Tests2", "Materialize.Tests2\Materialize.Tests2.csproj", "{1A4B6831-DCE2-4A5F-A966-DB3EE81400BC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Materialize.Tests.Outer", "Materialize.Tests.Outer\Materialize.Tests.Outer.csproj", "{1A4B6831-DCE2-4A5F-A966-DB3EE81400BC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Materialize.RandomQueries", "Materialize.RandomQueries\Materialize.RandomQueries.csproj", "{4F33BCD0-EF53-4905-8CF9-1FE14D39B446}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Materialize.Tests.Inner", "Materialize.Tests.Inner\Materialize.Tests.Inner.csproj", "{D45F40C1-4814-4112-AA1D-812AA2AB82EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -288,6 +290,30 @@ Global
 		{4F33BCD0-EF53-4905-8CF9-1FE14D39B446}.ReleaseWin8|x64.Build.0 = Release|Any CPU
 		{4F33BCD0-EF53-4905-8CF9-1FE14D39B446}.ReleaseWin8|x86.ActiveCfg = Release|Any CPU
 		{4F33BCD0-EF53-4905-8CF9-1FE14D39B446}.ReleaseWin8|x86.Build.0 = Release|Any CPU
+		{D45F40C1-4814-4112-AA1D-812AA2AB82EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D45F40C1-4814-4112-AA1D-812AA2AB82EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D45F40C1-4814-4112-AA1D-812AA2AB82EA}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{D45F40C1-4814-4112-AA1D-812AA2AB82EA}.Debug|ARM.Build.0 = Debug|Any CPU
+		{D45F40C1-4814-4112-AA1D-812AA2AB82EA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D45F40C1-4814-4112-AA1D-812AA2AB82EA}.Debug|x64.Build.0 = Debug|Any CPU
+		{D45F40C1-4814-4112-AA1D-812AA2AB82EA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D45F40C1-4814-4112-AA1D-812AA2AB82EA}.Debug|x86.Build.0 = Debug|Any CPU
+		{D45F40C1-4814-4112-AA1D-812AA2AB82EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D45F40C1-4814-4112-AA1D-812AA2AB82EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D45F40C1-4814-4112-AA1D-812AA2AB82EA}.Release|ARM.ActiveCfg = Release|Any CPU
+		{D45F40C1-4814-4112-AA1D-812AA2AB82EA}.Release|ARM.Build.0 = Release|Any CPU
+		{D45F40C1-4814-4112-AA1D-812AA2AB82EA}.Release|x64.ActiveCfg = Release|Any CPU
+		{D45F40C1-4814-4112-AA1D-812AA2AB82EA}.Release|x64.Build.0 = Release|Any CPU
+		{D45F40C1-4814-4112-AA1D-812AA2AB82EA}.Release|x86.ActiveCfg = Release|Any CPU
+		{D45F40C1-4814-4112-AA1D-812AA2AB82EA}.Release|x86.Build.0 = Release|Any CPU
+		{D45F40C1-4814-4112-AA1D-812AA2AB82EA}.ReleaseWin8|Any CPU.ActiveCfg = Release|Any CPU
+		{D45F40C1-4814-4112-AA1D-812AA2AB82EA}.ReleaseWin8|Any CPU.Build.0 = Release|Any CPU
+		{D45F40C1-4814-4112-AA1D-812AA2AB82EA}.ReleaseWin8|ARM.ActiveCfg = Release|Any CPU
+		{D45F40C1-4814-4112-AA1D-812AA2AB82EA}.ReleaseWin8|ARM.Build.0 = Release|Any CPU
+		{D45F40C1-4814-4112-AA1D-812AA2AB82EA}.ReleaseWin8|x64.ActiveCfg = Release|Any CPU
+		{D45F40C1-4814-4112-AA1D-812AA2AB82EA}.ReleaseWin8|x64.Build.0 = Release|Any CPU
+		{D45F40C1-4814-4112-AA1D-812AA2AB82EA}.ReleaseWin8|x86.ActiveCfg = Release|Any CPU
+		{D45F40C1-4814-4112-AA1D-812AA2AB82EA}.ReleaseWin8|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -303,5 +329,6 @@ Global
 		{27F82C5D-E7AB-4200-8194-464D58CE5A16} = {63E8FAB2-090D-4794-9B29-190A2606013B}
 		{1A4B6831-DCE2-4A5F-A966-DB3EE81400BC} = {63E8FAB2-090D-4794-9B29-190A2606013B}
 		{4F33BCD0-EF53-4905-8CF9-1FE14D39B446} = {63E8FAB2-090D-4794-9B29-190A2606013B}
+		{D45F40C1-4814-4112-AA1D-812AA2AB82EA} = {63E8FAB2-090D-4794-9B29-190A2606013B}
 	EndGlobalSection
 EndGlobal

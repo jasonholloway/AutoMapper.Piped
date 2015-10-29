@@ -1,4 +1,4 @@
-﻿using Materialize.Reify2.Elements;
+﻿using Materialize.Reify2.Operations;
 using Materialize.Types;
 using System;
 using System.Collections.Generic;
@@ -10,14 +10,14 @@ namespace Materialize.Reify2.Parsing2.Source
 {
     class SourceHandler : ParseHandler
     {
-        public override IEnumerable<IElement> Respond() 
+        public override IEnumerable<IOperation> Respond() 
         {
             var regime = Subject.ReifyContext.SourceRegime;
 
             var elemType = Subject.SubjectExp.Type.GetEnumerableElementType();
             
-            yield return (IElement)Activator.CreateInstance(
-                                            typeof(SourceElement<>).MakeGenericType(elemType),
+            yield return (IOperation)Activator.CreateInstance(
+                                            typeof(SourceOp<>).MakeGenericType(elemType),
                                             regime);
         }
     }

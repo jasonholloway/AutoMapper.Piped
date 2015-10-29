@@ -294,7 +294,7 @@
       <Project>{17079aef-66a9-49ab-8556-b753e170ef42}</Project>
       <Name>Materialize.EF6</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Materialize.Tests2\Materialize.Tests2.csproj">
+    <ProjectReference Include="..\Materialize.Tests.Outer\Materialize.Tests.Outer.csproj">
       <Project>{1a4b6831-dce2-4a5f-a966-db3ee81400bc}</Project>
       <Name>Materialize.Tests2</Name>
     </ProjectReference>
