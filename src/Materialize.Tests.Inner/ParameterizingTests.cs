@@ -1,4 +1,5 @@
 ﻿using Materialize.Reify2.Params;
+using Materialize.Expressions;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -36,8 +37,48 @@ namespace Materialize.Tests.Inner
         
 
 
+        [Test]
+        public void ConstantsParameterized() 
+        {
+            var ex = GetExpression<Class>(c => new Class() { Int = 999 } != null 
+                                                        ? "HELLO!" 
+                                                        : new string(new char[] { 'b', 'a', 'h' }));
+
+            var parameterized = Parameterizer.Parameterize(ex);
+            
+            Assert.That(
+                parameterized.Expression.AsEnumerable().OfType<ConstantExpression>().Any(), Is.False);
+
+            Assert.That(
+                parameterized.Map.Parameters.Select(p => p.Type), 
+                Is.EquivalentTo(ex.AsEnumerable().OfType<ConstantExpression>().Select(c => c.Type)));            
+        }
 
 
+        [Test]
+        public void ParameterizedAccessorsWork() 
+        {
+            var ex = GetExpression<Class>(c => new Class() { Int = 999 } != null
+                                                        ? "HELLO!"
+                                                        : new string(new char[] { 'b', 'a', 'h' }));
+
+            var parameterized = Parameterizer.Parameterize(ex);
+
+            var accessors = parameterized.Map.Parameters.Select(p => parameterized.Map.TryGetAccessor(p));
+
+            Assert.That(
+                accessors.Select(a => ((ConstantExpression)a(ex)).Value),
+                Is.EquivalentTo(ex.AsEnumerable().OfType<ConstantExpression>().Select(c => c.Value)));            
+        }
+
+
+
+
+
+        LambdaExpression GetExpression<T>(Expression<Func<T, object>> fn) {
+            return fn;
+        }
+        
 
         void TestPathingFor<T>(Expression<Func<T, object>> exSubject) 
         {

@@ -6,33 +6,24 @@ using System.Linq.Expressions;
 using System.Collections.ObjectModel;
 
 namespace Materialize.Reify2.Params
-{
-
-    internal static class ExpressionExtensions
-    {
-        public static void ForEach(this Expression @this, Action<Expression, ExpressionPather.Path> action) 
-        {
-            new ExpressionPather(action).Run(@this);
-        }
-    }
-
+{    
 
     internal class ExpressionPather
     {
-        Action<Expression, Path> _fnAction;        
+        Action<Expression, PathInfo> _fnAction;        
         Stack<Func<object, object>> _stAccessors;
                 
-        public ExpressionPather(Action<Expression, Path> fnAction) {
+        public ExpressionPather(Action<Expression, PathInfo> fnAction) {
             _fnAction = fnAction;
             _stAccessors = new Stack<Func<object, object>>();
         }
         
         
-        public class Path
+        public class PathInfo
         {
             IEnumerable<Func<object, object>> _subAccessors;
 
-            public Path(IEnumerable<Func<object, object>> subAccessors) {
+            public PathInfo(IEnumerable<Func<object, object>> subAccessors) {
                 _subAccessors = subAccessors;
             }
 
@@ -46,7 +37,7 @@ namespace Materialize.Reify2.Params
 
 
 
-        public void Run(Expression ex) {
+        public void Path(Expression ex) {
             Visit(ex);
         }
 
@@ -73,7 +64,7 @@ namespace Materialize.Reify2.Params
         void Visit(Expression ex) {
             if(ex == null) return;
             
-            _fnAction(ex, new Path(_stAccessors));
+            _fnAction(ex, new PathInfo(_stAccessors));
 
             switch(ex.NodeType) {
                 case ExpressionType.Negate:
@@ -178,7 +169,8 @@ namespace Materialize.Reify2.Params
 
         void Visit<T>(IList<T> list) {
             for(int i = 0; i < list.Count; i++) {
-                Delve(list, l => l[i]);
+                int index = i;
+                Delve(list, l => l[index]);
             }
         }
         

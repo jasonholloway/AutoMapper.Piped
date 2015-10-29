@@ -57,8 +57,20 @@ namespace Materialize.Expressions
             this Expression @this,
             Action<Expression> fn) 
         {
-            new EnumeratorVisitor(fn).Visit(@this);
+            new ForEachVisitor(fn).Visit(@this);
         }
+
+
+
+        public static IEnumerable<Expression> AsEnumerable(this Expression @this) 
+        {
+            var buffer = new List<Expression>();
+
+            @this.ForEach(ex => buffer.Add(ex));
+
+            return buffer;
+        }
+
 
 
 
@@ -153,11 +165,11 @@ namespace Materialize.Expressions
         }
 
 
-        class EnumeratorVisitor : ExpressionVisitor
+        class ForEachVisitor : ExpressionVisitor
         {
             Action<Expression> _fn;
 
-            public EnumeratorVisitor(Action<Expression> fn) {
+            public ForEachVisitor(Action<Expression> fn) {
                 _fn = fn;
             }
 

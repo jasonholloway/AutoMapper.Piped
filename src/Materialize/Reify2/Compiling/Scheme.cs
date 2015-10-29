@@ -9,19 +9,26 @@ namespace Materialize.Reify2.Compiling
 {
 
 
+
+    internal class ArgMap
+    {
+
+    }
+
+
     internal abstract class Scheme
     {
         public Type OutType { get; protected set; }
-        public ParameterMap Params { get; protected set; }
+        public ParamMap Params { get; protected set; }
 
-        public abstract Func<ArgumentMap, object> Compile();
+        public abstract Func<ArgMap, object> Compile();
     }
 
 
 
     class QueryScheme : Scheme
     {
-        public override Func<ArgumentMap, object> Compile() {
+        public override Func<ArgMap, object> Compile() {
             throw new NotImplementedException();
         }
     }
