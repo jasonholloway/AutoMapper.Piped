@@ -12,29 +12,28 @@ namespace Materialize.Tests.Inner
     [TestFixture]
     public class ParameterizingTests
     {
-
-
+        
         class Class
         {
             public int Int = 99;
             public string String = "hello";
+            public int[] Array = new int[0];
+            public Class Nested = null;
         }
 
 
 
         [Test]
         public void SimplePathing() {
-            TestPathingFor<Class>(c => c.Int == 89);            
+            TestPathingFor<Class>(c => c.Int == 89 ? c.ToString() : null);            
         }
 
 
         [Test]
         public void PathingWithBinding() {
-            TestPathingFor<Class>(c => new Class() { Int = 12, String = "blah" });
+            TestPathingFor<Class>(c => new Class() { Int = 12, String = "blah" }.Int);
         }
-
-
-
+        
 
 
 
@@ -42,12 +41,10 @@ namespace Materialize.Tests.Inner
 
         void TestPathingFor<T>(Expression<Func<T, object>> exSubject) 
         {
-            var pather = new ExpressionPather((ex, p) => {
-                var exViaPather = p.GetAccessor()(exSubject);
-                Assert.That(exViaPather, Is.EqualTo(ex));
-            });
-
-            pather.Run(exSubject);
+            exSubject.ForEach((ex, path) => {
+                            var exViaAccessor = path.GetAccessor()(exSubject);
+                            Assert.That(exViaAccessor, Is.EqualTo(ex));
+                        });            
         }
         
 
