@@ -50,7 +50,7 @@ namespace Materialize.Tests.Inner
                 parameterized.Expression.AsEnumerable().OfType<ConstantExpression>().Any(), Is.False);
 
             Assert.That(
-                parameterized.Map.Parameters.Select(p => p.Type), 
+                parameterized.Map.CanonicalExpressions.Select(p => p.Type), 
                 Is.EquivalentTo(ex.AsEnumerable().OfType<ConstantExpression>().Select(c => c.Type)));            
         }
 
@@ -64,7 +64,7 @@ namespace Materialize.Tests.Inner
 
             var parameterized = Parameterizer.Parameterize(ex);
 
-            var accessors = parameterized.Map.Parameters.Select(p => parameterized.Map.TryGetAccessor(p));
+            var accessors = parameterized.Map.CanonicalExpressions.Select(p => parameterized.Map.TryGetAccessor(p));
 
             Assert.That(
                 accessors.Select(a => ((ConstantExpression)a(ex)).Value),
@@ -83,7 +83,7 @@ namespace Materialize.Tests.Inner
         void TestPathingFor<T>(Expression<Func<T, object>> exSubject) 
         {
             exSubject.ForEach((ex, path) => {
-                            var exViaAccessor = path.GetAccessor()(exSubject);
+                            var exViaAccessor = path.BuildAccessor()(exSubject);
                             Assert.That(exViaAccessor, Is.EqualTo(ex));
                         });            
         }

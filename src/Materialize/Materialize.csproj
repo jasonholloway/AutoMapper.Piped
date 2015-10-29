@@ -86,10 +86,10 @@
     <Compile Include="Reify2\Mapping\Translation\FullFetchAndTransformStrategy.cs" />
     <Compile Include="Reify2\Mapping\Translation\SelectiveFetchAndTransformStrategy.cs" />
     <Compile Include="Reify2\Mapping\Translation\ServerFriendlyProjectStrategy.cs" />
-    <Compile Include="Reify2\Params\ExpressionExtensions.cs" />
     <Compile Include="Expressions\ExpressionPather.cs" />
-    <Compile Include="Reify2\Params\Parameterizer.cs" />
+    <Compile Include="Reify2\Params\ArgMap.cs" />
     <Compile Include="Reify2\Params\ParamMap.cs" />
+    <Compile Include="Reify2\Params\ParamMapFactory.cs" />
     <Compile Include="Reify2\Parsing2\Methods\Handlers\MapAsHandler.cs" />
     <Compile Include="Reify2\Parsing2\Methods\Handlers\WhereHandler.cs" />
     <Compile Include="Reify2\Parsing2\Methods\MethodParser.cs" />
@@ -122,6 +122,8 @@
     <Compile Include="Reify2\Rebasing\RootVector.cs" />
     <Compile Include="Reify2\Reifiable.cs" />
     <Compile Include="Reify2\ReifiableFactory.cs" />
+    <Compile Include="Reify2\Reifier.cs" />
+    <Compile Include="Reify2\ReifierFactory.cs" />
     <Compile Include="Reify2\ReifyContext.cs" />
     <Compile Include="Reify2\ReifyQuery.cs" />
     <Compile Include="Expressions\ExpressionComparer.cs" />
@@ -130,6 +132,7 @@
     <Compile Include="SourceRegimes\ISourceRegimeProvider.cs" />
     <Compile Include="SourceRegimes\TolerantRegime.cs" />
     <Compile Include="Structures\LinkList.cs" />
+    <Compile Include="Types\DefaultValueFactory.cs" />
     <Compile Include="Types\EnumerableMethods.cs" />
     <Compile Include="Types\LinkedListExtensions.cs" />
     <Compile Include="Types\QueryableMethods.cs" />

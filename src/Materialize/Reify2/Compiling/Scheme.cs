@@ -7,14 +7,7 @@ using System.Threading.Tasks;
 
 namespace Materialize.Reify2.Compiling
 {
-
-
-
-    internal class ArgMap
-    {
-
-    }
-
+    
 
     internal abstract class Scheme
     {

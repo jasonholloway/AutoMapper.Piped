@@ -12,7 +12,7 @@ namespace Materialize.Reify2
         public Expression CanonicalQuery { get; private set; }        
         
         protected ParamMap ParamMap { get; private set; }
-        protected Func<ArgMap, object> Executor { get; private set; }
+        protected Func<Expression, object> Executor { get; private set; }
 
 
         public object Execute(Expression exQuery) 
@@ -24,7 +24,7 @@ namespace Materialize.Reify2
 
 
             //get argmap
-            var args = new ArgMap();
+            
 
 
             return Executor(args);
@@ -32,7 +32,7 @@ namespace Materialize.Reify2
 
 
 
-        public Reifier(Expression exCanonicalQuery, Func<ArgMap, object> fnExecutor) 
+        public Reifier(Expression exCanonicalQuery, Func<Expression, object> fnExecutor) 
         {
             CanonicalQuery = exCanonicalQuery;
             Executor = fnExecutor;

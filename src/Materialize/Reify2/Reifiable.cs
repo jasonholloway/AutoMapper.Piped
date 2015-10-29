@@ -251,6 +251,7 @@ namespace Materialize.Reify2
 
 
             //reifier to be cached here, obvs
+            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
             var reifierFac = new ReifierFactory();
@@ -274,23 +275,23 @@ namespace Materialize.Reify2
             //Each Reifier has its canonical expression, which is the source expression with constants nullified
 
             
-            var parameterized = Parameterizer.Parameterize(exQuery);
+            //var parameterized = Parameterizer.Parameterize(exQuery);
 
 
-            var subject = new ParseSubject(parameterized.Expression, _qySource.Expression, ctx);
+            //var subject = new ParseSubject(parameterized.Expression, _qySource.Expression, ctx);
 
 
-            var ops = Parser.ParseAndPackage(subject);
+            //var ops = Parser.ParseAndPackage(subject);
 
 
-            //optimize ops here
-            //....
+            ////optimize ops here
+            ////....
             
-            var executor = Executor.Create(
-                                    _qySource, 
-                                    ops);
+            //var executor = Executor.Create(
+            //                        _qySource, 
+            //                        ops);
             
-            return (TResult)executor.Execute();
+            //return (TResult)executor.Execute();
 
 
 

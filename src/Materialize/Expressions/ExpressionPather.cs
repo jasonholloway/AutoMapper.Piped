@@ -26,7 +26,7 @@ namespace Materialize.Expressions
                 _subAccessors = subAccessors;
             }
 
-            public Func<Expression, Expression> GetAccessor() {                
+            public Func<Expression, Expression> BuildAccessor() {                
                 var rSubAccessors = _subAccessors.ToArray();
                 Array.Reverse(rSubAccessors);
 
@@ -111,6 +111,9 @@ namespace Materialize.Expressions
                     break;
                 case ExpressionType.Constant:
                     VisitConstant((ConstantExpression)ex);
+                    break;
+                case ExpressionType.Default:
+                    VisitDefault((DefaultExpression)ex);
                     break;
                 case ExpressionType.Parameter:
                     VisitParameter((ParameterExpression)ex);
@@ -204,6 +207,10 @@ namespace Materialize.Expressions
         }
 
         void VisitConstant(ConstantExpression constant) {
+            //...
+        }
+
+        void VisitDefault(DefaultExpression def) {
             //...
         }
 
