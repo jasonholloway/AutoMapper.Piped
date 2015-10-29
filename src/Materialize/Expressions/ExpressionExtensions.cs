@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace Materialize.Expressions
 {
-    public static class ExpressionExtensions
+    internal static class ExpressionExtensions
     {
         public static bool Contains(
             this Expression @this, 
@@ -60,6 +60,13 @@ namespace Materialize.Expressions
             new ForEachVisitor(fn).Visit(@this);
         }
 
+
+        public static void ForEach(
+            this Expression @this, 
+            Action<Expression, ExpressionPather.PathInfo> fn) 
+        {
+            new ExpressionPather(fn).Path(@this);
+        }
 
 
         public static IEnumerable<Expression> AsEnumerable(this Expression @this) 

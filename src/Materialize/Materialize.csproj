@@ -87,7 +87,7 @@
     <Compile Include="Reify2\Mapping\Translation\SelectiveFetchAndTransformStrategy.cs" />
     <Compile Include="Reify2\Mapping\Translation\ServerFriendlyProjectStrategy.cs" />
     <Compile Include="Reify2\Params\ExpressionExtensions.cs" />
-    <Compile Include="Reify2\Params\ExpressionPather.cs" />
+    <Compile Include="Expressions\ExpressionPather.cs" />
     <Compile Include="Reify2\Params\Parameterizer.cs" />
     <Compile Include="Reify2\Params\ParamMap.cs" />
     <Compile Include="Reify2\Parsing2\Methods\Handlers\MapAsHandler.cs" />

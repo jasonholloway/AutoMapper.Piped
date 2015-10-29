@@ -7,11 +7,8 @@ using System.Collections.Concurrent;
 
 namespace Materialize.Reify2.Params
 {
-    
-
     internal static class Parameterizer
-    {        
-        
+    {   
         public static Parameterized Parameterize(Expression subject) 
         {
             var map = new ParamMap();

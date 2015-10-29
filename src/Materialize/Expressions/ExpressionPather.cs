@@ -5,9 +5,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Collections.ObjectModel;
 
-namespace Materialize.Reify2.Params
+namespace Materialize.Expressions
 {    
-
     internal class ExpressionPather
     {
         Action<Expression, PathInfo> _fnAction;        
