@@ -20,35 +20,35 @@ namespace Materialize.Tests.Inner
         {
             var qy = Enumerable.Range(100, 40).AsQueryable();
             
-            var trans = ArrangeTrans(
+            var trans = PrepTransitions(
                             new SourceTransition(new TolerantRegime(), Expression.Constant(qy)));
 
             var scheme = Schematizer.Schematize(trans);
             var fnExec = scheme.Compile();
 
-            var results = fnExec(new ArgMapFake(qy));
+            var results = fnExec(qy.Provider, new ArgMapFake(qy));
 
-            Assert.That(results, Is.TypeOf<IQueryable<int>>());
+            Assert.That(results, Is.InstanceOf<IQueryable<int>>());
             Assert.That((IQueryable<int>)results, Is.EquivalentTo(qy));
         }
 
 
 
         [Test]
-        public void CompilesFetch() {
+        public void CompilesFetch() 
+        {
             var qy = Enumerable.Range(100, 40).AsQueryable();
 
-            var trans = ArrangeTrans(
+            var trans = PrepTransitions(
                             new SourceTransition(new TolerantRegime(), Expression.Constant(qy)),
                             new FetchTransition(new TolerantRegime()));
 
             var scheme = Schematizer.Schematize(trans);
             var fnExec = scheme.Compile();
 
-            var results = fnExec(new ArgMapFake(qy));
+            var results = fnExec(qy.Provider, new ArgMapFake(qy));
 
-            Assert.That(results, Is.TypeOf<IEnumerable<int>>());
-            Assert.That(results, Is.Not.TypeOf<IQueryable>());
+            Assert.That(results, Is.InstanceOf<IEnumerable<int>>());
             Assert.That((IEnumerable<int>)results, Is.EquivalentTo(qy));
         }
 
@@ -57,7 +57,8 @@ namespace Materialize.Tests.Inner
 
 
 
-        ITransition ArrangeTrans(params ITransition[] transitions) {
+        IEnumerable<ITransition> PrepTransitions(params ITransition[] transitions) 
+        {
             var list = new LinkedList<ITransition>(transitions);
 
             var node = list.First;
@@ -67,7 +68,7 @@ namespace Materialize.Tests.Inner
                 node = node.Next;
             }
 
-            return list.FirstOrDefault();
+            return list;
         }
 
 

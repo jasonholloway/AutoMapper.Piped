@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Collections.ObjectModel;
+using Materialize.Reify2.Params;
 
 namespace Materialize.Expressions
 {    
@@ -26,7 +27,7 @@ namespace Materialize.Expressions
                 _subAccessors = subAccessors;
             }
 
-            public Func<Expression, Expression> BuildAccessor() {                
+            public NodeAccessor BuildAccessor() {                
                 var rSubAccessors = _subAccessors.ToArray();
                 Array.Reverse(rSubAccessors);
 

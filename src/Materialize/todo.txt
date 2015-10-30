@@ -4,10 +4,13 @@ TO DO! ********************************************
 
 
 
-	Parser -> ParseStrategySource -> MapperRule -> MapperStrategy -> IModifier
+> Query-side execution could be more efficient: as is, every node of the tree is crawled and each parameterized constant fulfilled
+	only via indirect querying of ArgMap. Could build up a bespoke replacer, with hard references to accessors, feeding on passed incidental query.
 
-	Parser -> ParseStrategySource -> MethodRule -> WhereStrategizer -> WhereOnClientStrategy -> IModifier
-	
+
+
+
+
 
 
 

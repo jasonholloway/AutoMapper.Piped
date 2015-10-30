@@ -1,46 +1,77 @@
 ﻿using Materialize.Reify2.Transitions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Materialize.Reify2.Params;
+using System.Reflection;
+using Materialize.Types;
 
 namespace Materialize.Reify2.Compiling
 {   
 
     internal static class Schematizer {
 
-        public static Scheme Schematize(ITransition op) {
-            var sourceOp = op as SourceTransition;
+        public static Scheme Schematize(IEnumerable<ITransition> trans) {
+            Debug.Assert(trans.Any());
 
-            if(sourceOp == null) {
-                throw new InvalidOperationException("Compilation must begin from source element");
+            return trans.Aggregate(
+                            (Scheme)new BlankScheme(), 
+                            (scheme, transition) => Schematize((dynamic)scheme, (dynamic)transition));
+        }
+
+
+
+        class BlankScheme : Scheme
+        {
+            public override Type OutType {
+                get { return typeof(void); }
             }
 
-            return Schematize(null, (SourceTransition)op);
+            public override ReifyExecutor Compile() {
+                return (_, __) => null;
+            }
         }
 
+                
 
-        static Scheme Schematize(Scheme inpScheme, SourceTransition op) 
+        static Scheme Schematize(Scheme scheme, SourceTransition op) 
         {
-            //need to seed scheme with iqueryable parameter
-            //but scheme itself has the param map!
-
-            //this is something of an issue, as we no longer have the canonical expression tree at hand (was wasted in parsing)
-            //seems that the building of the param map should be done at the beginning, as part of parsing...
-
-
-            var scheme = new QueryScheme();
-
-            
-
-            return scheme;
+            return new QuerySideScheme() {
+                            QueryExpression = op.CanonicalExpression
+                        };
         }
 
 
-        static Scheme Schematize(Scheme prevScheme, FetchTransition op) {
-            throw new NotImplementedException();
+
+
+
+        static MethodInfo _mExecutorInvoke = Refl.GetMethod<ReifyExecutor>(r => r.Invoke(null, null));
+
+        static Scheme Schematize(Scheme prevScheme, FetchTransition op) 
+        {            
+            var lzUpstreamExecutor = new Lazy<ReifyExecutor>(() => prevScheme.Compile());
+            
+            var castType = prevScheme.OutType.IsQueryable()
+                            ? typeof(IEnumerable<>).MakeGenericType(prevScheme.OutType.GetEnumerableElementType())
+                            : prevScheme.OutType;
+
+            var scheme = new ClientSideScheme();
+
+            scheme.Body = Expression.Convert(
+                                Expression.Call(
+                                        Expression.MakeMemberAccess(
+                                                Expression.Constant(lzUpstreamExecutor), 
+                                                typeof(Lazy<ReifyExecutor>).GetProperty("Value")),
+                                        _mExecutorInvoke,
+                                        scheme.ProviderParam,
+                                        scheme.ArgMapParam),
+                                castType);
+            
+            return scheme;
         }
 
     }

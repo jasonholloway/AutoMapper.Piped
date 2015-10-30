@@ -6,6 +6,9 @@ using System.Linq.Expressions;
 
 namespace Materialize.Reify2.Params
 {
+    internal delegate Expression NodeAccessor(Expression exRoot);
+
+
     internal class ParamMap
     {
         Dictionary<Expression, Param> _dParams;
@@ -19,12 +22,12 @@ namespace Materialize.Reify2.Params
             get { return _dParams.Keys; }
         }
         
-        public IEnumerable<Func<Expression, Expression>> Accessors {
+        public IEnumerable<NodeAccessor> Accessors {
             get { return _dParams.Values.Select(i => i.Accessor); }
         }
 
 
-        public Func<Expression, Expression> TryGetAccessor(Expression ex) {
+        public NodeAccessor TryGetAccessor(Expression ex) {
             Param param = null;
 
             _dParams.TryGetValue(ex, out param);
@@ -41,7 +44,7 @@ namespace Materialize.Reify2.Params
         public class Param
         {
             public Expression CanonicalExp;
-            public Func<Expression, Expression> Accessor;
+            public NodeAccessor Accessor;
         }
     }
 

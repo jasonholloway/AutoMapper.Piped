@@ -11,6 +11,11 @@ namespace Materialize.Reify2.Params
         Expression _exQuery;
 
         protected ArgMap() { }
+        
+                
+        public virtual Expression GetIncidentalWith(NodeAccessor accessor) {
+            return accessor(_exQuery);
+        }
                 
 
         public virtual Expression GetIncidentalFor(Expression exCanonical) 
@@ -18,7 +23,7 @@ namespace Materialize.Reify2.Params
             var accessor = _paramMap.TryGetAccessor(exCanonical);
 
             if(accessor != null) {
-                return accessor(_exQuery);
+                return GetIncidentalWith(accessor);
             }
 
             throw new InvalidOperationException();
