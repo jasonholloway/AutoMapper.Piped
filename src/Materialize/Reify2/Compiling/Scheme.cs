@@ -15,7 +15,7 @@ namespace Materialize.Reify2.Compiling
 
     internal abstract class Scheme
     {
-        public ParamMap Params { get; protected set; }
+        public ParamMap ParamMap { get; set; }
 
         public abstract Type OutType { get; }
 
@@ -65,7 +65,9 @@ namespace Materialize.Reify2.Compiling
 
         public override ReifyExecutor Compile() {
             var exLambda = Expression.Lambda<ReifyExecutor>(
-                                        Body,
+                                        Body.Type.IsValueType 
+                                            ? Expression.Convert(Body, typeof(object)) //boxing needed???
+                                            : Body,
                                         ProviderParam,
                                         ArgMapParam);
 

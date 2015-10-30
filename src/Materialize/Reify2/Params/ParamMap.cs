@@ -27,7 +27,7 @@ namespace Materialize.Reify2.Params
         }
 
 
-        public NodeAccessor TryGetAccessor(Expression ex) {
+        public virtual NodeAccessor TryGetAccessor(Expression ex) {
             Param param = null;
 
             _dParams.TryGetValue(ex, out param);

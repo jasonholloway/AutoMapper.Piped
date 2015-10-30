@@ -30,14 +30,28 @@ namespace Materialize.Reify2.Params
         }
 
 
-        public object GetValueFor(Expression exCanonical) 
-        {
-            var exIncidental = GetIncidentalFor(exCanonical);
 
+
+        public virtual object GetValueWith(NodeAccessor accessor) 
+        {
+            var exIncidental = GetIncidentalWith(accessor);
+            
             var exConstant = exIncidental as ConstantExpression;
 
             if(exConstant != null) {
                 return exConstant.Value;
+            }
+
+            throw new InvalidOperationException();
+        }
+
+
+        public virtual object GetValueFor(Expression exCanonical) 
+        {
+            var accessor = _paramMap.TryGetAccessor(exCanonical);
+
+            if(accessor != null) {
+                return GetValueWith(accessor);
             }
 
             throw new InvalidOperationException();

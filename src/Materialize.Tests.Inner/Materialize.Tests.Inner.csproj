@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompilationTests.cs" />
+    <Compile Include="Fakes\ParamMapFake.cs" />
     <Compile Include="Fakes\ArgMapFake.cs" />
     <Compile Include="Fakes\MapperWriterFake.cs" />
     <Compile Include="Fakes\MapStrategyFake.cs" />

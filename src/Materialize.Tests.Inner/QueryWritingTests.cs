@@ -88,7 +88,7 @@ namespace Materialize.Tests.Inner
             var context = new ReifyContext(null, null, null, false);
             return new ParseSubject(
                             exLambda.Body, 
-                            ArgMap.Create(new ParamMap(new ParamMap.Param[0]), exLambda), 
+                            //ArgMap.Create(new ParamMap(new ParamMap.Param[0]), exLambda), 
                             context);
         }
         

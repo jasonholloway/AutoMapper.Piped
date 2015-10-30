@@ -18,13 +18,11 @@ namespace Materialize.Reify2
         public Reifier Build(Expression exQuery, ReifyContext ctx, Expression exBase) 
         {            
             var exCanonical = CanonicalizeQuery(exQuery, exBase);
-            
+
             var paramMap = ParamMapFactory.Build(exCanonical);
 
-            
             var subject = new ParseSubject(
                                     exCanonical,
-                                    paramMap.CreateArgMap(exQuery),
                                     ctx);
             
             var transitions = Parser.ParseAndPackage(subject);

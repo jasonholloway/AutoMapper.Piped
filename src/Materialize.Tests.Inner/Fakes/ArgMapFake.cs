@@ -25,5 +25,6 @@ namespace Materialize.Tests.Inner.Fakes
 
             return Expression.Constant(DefaultValueFactory.GetForType(exCanonical.Type));
         }
+        
     }
 }

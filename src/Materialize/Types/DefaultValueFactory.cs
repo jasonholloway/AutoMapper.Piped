@@ -23,7 +23,9 @@ namespace Materialize.Types
 
                 var valueFac = _dValueFacs.GetOrAdd(type, 
                                             t => Expression.Lambda<Func<object>>(
-                                                                Expression.Default(t)
+                                                                Expression.Convert(
+                                                                        Expression.Default(t), 
+                                                                        typeof(object))
                                                                 ).Compile());
 
                 return valueFac();

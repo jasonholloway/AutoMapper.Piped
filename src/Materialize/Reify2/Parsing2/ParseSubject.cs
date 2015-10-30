@@ -14,7 +14,6 @@ namespace Materialize.Reify2.Parsing2
     struct ParseSubject
     {
         public readonly Expression SubjectExp;
-        public readonly ArgMap ArgMap;
         public readonly ReifyContext ReifyContext;        
         
         //---------------------------------------------------
@@ -27,12 +26,10 @@ namespace Materialize.Reify2.Parsing2
          
 
         public ParseSubject(
-            Expression exSubject, 
-            ArgMap argMap,
+            Expression exSubject,
             ReifyContext reifyContext) 
         {
             SubjectExp = exSubject;
-            ArgMap = argMap;
             ReifyContext = reifyContext;
             
             CallExp = SubjectExp as MethodCallExpression;
@@ -49,7 +46,7 @@ namespace Materialize.Reify2.Parsing2
         }
         
         public ParseSubject Spawn(Expression exSubject) {
-            return new ParseSubject(exSubject, ArgMap, ReifyContext);
+            return new ParseSubject(exSubject, ReifyContext);
         }
         
     }

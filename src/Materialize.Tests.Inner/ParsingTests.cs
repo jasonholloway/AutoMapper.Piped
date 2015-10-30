@@ -28,7 +28,7 @@ namespace Materialize.Tests.Inner
         ParseSubject GetSubject<TSourceElem>(Expression<Func<IQueryable<TSourceElem>, object>> exLambda) {
             return new ParseSubject(
                             exLambda.Body, 
-                            ArgMap.Create(new ParamMap(Enumerable.Empty<ParamMap.Param>()), exLambda), 
+                            //ArgMap.Create(new ParamMap(Enumerable.Empty<ParamMap.Param>()), exLambda), 
                             _reifyContext);
         }
 
