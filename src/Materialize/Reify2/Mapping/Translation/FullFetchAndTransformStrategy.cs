@@ -31,12 +31,12 @@ namespace Materialize.Reify2.Mapping.Translation
             get { return false; }
         }
 
-        public override IMapperWriter CreateWriter() {
+        public override IMapper CreateWriter() {
             return new Mapper(_ctx, _exProjection);
         }
 
         
-        class Mapper : MapperWriter<TOrig, TOrig, TDest>
+        class Mapper : Mapper<TOrig, TOrig, TDest>
         {
             MapContext _ctx;
             Expression<Func<TOrig, TDest>> _exProjection;

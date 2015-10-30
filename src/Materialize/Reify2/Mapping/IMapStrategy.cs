@@ -12,7 +12,7 @@ namespace Materialize.Reify2.Mapping
         bool FetchesToTuple { get; }
         bool RewritesExpression { get; }
 
-        IMapperWriter CreateWriter();
+        IMapper CreateWriter();
 
         IRebaseStrategy GetRootRebaseStrategy(RootVector roots);
     }

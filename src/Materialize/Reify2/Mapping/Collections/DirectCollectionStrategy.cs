@@ -32,17 +32,17 @@ namespace Materialize.Reify2.Mapping.Collections
             get { return false; }
         }
 
-        public override IMapperWriter CreateWriter() {
+        public override IMapper CreateWriter() {
             return new Mapper(_ctx, _collFactory, _elemStrategy);
         }
                 
         
 
-        class Mapper : MapperWriter<IEnumerable<TOrigElem>, IEnumerable<TOrigElem>, TDest>
+        class Mapper : Mapper<IEnumerable<TOrigElem>, IEnumerable<TOrigElem>, TDest>
         {
             MapContext _ctx;
             CollectionFactory _collFactory;
-            IMapperWriter _elemModifier;
+            IMapper _elemModifier;
 
             public Mapper(MapContext ctx, CollectionFactory collFactory, IMapStrategy elemStrategy) {
                 _ctx = ctx;

@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 namespace Materialize.Reify2.Mapping
 {    
     
-    interface IMapperWriter
+    interface IMapper
     {
         Expression ServerRewrite(Expression ex);
         Expression ClientRewrite(Expression ex);
@@ -19,8 +19,8 @@ namespace Materialize.Reify2.Mapping
     }
 
 
-    abstract class MapperWriter<TSource, TFetch, TDest>
-        : IMapperWriter
+    abstract class Mapper<TSource, TFetch, TDest>
+        : IMapper
     {        
 
         public Type SourceType {
@@ -49,7 +49,7 @@ namespace Materialize.Reify2.Mapping
         
 
 
-        Expression IMapperWriter.ServerRewrite(Expression ex) {
+        Expression IMapper.ServerRewrite(Expression ex) {
             var exRewritten = ServerRewrite(ex);
 
             Debug.Assert(typeof(TFetch).IsAssignableFrom(exRewritten.Type));
@@ -58,7 +58,7 @@ namespace Materialize.Reify2.Mapping
         }
 
 
-        Expression IMapperWriter.ClientRewrite(Expression ex) {
+        Expression IMapper.ClientRewrite(Expression ex) {
             Debug.Assert(typeof(TFetch).IsAssignableFrom(ex.Type));
 
             var exRewritten = ClientRewrite(ex);

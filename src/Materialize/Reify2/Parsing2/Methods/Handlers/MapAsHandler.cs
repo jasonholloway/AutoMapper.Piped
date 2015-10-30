@@ -1,4 +1,4 @@
-﻿using Materialize.Reify2.Operations;
+﻿using Materialize.Reify2.Transitions;
 using Materialize.Reify2.Mapping;
 using Materialize.SourceRegimes;
 using Materialize.Types;
@@ -6,48 +6,31 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Materialize.Reify2.Parsing2.Methods.Handlers
 {
     class MapAsHandler : SequenceMethodHandler
     {
         
-        protected override IEnumerable<IOperation> InnerRespond() 
+        protected override IEnumerable<ITransition> InnerRespond() 
         {
-            var elPrev = UpstreamSteps.Last();
-
-            var regime = elPrev.OutRegime;
-
-            var inElemType = elPrev.OutType.GetEnumerableElementType();            
-            var outElemType = Subject.MethodTypeArgs.Single();
-            var outType = typeof(IQueryable<>).MakeGenericType(outElemType);
-
-
-            var mapperWriter = GetMapperWriter(inElemType, outElemType);
-
-            var exServerProjection = GetServerProjection(mapperWriter);
-            var exClientProjection = GetClientProjection(mapperWriter);
+            var tInElem = Subject.CallExp.Arguments[0].Type.GetEnumerableElementType();
+            var tOutElem = Subject.MethodTypeArgs.Single();
             
-            //yield bounded data projector
-            yield return (IOperation)Activator.CreateInstance(
-                                            typeof(ProjectorOp<,>).MakeGenericType(inElemType, mapperWriter.FetchType),
-                                            exServerProjection);
-
-            //yield fetch step            
-            yield return new FetchOp(new TolerantRegime());
-
-            //yield transformer                        
-            yield return (IOperation)Activator.CreateInstance(
-                                            typeof(ProjectorOp<,>).MakeGenericType(mapperWriter.FetchType, outElemType),
-                                            exClientProjection);
+            var mapper = GetMapper(tInElem, tOutElem);
+                        
+            yield return new ProjectionTransition(GetServerProjection(mapper));
+            
+            yield return new FetchTransition(new TolerantRegime());
+            
+            yield return new ProjectionTransition(GetClientProjection(mapper));            
         }
 
 
 
         
-        IMapperWriter GetMapperWriter(Type tFrom, Type tTo) {
+        IMapper GetMapper(Type tFrom, Type tTo) 
+        {
             var writerSource = Subject.ReifyContext.MapperWriterSource;
             var vector = new TypeVector(tFrom, tTo);
 
@@ -55,21 +38,23 @@ namespace Materialize.Reify2.Parsing2.Methods.Handlers
         }
 
 
-        LambdaExpression GetServerProjection(IMapperWriter mapperWriter) {
-            var exParam = Expression.Parameter(mapperWriter.SourceType, "x");
+        LambdaExpression GetServerProjection(IMapper mapper) 
+        {
+            var exParam = Expression.Parameter(mapper.SourceType, "x");
 
             return Expression.Lambda(
-                            mapperWriter.ServerRewrite(exParam),
+                            mapper.ServerRewrite(exParam),
                             exParam);
 
         }
 
 
-        LambdaExpression GetClientProjection(IMapperWriter mapperWriter) {
-            var exParam = Expression.Parameter(mapperWriter.FetchType, "x");
+        LambdaExpression GetClientProjection(IMapper mapper) 
+        {
+            var exParam = Expression.Parameter(mapper.FetchType, "x");
 
             return Expression.Lambda(
-                            mapperWriter.ClientRewrite(exParam),
+                            mapper.ClientRewrite(exParam),
                             exParam);
         }
 

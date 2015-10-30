@@ -57,7 +57,7 @@ namespace Materialize
             //x.Register<ParseRuleRegistry>();
             //x.Register<ParserFactory>();
 
-            x.Register<MapperWriterSource>();
+            x.Register<MapperSource>();
 
             x.Register<ReifiableFactory>();
 

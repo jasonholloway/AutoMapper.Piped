@@ -33,6 +33,9 @@ namespace Materialize.Reify2.Params
         }
         
         
+        public ArgMap CreateArgMap(Expression exSubject) {
+            return ArgMap.Create(this, exSubject);
+        }
                 
 
         public class Param

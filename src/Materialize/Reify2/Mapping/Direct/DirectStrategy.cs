@@ -27,12 +27,12 @@ namespace Materialize.Reify2.Mapping.Direct
             get { return false; }
         }
         
-        public override IMapperWriter CreateWriter() {
+        public override IMapper CreateWriter() {
             return new Mapper(_ctx);
         }
 
 
-        class Mapper : MapperWriter<TOrig, TOrig, TDest>
+        class Mapper : Mapper<TOrig, TOrig, TDest>
         {
             MapContext _ctx;
 

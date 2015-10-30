@@ -22,7 +22,7 @@ namespace Materialize.Tests.Inner
         [Test]
         public void ReifiablePassesSourceThrough() 
         {
-            var mapperWriterSource = new MapperWriterSource(new MapStrategySourceFake());
+            var mapperWriterSource = new MapperSource(new MapStrategySourceFake());
                         
             var data = Enumerable.Range(0, 100);
 

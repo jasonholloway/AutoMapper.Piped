@@ -28,7 +28,7 @@ namespace Materialize.Reify2
 
 
         ISourceRegimeProvider _regimeSourceProv;
-        MapperWriterSource _mapperWriterSource;
+        MapperSource _mapperWriterSource;
         MaterializeOptions _options;
         ISnooper _snoop;
         
@@ -42,7 +42,7 @@ namespace Materialize.Reify2
         public Reifiable(
             IQueryable<TElem> sourceQuery, 
             ISourceRegimeProvider regimeSourceProv,
-            MapperWriterSource mapperWriterSource,
+            MapperSource mapperWriterSource,
             MaterializeOptions options)
         {
             _qySource = sourceQuery;
@@ -152,59 +152,59 @@ namespace Materialize.Reify2
 
 
 
-        abstract class Executor
-        {
-            protected IQueryable SourceQuery { get; private set; }
-            protected IEnumerable<IOperation> ServerSteps { get; private set; }
-            protected IEnumerable<IOperation> ClientSteps { get; private set; }
+        //abstract class Executor
+        //{
+        //    protected IQueryable SourceQuery { get; private set; }
+        //    protected IEnumerable<ITransition> ServerSteps { get; private set; }
+        //    protected IEnumerable<ITransition> ClientSteps { get; private set; }
 
-            public abstract object Execute();
+        //    public abstract object Execute();
 
-            public static Executor Create(IQueryable qySource, LinkedList<IOperation> ops) 
-            {
-                var spec = BuildExecSpec(ops);
+        //    public static Executor Create(IQueryable qySource, LinkedList<ITransition> ops) 
+        //    {
+        //        var spec = BuildExecSpec(ops);
 
-                var executor = (Executor)Activator.CreateInstance(
-                                            typeof(Executor<,,>).MakeGenericType(
-                                                                        typeof(TElem), 
-                                                                        spec.SourceType, 
-                                                                        spec.FetchType, 
-                                                                        spec.DestType));
-                executor.SourceQuery = qySource;
-                executor.ServerSteps = spec.ServerSteps;
-                executor.ClientSteps = spec.ClientSteps;
+        //        var executor = (Executor)Activator.CreateInstance(
+        //                                    typeof(Executor<,,>).MakeGenericType(
+        //                                                                typeof(TElem), 
+        //                                                                spec.SourceType, 
+        //                                                                spec.FetchType, 
+        //                                                                spec.DestType));
+        //        executor.SourceQuery = qySource;
+        //        executor.ServerSteps = spec.ServerSteps;
+        //        executor.ClientSteps = spec.ClientSteps;
 
-                return executor;
-            }
-        }
+        //        return executor;
+        //    }
+        //}
 
 
-        class Executor<TSource, TFetch, TDest> : Executor
-        {
-            public override object Execute() 
-            {                
-                var exServerQuery = QueryWriter.Write(
-                                                SourceQuery.Expression, 
-                                                ServerSteps);
+        //class Executor<TSource, TFetch, TDest> : Executor
+        //{
+        //    public override object Execute() 
+        //    {                
+        //        var exServerQuery = QueryWriter.Write(
+        //                                        SourceQuery.Expression, 
+        //                                        ServerSteps);
                 
-                var fetched = SourceQuery.Provider.Execute<TFetch>(exServerQuery);
+        //        var fetched = SourceQuery.Provider.Execute<TFetch>(exServerQuery);
 
 
 
-                var exInput = Expression.Parameter(typeof(TFetch), "fetched");
+        //        var exInput = Expression.Parameter(typeof(TFetch), "fetched");
                           
-                var exTransform = TransformWriter.Write(exInput, ClientSteps);
+        //        var exTransform = TransformWriter.Write(exInput, ClientSteps);
 
-                var fnTransform = Expression.Lambda<Func<TFetch, TDest>>(
-                                                exTransform,
-                                                exInput
-                                                ).Compile();
+        //        var fnTransform = Expression.Lambda<Func<TFetch, TDest>>(
+        //                                        exTransform,
+        //                                        exInput
+        //                                        ).Compile();
                 
-                var transformed = fnTransform(fetched);
+        //        var transformed = fnTransform(fetched);
                 
-                return fetched;                                
-            }
-        }
+        //        return fetched;                                
+        //    }
+        //}
 
 
         //need to assemble into a cacheable lump by parsing through elements
@@ -256,7 +256,7 @@ namespace Materialize.Reify2
 
             var reifierFac = new ReifierFactory();
             
-            var reifier = reifierFac.Build(exQuery, ctx);
+            var reifier = reifierFac.Build(exQuery, ctx, _qySource.Expression);
 
 
 
@@ -368,49 +368,49 @@ namespace Materialize.Reify2
 
 
 
-        static ExecSpec BuildExecSpec(IEnumerable<IOperation> steps) {
-            var serverSteps = new List<IOperation>();
-            var clientSteps = new List<IOperation>();
+        //static ExecSpec BuildExecSpec(IEnumerable<ITransition> steps) {
+        //    var serverSteps = new List<ITransition>();
+        //    var clientSteps = new List<ITransition>();
 
-            bool afterGap = false;
+        //    bool afterGap = false;
 
-            foreach(var step in steps) {
-                if(afterGap) clientSteps.Add(step);
-                else serverSteps.Add(step);
+        //    foreach(var step in steps) {
+        //        if(afterGap) clientSteps.Add(step);
+        //        else serverSteps.Add(step);
 
-                afterGap = afterGap | step.OpType.HasFlag(OpType.RegimeBoundary);
-            }
+        //        afterGap = afterGap | step.TransitionType.HasFlag(TransitionType.RegimeBoundary);
+        //    }
 
-            return new ExecSpec(serverSteps, clientSteps);
-        }
+        //    return new ExecSpec(serverSteps, clientSteps);
+        //}
 
-        struct ExecSpec
-        {
-            public readonly IEnumerable<IOperation> ServerSteps;
-            public readonly IEnumerable<IOperation> ClientSteps;
+        //struct ExecSpec
+        //{
+        //    public readonly IEnumerable<ITransition> ServerSteps;
+        //    public readonly IEnumerable<ITransition> ClientSteps;
 
-            public ExecSpec(
-                IEnumerable<IOperation> serverSteps, 
-                IEnumerable<IOperation> clientSteps)
-            {
-                ServerSteps = serverSteps;
-                ClientSteps = clientSteps;
-            }
+        //    public ExecSpec(
+        //        IEnumerable<ITransition> serverSteps, 
+        //        IEnumerable<ITransition> clientSteps)
+        //    {
+        //        ServerSteps = serverSteps;
+        //        ClientSteps = clientSteps;
+        //    }
 
             
-            public Type SourceType {
-                get { return ServerSteps.First().OutType; }
-            }
+        //    public Type SourceType {
+        //        get { return ServerSteps.First().OutType; }
+        //    }
             
-            public Type FetchType {
-                get { return ServerSteps.Last().OutType; }
-            }
+        //    public Type FetchType {
+        //        get { return ServerSteps.Last().OutType; }
+        //    }
 
-            public Type DestType {
-                get { return ClientSteps.Last().OutType; }
-            }
+        //    public Type DestType {
+        //        get { return ClientSteps.Last().OutType; }
+        //    }
 
-        }
+        //}
 
 
 

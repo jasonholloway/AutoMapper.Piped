@@ -1,4 +1,4 @@
-﻿using Materialize.Reify2.Operations;
+﻿using Materialize.Reify2.Transitions;
 using Materialize.Types;
 using System;
 using System.Collections.Generic;
@@ -11,18 +11,11 @@ namespace Materialize.Reify2.Parsing2.Methods.Handlers
 {
     class WhereHandler : SequenceMethodHandler
     {
-        protected override IEnumerable<IOperation> InnerRespond() 
+        protected override IEnumerable<ITransition> InnerRespond() 
         {
-            var type = UpstreamSteps.Last().OutType;
-            var elemType = type.GetEnumerableElementType();
+            var exPred = (LambdaExpression)((UnaryExpression)Subject.CallExp.Arguments[1]).Operand;
 
-            yield return (IOperation)Activator.CreateInstance(
-                                            typeof(FilterOp<>).MakeGenericType(elemType),
-                                            Expression.Lambda(
-                                                    typeof(Func<,>).MakeGenericType(elemType, typeof(bool)),
-                                                    Expression.Constant(true),
-                                                    Expression.Parameter(elemType)
-                                                    ));
-        }
+            yield return new FilterTransition(exPred);                          
+        }        
     }
 }

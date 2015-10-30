@@ -16,7 +16,7 @@ namespace Materialize.Reify2.Mapping.Translation
         MapContext _ctx;
         LambdaExpression _exProject;
         DataType _dataType;
-        Func<IMapperWriter> _fnCreateModifier;
+        Func<IMapper> _fnCreateModifier;
 
         public SelectiveFetchAndTransformStrategy(MapContext ctx, TypeMap typeMap) 
         {
@@ -55,7 +55,7 @@ namespace Materialize.Reify2.Mapping.Translation
 
             var reifierType = typeof(Modifier<>).MakeGenericType(typeof(TOrig), typeof(TDest), _dataType.Type);
             
-            _fnCreateModifier = Expression.Lambda<Func<IMapperWriter>>( //will opt out of this for ios
+            _fnCreateModifier = Expression.Lambda<Func<IMapper>>( //will opt out of this for ios
                                                         Expression.New(
                                                                     reifierType.GetConstructors().First(),
                                                                     Expression.Constant(_ctx),
@@ -70,7 +70,7 @@ namespace Materialize.Reify2.Mapping.Translation
         }
 
 
-        public override IMapperWriter CreateWriter() {
+        public override IMapper CreateWriter() {
             return _fnCreateModifier();
         }
 
@@ -95,7 +95,7 @@ namespace Materialize.Reify2.Mapping.Translation
 
 
 
-        class Modifier<TMed> : MapperWriter<TOrig, TMed, TDest>
+        class Modifier<TMed> : Mapper<TOrig, TMed, TDest>
         {
             MapContext _ctx;
             DataType _dataType;

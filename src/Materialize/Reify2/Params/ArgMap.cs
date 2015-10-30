@@ -5,15 +5,15 @@ using System.Linq.Expressions;
 
 namespace Materialize.Reify2.Params
 {
-    class ArgMap
+    internal class ArgMap
     {
         ParamMap _paramMap;
         Expression _exQuery;
 
-        private ArgMap() { }
+        protected ArgMap() { }
                 
 
-        public Expression GetIncidentalFor(Expression exCanonical) 
+        public virtual Expression GetIncidentalFor(Expression exCanonical) 
         {
             var accessor = _paramMap.TryGetAccessor(exCanonical);
 

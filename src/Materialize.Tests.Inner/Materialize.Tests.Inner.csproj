@@ -64,6 +64,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompilationTests.cs" />
+    <Compile Include="Fakes\ArgMapFake.cs" />
     <Compile Include="Fakes\MapperWriterFake.cs" />
     <Compile Include="Fakes\MapStrategyFake.cs" />
     <Compile Include="Fakes\MapStrategySourceFake.cs" />

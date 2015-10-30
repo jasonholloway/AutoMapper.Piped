@@ -10,13 +10,15 @@ namespace Materialize.Reify2.Parsing2
 {   
     internal static class Parser
     {             
-        public static IEnumerable<IOperation> Parse(ParseSubject subject) 
+        public static IEnumerable<ITransition> Parse(ParseSubject subject) 
         {
-            if(subject.IsMappingBase) {
+            if(subject.SubjectExp is ConstantExpression 
+                && subject.SubjectExp.Type.IsQueryable()) 
+            {
                 var handler = ParseHandler.Create<SourceHandler>(subject);
                 return handler.Respond();
             }
-
+            
             if(subject.SubjectExp is MethodCallExpression) {
                 return MethodParser.Parse(subject);
             }
@@ -25,9 +27,9 @@ namespace Materialize.Reify2.Parsing2
         }
                    
 
-        public static LinkedList<IOperation> ParseAndPackage(ParseSubject subject) 
+        public static LinkedList<ITransition> ParseAndPackage(ParseSubject subject) 
         {
-            var llOps = new LinkedList<IOperation>(Parse(subject));
+            var llOps = new LinkedList<ITransition>(Parse(subject));
                                    
             foreach(var node in llOps.EnumerateNodes()) {
                 node.Value.Site = node;

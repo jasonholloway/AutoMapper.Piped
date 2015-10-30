@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 
 namespace Materialize.Tests.Inner.Fakes
 {
-    class MapperWriterFake : IMapperWriter
+    class MapperWriterFake : IMapper
     {
         IMapStrategy _strat;
 

@@ -6,18 +6,18 @@ namespace Materialize.Reify2.Parsing2.Methods
 {
     abstract class SequenceMethodHandler : ParseHandler
     {
-        protected IEnumerable<IOperation> UpstreamSteps { get; private set; }
+        protected IEnumerable<ITransition> Upstream { get; private set; }
 
-        protected abstract IEnumerable<IOperation> InnerRespond();
+        protected abstract IEnumerable<ITransition> InnerRespond();
 
 
-        public override IEnumerable<IOperation> Respond() 
+        public override IEnumerable<ITransition> Respond() 
         {
             var upstreamSubject = Subject.Spawn(Subject.CallExp.Arguments[0]);
 
-            UpstreamSteps = Parser.Parse(upstreamSubject).ToArray();
+            Upstream = Parser.Parse(upstreamSubject).ToArray();
 
-            return UpstreamSteps.Concat(InnerRespond());               
+            return Upstream.Concat(InnerRespond());               
         }
         
 

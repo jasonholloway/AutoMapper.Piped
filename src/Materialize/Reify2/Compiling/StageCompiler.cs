@@ -8,16 +8,16 @@ namespace Materialize.Reify2.Compiling
 {
     abstract class StageCompiler
     {
-        public abstract StageCompilation Compile(IOperation op);
+        public abstract StageCompilation Compile(ITransition op);
     }
 
 
     internal class StageCompilation
     {
         public Func<object> Func { get; private set; }
-        public IOperation NextOp { get; private set; }
+        public ITransition NextOp { get; private set; }
 
-        public StageCompilation(Func<object> fn, IOperation nextOp) {
+        public StageCompilation(Func<object> fn, ITransition nextOp) {
             Func = fn;
             NextOp = nextOp;
         }
@@ -30,7 +30,7 @@ namespace Materialize.Reify2.Compiling
 
     internal class QueryStageCompiler : StageCompiler
     {
-        public override StageCompilation Compile(IOperation op) {
+        public override StageCompilation Compile(ITransition op) {
             throw new NotImplementedException();
         }
     }
@@ -38,7 +38,7 @@ namespace Materialize.Reify2.Compiling
 
     internal class TransformStageCompiler : StageCompiler
     {
-        public override StageCompilation Compile(IOperation op) {
+        public override StageCompilation Compile(ITransition op) {
             throw new NotImplementedException();
         }
     }

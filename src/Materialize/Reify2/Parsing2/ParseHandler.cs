@@ -9,11 +9,9 @@ namespace Materialize.Reify2.Parsing2
     abstract class ParseHandler
     {
         protected ParseSubject Subject { get; private set; }
-
-        protected Func<IOperation> StepFactory { get; private set; }
-
         
-        public abstract IEnumerable<IOperation> Respond();
+        
+        public abstract IEnumerable<ITransition> Respond();
         
         public static ParseHandler Create<THandler>(ParseSubject subject)
             where THandler : ParseHandler, new() 

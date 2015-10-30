@@ -31,16 +31,16 @@ namespace Materialize.Reify2.Mapping.PropertyMaps
             get { return _projTypeInfo.Type; }
         }
         
-        public override IMapperWriter CreateWriter() {            
+        public override IMapper CreateWriter() {            
             var mapperType = typeof(Mapper<>).MakeGenericType(typeof(TOrig), typeof(TDest), _projTypeInfo.Type);
-            return (IMapperWriter)Activator.CreateInstance(mapperType, _projTypeInfo);
+            return (IMapper)Activator.CreateInstance(mapperType, _projTypeInfo);
         }
 
 
 
 
 
-        class Mapper<TMed> : MapperWriter<TOrig, TMed, TDest>
+        class Mapper<TMed> : Mapper<TOrig, TMed, TDest>
         {
             Type _projType;
             MemberReifySpec[] _memberSpecs;            
@@ -115,9 +115,9 @@ namespace Materialize.Reify2.Mapping.PropertyMaps
             {
                 public readonly PropertyMap PropertyMap;
                 public readonly FieldInfo ProjectedField;
-                public readonly IMapperWriter Mapper;
+                public readonly IMapper Mapper;
 
-                public MemberReifySpec(PropertyMap propMap, FieldInfo projField, IMapperWriter mapper) {
+                public MemberReifySpec(PropertyMap propMap, FieldInfo projField, IMapper mapper) {
                     PropertyMap = propMap;
                     ProjectedField = projField;
                     Mapper = mapper;

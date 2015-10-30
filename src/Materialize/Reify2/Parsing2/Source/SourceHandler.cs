@@ -1,24 +1,18 @@
-﻿using Materialize.Reify2.Operations;
+﻿using Materialize.Reify2.Transitions;
 using Materialize.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Materialize.Reify2.Parsing2.Source
 {
     class SourceHandler : ParseHandler
     {
-        public override IEnumerable<IOperation> Respond() 
-        {
+        public override IEnumerable<ITransition> Respond() 
+        {   
             var regime = Subject.ReifyContext.SourceRegime;
-
-            var elemType = Subject.SubjectExp.Type.GetEnumerableElementType();
             
-            yield return (IOperation)Activator.CreateInstance(
-                                            typeof(SourceOp<>).MakeGenericType(elemType),
-                                            regime);
+            yield return new SourceTransition(regime, Subject.SubjectExp);
         }
     }
 }

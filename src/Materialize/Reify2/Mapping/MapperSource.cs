@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace Materialize.Reify2.Mapping
 {
-    internal class MapperWriterSource
+    internal class MapperSource
     {
         IMapStrategySource _strategySource;
 
-        public MapperWriterSource(IMapStrategySource strategySource) {
+        public MapperSource(IMapStrategySource strategySource) {
             _strategySource = strategySource;
         }
         
-        public IMapperWriter GetWriter(ReifyContext ctx, TypeVector types) {            
+        public IMapper GetWriter(ReifyContext ctx, TypeVector types) {            
             var strategy = _strategySource.GetStrategy(new MapContext(types, ctx));
             return strategy.CreateWriter();
         }

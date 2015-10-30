@@ -32,13 +32,13 @@ namespace Materialize.Reify2.Mapping.Collections
             get { return typeof(IEnumerable<TMedElem>); }
         }
         
-        public override IMapperWriter CreateWriter() {
+        public override IMapper CreateWriter() {
             return new Mapper(_collFactory, _elemStrategy);
         }
 
 
 
-        class Mapper : MapperWriter<IEnumerable<TOrigElem>, IEnumerable<TMedElem>, TDest>
+        class Mapper : Mapper<IEnumerable<TOrigElem>, IEnumerable<TMedElem>, TDest>
         {
             static MethodInfo _mQueryableSelect = Refl.GetMethod(() => Queryable.Select(null, (Expression<Func<TOrigElem, TMedElem>>)null));
             static MethodInfo _mEnumerableSelect = Refl.GetMethod(() => Enumerable.Select(null, (Func<TOrigElem, TMedElem>)null));
@@ -46,7 +46,7 @@ namespace Materialize.Reify2.Mapping.Collections
 
             CollectionFactory _collFactory;
             IMapStrategy _elemStrategy;
-            IMapperWriter _elemModifier;
+            IMapper _elemModifier;
 
             public Mapper(
                 CollectionFactory collFactory,

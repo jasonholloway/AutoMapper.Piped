@@ -31,13 +31,13 @@ namespace Materialize.Reify2.Mapping.PropertyMaps
         }
         
 
-        public override IMapperWriter CreateWriter() {
+        public override IMapper CreateWriter() {
             return new Mapper(_ctx, _propMapSpecs);
         }
 
 
 
-        class Mapper : MapperWriter<TOrig, TDest, TDest>
+        class Mapper : Mapper<TOrig, TDest, TDest>
         {
             MapContext _ctx;
             IEnumerable<PropMapSpec> _propSpecs;

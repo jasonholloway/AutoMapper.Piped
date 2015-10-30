@@ -14,13 +14,13 @@ namespace Materialize.Reify2
     {
         public readonly IMappingEngine MappingEngine;
         public readonly ISourceRegime SourceRegime;
-        public readonly MapperWriterSource MapperWriterSource;
+        public readonly MapperSource MapperWriterSource;
         public readonly bool AllowClientSideFiltering;
         
         public ReifyContext(
             IMappingEngine mappingEngine, 
             ISourceRegime sourceRegime,
-            MapperWriterSource mapperWriterSource,
+            MapperSource mapperWriterSource,
             bool allowClientFiltering) 
         {
             MappingEngine = mappingEngine;

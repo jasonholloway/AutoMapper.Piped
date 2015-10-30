@@ -15,52 +15,34 @@ namespace Materialize.Reify2
     class ReifierFactory
     {
 
-        public Reifier Build(Expression exQuery, ReifyContext ctx) 
+        public Reifier Build(Expression exQuery, ReifyContext ctx, Expression exBase) 
         {            
-            var exCanonical = CanonicalizeQuery(exQuery);
+            var exCanonical = CanonicalizeQuery(exQuery, exBase);
             
             var paramMap = ParamMapFactory.Build(exCanonical);
 
-
-            //NOW HYDRATE ARGMAP (for benefit of parser...)
-            var argMap = ArgMap.Create(paramMap, exQuery);
             
-
-
-
-
-
-
-
-            //though argmap should only hydrate on-demand...(?)
-            //nah, except for this occasion, all values will surely always be needed
+            var subject = new ParseSubject(
+                                    exCanonical,
+                                    paramMap.CreateArgMap(exQuery),
+                                    ctx);
             
-            
-                        
-            //Parameterizer shouldn't emplace parameters... it should just build a ParamMap
-            //*BUT* need some nice, non-dictionary way to get arg values for encountered parameterized constants.
-            //Can't be strong references, as different ArgMap instances will be used concurrently,
-            //against shared base, potentially.
+            var transitions = Parser.ParseAndPackage(subject);
 
-            //Some kind of indirection via index in order. A dictionary keyed by ConstantExpression ref.
 
-            //SO: Parameterizer not needed; just a ParamMap factory instead.
+            //OPTIMIZE HERE!!!
 
 
 
-            //now, need to parse
+            //so now need to compile the transitions
+            //accumulate a Scheme
+            //Compile!
 
-            //an IQueryable constant should be parsed as a source element
-            //but the parser should also extract information from it...
-            //yet it has been canonicalized! ie stripped of info.
-
-            //sourceregime needs determining before parsing, then.
-            //alternatives? The constant value must be in place for that...
-            //All constants will be hydrated via the ArgMap, which will extract values from the query at hand.
-            //The concrete queryable could then be requested on first parse...
-            //Maybe I like this idea! Keeps things light up front.
-
-            //SO: 
+            //how could we test this?
+            //given a certain transition list, such or such a functioning Reifier is needed
+            //the transition list is complimented by a canonical query form. Information stored within 
+            //the transitions relates to this canonical form directly, cannot be separated.
+            //And so any tests of compilation will need such a query. Plus some kind of mocked ArgMap to deliver default types.
 
 
 
@@ -77,9 +59,9 @@ namespace Materialize.Reify2
 
 
 
-        static Expression CanonicalizeQuery(Expression exQuery) {
+        static Expression CanonicalizeQuery(Expression exQuery, Expression exBase) {
             return exQuery.Replace(
-                            x => x is ConstantExpression,
+                            x => x is ConstantExpression || x == exBase,
                             x => Expression.Constant(x.Type.GetDefaultValue(), x.Type));
         }
                 

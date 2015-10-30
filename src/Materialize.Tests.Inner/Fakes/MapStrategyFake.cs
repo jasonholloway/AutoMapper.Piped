@@ -40,7 +40,7 @@ namespace Materialize.Tests.Inner.Fakes
             get { return _ctx.TypeVector.DestType; }
         }
 
-        public IMapperWriter CreateWriter() {
+        public IMapper CreateWriter() {
             return new MapperWriterFake(this);
         }
 

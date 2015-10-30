@@ -7,21 +7,20 @@ using System.Threading.Tasks;
 
 namespace Materialize.Reify2
 {
-    interface IOperation
+    interface ITransition
     {
-        OpType OpType { get; }        
+        TransitionType TransitionType { get; }        
         ISourceRegime OutRegime { get; } 
-        Type OutType { get; }
         
-        IOperation Previous { get; }
-        IOperation Next { get; }
-        LinkedListNode<IOperation> Site { get; set; }
+        ITransition Previous { get; }
+        ITransition Next { get; }
+        LinkedListNode<ITransition> Site { get; set; }
     }
 
 
 
     [Flags]
-    internal enum OpType
+    internal enum TransitionType
     {
         Source,
         Filter,

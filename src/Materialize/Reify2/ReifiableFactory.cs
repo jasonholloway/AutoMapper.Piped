@@ -9,12 +9,12 @@ namespace Materialize.Reify2
     internal class ReifiableFactory
     {
         ISourceRegimeProvider _regimeSource;
-        MapperWriterSource _mapperWriterSource;
+        MapperSource _mapperWriterSource;
         MaterializeOptions _baseOptions;
 
         public ReifiableFactory(
             ISourceRegimeProvider regimeSource,
-            MapperWriterSource mapperWriterSource,
+            MapperSource mapperWriterSource,
             MaterializeOptions baseOptions) 
         {
             _regimeSource = regimeSource;

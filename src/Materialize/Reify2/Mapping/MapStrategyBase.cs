@@ -28,7 +28,7 @@ namespace Materialize.Reify2.Mapping
             get { return true; }
         }
         
-        public abstract IMapperWriter CreateWriter();
+        public abstract IMapper CreateWriter();
                  
 
         public virtual IRebaseStrategy GetRootRebaseStrategy(RootVector roots) {
