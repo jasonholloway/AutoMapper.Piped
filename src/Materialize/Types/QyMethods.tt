@@ -1,0 +1,130 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Security" #>
+<#@ output extension=".cs" #>
+<#	
+	var names = new HashSet<string>();
+
+	var qyMethods = typeof(Queryable).GetMethods()
+										.Where(m => m.DeclaringType == typeof(Queryable))
+										.OrderBy(m => m.Name)
+										.Select(m => new QyMethod() {
+															Method = m,
+															Name = IndividuateName(names, m.Name)
+														}).ToArray();
+#>
+using System;
+using System.Linq;
+using System.Reflection;
+
+internal static class QyMethods 
+{
+<#
+foreach(var qyMethod in qyMethods) {
+#>	///<summary>
+	///<#=SecurityElement.Escape(qyMethod.ToString())#>
+	///</summary>
+	public static readonly MethodInfo <#=qyMethod.Name#>;
+
+<#
+}
+	#>
+	
+	static QyMethods() 
+	{
+		//Have to replicate binding behaviour, up front, right here...
+
+		var methods = typeof(Queryable).GetMethods(BindingFlags.Static | BindingFlags.Public)
+										.GroupBy(m => m.Name)
+										.ToDictionary(g => g.Key, g => g.ToArray());
+
+		//BELOW TO MATCH PARAM TYPES!!! Even though they are in many cases unresolved generic typespecs
+		//as in metadata, we have to refer generic paramtypes to position in methodinfo... FUN!
+
+<# foreach(var qyMethod in qyMethods) {
+	   
+#>		<#=qyMethod.Name#> = methods["<#=qyMethod.Method.Name#>"].First(m => true);
+<#
+}#>
+	}
+} 
+
+<#+
+	class QyMethod { 
+		public MethodInfo Method;
+		public string Name;
+
+		public override string ToString() {
+			var typeArgs = Method.GetGenericArguments();			
+			var pars = Method.GetParameters().Skip(1);
+
+			return string.Format(
+							"{0} qy.{1}<{2}>({3})",
+							GetNiceTypeName(Method.ReturnType),
+							Method.Name,
+							string.Join(", ", typeArgs.Select(t => GetNiceTypeName(t))),
+							string.Join(", ", pars.Select(p => string.Format("{0} {1}", GetNiceTypeName(p.ParameterType), p.Name)))
+							);
+        }
+	}
+
+
+		
+	static string IndividuateName(ISet<string> names,  string baseName) 
+	{	
+		for(int i = 1; true; i++) {
+			var name = baseName + (i > 1 ? i.ToString() : "");
+
+			if(!names.Contains(name)) {
+				names.Add(name);
+				return name;
+            }
+        }
+    }
+
+
+
+    
+    static string GetNiceTypeName(Type type) 
+    {
+        if(type.IsGenericType) {
+            var baseName = Regex.Match(type.Name, "(.*)`").Groups[1].Value;
+
+            var sb = new StringBuilder(baseName);
+            sb.Append("<");
+
+            bool successor = false;
+
+            foreach(var typeArg in type.GetGenericArguments()) {
+                if(successor) {
+                    sb.Append(", ");
+                }
+
+                sb.Append(GetNiceTypeName(typeArg));
+
+                successor = true;
+            }
+
+            sb.Append(">");
+
+            return sb.ToString();
+        }
+        else if(type.IsGenericTypeDefinition) {
+            throw new NotImplementedException();
+        }
+        else {
+            return type.Name;
+        }
+    }
+
+
+
+
+
+
+#>

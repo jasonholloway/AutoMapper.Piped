@@ -152,6 +152,11 @@
     <Compile Include="SourceRegimes\MinimalRegime.cs" />
     <Compile Include="SourceRegimes\ISourceRegime.cs" />
     <Compile Include="SourceRegimes\SourceRegimeProvider.cs" />
+    <Compile Include="Types\QyMethods.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>QyMethods.tt</DependentUpon>
+    </Compile>
     <Compile Include="Types\ReflectionExtensions.cs" />
     <Compile Include="Types\ReflectionHelper.cs" />
     <Compile Include="Tuples\IProjectedMemberSpec.cs" />
@@ -180,8 +185,14 @@
     <Content Include="notes.txt" />
     <Content Include="Reify2\Rebasing\about.txt" />
     <Content Include="todo.txt" />
+    <Content Include="Types\QyMethods.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>QyMethods.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
