@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Materialize.Reify2
 {
@@ -22,11 +20,12 @@ namespace Materialize.Reify2
     [Flags]
     internal enum TransitionType
     {
-        Source,
-        Filter,
-        Projector,
-        Aggregator,
-        RegimeBoundary
+        Source = 1,
+        Filter = 2,
+        Projector = 4,
+        Aggregator = 8,
+        RegimeBoundary = 16,
+        Partition = 32
     }
 
 }

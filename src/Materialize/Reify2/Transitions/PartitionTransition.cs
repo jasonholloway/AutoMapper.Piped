@@ -14,12 +14,15 @@ namespace Materialize.Reify2.Transitions
         public Expression CountExpression { get; private set; }
 
         public PartitionTransition(PartitionType partType, Expression exCount)
-            : base(TransitionType.Filter) 
+            : base(TransitionType.Partition) 
         {
             PartitionType = partType;
             CountExpression = exCount;
         }
 
+        public override string ToString() {
+            return $"{PartitionType.ToString()}";
+        }
     }
         
 }

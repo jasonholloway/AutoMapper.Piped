@@ -15,7 +15,7 @@ namespace Materialize.Reify2.Mapping
             _strategySource = strategySource;
         }
         
-        public IMapper GetWriter(ReifyContext ctx, TypeVector types) {            
+        public IMapper GetMapper(ReifyContext ctx, TypeVector types) {            
             var strategy = _strategySource.GetStrategy(new MapContext(types, ctx));
             return strategy.CreateWriter();
         }

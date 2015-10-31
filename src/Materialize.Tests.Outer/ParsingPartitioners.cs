@@ -64,8 +64,7 @@ namespace Materialize.Tests.Outer
                             .Take(10)
                             .ToArray();
 
-            Fetched.Count().ShouldEqual(result.Length);
-            
+            Assert.That(Fetched.Count(), Is.EqualTo(result.Length));            
             Assert.That(result.Select(m => m.Value), Is.EquivalentTo(Enumerable.Range(100, 10)));
         }
 

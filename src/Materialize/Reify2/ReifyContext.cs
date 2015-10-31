@@ -5,27 +5,25 @@ using Materialize.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Materialize.Reify2
 {
-    struct ReifyContext
+    class ReifyContext
     {
         public readonly IMappingEngine MappingEngine;
         public readonly ISourceRegime SourceRegime;
-        public readonly MapperSource MapperWriterSource;
+        public readonly MapperSource MapperSource;
         public readonly bool AllowClientSideFiltering;
         
         public ReifyContext(
             IMappingEngine mappingEngine, 
             ISourceRegime sourceRegime,
-            MapperSource mapperWriterSource,
+            MapperSource mapperSource,
             bool allowClientFiltering) 
         {
             MappingEngine = mappingEngine;
             SourceRegime = sourceRegime;
-            MapperWriterSource = mapperWriterSource;
+            MapperSource = mapperSource;
             AllowClientSideFiltering = allowClientFiltering;
         }
 

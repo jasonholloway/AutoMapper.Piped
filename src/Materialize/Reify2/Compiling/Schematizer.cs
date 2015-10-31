@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Materialize.Reify2.Parameterize;
 using System.Reflection;
 using Materialize.Types;
@@ -13,7 +11,6 @@ using Materialize.Expressions;
 
 namespace Materialize.Reify2.Compiling
 {   
-
     internal static class Schematizer {
 
         public static Scheme Schematize(IEnumerable<ITransition> trans, ParamMap paramMap) {
@@ -86,10 +83,10 @@ namespace Materialize.Reify2.Compiling
         static Scheme Schematize(QueryScheme scheme, ProjectionTransition trans) 
         {
             scheme.Query = Expression.Call(
-                                            QueryableMethods.Select.MakeGenericMethod(trans.InElemType, trans.OutElemType),
-                                            scheme.Query,
-                                            trans.Projection
-                                            );
+                                QueryableMethods.Select.MakeGenericMethod(trans.InElemType, trans.OutElemType),
+                                scheme.Query,
+                                trans.Projection
+                                );
             
             return scheme;
         }
@@ -99,15 +96,13 @@ namespace Materialize.Reify2.Compiling
 
 
 
-        static MethodInfo _mGetValueWith = Refl.GetMethod<ArgMap>(m => m.GetValueWith(_ => null));
-
-
+        
         static Scheme Schematize(ClientScheme scheme, ProjectionTransition trans) 
         {
             scheme.Body = Expression.Call(
                                 EnumerableMethods.Select.MakeGenericMethod(trans.InElemType, trans.OutElemType),
                                 scheme.Body,
-                                EmplaceIncidentals(scheme, trans.Projection)
+                                InjectIncidentalFetchers(scheme, trans.Projection)
                                 );
             
             return scheme;
@@ -122,9 +117,9 @@ namespace Materialize.Reify2.Compiling
         static Scheme Schematize(QueryScheme scheme, FilterTransition trans) 
         {
             scheme.Query = Expression.Call(
-                                            QueryableMethods.Where.MakeGenericMethod(trans.ElemType),
-                                            scheme.Query,
-                                            trans.Predicate);
+                                QueryableMethods.Where.MakeGenericMethod(trans.ElemType),
+                                scheme.Query,
+                                trans.Predicate);
 
             return scheme;
         }
@@ -138,7 +133,7 @@ namespace Materialize.Reify2.Compiling
             scheme.Body = Expression.Call(
                                 EnumerableMethods.Where.MakeGenericMethod(trans.ElemType),
                                 scheme.Body,
-                                EmplaceIncidentals(scheme, trans.Predicate)
+                                InjectIncidentalFetchers(scheme, trans.Predicate)
                                 );
 
             return scheme;
@@ -189,7 +184,7 @@ namespace Materialize.Reify2.Compiling
             scheme.Body = Expression.Call(
                                     mPartition.MakeGenericMethod(scheme.OutType.GetEnumerableElementType()),
                                     scheme.Body,
-                                    EmplaceIncidentals(scheme, trans.CountExpression));
+                                    InjectIncidentalFetchers(scheme, trans.CountExpression));
 
             return scheme;
         }
@@ -199,9 +194,11 @@ namespace Materialize.Reify2.Compiling
 
 
 
+        static MethodInfo _mGetValueWith = Refl.GetMethod<ArgMap>(m => m.GetValueWith(_ => null));
 
 
-        static Expression EmplaceIncidentals(ClientScheme scheme, Expression exSubject) {
+        static Expression InjectIncidentalFetchers(ClientScheme scheme, Expression exSubject) 
+        {
             //replace all constant-parameters with fetching code, to acquire incidental values from the passed ArgMap
             return exSubject.Replace(
                         x => x is ConstantExpression,
@@ -209,7 +206,7 @@ namespace Materialize.Reify2.Compiling
                             var accessor = scheme.ParamMap.TryGetAccessor(x);
                             
                             if(accessor == null) {
-                                return x; //not all constants are paramterized - some are magicked out of nowhere by the mapping layer
+                                return x; //not all constants are paramterized - some are produced by the mapping layer, and should be left in place
                             }
 
                             return Expression.Convert(
@@ -222,9 +219,7 @@ namespace Materialize.Reify2.Compiling
                         });
         }
 
-
-
-
+        
 
 
     }

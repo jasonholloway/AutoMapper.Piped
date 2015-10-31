@@ -58,6 +58,7 @@
     <Compile Include="Reify2\Parsing2\Methods\Handlers\SkipHandler.cs" />
     <Compile Include="Reify2\Parsing2\Methods\Handlers\TakeHandler.cs" />
     <Compile Include="Reify2\Transitions\FetchTransition.cs" />
+    <Compile Include="Reify2\Transitions\ElementTransition.cs" />
     <Compile Include="Reify2\Transitions\PartitionTransition.cs" />
     <Compile Include="Reify2\Transitions\TransitionBase.cs" />
     <Compile Include="Reify2\Transitions\SourceTransition.cs" />
@@ -94,7 +95,7 @@
     <Compile Include="Reify2\Parameterize\ArgMap.cs" />
     <Compile Include="Reify2\Parameterize\ParamMap.cs" />
     <Compile Include="Reify2\Parameterize\ParamMapFactory.cs" />
-    <Compile Include="Reify2\Parsing2\Methods\Handlers\MapAsHandler.cs" />
+    <Compile Include="Reify2\Parsing2\Methods\MapAsParser.cs" />
     <Compile Include="Reify2\Parsing2\Methods\Handlers\WhereHandler.cs" />
     <Compile Include="Reify2\Parsing2\Methods\MethodParser.cs" />
     <Compile Include="Reify2\Parsing2\Methods\SequenceMethodHandler.cs" />

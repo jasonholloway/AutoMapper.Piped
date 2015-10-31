@@ -33,6 +33,25 @@ namespace Materialize.Types
         public static MethodInfo Last = Refl.GetGenMethod(
                                             () => Queryable.Last<object>(null));
 
+        public static MethodInfo ElementAt = Refl.GetGenMethod(
+                                            () => Queryable.ElementAt<object>(null, 0));
+
+        public static MethodInfo FirstOrDefault = Refl.GetGenMethod(
+                                            () => Queryable.FirstOrDefault<object>(null));
+
+        public static MethodInfo SingleOrDefault = Refl.GetGenMethod(
+                                            () => Queryable.SingleOrDefault<object>(null));
+
+        public static MethodInfo LastOrDefault = Refl.GetGenMethod(
+                                            () => Queryable.LastOrDefault<object>(null));
+
+        public static MethodInfo ElementAtOrDefault = Refl.GetGenMethod(
+                                            () => Queryable.ElementAtOrDefault<object>(null, 0));
+
+
+
+
+
 
         public static MethodInfo All = Refl.GetGenMethod(
                                             () => Queryable.All<object>(null, i => true));
