@@ -1,4 +1,4 @@
-﻿using Materialize.Reify2.Params;
+﻿using Materialize.Reify2.Parameterize;
 using System;
 using System.Collections.Generic;
 using System.Linq;

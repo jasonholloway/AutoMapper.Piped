@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Materialize.Expressions;
 
-namespace Materialize.Reify2.Params
+namespace Materialize.Reify2.Parameterize
 {
     internal static class ParamMapFactory
     {

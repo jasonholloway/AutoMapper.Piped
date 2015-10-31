@@ -54,7 +54,11 @@
     <Compile Include="Reify2\Compiling\Scheme.cs" />
     <Compile Include="Reify2\Compiling\StageCompiler.cs" />
     <Compile Include="Reify2\Compiling\TransformWriter.cs" />
+    <Compile Include="Reify2\Parsing2\Methods\Handlers\SelectHandler.cs" />
+    <Compile Include="Reify2\Parsing2\Methods\Handlers\SkipHandler.cs" />
+    <Compile Include="Reify2\Parsing2\Methods\Handlers\TakeHandler.cs" />
     <Compile Include="Reify2\Transitions\FetchTransition.cs" />
+    <Compile Include="Reify2\Transitions\PartitionTransition.cs" />
     <Compile Include="Reify2\Transitions\TransitionBase.cs" />
     <Compile Include="Reify2\Transitions\SourceTransition.cs" />
     <Compile Include="Reify2\Transitions\ProjectionTransition.cs" />
@@ -87,9 +91,9 @@
     <Compile Include="Reify2\Mapping\Translation\SelectiveFetchAndTransformStrategy.cs" />
     <Compile Include="Reify2\Mapping\Translation\ServerFriendlyProjectStrategy.cs" />
     <Compile Include="Expressions\ExpressionPather.cs" />
-    <Compile Include="Reify2\Params\ArgMap.cs" />
-    <Compile Include="Reify2\Params\ParamMap.cs" />
-    <Compile Include="Reify2\Params\ParamMapFactory.cs" />
+    <Compile Include="Reify2\Parameterize\ArgMap.cs" />
+    <Compile Include="Reify2\Parameterize\ParamMap.cs" />
+    <Compile Include="Reify2\Parameterize\ParamMapFactory.cs" />
     <Compile Include="Reify2\Parsing2\Methods\Handlers\MapAsHandler.cs" />
     <Compile Include="Reify2\Parsing2\Methods\Handlers\WhereHandler.cs" />
     <Compile Include="Reify2\Parsing2\Methods\MethodParser.cs" />

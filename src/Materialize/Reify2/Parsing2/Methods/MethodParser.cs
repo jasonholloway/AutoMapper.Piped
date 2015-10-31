@@ -35,16 +35,17 @@ namespace Materialize.Reify2.Parsing2.Methods
         static IDictionary<MethodInfo, HandlerFactory> _dParsers
             = new Dictionary<MethodInfo, HandlerFactory>() {
                 { QueryableMethods.MapAs, s => ParseHandler.Create<MapAsHandler>(s) },
-                { QueryableMethods.Skip, null },
-                { QueryableMethods.Take, null },
                 { QueryableMethods.Where, s => ParseHandler.Create<WhereHandler>(s) },
-                { QueryableMethods.First, null },
-                { QueryableMethods.Single, null },
-                { QueryableMethods.Last, null },
-                { QueryableMethods.AnyPred, null },
-                { QueryableMethods.All, null },
-                { QueryableMethods.CountPred, null },
-                { QueryableMethods.Count, null }
+                { QueryableMethods.Select, s => ParseHandler.Create<SelectHandler>(s) },
+                { QueryableMethods.Skip, s => ParseHandler.Create<SkipHandler>(s) },
+                { QueryableMethods.Take, s => ParseHandler.Create<TakeHandler>(s) },
+                //{ QueryableMethods.First, null },
+                //{ QueryableMethods.Single, null },
+                //{ QueryableMethods.Last, null },
+                //{ QueryableMethods.AnyPred, null },
+                //{ QueryableMethods.All, null },
+                //{ QueryableMethods.CountPred, null },
+                //{ QueryableMethods.Count, null }
             };
 
         

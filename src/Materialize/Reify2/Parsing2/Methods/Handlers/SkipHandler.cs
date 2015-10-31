@@ -9,13 +9,11 @@ using System.Threading.Tasks;
 
 namespace Materialize.Reify2.Parsing2.Methods.Handlers
 {
-    class WhereHandler : SequenceMethodHandler
+    class SkipHandler : SequenceMethodHandler
     {
         protected override IEnumerable<ITransition> InnerRespond() 
         {
-            var exPred = (LambdaExpression)((UnaryExpression)Call.Arguments[1]).Operand;
-
-            yield return new FilterTransition(exPred);                          
+            yield return new PartitionTransition(PartitionType.Skip, Call.Arguments[1]);                          
         }        
     }
 }

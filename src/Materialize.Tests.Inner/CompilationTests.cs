@@ -1,6 +1,6 @@
 ﻿using Materialize.Reify2;
 using Materialize.Reify2.Compiling;
-using Materialize.Reify2.Params;
+using Materialize.Reify2.Parameterize;
 using Materialize.Reify2.Transitions;
 using Materialize.SourceRegimes;
 using Materialize.Tests.Inner.Fakes;
@@ -139,6 +139,63 @@ namespace Materialize.Tests.Inner
             Assert.That(results, Is.InstanceOf<IEnumerable<int>>());
             Assert.That((IEnumerable<int>)results, Is.EquivalentTo(qy.Where(i => i > 0))); //constant will be replaced with default if parameterization working!
         }
+
+
+
+
+
+
+        [Test]
+        public void CompilesServerPartitions() {
+            var qy = Enumerable.Range(-50, 100).AsQueryable();
+
+            var trans = PrepTransitions(
+                            new SourceTransition(new TolerantRegime(), Expression.Constant(qy)),
+                            new PartitionTransition(PartitionType.Skip, Expression.Constant(10)),
+                            new PartitionTransition(PartitionType.Take, Expression.Constant(10)),
+                            new FetchTransition(new TolerantRegime()));
+
+            var scheme = Schematizer.Schematize(trans, new ParamMapFake());
+            var fnExec = scheme.Compile();
+
+            var argMap = Substitute.ForPartsOf<ArgMapFake>(qy); //slow, this!
+            argMap.GetIncidentalFor(Arg.Is<Expression>(x => x.Type == typeof(int)))
+                        .Returns(Expression.Constant(5));
+
+            var results = fnExec(qy.Provider, argMap);
+
+            Assert.That(results, Is.InstanceOf<IEnumerable<int>>());
+            Assert.That((IEnumerable<int>)results, Is.EquivalentTo(qy.Skip(5).Take(5)));
+        }
+
+
+
+        [Test]
+        public void CompilesClientPartitions() {
+            var qy = Enumerable.Range(-50, 100).AsQueryable();
+
+            var trans = PrepTransitions(
+                            new SourceTransition(new TolerantRegime(), Expression.Constant(qy)),
+                            new FetchTransition(new TolerantRegime()),
+                            new PartitionTransition(PartitionType.Skip, Expression.Constant(10)),
+                            new PartitionTransition(PartitionType.Take, Expression.Constant(10)));
+
+            var scheme = Schematizer.Schematize(trans, new ParamMapFake());
+            var fnExec = scheme.Compile();
+
+            var argMap = Substitute.ForPartsOf<ArgMapFake>(qy);            
+            argMap.GetValueWith(Arg.Any<NodeAccessor>())
+                        .Returns(5);
+            
+            var results = fnExec(qy.Provider, argMap);
+
+            Assert.That(results, Is.InstanceOf<IEnumerable<int>>());
+            Assert.That((IEnumerable<int>)results, Is.EquivalentTo(qy.Skip(5).Take(5)));
+        }
+
+
+
+
 
 
 

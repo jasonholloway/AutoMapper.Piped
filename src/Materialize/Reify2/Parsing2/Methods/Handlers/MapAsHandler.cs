@@ -14,7 +14,7 @@ namespace Materialize.Reify2.Parsing2.Methods.Handlers
         
         protected override IEnumerable<ITransition> InnerRespond() 
         {
-            var tInElem = Subject.CallExp.Arguments[0].Type.GetEnumerableElementType();
+            var tInElem = Call.Arguments[0].Type.GetEnumerableElementType();
             var tOutElem = Subject.MethodTypeArgs.Single();
             
             var mapper = GetMapper(tInElem, tOutElem);

@@ -1,6 +1,6 @@
 ﻿using Materialize.Expressions;
 using Materialize.Reify2.Mapping;
-using Materialize.Reify2.Params;
+using Materialize.Reify2.Parameterize;
 using Materialize.Types;
 using System;
 using System.Collections.Generic;

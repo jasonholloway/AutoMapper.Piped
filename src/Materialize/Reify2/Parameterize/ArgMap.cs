@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Materialize.Reify2.Params
+namespace Materialize.Reify2.Parameterize
 {
     internal class ArgMap
     {

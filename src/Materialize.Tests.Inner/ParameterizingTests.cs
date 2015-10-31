@@ -1,4 +1,4 @@
-﻿using Materialize.Reify2.Params;
+﻿using Materialize.Reify2.Parameterize;
 using Materialize.Expressions;
 using NUnit.Framework;
 using System;

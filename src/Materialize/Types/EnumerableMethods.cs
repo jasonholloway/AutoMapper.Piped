@@ -33,6 +33,13 @@ namespace Materialize.Types
                                                     () => Enumerable.Single<object>(null));
 
 
+        public static MethodInfo Skip = Refl.GetGenMethod(
+                                                    () => Enumerable.Skip<object>(null, 1));
+
+
+        public static MethodInfo Take = Refl.GetGenMethod(
+                                                    () => Enumerable.Take<object>(null, 1));
+
 
 
         public static MethodInfo GetFromQueryableMethod(MethodInfo mQueryable) {

@@ -1,7 +1,7 @@
 ﻿using Materialize.Expressions;
 using Materialize.Reify2.Compiling;
 using Materialize.Reify2.Mapping;
-using Materialize.Reify2.Params;
+using Materialize.Reify2.Parameterize;
 using Materialize.Reify2.Parsing2;
 using Materialize.SourceRegimes;
 using Materialize.Types;
@@ -249,107 +249,17 @@ namespace Materialize.Reify2
                             _options.AllowClientSideFiltering ?? false);
 
 
-
-            //reifier to be cached here, obvs
-            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            //CACHEING HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
             var reifierFac = new ReifierFactory();
             
             var reifier = reifierFac.Build(exQuery, ctx, _qySource.Expression);
 
-
-
-
-            //EXECUTION
-            return (TResult)reifier.Execute(exQuery);
-
-
-
-
-
-
-            //need to package all up into a Reifier
-            //Reifiable potentially summons a suitable Reifier 
-
-            //Each Reifier has its canonical expression, which is the source expression with constants nullified
-
             
-            //var parameterized = Parameterizer.Parameterize(exQuery);
-
-
-            //var subject = new ParseSubject(parameterized.Expression, _qySource.Expression, ctx);
-
-
-            //var ops = Parser.ParseAndPackage(subject);
-
-
-            ////optimize ops here
-            ////....
-            
-            //var executor = Executor.Create(
-            //                        _qySource, 
-            //                        ops);
-            
-            //return (TResult)executor.Execute();
-
-
-
-            //create Executor class here...
-
-
-
-            //in writing the source query and compiling the transformation, need to figure out the source type, the fetch type, and the destination type
-            //these are all found 
-
-
-            //The original query comes in, and we need to supply the mapping projections...
-            //this is already done by Parser. At this point, these projections are in place
-            //and are just to be optimised/executed
-
-
-            //at the moment, I'm struggling with the inelegancy of execution.
-            //it seems, to me at least, that fetching should be done as part of parsing.
-
-            //Execute() would trigger this, then receive the results.
-            //The parser would:
-            //  populate a 1D buffer of steps (i.e. a list!)
-
-            //The Executor would:
-            //  traverse this list of steps, writing the source query, fetching and
-            //  transforming via compilation.
-
-            //  the runner would work out the fetch type, somehow...
-            //  The OutType preceding the new source regime would determine the fetch type.
-
-            
-            
-
-
-
-
-
-
-
-            throw new NotImplementedException();
-
-
-
-
-            //dynamic _parserFac = null;
-
-            //var parser = _parserFac.Create(
-            //                            BaseReifyQuery.Expression, 
-            //                            typeof(IQueryable<TSource>), 
-            //                            reifyContext);
-                        
-            //var parsed = parser.Parse(exQuery);
-            ////_snoop?.OnStrategized(parsed.UsedStrategy);
-
-
-            //var fetcher = Fetcher.Create(parsed, _options.Snooper);
-
-            //return (TResult)(object)fetcher.FetchFrom(SourceQuery);
+            return (TResult)reifier.Execute(_qySource.Provider, exQuery);            
         }
 
 

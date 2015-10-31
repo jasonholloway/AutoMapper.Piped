@@ -1,4 +1,4 @@
-﻿using Materialize.Reify2.Params;
+﻿using Materialize.Reify2.Parameterize;
 using Materialize.Expressions;
 using System;
 using System.Collections.Generic;
@@ -24,19 +24,19 @@ namespace Materialize.Reify2.Compiling
 
 
 
-    class QuerySideScheme : Scheme
+    class QueryScheme : Scheme
     {
-        public Expression QueryExpression { get; set; }
+        public Expression Query { get; set; }
 
         public override Type OutType {
-            get { return QueryExpression.Type; }
+            get { return Query.Type; }
         }
 
         public override ReifyExecutor Compile() {
             return (prov, args) => {             
-                var ex = QueryExpression.Replace(
-                                x => x is ConstantExpression,
-                                x => args.GetIncidentalFor(x));
+                var ex = Query.Replace(
+                            x => x is ConstantExpression,
+                            x => args.GetIncidentalFor(x));
                 
                 return prov.CreateQuery(ex);
             };            
@@ -44,7 +44,7 @@ namespace Materialize.Reify2.Compiling
     }
     
 
-    class ClientSideScheme : Scheme
+    class ClientScheme : Scheme
     {
         public Expression Body { get; set; }
 
@@ -52,7 +52,7 @@ namespace Materialize.Reify2.Compiling
         public ParameterExpression ArgMapParam { get; private set; }
 
 
-        public ClientSideScheme() {
+        public ClientScheme() {
             ProviderParam = Expression.Parameter(typeof(IQueryProvider));
             ArgMapParam = Expression.Parameter(typeof(ArgMap));
         }

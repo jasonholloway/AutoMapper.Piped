@@ -6,7 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using Materialize.Reify2.Params;
+using Materialize.Reify2.Parameterize;
 using System.Reflection;
 using Materialize.Types;
 using Materialize.Expressions;
@@ -41,8 +41,8 @@ namespace Materialize.Reify2.Compiling
 
         static Scheme Schematize(Scheme prevScheme, SourceTransition trans) 
         {
-            return new QuerySideScheme() {
-                            QueryExpression = trans.CanonicalExpression,
+            return new QueryScheme() {
+                            Query = trans.CanonicalExpression,
                             ParamMap = prevScheme.ParamMap
                         };
         }
@@ -62,7 +62,7 @@ namespace Materialize.Reify2.Compiling
                             ? typeof(IEnumerable<>).MakeGenericType(prevScheme.OutType.GetEnumerableElementType())
                             : prevScheme.OutType;
 
-            var scheme = new ClientSideScheme();
+            var scheme = new ClientScheme();
 
             scheme.ParamMap = prevScheme.ParamMap;
 
@@ -83,11 +83,11 @@ namespace Materialize.Reify2.Compiling
 
 
 
-        static Scheme Schematize(QuerySideScheme scheme, ProjectionTransition trans) 
+        static Scheme Schematize(QueryScheme scheme, ProjectionTransition trans) 
         {
-            scheme.QueryExpression = Expression.Call(
+            scheme.Query = Expression.Call(
                                             QueryableMethods.Select.MakeGenericMethod(trans.InElemType, trans.OutElemType),
-                                            scheme.QueryExpression,
+                                            scheme.Query,
                                             trans.Projection
                                             );
             
@@ -102,7 +102,7 @@ namespace Materialize.Reify2.Compiling
         static MethodInfo _mGetValueWith = Refl.GetMethod<ArgMap>(m => m.GetValueWith(_ => null));
 
 
-        static Scheme Schematize(ClientSideScheme scheme, ProjectionTransition trans) 
+        static Scheme Schematize(ClientScheme scheme, ProjectionTransition trans) 
         {
             scheme.Body = Expression.Call(
                                 EnumerableMethods.Select.MakeGenericMethod(trans.InElemType, trans.OutElemType),
@@ -119,11 +119,11 @@ namespace Materialize.Reify2.Compiling
 
 
 
-        static Scheme Schematize(QuerySideScheme scheme, FilterTransition trans) 
+        static Scheme Schematize(QueryScheme scheme, FilterTransition trans) 
         {
-            scheme.QueryExpression = Expression.Call(
+            scheme.Query = Expression.Call(
                                             QueryableMethods.Where.MakeGenericMethod(trans.ElemType),
-                                            scheme.QueryExpression,
+                                            scheme.Query,
                                             trans.Predicate);
 
             return scheme;
@@ -133,7 +133,7 @@ namespace Materialize.Reify2.Compiling
 
 
 
-        static Scheme Schematize(ClientSideScheme scheme, FilterTransition trans) 
+        static Scheme Schematize(ClientScheme scheme, FilterTransition trans) 
         {
             scheme.Body = Expression.Call(
                                 EnumerableMethods.Where.MakeGenericMethod(trans.ElemType),
@@ -149,15 +149,68 @@ namespace Materialize.Reify2.Compiling
 
 
 
+        static Scheme Schematize(QueryScheme scheme, PartitionTransition trans) 
+        {
+            MethodInfo mPartition = null;
+
+            switch(trans.PartitionType) {
+                case PartitionType.Skip:
+                    mPartition = QueryableMethods.Skip;
+                    break;
+                case PartitionType.Take:
+                    mPartition = QueryableMethods.Take;
+                    break;
+            }
+            
+            scheme.Query = Expression.Call(
+                                    mPartition.MakeGenericMethod(scheme.OutType.GetEnumerableElementType()),
+                                    scheme.Query,
+                                    trans.CountExpression);
+
+            return scheme;
+        }
 
 
-        static Expression EmplaceIncidentals(ClientSideScheme scheme, Expression exSubject) {
+
+
+        static Scheme Schematize(ClientScheme scheme, PartitionTransition trans) 
+        {
+            MethodInfo mPartition = null;
+
+            switch(trans.PartitionType) {
+                case PartitionType.Skip:
+                    mPartition = EnumerableMethods.Skip;
+                    break;
+                case PartitionType.Take:
+                    mPartition = EnumerableMethods.Take;
+                    break;
+            }
+
+            scheme.Body = Expression.Call(
+                                    mPartition.MakeGenericMethod(scheme.OutType.GetEnumerableElementType()),
+                                    scheme.Body,
+                                    EmplaceIncidentals(scheme, trans.CountExpression));
+
+            return scheme;
+        }
+
+
+
+
+
+
+
+
+        static Expression EmplaceIncidentals(ClientScheme scheme, Expression exSubject) {
             //replace all constant-parameters with fetching code, to acquire incidental values from the passed ArgMap
             return exSubject.Replace(
                         x => x is ConstantExpression,
                         x => {
                             var accessor = scheme.ParamMap.TryGetAccessor(x);
-                            Debug.Assert(accessor != null);
+                            
+                            if(accessor == null) {
+                                return x; //not all constants are paramterized - some are magicked out of nowhere by the mapping layer
+                            }
 
                             return Expression.Convert(
                                         Expression.Call(

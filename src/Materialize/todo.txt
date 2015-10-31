@@ -8,7 +8,7 @@ TO DO! ********************************************
 	only via indirect querying of ArgMap. Could build up a bespoke replacer, with hard references to accessors, feeding on passed incidental query.
 
 
-
+> A simplification stage: after the canonical form has been recognised, elements of the query deriving only from constants should all be replaced with calculated constants, emplaced by a set of simplifiers stored against the canonical query along with everything else. The upshot would be that the query to be optimized will be made simpler - some things may be pushed onto the server that otherwise wouldn't (though EF does this already, you know...) BUT: we may shortcircuit the funcletizing in our regime testing...
 
 
 

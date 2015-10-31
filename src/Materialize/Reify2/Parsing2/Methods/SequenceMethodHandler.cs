@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Materialize.Reify2.Parsing2.Methods
 {
@@ -9,6 +10,11 @@ namespace Materialize.Reify2.Parsing2.Methods
         protected IEnumerable<ITransition> Upstream { get; private set; }
 
         protected abstract IEnumerable<ITransition> InnerRespond();
+
+
+        protected MethodCallExpression Call {
+            get { return Subject.CallExp; }
+        }
 
 
         public override IEnumerable<ITransition> Respond() 

@@ -10,75 +10,107 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Materialize.Reify2.Params;
+using Materialize.Expressions;
 
 namespace Materialize.Tests.Inner
 {
     [TestFixture]
     public class ParsingTests
     {
-        ReifyContext _reifyContext;
+        ReifyContext _ctx;
 
         public ParsingTests() {
-            var mapperWriterSource = new MapperSource(new MapStrategySourceFake());
-            _reifyContext = new ReifyContext(null, null, mapperWriterSource, true);
+            var mapperSource = new MapperSource(new MapStrategySourceFake());
+            _ctx = new ReifyContext(null, null, mapperSource, true);
         }
 
 
-        ParseSubject GetSubject<TSourceElem>(Expression<Func<IQueryable<TSourceElem>, object>> exLambda) {
+        ParseSubject GetSubject<TElem>(Expression<Func<IQueryable<TElem>, object>> exLambda) {
             return new ParseSubject(
-                            exLambda.Body, 
-                            //ArgMap.Create(new ParamMap(Enumerable.Empty<ParamMap.Param>()), exLambda), 
-                            _reifyContext);
+                            exLambda.Body.Replace(
+                                            exLambda.Parameters.Single(), 
+                                            Expression.Constant(null, typeof(IQueryable<TElem>))), 
+                            _ctx);
         }
 
-
-
-
-
-
+                
 
         [Test]
-        public void SourceIsParsedToSourceStep() 
+        public void ParsesSource() 
         {
-            var subject = GetSubject<int>(s => s);
+            var subject = GetSubject<int>(q => q);
 
             var steps = Parser.Parse(subject).ToArray();
 
             Assert.That(steps, Has.Length.EqualTo(1));
-            Assert.That(steps[0].TransitionType, Is.EqualTo(TransitionType.Source));
+            Assert.That(steps[0], Is.InstanceOf<SourceTransition>());
         }
 
 
         [Test]
-        public void MapAsIsParsedToProjectionsAndTransition() 
+        public void ParsesMapAs() 
         {
-            var subject = GetSubject<int>(s => s.MapAs<float>());
+            var subject = GetSubject<int>(q => q.MapAs<float>());
 
             var steps = Parser.Parse(subject).ToArray();
 
             Assert.That(steps, Has.Length.EqualTo(4));
-            Assert.That(steps[0].TransitionType, Is.EqualTo(TransitionType.Source));
-            Assert.That(steps[1].TransitionType, Is.EqualTo(TransitionType.Projector));
-            Assert.That(steps[2].TransitionType, Is.EqualTo(TransitionType.RegimeBoundary));
-            Assert.That(steps[3].TransitionType, Is.EqualTo(TransitionType.Projector));
+            Assert.That(steps[0], Is.InstanceOf<SourceTransition>());
+            Assert.That(steps[1], Is.InstanceOf<ProjectionTransition>());
+            Assert.That(steps[2], Is.InstanceOf<FetchTransition>());
+            Assert.That(steps[3], Is.InstanceOf<ProjectionTransition>());
         }
-
         
 
-
         [Test]
-        public void WhereIsParsedToFilterStep() 
+        public void ParsesWhere() 
         {
-            var subject = GetSubject<int>(s => s.Where(i => true));
+            var subject = GetSubject<int>(q => q.Where(i => true));
 
             var steps = Parser.Parse(subject).ToArray();
 
             Assert.That(steps, Has.Length.EqualTo(2));
-            Assert.That(steps[0].TransitionType, Is.EqualTo(TransitionType.Source));
-            Assert.That(steps[1].TransitionType, Is.EqualTo(TransitionType.Filter));
+            Assert.That(steps[0], Is.InstanceOf<SourceTransition>());
+            Assert.That(steps[1], Is.InstanceOf<FilterTransition>());
         }
-        
+
+
+        [Test]
+        public void ParsesSelect() {
+            var subject = GetSubject<int>(q => q.Select(i => 13));
+
+            var steps = Parser.Parse(subject).ToArray();
+
+            Assert.That(steps, Has.Length.EqualTo(2));
+            Assert.That(steps[0], Is.InstanceOf<SourceTransition>());
+            Assert.That(steps[1], Is.InstanceOf<ProjectionTransition>());
+        }
+
+
+        [Test]
+        public void ParsesTake() {
+            var subject = GetSubject<int>(q => q.Take(13));
+
+            var steps = Parser.Parse(subject).ToArray();
+
+            Assert.That(steps, Has.Length.EqualTo(2));
+            Assert.That(steps[0], Is.InstanceOf<SourceTransition>());
+            Assert.That(steps[1], Is.InstanceOf<PartitionTransition>());
+            Assert.That(((PartitionTransition)steps[1]).PartitionType, Is.EqualTo(PartitionType.Take));
+        }
+
+
+        [Test]
+        public void ParsesSkip() {
+            var subject = GetSubject<int>(q => q.Skip(13));
+
+            var steps = Parser.Parse(subject).ToArray();
+
+            Assert.That(steps, Has.Length.EqualTo(2));
+            Assert.That(steps[0], Is.InstanceOf<SourceTransition>());
+            Assert.That(steps[1], Is.InstanceOf<PartitionTransition>());
+            Assert.That(((PartitionTransition)steps[1]).PartitionType, Is.EqualTo(PartitionType.Skip));
+        }
 
     }
 }

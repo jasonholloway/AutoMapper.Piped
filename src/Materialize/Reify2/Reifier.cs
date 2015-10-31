@@ -1,5 +1,5 @@
 ﻿using Materialize.Reify2.Compiling;
-using Materialize.Reify2.Params;
+using Materialize.Reify2.Parameterize;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,31 +12,23 @@ namespace Materialize.Reify2
         public Expression CanonicalQuery { get; private set; }        
         
         protected ParamMap ParamMap { get; private set; }
-        protected Func<Expression, object> Executor { get; private set; }
+        protected ReifyExecutor Executor { get; private set; }
 
 
-        public object Execute(Expression exQuery) 
-        {
-            //extract constant values, and feed in to Executor
-
-            var argValues = ParamMap.Accessors
-                                    .Select(ac => ((ConstantExpression)ac(exQuery)).Value);
-
-
-            //get argmap
-
-            throw new NotImplementedException();
-
-
-            //return Executor(args);
+        public object Execute(IQueryProvider provider, Expression exQuery) 
+        {            
+            var argMap = ParamMap.CreateArgMap(exQuery);
+            
+            return Executor.Invoke(provider, argMap);
         }
 
 
 
-        public Reifier(Expression exCanonicalQuery, Func<Expression, object> fnExecutor) 
+        public Reifier(Expression exCanonicalQuery, ParamMap paramMap, ReifyExecutor executor) 
         {
             CanonicalQuery = exCanonicalQuery;
-            Executor = fnExecutor;
+            ParamMap = paramMap;
+            Executor = executor;
         }
 
 
