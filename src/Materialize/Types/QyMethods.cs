@@ -39,16 +39,6 @@ internal static partial class QyMethods
 	public static readonly MethodInfo Any2;
 
 	///<summary>
-	///IQueryable&lt;TElement&gt; qy.AsQueryable&lt;TElement&gt;()
-	///</summary>
-	public static readonly MethodInfo AsQueryable;
-
-	///<summary>
-	///IQueryable qy.AsQueryable&lt;&gt;()
-	///</summary>
-	public static readonly MethodInfo AsQueryable2;
-
-	///<summary>
 	///Double qy.Average&lt;&gt;()
 	///</summary>
 	public static readonly MethodInfo Average;
@@ -632,18 +622,16 @@ internal static partial class QyMethods
 		All = Refl.GetGenMethod(() => Queryable.All<object>((IQueryable<object>)null, (Expression<Func<object, Boolean>>)null));
 		Any = Refl.GetGenMethod(() => Queryable.Any<object>((IQueryable<object>)null));
 		Any2 = Refl.GetGenMethod(() => Queryable.Any<object>((IQueryable<object>)null, (Expression<Func<object, Boolean>>)null));
-		AsQueryable = Refl.GetGenMethod(() => Queryable.AsQueryable<object>((IEnumerable<object>)null));
-		AsQueryable2 = Refl.GetGenMethod(() => Queryable.AsQueryable((IEnumerable)null));
-		Average = Refl.GetGenMethod(() => Queryable.Average((IQueryable<Int32>)null));
-		Average2 = Refl.GetGenMethod(() => Queryable.Average((IQueryable<Nullable<Int32>>)null));
-		Average3 = Refl.GetGenMethod(() => Queryable.Average((IQueryable<Int64>)null));
-		Average4 = Refl.GetGenMethod(() => Queryable.Average((IQueryable<Nullable<Int64>>)null));
-		Average5 = Refl.GetGenMethod(() => Queryable.Average((IQueryable<Single>)null));
-		Average6 = Refl.GetGenMethod(() => Queryable.Average((IQueryable<Nullable<Single>>)null));
-		Average7 = Refl.GetGenMethod(() => Queryable.Average((IQueryable<Double>)null));
-		Average8 = Refl.GetGenMethod(() => Queryable.Average((IQueryable<Nullable<Double>>)null));
-		Average9 = Refl.GetGenMethod(() => Queryable.Average((IQueryable<Decimal>)null));
-		Average10 = Refl.GetGenMethod(() => Queryable.Average((IQueryable<Nullable<Decimal>>)null));
+		Average = Refl.GetMethod(() => Queryable.Average((IQueryable<Int32>)null));
+		Average2 = Refl.GetMethod(() => Queryable.Average((IQueryable<Nullable<Int32>>)null));
+		Average3 = Refl.GetMethod(() => Queryable.Average((IQueryable<Int64>)null));
+		Average4 = Refl.GetMethod(() => Queryable.Average((IQueryable<Nullable<Int64>>)null));
+		Average5 = Refl.GetMethod(() => Queryable.Average((IQueryable<Single>)null));
+		Average6 = Refl.GetMethod(() => Queryable.Average((IQueryable<Nullable<Single>>)null));
+		Average7 = Refl.GetMethod(() => Queryable.Average((IQueryable<Double>)null));
+		Average8 = Refl.GetMethod(() => Queryable.Average((IQueryable<Nullable<Double>>)null));
+		Average9 = Refl.GetMethod(() => Queryable.Average((IQueryable<Decimal>)null));
+		Average10 = Refl.GetMethod(() => Queryable.Average((IQueryable<Nullable<Decimal>>)null));
 		Average11 = Refl.GetGenMethod(() => Queryable.Average<object>((IQueryable<object>)null, (Expression<Func<object, Int32>>)null));
 		Average12 = Refl.GetGenMethod(() => Queryable.Average<object>((IQueryable<object>)null, (Expression<Func<object, Nullable<Int32>>>)null));
 		Average13 = Refl.GetGenMethod(() => Queryable.Average<object>((IQueryable<object>)null, (Expression<Func<object, Single>>)null));
@@ -718,16 +706,16 @@ internal static partial class QyMethods
 		SkipWhile = Refl.GetGenMethod(() => Queryable.SkipWhile<object>((IQueryable<object>)null, (Expression<Func<object, Boolean>>)null));
 		SkipWhile2 = Refl.GetGenMethod(() => Queryable.SkipWhile<object>((IQueryable<object>)null, (Expression<Func<object, Int32, Boolean>>)null));
 		Sum = Refl.GetGenMethod(() => Queryable.Sum<object>((IQueryable<object>)null, (Expression<Func<object, Nullable<Decimal>>>)null));
-		Sum2 = Refl.GetGenMethod(() => Queryable.Sum((IQueryable<Int32>)null));
-		Sum3 = Refl.GetGenMethod(() => Queryable.Sum((IQueryable<Nullable<Int32>>)null));
-		Sum4 = Refl.GetGenMethod(() => Queryable.Sum((IQueryable<Int64>)null));
-		Sum5 = Refl.GetGenMethod(() => Queryable.Sum((IQueryable<Nullable<Int64>>)null));
-		Sum6 = Refl.GetGenMethod(() => Queryable.Sum((IQueryable<Single>)null));
-		Sum7 = Refl.GetGenMethod(() => Queryable.Sum((IQueryable<Nullable<Single>>)null));
-		Sum8 = Refl.GetGenMethod(() => Queryable.Sum((IQueryable<Double>)null));
-		Sum9 = Refl.GetGenMethod(() => Queryable.Sum((IQueryable<Nullable<Double>>)null));
-		Sum10 = Refl.GetGenMethod(() => Queryable.Sum((IQueryable<Decimal>)null));
-		Sum11 = Refl.GetGenMethod(() => Queryable.Sum((IQueryable<Nullable<Decimal>>)null));
+		Sum2 = Refl.GetMethod(() => Queryable.Sum((IQueryable<Int32>)null));
+		Sum3 = Refl.GetMethod(() => Queryable.Sum((IQueryable<Nullable<Int32>>)null));
+		Sum4 = Refl.GetMethod(() => Queryable.Sum((IQueryable<Int64>)null));
+		Sum5 = Refl.GetMethod(() => Queryable.Sum((IQueryable<Nullable<Int64>>)null));
+		Sum6 = Refl.GetMethod(() => Queryable.Sum((IQueryable<Single>)null));
+		Sum7 = Refl.GetMethod(() => Queryable.Sum((IQueryable<Nullable<Single>>)null));
+		Sum8 = Refl.GetMethod(() => Queryable.Sum((IQueryable<Double>)null));
+		Sum9 = Refl.GetMethod(() => Queryable.Sum((IQueryable<Nullable<Double>>)null));
+		Sum10 = Refl.GetMethod(() => Queryable.Sum((IQueryable<Decimal>)null));
+		Sum11 = Refl.GetMethod(() => Queryable.Sum((IQueryable<Nullable<Decimal>>)null));
 		Sum12 = Refl.GetGenMethod(() => Queryable.Sum<object>((IQueryable<object>)null, (Expression<Func<object, Int32>>)null));
 		Sum13 = Refl.GetGenMethod(() => Queryable.Sum<object>((IQueryable<object>)null, (Expression<Func<object, Nullable<Int32>>>)null));
 		Sum14 = Refl.GetGenMethod(() => Queryable.Sum<object>((IQueryable<object>)null, (Expression<Func<object, Int64>>)null));

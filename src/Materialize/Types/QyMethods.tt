@@ -12,6 +12,7 @@
 
 	var qyMethods = typeof(Queryable).GetMethods()
 										.Where(m => m.DeclaringType == typeof(Queryable))
+										.Where(m => m.GetParameters().Any() && typeof(IQueryable).IsAssignableFrom(m.GetParameters().First().ParameterType))
 										.OrderBy(m => m.Name)
 										.Select(m => new QyMethod(m, IndividuateName(names, m.Name)))
 										.ToArray();
@@ -40,9 +41,9 @@ foreach(var qyMethod in qyMethods) {
 	
 	static QyMethods() 
 	{
-<# foreach(var qyMethod in qyMethods) {
+<# foreach(var m in qyMethods) {
 	   
-#>		<#=qyMethod.Name#> = Refl.GetGenMethod(() => <#=qyMethod.CallStatement#>);
+#>		<#=m.Name#> = Refl.Get<#=(m.Method.IsGenericMethodDefinition ? "Gen" : "")#>Method(() => <#=m.CallStatement#>);
 <#
 }#>
 	}

@@ -70,6 +70,9 @@ namespace Materialize.Reify2.Parsing2.Methods
                 { QyMethods.First, ParseFirst },
                 { QyMethods.Single, ParseSingle },
                 { QyMethods.Last, ParseLast },
+                { QyMethods.First2, ParseFirstPred },
+                { QyMethods.Last2, ParseLastPred },
+                { QyMethods.Single2, ParseSinglePred },
                 { QyMethods.ElementAt, ParseElementAt },
                 { QyMethods.FirstOrDefault, ParseFirstOrDefault },
                 { QyMethods.SingleOrDefault, ParseSingleOrDefault },
@@ -94,17 +97,23 @@ namespace Materialize.Reify2.Parsing2.Methods
             var exProj = (LambdaExpression)((UnaryExpression)s.Args[1]).Operand;
             yield return new ProjectionTransition(exProj);
         }
-        
+
+                
+
+        #region Partition operations
 
         static IEnumerable<ITransition> ParseSkip(MethodParseSubject s) {
             yield return new PartitionTransition(PartitionType.Skip, s.Args[1]);
         }
 
-
         static IEnumerable<ITransition> ParseTake(MethodParseSubject s) {
             yield return new PartitionTransition(PartitionType.Take, s.Args[1]);
         }
 
+        #endregion
+
+
+        #region Element operations
 
         static IEnumerable<ITransition> ParseFirst(MethodParseSubject s) {
             yield return new ElementTransition(ElementTransitionType.First, false);
@@ -117,6 +126,24 @@ namespace Materialize.Reify2.Parsing2.Methods
         static IEnumerable<ITransition> ParseSingle(MethodParseSubject s) {
             yield return new ElementTransition(ElementTransitionType.Single, false);
         }
+
+
+        static IEnumerable<ITransition> ParseFirstPred(MethodParseSubject s) {
+            yield return new FilterTransition((LambdaExpression)((UnaryExpression)s.Args[1]).Operand);
+            yield return new ElementTransition(ElementTransitionType.First, false);
+        }
+
+        static IEnumerable<ITransition> ParseLastPred(MethodParseSubject s) {
+            yield return new FilterTransition((LambdaExpression)((UnaryExpression)s.Args[1]).Operand);
+            yield return new ElementTransition(ElementTransitionType.Last, false);
+        }
+
+        static IEnumerable<ITransition> ParseSinglePred(MethodParseSubject s) {
+            yield return new FilterTransition((LambdaExpression)((UnaryExpression)s.Args[1]).Operand);
+            yield return new ElementTransition(ElementTransitionType.Single, false);
+        }
+
+
 
         static IEnumerable<ITransition> ParseElementAt(MethodParseSubject s) {
             yield return new ElementTransition(ElementTransitionType.ElementAt, false, s.Args[1]);
@@ -138,7 +165,7 @@ namespace Materialize.Reify2.Parsing2.Methods
             yield return new ElementTransition(ElementTransitionType.ElementAt, true, s.Args[1]);
         }
 
-
+        #endregion
 
     }
 }

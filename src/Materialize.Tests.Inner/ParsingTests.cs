@@ -124,8 +124,7 @@ namespace Materialize.Tests.Inner
             var partTrans = (PartitionTransition)steps[1];
             Assert.That(partTrans.PartitionType, Is.EqualTo(PartitionType.Skip));
         }
-
-
+        
 
         [Test]
         public void ParsesFirst() {
@@ -144,6 +143,31 @@ namespace Materialize.Tests.Inner
 
 
         [Test]
+        public void ParsesFirstPred() {
+            var subject = GetSubject<int>(q => q.First(i => true));
+
+            var steps = Parser.Parse(subject).ToArray();
+
+            Assert.That(steps, Has.Length.EqualTo(3));
+            Assert.That(steps[0], Is.InstanceOf<SourceTransition>());
+            Assert.That(steps[1], Is.InstanceOf<FilterTransition>());
+            Assert.That(steps[2], Is.InstanceOf<ElementTransition>());
+
+            var filterTrans = (FilterTransition)steps[1];
+            Assert.That(filterTrans.ElemType, Is.EqualTo(typeof(int)));
+            Assert.That(filterTrans.Predicate.IsFormallyEquivalentTo(((UnaryExpression)subject.CallExp.Arguments[1]).Operand));
+
+            var elemTrans = (ElementTransition)steps[2];
+            Assert.That(elemTrans.ElementTransitionType, Is.EqualTo(ElementTransitionType.First));
+            Assert.That(elemTrans.ReturnsDefault, Is.False);
+        }
+
+
+
+
+
+
+        [Test]
         public void ParsesLast() {
             var subject = GetSubject<int>(q => q.Last());
 
@@ -157,6 +181,32 @@ namespace Materialize.Tests.Inner
             Assert.That(elemTrans.ElementTransitionType, Is.EqualTo(ElementTransitionType.Last));
             Assert.That(elemTrans.ReturnsDefault, Is.False);
         }
+
+
+
+        [Test]
+        public void ParsesLastPred() {
+            var subject = GetSubject<int>(q => q.Last(i => true));
+
+            var steps = Parser.Parse(subject).ToArray();
+
+            Assert.That(steps, Has.Length.EqualTo(3));
+            Assert.That(steps[0], Is.InstanceOf<SourceTransition>());
+            Assert.That(steps[1], Is.InstanceOf<FilterTransition>());
+            Assert.That(steps[2], Is.InstanceOf<ElementTransition>());
+
+            var filterTrans = (FilterTransition)steps[1];
+            Assert.That(filterTrans.ElemType, Is.EqualTo(typeof(int)));
+            Assert.That(filterTrans.Predicate.IsFormallyEquivalentTo(((UnaryExpression)subject.CallExp.Arguments[1]).Operand));
+
+            var elemTrans = (ElementTransition)steps[2];
+            Assert.That(elemTrans.ElementTransitionType, Is.EqualTo(ElementTransitionType.Last));
+            Assert.That(elemTrans.ReturnsDefault, Is.False);
+        }
+
+
+
+
 
 
         [Test]
@@ -173,6 +223,32 @@ namespace Materialize.Tests.Inner
             Assert.That(elemTrans.ElementTransitionType, Is.EqualTo(ElementTransitionType.Single));
             Assert.That(elemTrans.ReturnsDefault, Is.False);
         }
+
+
+        [Test]
+        public void ParsesSinglePred() {
+            var subject = GetSubject<int>(q => q.Single(i => true));
+
+            var steps = Parser.Parse(subject).ToArray();
+
+            Assert.That(steps, Has.Length.EqualTo(3));
+            Assert.That(steps[0], Is.InstanceOf<SourceTransition>());
+            Assert.That(steps[1], Is.InstanceOf<FilterTransition>());
+            Assert.That(steps[2], Is.InstanceOf<ElementTransition>());
+
+            var filterTrans = (FilterTransition)steps[1];
+            Assert.That(filterTrans.ElemType, Is.EqualTo(typeof(int)));
+            Assert.That(filterTrans.Predicate.IsFormallyEquivalentTo(((UnaryExpression)subject.CallExp.Arguments[1]).Operand));
+
+            var elemTrans = (ElementTransition)steps[2];
+            Assert.That(elemTrans.ElementTransitionType, Is.EqualTo(ElementTransitionType.Single));
+            Assert.That(elemTrans.ReturnsDefault, Is.False);
+        }
+
+
+
+
+
 
 
         [Test]
