@@ -43,7 +43,7 @@ foreach(var m in enMethods) {
 	{
 <# foreach(var m in enMethods) {
 	   
-#>		<#=m.Name#> = Refl.GetGenMethod(() => <#=m.CallStatement#>);
+#>		<#=m.Name#> = Refl.Get<#=(m.Method.IsGenericMethodDefinition ? "Gen" : "")#>Method(() => <#=m.CallStatement#>);
 <#
 }#>
 	}
