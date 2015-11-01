@@ -4,18 +4,19 @@
 <#@ import namespace="System.Reflection" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Collections" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Security" #>
 <#@ output extension=".cs" #>
 <#	
 	var names = new HashSet<string>();
 
-	var qyMethods = typeof(Queryable).GetMethods()
-										.Where(m => m.DeclaringType == typeof(Queryable))
+	var enMethods = typeof(Enumerable).GetMethods()
+										.Where(m => m.DeclaringType == typeof(Enumerable))
+										.Where(m => m.GetParameters().Any() && typeof(IEnumerable).IsAssignableFrom(m.GetParameters().First().ParameterType))
 										.OrderBy(m => m.Name)
-										.Select(m => new QyMethod(m, IndividuateName(names, m.Name)))
+										.Select(m => new EnMethod(m, IndividuateName(names, m.Name)))
 										.ToArray();
-
 #>
 using System;
 using System.Collections;
@@ -25,38 +26,38 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Materialize.Types;
 
-internal static partial class QyMethods 
+internal static partial class EnMethods 
 {
 <#
-foreach(var qyMethod in qyMethods) {
+foreach(var m in enMethods) {
 #>	///<summary>
-	///<#=SecurityElement.Escape(qyMethod.ToString())#>
+	///<#=SecurityElement.Escape(m.Description)#>
 	///</summary>
-	public static readonly MethodInfo <#=qyMethod.Name#>;
+	public static readonly MethodInfo <#=m.Name#>;
 
 <#
 }
 	#>
 	
-	static QyMethods() 
+	static EnMethods() 
 	{
-<# foreach(var qyMethod in qyMethods) {
+<# foreach(var m in enMethods) {
 	   
-#>		<#=qyMethod.Name#> = Refl.GetGenMethod(() => <#=qyMethod.CallStatement#>);
+#>		<#=m.Name#> = Refl.GetGenMethod(() => <#=m.CallStatement#>);
 <#
 }#>
 	}
 } 
 
 <#+
-	class QyMethod { 
+	class EnMethod { 
 		public readonly MethodInfo Method;
 		public readonly string Name;
 		public readonly string Description;
 		public readonly string CallStatement;
 
 
-        public QyMethod(MethodInfo method, string name) {
+        public EnMethod(MethodInfo method, string name) {
 			Method = method;
 			Name = name;
 			Description = BuildDescription();
@@ -69,7 +70,7 @@ foreach(var qyMethod in qyMethods) {
 			var m = Method;
 			var sb = new StringBuilder();
 
-			sb.Append("Queryable.");
+			sb.Append("Enumerable.");
 			sb.Append(m.Name);
 			
 			var typeArgs = m.GetGenericArguments();

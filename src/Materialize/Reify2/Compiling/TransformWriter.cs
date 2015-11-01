@@ -17,7 +17,7 @@ namespace Materialize.Reify2.Compiling
         
         static Expression WriteStep(Expression exPrev, ProjectionTransition s) {
             return Expression.Call(
-                            EnumerableMethods.Select.MakeGenericMethod(s.InElemType, s.OutElemType),
+                            EnMethods.Select.MakeGenericMethod(s.InElemType, s.OutElemType),
                             exPrev,
                             s.Projection);
         }
@@ -25,7 +25,7 @@ namespace Materialize.Reify2.Compiling
 
         static Expression WriteStep(Expression exPrev, FilterTransition s) {
             return Expression.Call(
-                            EnumerableMethods.Where.MakeGenericMethod(s.ElemType),
+                            EnMethods.Where.MakeGenericMethod(s.ElemType),
                             exPrev,
                             s.Predicate);
         }

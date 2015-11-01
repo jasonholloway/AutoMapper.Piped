@@ -10,10 +10,10 @@ namespace Materialize.Reify2.Rebasing.Methods.Rules
     {        
         public QueryablePredicatorRule() 
             : base(new[] {
-                QueryableMethods.Where,
-                QueryableMethods.All,
-                QueryableMethods.AnyPred,
-                QueryableMethods.CountPred
+                QyMethods.Where,
+                QyMethods.All,
+                QyMethods.Any2,
+                QyMethods.Count2
             }) { }
         
 

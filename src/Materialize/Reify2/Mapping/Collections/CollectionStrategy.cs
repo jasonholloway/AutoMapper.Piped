@@ -84,7 +84,7 @@ namespace Materialize.Reify2.Mapping.Collections
                                                 exProjParam);
 
                 var exEnum = Expression.Call(
-                                    EnumerableMethods.Select.MakeGenericMethod(typeof(TMedElem), typeof(TDestElem)),
+                                    EnMethods.Select.MakeGenericMethod(typeof(TMedElem), typeof(TDestElem)),
                                     exTransform,
                                     exProjLambda);
 
@@ -137,7 +137,7 @@ namespace Materialize.Reify2.Mapping.Collections
         //                                        exProjParam);
                 
         //        var exEnum = Expression.Call(
-        //                            EnumerableMethods.Select.MakeGenericMethod(typeof(TMedElem), typeof(TDestElem)),
+        //                            EnMethods.Select.MakeGenericMethod(typeof(TMedElem), typeof(TDestElem)),
         //                            exTransform,
         //                            exProjLambda);
 

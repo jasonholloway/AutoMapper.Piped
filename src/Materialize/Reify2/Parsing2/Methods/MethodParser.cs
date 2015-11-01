@@ -62,23 +62,23 @@ namespace Materialize.Reify2.Parsing2.Methods
 
         static IDictionary<MethodInfo, MethodParseHandler> _dHandlers
             = new Dictionary<MethodInfo, MethodParseHandler>() {
-                { QueryableMethods.MapAs, ParseMapAs },
-                { QueryableMethods.Where, ParseWhere },
-                { QueryableMethods.Select, ParseSelect },
-                { QueryableMethods.Skip, ParseSkip },
-                { QueryableMethods.Take, ParseTake },
-                { QueryableMethods.First, ParseFirst },
-                { QueryableMethods.Single, ParseSingle },
-                { QueryableMethods.Last, ParseLast },
-                { QueryableMethods.ElementAt, ParseElementAt },
-                { QueryableMethods.FirstOrDefault, ParseFirstOrDefault },
-                { QueryableMethods.SingleOrDefault, ParseSingleOrDefault },
-                { QueryableMethods.LastOrDefault, ParseLastOrDefault },
-                { QueryableMethods.ElementAtOrDefault, ParseElementAtOrDefault }
-                //{ QueryableMethods.AnyPred, null },
-                //{ QueryableMethods.All, null },
-                //{ QueryableMethods.CountPred, null },
-                //{ QueryableMethods.Count, null }
+                { QyMethods.MapAs, ParseMapAs },
+                { QyMethods.Where, ParseWhere },
+                { QyMethods.Select, ParseSelect },
+                { QyMethods.Skip, ParseSkip },
+                { QyMethods.Take, ParseTake },
+                { QyMethods.First, ParseFirst },
+                { QyMethods.Single, ParseSingle },
+                { QyMethods.Last, ParseLast },
+                { QyMethods.ElementAt, ParseElementAt },
+                { QyMethods.FirstOrDefault, ParseFirstOrDefault },
+                { QyMethods.SingleOrDefault, ParseSingleOrDefault },
+                { QyMethods.LastOrDefault, ParseLastOrDefault },
+                { QyMethods.ElementAtOrDefault, ParseElementAtOrDefault }
+                //{ QyMethods.AnyPred, null },
+                //{ QyMethods.All, null },
+                //{ QyMethods.CountPred, null },
+                //{ QyMethods.Count, null }
             };
 
 

@@ -83,7 +83,7 @@ namespace Materialize.Reify2.Compiling
         static Scheme Schematize(QueryScheme scheme, ProjectionTransition trans) 
         {
             scheme.Query = Expression.Call(
-                                QueryableMethods.Select.MakeGenericMethod(trans.InElemType, trans.OutElemType),
+                                QyMethods.Select.MakeGenericMethod(trans.InElemType, trans.OutElemType),
                                 scheme.Query,
                                 trans.Projection
                                 );
@@ -100,7 +100,7 @@ namespace Materialize.Reify2.Compiling
         static Scheme Schematize(ClientScheme scheme, ProjectionTransition trans) 
         {
             scheme.Body = Expression.Call(
-                                EnumerableMethods.Select.MakeGenericMethod(trans.InElemType, trans.OutElemType),
+                                EnMethods.Select.MakeGenericMethod(trans.InElemType, trans.OutElemType),
                                 scheme.Body,
                                 InjectIncidentalFetchers(scheme, trans.Projection)
                                 );
@@ -117,7 +117,7 @@ namespace Materialize.Reify2.Compiling
         static Scheme Schematize(QueryScheme scheme, FilterTransition trans) 
         {
             scheme.Query = Expression.Call(
-                                QueryableMethods.Where.MakeGenericMethod(trans.ElemType),
+                                QyMethods.Where.MakeGenericMethod(trans.ElemType),
                                 scheme.Query,
                                 trans.Predicate);
 
@@ -131,7 +131,7 @@ namespace Materialize.Reify2.Compiling
         static Scheme Schematize(ClientScheme scheme, FilterTransition trans) 
         {
             scheme.Body = Expression.Call(
-                                EnumerableMethods.Where.MakeGenericMethod(trans.ElemType),
+                                EnMethods.Where.MakeGenericMethod(trans.ElemType),
                                 scheme.Body,
                                 InjectIncidentalFetchers(scheme, trans.Predicate)
                                 );
@@ -150,10 +150,10 @@ namespace Materialize.Reify2.Compiling
 
             switch(trans.PartitionType) {
                 case PartitionType.Skip:
-                    mPartition = QueryableMethods.Skip;
+                    mPartition = QyMethods.Skip;
                     break;
                 case PartitionType.Take:
-                    mPartition = QueryableMethods.Take;
+                    mPartition = QyMethods.Take;
                     break;
             }
             
@@ -174,10 +174,10 @@ namespace Materialize.Reify2.Compiling
 
             switch(trans.PartitionType) {
                 case PartitionType.Skip:
-                    mPartition = EnumerableMethods.Skip;
+                    mPartition = EnMethods.Skip;
                     break;
                 case PartitionType.Take:
-                    mPartition = EnumerableMethods.Take;
+                    mPartition = EnMethods.Take;
                     break;
             }
 

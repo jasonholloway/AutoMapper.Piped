@@ -152,11 +152,17 @@
     <Compile Include="SourceRegimes\MinimalRegime.cs" />
     <Compile Include="SourceRegimes\ISourceRegime.cs" />
     <Compile Include="SourceRegimes\SourceRegimeProvider.cs" />
+    <Compile Include="Types\EnMethods.cs">
+      <DependentUpon>EnMethods.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Types\QyMethods.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>QyMethods.tt</DependentUpon>
     </Compile>
+    <Compile Include="Types\QyMethods2.cs" />
     <Compile Include="Types\ReflectionExtensions.cs" />
     <Compile Include="Types\ReflectionHelper.cs" />
     <Compile Include="Tuples\IProjectedMemberSpec.cs" />
@@ -185,6 +191,10 @@
     <Content Include="notes.txt" />
     <Content Include="Reify2\Rebasing\about.txt" />
     <Content Include="todo.txt" />
+    <Content Include="Types\EnMethods.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EnMethods.cs</LastGenOutput>
+    </Content>
     <Content Include="Types\QyMethods.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>QyMethods.cs</LastGenOutput>

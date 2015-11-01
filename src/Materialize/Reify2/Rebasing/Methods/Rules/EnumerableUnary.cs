@@ -10,8 +10,8 @@ namespace Materialize.Reify2.Rebasing.Methods.Rules
     {
         public EnumerableUnaryRule() 
             : base(new[] {
-                    EnumerableMethods.Any,
-                    EnumerableMethods.Count
+                    EnMethods.Any,
+                    EnMethods.Count
                 }) 
             { }
 

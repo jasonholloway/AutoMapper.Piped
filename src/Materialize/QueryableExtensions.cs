@@ -30,7 +30,7 @@ namespace Materialize
 
             return reifiable.CreateQuery<TDest>(
                                     Expression.Call(
-                                            QueryableMethods.MapAs.MakeGenericMethod(typeof(TDest)),
+                                            QyMethods.MapAs.MakeGenericMethod(typeof(TDest)),
                                             source.Expression
                                         ));
         }

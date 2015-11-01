@@ -11,9 +11,9 @@ namespace Materialize.Reify2.Rebasing.Methods.Rules
     {                
         public EnumerablePredicatorRule() 
             : base(new[] {
-                    EnumerableMethods.Where,
-                    EnumerableMethods.AnyPred,
-                    EnumerableMethods.CountPred
+                    EnMethods.Where,
+                    EnMethods.Any2,
+                    EnMethods.Count2
                 }) 
             { }
         

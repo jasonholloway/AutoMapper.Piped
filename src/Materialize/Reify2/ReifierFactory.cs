@@ -16,7 +16,12 @@ namespace Materialize.Reify2
     {
 
         public Reifier Build(Expression exQuery, ReifyContext ctx, Expression exBase) 
-        {            
+        {
+
+            var m = QyMethods.Aggregate;
+
+
+
             var exCanonical = CanonicalizeQuery(exQuery, exBase);
 
             var subject = new ParseSubject(

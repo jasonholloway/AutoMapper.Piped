@@ -23,7 +23,7 @@ namespace Materialize.Reify2.Compiling
 
         static Expression WriteStep(Expression exPrev, FilterTransition s) {
             return Expression.Call(
-                            QueryableMethods.Where.MakeGenericMethod(s.ElemType),
+                            QyMethods.Where.MakeGenericMethod(s.ElemType),
                             exPrev,
                             s.Predicate);
         }
@@ -31,7 +31,7 @@ namespace Materialize.Reify2.Compiling
 
         static Expression WriteStep(Expression exPrev, ProjectionTransition s) {
             return Expression.Call(
-                            QueryableMethods.Select.MakeGenericMethod(s.InElemType, s.OutElemType),
+                            QyMethods.Select.MakeGenericMethod(s.InElemType, s.OutElemType),
                             exPrev,
                             s.Projection);
         }

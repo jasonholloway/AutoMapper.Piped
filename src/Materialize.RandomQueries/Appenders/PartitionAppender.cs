@@ -13,8 +13,8 @@ namespace Materialize.RandomQueries.Appenders
     class PartitionAppender : Appender
     {
         MethodInfo _method = Rand.FromList(
-                                    QueryableMethods.Take,
-                                    QueryableMethods.Skip);
+                                    QyMethods.Take,
+                                    QyMethods.Skip);
 
         int _count = Rand.FromRange(1, 50);
 
