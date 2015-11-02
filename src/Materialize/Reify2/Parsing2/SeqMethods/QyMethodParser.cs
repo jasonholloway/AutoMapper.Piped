@@ -12,16 +12,18 @@ namespace Materialize.Reify2.Parsing2.SeqMethods
 {
     internal class QyMethodParser : QyMethodParserBase 
     {
+        static QyMethodParser @this = new QyMethodParser();
 
-        public IEnumerable<ITransition> Parse(ParseSubject s) 
+
+        public static IEnumerable<ITransition> Parse(ParseSubject s) 
         {
             Debug.Assert(s.Method.DeclaringType == typeof(Queryable));
 
             Func<QyMethodParserBase, SubParser> fnSubParser = null;
             var method = s.MethodDef != null ? s.MethodDef : s.Method;
 
-            if(_dSubParsers.TryGetValue(method, out fnSubParser)) {
-                var subParser = fnSubParser(this);
+            if(@this._dSubParsers.TryGetValue(method, out fnSubParser)) {
+                var subParser = fnSubParser(@this);
                 return subParser(new MethodParseSubject(s));
             }
 

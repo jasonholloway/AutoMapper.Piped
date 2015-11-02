@@ -9,9 +9,6 @@ namespace Materialize.Reify2.Parsing2.SeqMethods
 {
     static class MethodParser
     {
-        static QyMethodParser _qyParser = new QyMethodParser();
-        
-
         public static IEnumerable<ITransition> Parse(ParseSubject s) 
         {
             Debug.Assert(s.SubjectExp is MethodCallExpression);
@@ -25,7 +22,7 @@ namespace Materialize.Reify2.Parsing2.SeqMethods
             IEnumerable<ITransition> result;
 
             if(s.Method.DeclaringType == typeof(Queryable)) {
-                result = _qyParser.Parse(s);
+                result = QyMethodParser.Parse(s);
             }
             else if(s.MethodDef == QyMethods.MapAs) {
                 result = MapAsParser.Parse(new MethodParseSubject(s));
