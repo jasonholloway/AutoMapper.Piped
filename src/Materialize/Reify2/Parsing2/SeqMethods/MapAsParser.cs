@@ -7,12 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Materialize.Reify2.Parsing2.Methods
+namespace Materialize.Reify2.Parsing2.SeqMethods
 {
-    static partial class MethodParser
-    {
-        
-        static IEnumerable<ITransition> ParseMapAs(MethodParseSubject s) 
+    static class MapAsParser
+    {        
+        public static IEnumerable<ITransition> Parse(MethodParseSubject s) 
         {
             var tInElem = s.Args[0].Type.GetEnumerableElementType();
             var tOutElem = s.TypeArgs.Single();
@@ -49,9 +48,6 @@ namespace Materialize.Reify2.Parsing2.Methods
                             mapper.ClientRewrite(exParam),
                             exParam);
         }
-
-
-
 
     }
 }

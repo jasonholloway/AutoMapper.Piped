@@ -54,9 +54,14 @@
     <Compile Include="Reify2\Compiling\Scheme.cs" />
     <Compile Include="Reify2\Compiling\StageCompiler.cs" />
     <Compile Include="Reify2\Compiling\TransformWriter.cs" />
-    <Compile Include="Reify2\Parsing2\Methods\Handlers\SelectHandler.cs" />
-    <Compile Include="Reify2\Parsing2\Methods\Handlers\SkipHandler.cs" />
-    <Compile Include="Reify2\Parsing2\Methods\Handlers\TakeHandler.cs" />
+    <Compile Include="Reify2\Parsing2\SeqMethods\MethodParseSubject.cs" />
+    <Compile Include="Reify2\Parsing2\SeqMethods\QyMethodParser.cs" />
+    <Compile Include="Reify2\Parsing2\SeqMethods\QyMethodParserBase.cs">
+      <DependentUpon>QyMethodParserBase.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Reify2\Parsing2\Source\SourceParser.cs" />
     <Compile Include="Reify2\Transitions\FetchTransition.cs" />
     <Compile Include="Reify2\Transitions\ElementTransition.cs" />
     <Compile Include="Reify2\Transitions\PartitionTransition.cs" />
@@ -95,14 +100,10 @@
     <Compile Include="Reify2\Parameterize\ArgMap.cs" />
     <Compile Include="Reify2\Parameterize\ParamMap.cs" />
     <Compile Include="Reify2\Parameterize\ParamMapFactory.cs" />
-    <Compile Include="Reify2\Parsing2\Methods\MapAsParser.cs" />
-    <Compile Include="Reify2\Parsing2\Methods\Handlers\WhereHandler.cs" />
-    <Compile Include="Reify2\Parsing2\Methods\MethodParser.cs" />
-    <Compile Include="Reify2\Parsing2\Methods\SequenceMethodHandler.cs" />
-    <Compile Include="Reify2\Parsing2\ParseHandler.cs" />
+    <Compile Include="Reify2\Parsing2\SeqMethods\MapAsParser.cs" />
+    <Compile Include="Reify2\Parsing2\SeqMethods\MethodParser.cs" />
     <Compile Include="Reify2\Parsing2\ParseSubject.cs" />
     <Compile Include="Reify2\Parsing2\Parser.cs" />
-    <Compile Include="Reify2\Parsing2\Source\SourceHandler.cs" />
     <Compile Include="Reify2\Rebasing\IRebaseStrategy.cs" />
     <Compile Include="Reify2\Rebasing\Methods\IMethodRebaseRule.cs" />
     <Compile Include="Reify2\Rebasing\Methods\IParentRebaser.cs" />
@@ -189,6 +190,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="notes.txt" />
+    <Content Include="Reify2\Parsing2\SeqMethods\QyMethodParserBase.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>QyMethodParserBase.cs</LastGenOutput>
+    </Content>
     <Content Include="Reify2\Rebasing\about.txt" />
     <Content Include="todo.txt" />
     <Content Include="Types\EnMethods.tt">

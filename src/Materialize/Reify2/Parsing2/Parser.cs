@@ -1,4 +1,4 @@
-﻿using Materialize.Reify2.Parsing2.Methods;
+﻿using Materialize.Reify2.Parsing2.SeqMethods;
 using Materialize.Reify2.Parsing2.Source;
 using Materialize.Types;
 using System;
@@ -15,8 +15,7 @@ namespace Materialize.Reify2.Parsing2
             if(subject.SubjectExp is ConstantExpression 
                 && subject.SubjectExp.Type.IsQueryable()) 
             {
-                var handler = ParseHandler.Create<SourceHandler>(subject);
-                return handler.Respond();
+                return SourceParser.Parse(subject);
             }
             
             if(subject.SubjectExp is MethodCallExpression) {

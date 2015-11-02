@@ -336,6 +336,69 @@ namespace Materialize.Tests.Inner
 
 
 
+        [Test]
+        public void ParsesFirstOrDefaultPred() {
+            var subject = GetSubject<int>(q => q.FirstOrDefault(i => true));
+
+            var steps = Parser.Parse(subject).ToArray();
+
+            Assert.That(steps, Has.Length.EqualTo(3));
+            Assert.That(steps[0], Is.InstanceOf<SourceTransition>());
+            Assert.That(steps[1], Is.InstanceOf<FilterTransition>());
+            Assert.That(steps[2], Is.InstanceOf<ElementTransition>());
+
+            var filterTrans = (FilterTransition)steps[1];
+            Assert.That(filterTrans.ElemType, Is.EqualTo(typeof(int)));
+            Assert.That(filterTrans.Predicate.IsFormallyEquivalentTo(((UnaryExpression)subject.CallExp.Arguments[1]).Operand));
+
+            var elemTrans = (ElementTransition)steps[2];
+            Assert.That(elemTrans.ElementTransitionType, Is.EqualTo(ElementTransitionType.First));
+            Assert.That(elemTrans.ReturnsDefault, Is.True);
+        }
+
+
+        [Test]
+        public void ParsesLastOrDefaultPred() {
+            var subject = GetSubject<int>(q => q.LastOrDefault(i => true));
+
+            var steps = Parser.Parse(subject).ToArray();
+
+            Assert.That(steps, Has.Length.EqualTo(3));
+            Assert.That(steps[0], Is.InstanceOf<SourceTransition>());
+            Assert.That(steps[1], Is.InstanceOf<FilterTransition>());
+            Assert.That(steps[2], Is.InstanceOf<ElementTransition>());
+
+            var filterTrans = (FilterTransition)steps[1];
+            Assert.That(filterTrans.ElemType, Is.EqualTo(typeof(int)));
+            Assert.That(filterTrans.Predicate.IsFormallyEquivalentTo(((UnaryExpression)subject.CallExp.Arguments[1]).Operand));
+
+            var elemTrans = (ElementTransition)steps[2];
+            Assert.That(elemTrans.ElementTransitionType, Is.EqualTo(ElementTransitionType.Last));
+            Assert.That(elemTrans.ReturnsDefault, Is.True);
+        }
+
+
+        [Test]
+        public void ParsesSingleOrDefaultPred() {
+            var subject = GetSubject<int>(q => q.SingleOrDefault(i => true));
+
+            var steps = Parser.Parse(subject).ToArray();
+
+            Assert.That(steps, Has.Length.EqualTo(3));
+            Assert.That(steps[0], Is.InstanceOf<SourceTransition>());
+            Assert.That(steps[1], Is.InstanceOf<FilterTransition>());
+            Assert.That(steps[2], Is.InstanceOf<ElementTransition>());
+
+            var filterTrans = (FilterTransition)steps[1];
+            Assert.That(filterTrans.ElemType, Is.EqualTo(typeof(int)));
+            Assert.That(filterTrans.Predicate.IsFormallyEquivalentTo(((UnaryExpression)subject.CallExp.Arguments[1]).Operand));
+
+            var elemTrans = (ElementTransition)steps[2];
+            Assert.That(elemTrans.ElementTransitionType, Is.EqualTo(ElementTransitionType.Single));
+            Assert.That(elemTrans.ReturnsDefault, Is.True);
+        }
+
+
 
 
     }
