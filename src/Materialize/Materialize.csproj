@@ -62,6 +62,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Reify2\Parsing2\Source\SourceParser.cs" />
+    <Compile Include="Reify2\Transitions\QuantifierTransition.cs" />
     <Compile Include="Reify2\Transitions\FetchTransition.cs" />
     <Compile Include="Reify2\Transitions\ElementTransition.cs" />
     <Compile Include="Reify2\Transitions\PartitionTransition.cs" />

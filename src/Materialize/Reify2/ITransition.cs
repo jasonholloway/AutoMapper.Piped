@@ -25,7 +25,8 @@ namespace Materialize.Reify2
         Projector = 4,
         Aggregator = 8,
         RegimeBoundary = 16,
-        Partition = 32
+        Partition = 32,
+        Quantifier = 64
     }
 
 }

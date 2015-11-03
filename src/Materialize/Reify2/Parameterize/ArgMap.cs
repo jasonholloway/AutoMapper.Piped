@@ -26,7 +26,8 @@ namespace Materialize.Reify2.Parameterize
                 return GetIncidentalWith(accessor);
             }
 
-            throw new InvalidOperationException();
+            return null;
+            //throw new InvalidOperationException();
         }
 
 

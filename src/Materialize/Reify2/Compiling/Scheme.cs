@@ -37,7 +37,7 @@ namespace Materialize.Reify2.Compiling
             return (prov, args) => {             
                 var ex = Exp.Replace(
                             x => x is ConstantExpression,
-                            x => args.GetIncidentalFor(x));
+                            x => args.GetIncidentalFor(x) ?? x);
 
                 return ex.Type.IsQueryable() 
                             ? prov.CreateQuery(ex) 

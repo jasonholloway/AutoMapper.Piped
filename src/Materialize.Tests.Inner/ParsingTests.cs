@@ -42,7 +42,15 @@ namespace Materialize.Tests.Inner
             return new ParseSubject(ex, _ctx);
         }
 
-                
+        LambdaExpression GetPredicate<TElem>(Expression<Func<TElem, bool>> exFn) {
+            return exFn;
+        }
+
+
+
+
+
+
 
         [Test]
         public void ParsesSource() 
@@ -399,6 +407,100 @@ namespace Materialize.Tests.Inner
         }
 
 
+
+
+        [Test]
+        public void ParsesAny() {
+            var subject = GetSubject<int>(q => q.Any());
+
+            var steps = Parser.Parse(subject).ToArray();
+
+            Assert.That(steps, Has.Length.EqualTo(2));
+            Assert.That(steps[0], Is.InstanceOf<SourceTransition>());
+            Assert.That(steps[1], Is.InstanceOf<QuantifierTransition>());
+
+            var quantTrans = (QuantifierTransition)steps[1];
+            Assert.That(quantTrans.QuantifierTransitionType, Is.EqualTo(QuantifierTransitionType.Any));
+        }
+
+        [Test]
+        public void ParsesAnyPred() {
+            var subject = GetSubject<int>(q => q.Any(i => i > 55));
+
+            var steps = Parser.Parse(subject).ToArray();
+
+            Assert.That(steps, Has.Length.EqualTo(3));
+            Assert.That(steps[0], Is.InstanceOf<SourceTransition>());
+            Assert.That(steps[1], Is.InstanceOf<FilterTransition>());
+            Assert.That(steps[2], Is.InstanceOf<QuantifierTransition>());
+
+            var filterTrans = (FilterTransition)steps[1];
+            Assert.That(filterTrans.Predicate.IsFormallyEquivalentTo(GetPredicate<int>(i => i > 55)));
+
+            var quantTrans = (QuantifierTransition)steps[2];
+            Assert.That(quantTrans.QuantifierTransitionType, Is.EqualTo(QuantifierTransitionType.Any));
+        }
+        
+        [Test]
+        public void ParsesAllPred() {
+            var subject = GetSubject<int>(q => q.All(i => i > 55));
+
+            var steps = Parser.Parse(subject).ToArray();
+
+            Assert.That(steps, Has.Length.EqualTo(2));
+            Assert.That(steps[0], Is.InstanceOf<SourceTransition>());
+            Assert.That(steps[1], Is.InstanceOf<QuantifierTransition>());
+            
+            var quantTrans = (QuantifierTransition)steps[1];
+            Assert.That(quantTrans.QuantifierTransitionType, Is.EqualTo(QuantifierTransitionType.All));
+            Assert.That(quantTrans.Predicate.IsFormallyEquivalentTo(GetPredicate<int>(i => i > 55)));
+        }
+
+
+
+        [Test]
+        public void ParsesContains() {
+            var subject = GetSubject<int>(q => q.Contains(55));
+
+            var steps = Parser.Parse(subject).ToArray();
+
+            Assert.That(steps, Has.Length.EqualTo(3));
+            Assert.That(steps[0], Is.InstanceOf<SourceTransition>());
+            Assert.That(steps[1], Is.InstanceOf<FilterTransition>());
+            Assert.That(steps[2], Is.InstanceOf<QuantifierTransition>());
+
+            var filterTrans = (FilterTransition)steps[1];
+            Assert.That(filterTrans.Predicate.IsFormallyEquivalentTo(GetPredicate<int>(i => i == 55)));
+
+            var quantTrans = (QuantifierTransition)steps[2];
+            Assert.That(quantTrans.QuantifierTransitionType, Is.EqualTo(QuantifierTransitionType.Any));
+        }
+
+
+        [Test]
+        public void ParsesContainsWithComparer() 
+        {
+            //Not sure if we can decompose this... will EF only accept a constant?
+            //test this, or give up with the manual decomposition...
+            throw new NotImplementedException();
+
+            var comparer = Substitute.For<IEqualityComparer<int>>();
+
+            var subject = GetSubject<int>(q => q.Contains(55, comparer));
+
+            var steps = Parser.Parse(subject).ToArray();
+
+            Assert.That(steps, Has.Length.EqualTo(3));
+            Assert.That(steps[0], Is.InstanceOf<SourceTransition>());
+            Assert.That(steps[1], Is.InstanceOf<FilterTransition>());
+            Assert.That(steps[2], Is.InstanceOf<QuantifierTransition>());
+
+            var filterTrans = (FilterTransition)steps[1];
+            Assert.That(filterTrans.Predicate.IsFormallyEquivalentTo(GetPredicate<int>(i => i == 55)));
+
+            var quantTrans = (QuantifierTransition)steps[2];
+            Assert.That(quantTrans.QuantifierTransitionType, Is.EqualTo(QuantifierTransitionType.Any));
+        }
 
 
     }

@@ -174,6 +174,32 @@ namespace Materialize.Reify2.Compiling
         }
 
         
+        static Scheme Schematize(Scheme scheme, QuantifierTransition trans) 
+        {
+            SeqMethod m = null;
+            var args = new List<Expression>(2);
+            args.Add(scheme.Exp);
+
+            switch(trans.QuantifierTransitionType) {
+                case QuantifierTransitionType.Any:
+                    m = SeqMethods.Any;
+                    break;
+
+                case QuantifierTransitionType.All:
+                    m = SeqMethods.All;
+                    args.Add(trans.Predicate);
+                    break;
+
+                default:
+                    throw new NotImplementedException();
+            }
+
+            scheme.Exp = Expression.Call(
+                                (scheme.IsQueryable ? m.Qy : m.En).MakeGenericMethod(scheme.OutType.GetEnumerableElementType()),
+                                args);
+
+            return scheme;
+        }
 
     }
 

@@ -1,4 +1,5 @@
-﻿using Materialize.Reify2.Transitions;
+﻿using Materialize.Expressions;
+using Materialize.Reify2.Transitions;
 using Materialize.Types;
 using System;
 using System.Collections.Generic;
@@ -134,6 +135,58 @@ namespace Materialize.Reify2.Parsing2.SeqMethods
 
         #endregion
 
+
+        #region Quantifiers
+
+        protected override IEnumerable<ITransition> ParseAny(MethodParseSubject s) {
+            yield return new QuantifierTransition(QuantifierTransitionType.Any);
+        }
+
+        protected override IEnumerable<ITransition> ParseAny2(MethodParseSubject s) {
+            yield return new FilterTransition((LambdaExpression)((UnaryExpression)s.Args[1]).Operand);
+            yield return new QuantifierTransition(QuantifierTransitionType.Any);
+        }
+
+        protected override IEnumerable<ITransition> ParseAll(MethodParseSubject s) {
+            var exPred = (LambdaExpression)((UnaryExpression)s.Args[1]).Operand;
+                        
+            yield return new QuantifierTransition(QuantifierTransitionType.All, exPred);
+        }
+
+        protected override IEnumerable<ITransition> ParseContains(MethodParseSubject s) {
+            var exParam = Expression.Parameter(s.Args[1].Type);
+
+            var exPred = Expression.Lambda(
+                                Expression.Equal(exParam, s.Args[1]),
+                                exParam);
+
+            yield return new FilterTransition(exPred);
+            yield return new QuantifierTransition(QuantifierTransitionType.Any);
+        }
+
+        protected override IEnumerable<ITransition> ParseContains2(MethodParseSubject s) {
+            return base.ParseContains2(s);
+        }
+
+        #endregion
+
+
+        #region Aggregators
+
+
+        protected override IEnumerable<ITransition> ParseAggregate(MethodParseSubject s) {
+            return base.ParseAggregate(s);
+        }
+
+        protected override IEnumerable<ITransition> ParseAggregate2(MethodParseSubject s) {
+            return base.ParseAggregate2(s);
+        }
+
+        protected override IEnumerable<ITransition> ParseAggregate3(MethodParseSubject s) {
+            return base.ParseAggregate3(s);
+        }
+        
+        #endregion
 
 
 

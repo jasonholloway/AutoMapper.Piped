@@ -1,32 +1,19 @@
 ﻿<#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ assembly name="System.Core" #>
+<#@ assembly name="$(ProjectDir)..\Materialize.SequenceMethods\bin\$(Configuration)\Materialize.SequenceMethods.dll" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Reflection" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Security" #>
+<#@ import namespace="Materialize.SequenceMethods" #>
 <#@ output extension=".cs" #>
-<#	
-	var names = new HashSet<string>();
-
-	var qyMethods = typeof(Queryable).GetMethods()
-										.Where(m => m.DeclaringType == typeof(Queryable))
-										.Where(m => m.GetParameters().Any() && typeof(IQueryable).IsAssignableFrom(m.GetParameters().First().ParameterType))
-										.OrderBy(m => m.Name)
-										.Select(m => new QyMethod(m, IndividuateName(names, m.Name)))
-										.ToArray();
-
-#>
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
-using Materialize.Types;
 
-namespace Materialize.Reify2.Parsing2.Methods 
+namespace Materialize.Reify2.Parsing2.SeqMethods 
 {
 	abstract class QyMethodParserBase 
 	{
@@ -35,7 +22,7 @@ namespace Materialize.Reify2.Parsing2.Methods
 
 		protected IDictionary<MethodInfo, Func<QyMethodParserBase, SubParser>> _dSubParsers 
 			= new Dictionary<MethodInfo, Func<QyMethodParserBase, SubParser>>() {
-<#foreach(var m in qyMethods) {#>
+<#foreach(var m in SeqMethodMap.Methods.Values) {#>
 				{ QyMethods.<#=m.Name#>, @this => @this.Parse<#=m.Name#> },
 <#}#>
 			};
@@ -44,12 +31,12 @@ namespace Materialize.Reify2.Parsing2.Methods
 
 
 	<#
-	foreach(var qyMethod in qyMethods) {
+	foreach(var m in SeqMethodMap.Methods.Values) {
 	#>	///<summary>
-		///<#=SecurityElement.Escape(qyMethod.Description)#>
+		///<#=SecurityElement.Escape(m.Qy.Describe())#>
 		///</summary>
-		protected virtual IEnumerable<ITransition> Parse<#=qyMethod.Name#>(MethodParseSubject s) {
-			throw new NotImplementedException("No method subparser supplied for Queryable method <#=qyMethod.Description#>");
+		protected virtual IEnumerable<ITransition> Parse<#=m.Name#>(MethodParseSubject s) {
+			throw new NotImplementedException("No method subparser supplied for Queryable method <#=m.Qy.Describe()#>");
 		}
 
 	<#
@@ -59,136 +46,3 @@ namespace Materialize.Reify2.Parsing2.Methods
 	} 
 
 }
-
-<#+
-	class QyMethod { 
-		public readonly MethodInfo Method;
-		public readonly string Name;
-		public readonly string Description;
-		public readonly string CallStatement;
-
-
-        public QyMethod(MethodInfo method, string name) {
-			Method = method;
-			Name = name;
-			Description = BuildDescription();
-			CallStatement = BuildCallStatement();
-        }
-
-
-
-		string BuildCallStatement() {
-			var m = Method;
-			var sb = new StringBuilder();
-
-			sb.Append("Queryable.");
-			sb.Append(m.Name);
-			
-			var typeArgs = m.GetGenericArguments();
-
-			if(typeArgs.Any()) {
-				sb.Append("<");
-				sb.Append(string.Join(", ", typeArgs.Select(t => "object")));
-				sb.Append(">");
-            }
-
-			sb.Append("(");
-
-			var paramParts = m.GetParameters()
-								.Select(p => {
-									var t = p.ParameterType;
-
-									if(t.IsValueType) {
-										return Activator.CreateInstance(t).ToString();
-                                    }
-
-									var cast = Regex.Replace(GetNiceTypeName(t), @"(T[A-Za-z]+)" , @"object");
-
-									return "(" + cast + ")null";
-								}); 
-
-			sb.Append(string.Join(", ", paramParts));
-
-			sb.Append(")");
-
-			return sb.ToString();
-        }
-
-
-
-
-		string BuildDescription() {
-			var typeArgs = Method.GetGenericArguments();			
-			var pars = Method.GetParameters().Skip(1);
-
-			return string.Format(
-							"{0} qy.{1}<{2}>({3})",
-							GetNiceTypeName(Method.ReturnType),
-							Method.Name,
-							string.Join(", ", typeArgs.Select(t => GetNiceTypeName(t))),
-							string.Join(", ", pars.Select(p => string.Format("{0} {1}", GetNiceTypeName(p.ParameterType), p.Name)))
-							);
-        }
-
-
-
-		public override string ToString() {
-			return Description;
-        }
-	}
-
-
-		
-	static string IndividuateName(ISet<string> names,  string baseName) 
-	{	
-		for(int i = 1; true; i++) {
-			var name = baseName + (i > 1 ? i.ToString() : "");
-
-			if(!names.Contains(name)) {
-				names.Add(name);
-				return name;
-            }
-        }
-    }
-
-
-
-    
-    static string GetNiceTypeName(Type type) 
-    {
-        if(type.IsGenericType) {
-            var baseName = Regex.Match(type.Name, "(.*)`").Groups[1].Value;
-
-            var sb = new StringBuilder(baseName);
-            sb.Append("<");
-
-            bool successor = false;
-
-            foreach(var typeArg in type.GetGenericArguments()) {
-                if(successor) {
-                    sb.Append(", ");
-                }
-
-                sb.Append(GetNiceTypeName(typeArg));
-
-                successor = true;
-            }
-
-            sb.Append(">");
-
-            return sb.ToString();
-        }
-        else if(type.IsGenericTypeDefinition) {
-            throw new NotImplementedException();
-        }
-        else {
-            return type.Name;
-        }
-    }
-
-
-
-
-
-
-#>
