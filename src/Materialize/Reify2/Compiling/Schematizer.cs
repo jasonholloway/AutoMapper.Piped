@@ -192,21 +192,63 @@ namespace Materialize.Reify2.Compiling
 
 
 
+        static Scheme Schematize(QueryScheme scheme, ElementTransition trans) 
+        {
+            MethodInfo method = null;
+
+            switch(trans.ElementTransitionType) {
+                case ElementTransitionType.ElementAt:
+                    method = trans.ReturnsDefault ? QyMethods.ElementAtOrDefault : QyMethods.ElementAt;
+
+                    method = method.MakeGenericMethod(scheme.OutType.GetEnumerableElementType());
+
+                    scheme.Query = Expression.Call(
+                                            method,
+                                            scheme.Query,
+                                            trans.IndexExpression);
+                    return scheme;
+
+                case ElementTransitionType.First:
+                    method = trans.ReturnsDefault ? QyMethods.FirstOrDefault : QyMethods.First;
+                    break;
+
+                case ElementTransitionType.Last:
+                    method = trans.ReturnsDefault ? QyMethods.LastOrDefault : QyMethods.Last;
+                    break;
+
+                case ElementTransitionType.Single:
+                    method = trans.ReturnsDefault ? QyMethods.SingleOrDefault : QyMethods.Single;
+                    break;
+            }
+
+            method = method.MakeGenericMethod(scheme.OutType.GetEnumerableElementType());
+
+            scheme.Query = Expression.Call(
+                                    method,
+                                    scheme.Query);
+
+            return scheme;
+        } 
+
+
+
+
+
 
 
         static MethodInfo _mGetValueWith = Refl.GetMethod<ArgMap>(m => m.GetValueWith(_ => null));
 
 
+        //replace all constant-parameters with fetching code, to acquire incidental values from the passed ArgMap
         static Expression InjectIncidentalFetchers(ClientScheme scheme, Expression exSubject) 
         {
-            //replace all constant-parameters with fetching code, to acquire incidental values from the passed ArgMap
             return exSubject.Replace(
                         x => x is ConstantExpression,
                         x => {
                             var accessor = scheme.ParamMap.TryGetAccessor(x);
                             
                             if(accessor == null) {
-                                return x; //not all constants are paramterized - some are produced by the mapping layer, and should be left in place
+                                return x; //not all constants are parameterized - some are produced by the mapping layer, and should be left in place
                             }
 
                             return Expression.Convert(

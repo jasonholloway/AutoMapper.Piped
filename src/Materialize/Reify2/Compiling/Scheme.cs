@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Materialize.Types;
 
 namespace Materialize.Reify2.Compiling
 {
@@ -37,8 +38,10 @@ namespace Materialize.Reify2.Compiling
                 var ex = Query.Replace(
                             x => x is ConstantExpression,
                             x => args.GetIncidentalFor(x));
-                
-                return prov.CreateQuery(ex);
+
+                return ex.Type.IsQueryable() 
+                            ? prov.CreateQuery(ex) 
+                            : prov.Execute(ex);                
             };            
         }
     }

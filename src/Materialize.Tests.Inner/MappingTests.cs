@@ -13,6 +13,7 @@ namespace Materialize.Tests.Inner
 
         //should test mapping strategies write functional projections
         //for various scenarios... though this is already in practice assured
+        
 
 
     }

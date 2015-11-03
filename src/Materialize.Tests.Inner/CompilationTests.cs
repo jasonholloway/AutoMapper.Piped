@@ -195,6 +195,14 @@ namespace Materialize.Tests.Inner
 
 
 
+        //want to avoid manually listing every testable compilation...
+        //cos there will be one for every queryable method...
+        //only thing I can think is to test the entire pipeline WITHOUT MapAs
+        //and WITHOUT optimizations (or maybe with...)
+        //templated tests could try passing each Queryable method through the pipeline,
+        //and would test the result.
+
+
 
 
 

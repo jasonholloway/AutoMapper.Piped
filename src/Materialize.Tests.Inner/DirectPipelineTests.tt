@@ -1,0 +1,401 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Linq.Expressions" #> 
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Security" #>
+<#@ output extension=".cs" #>
+<#	
+	var names = new HashSet<string>();
+
+	var qyMethods = typeof(Queryable).GetMethods()
+										.Where(m => m.DeclaringType == typeof(Queryable))
+										.Where(m => m.GetParameters().Any() && typeof(IQueryable).IsAssignableFrom(m.GetParameters().First().ParameterType))
+										.OrderBy(m => m.Name)
+										.Select(m => new QyMethod(m, IndividuateName(names, m.Name)))
+										.ToArray();
+
+#>
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using Materialize.Types;
+using NUnit.Framework;
+using Materialize;
+using Materialize.Reify2.Parsing2;
+using Materialize.Reify2;
+using Materialize.SourceRegimes;
+
+[TestFixture]
+class DirectPipelineTests
+{
+
+	class Item {
+		public int Int;
+
+		public Item(int i) {
+			Int = i;
+		}
+	}
+	
+	class ItemComparer : IEqualityComparer<Item> {
+		public static readonly ItemComparer Default = new ItemComparer();
+
+		public bool Equals(Item a, Item b) {
+			return a.Int == b.Int;
+		}
+
+		public int GetHashCode(Item i) {
+			return i.Int;
+		}
+	}
+
+
+	ReifiableFactory _reifiableFac = MaterializeServices.Resolve<ReifiableFactory>();
+
+
+<#
+foreach(var m in qyMethods) {
+	var invocation = new Invocation(m);
+#>	[Test]
+	public void <#=m.Name#>Test() 
+	{
+		IQueryable<<#=invocation.SourceElemTypeString#>> qySource = Enumerable.Range(10, 40).Select(<#=invocation.SourceElemProjection#>).AsQueryable();			
+		
+        var reifiable = _reifiableFac.CreateReifiable(qySource, new MaterializeOptions());
+
+        var result = reifiable.CreateQuery<<#=invocation.SourceElemTypeString#>>(qySource.Expression)
+                                .<#=invocation.Statement#>;
+
+        Assert.That(
+				result, 
+				Is.<#=invocation.ReturnsQueryable ? "Equivalent" : "Equal"#>To(qySource.<#=invocation.Statement#>));
+	}
+
+<#
+}
+	#>
+	
+}
+
+<#+
+
+	class Invocation 
+	{
+		public readonly string SourceElemTypeString;
+		public readonly string SourceElemProjection;
+
+		public readonly bool ReturnsQueryable;
+		public readonly string Statement;
+
+		public Invocation(QyMethod m) {
+			ReturnsQueryable = typeof(IQueryable).IsAssignableFrom(m.Method.ReturnType);
+			Statement = BuildStatement(m);
+			
+			var tArg0 = m.Method.GetParameters()[0].ParameterType;
+
+			if(tArg0.IsGenericType && tArg0.GetGenericTypeDefinition() == typeof(IQueryable<>)) {
+				var elemType = tArg0.GetGenericArguments().Single();
+
+				if(elemType.IsGenericParameter) {
+					SourceElemTypeString = "Item";
+					SourceElemProjection = "i => new Item(i)";
+                }
+				else {
+					SourceElemTypeString = GetNiceTypeName(elemType);
+					SourceElemProjection = "i => (" + SourceElemTypeString + ")i";
+                }
+            }
+			else {
+				SourceElemTypeString = "Item";
+				SourceElemProjection = "i => new Item(i)";
+            }
+		}
+
+		static string BuildStatement(QyMethod m) 
+		{
+			var sb = new StringBuilder();
+
+			sb.Append(Regex.Match(m.Name, @"\D+"));
+						
+			if(m.Method.IsGenericMethodDefinition) {
+				var typeParams = m.Method.GetGenericArguments();
+
+				if(typeParams.Any()) {
+					sb.Append("<");
+
+					var typeArgParts = typeParams.Select(
+													t => {
+														if(t.IsValueType) return "int";
+														if(t.Name == "TKey") return "string";
+														if(t.Name == "TCollection") return "List<Item>";
+														else return "Item";
+													});
+
+					sb.Append(string.Join(", ", typeArgParts));
+
+					sb.Append(">");
+                }
+            }
+			
+
+			sb.Append("(");
+
+			var paramParts = m.Method.GetParameters()
+										.Skip(1)
+										.Select(
+											p => {
+												var t = p.ParameterType;
+												
+												switch(GetNiceTypeName(t)) {
+													case "Int32":
+														return "17";
+													case "TSource":
+													case "TAccumulate":
+														return "qySource.ElementAt(13)";
+													
+													case "Expression<Func<TSource, TSource, TSource>>":
+													case "Expression<Func<TAccumulate, TSource, TAccumulate>>":
+														return "(i, j) => new Item(i.Int + j.Int)";
+
+													case "Expression<Func<TAccumulate, TResult>>":
+														return "i => i";
+
+													case "Expression<Func<TSource, Boolean>>":
+														return "i => i.Int % 2 == 1";
+
+													case "Expression<Func<TSource, Int32>>":		
+													case "Expression<Func<TSource, Nullable<Int32>>>":
+														return "i => i.Int * 3";
+														
+													case "Expression<Func<TSource, Single>>":
+													case "Expression<Func<TSource, Nullable<Single>>>":
+														return "i => i.Int * 3.5F";
+														
+													case "Expression<Func<TSource, Int64>>":		
+													case "Expression<Func<TSource, Nullable<Int64>>>":
+														return "i => i.Int * 13";
+														
+													case "Expression<Func<TSource, Decimal>>":		
+													case "Expression<Func<TSource, Nullable<Decimal>>>":
+														return "i => i.Int * 3.67";
+																												
+													case "Expression<Func<TSource, Double>>":		
+													case "Expression<Func<TSource, Nullable<Double>>>":
+														return "i => i.Int * 0.73";
+
+													case "Expression<Func<TSource, TKey>>":
+													case "Expression<Func<TOuter, TKey>>":
+													case "Expression<Func<TInner, TKey>>":
+														return "i => i.Int.ToString()";
+
+													case "Expression<Func<TKey, IEnumerable<TElement>, TResult>>":
+													case "Expression<Func<TKey, IEnumerable<TSource>, TResult>>":
+														return "(k, r) => r.Last()";
+
+													case "Expression<Func<TOuter, IEnumerable<TInner>, TResult>>":
+														return "(o, r) => new Item(r.Last().Int + o.Int)";
+
+													case "Expression<Func<TOuter, TInner, TResult>>":
+														return "(o, i) => new Item(o.Int - i.Int * 3)";
+
+													case "Expression<Func<TSource, TElement>>":
+													case "Expression<Func<TSource, TResult>>":
+														return "i => new Item(i.Int - 1)";
+
+													case "Expression<Func<TSource, Int32, TResult>>":
+														return "(s, i) => new Item(s.Int * i)";
+
+													case "Expression<Func<TSource, IEnumerable<TResult>>>":
+														return "i => Enumerable.Repeat(i, i.Int + 30)";
+
+													case "Expression<Func<TSource, Int32, IEnumerable<TResult>>>":
+														return "(s, i) => Enumerable.Repeat(s, i * 2)";
+
+													case "Expression<Func<TSource, Int32, Boolean>>":
+														return "(s, i) => s.Int + i < 10";
+
+													case "Expression<Func<TFirst, TSecond, TResult>>":
+														return "(a, b) => new Item(a.Int * b.Int)";
+
+													case "Expression<Func<TSource, IEnumerable<TCollection>>>":
+													case "Expression<Func<TSource, Int32, IEnumerable<TCollection>>>":
+														return "s => new[] { new List<Item>() }";
+
+													case "Expression<Func<TSource, TCollection, TResult>>":
+														return "(s, c) => s";
+
+													case "IQueryable<TSource>":
+													case "IEnumerable<TSource>":
+													case "IEnumerable<TInner>":
+													case "IEnumerable<TSecond>":
+														return "qySource.Reverse()";
+
+													case "IEqualityComparer<TSource>":
+														return "ItemComparer.Default";
+
+													case "IEqualityComparer<TKey>":
+														return "EqualityComparer<string>.Default";
+
+													case "IComparer<TKey>":
+														return "StringComparer.Ordinal";
+                                                }
+
+												return "____";
+											});
+
+			sb.Append(string.Join(", ", paramParts));
+			sb.Append(")");
+			
+			//correction here
+			var tReturn = m.Method.ReturnType;
+			
+			if(typeof(IEnumerable).IsAssignableFrom(tReturn) && tReturn.GetGenericArguments().Single().IsGenericParameter) {
+				sb.Append(".Select(i => i.Int)");
+            }
+			else if(tReturn.IsGenericParameter && !typeof(IEnumerable).IsAssignableFrom(tReturn)) {
+				sb.Append(".Int");
+            }
+
+			return sb.ToString();
+        }
+
+    }
+
+
+
+
+
+	class QyMethod { 
+		public readonly MethodInfo Method;
+		public readonly string Name;
+		public readonly string Description;
+		public readonly string CallStatement;
+
+
+        public QyMethod(MethodInfo method, string name) {
+			Method = method;
+			Name = name;
+			Description = BuildDescription();
+			CallStatement = BuildCallStatement();
+        }
+
+
+
+		string BuildCallStatement() {
+			var m = Method;
+			var sb = new StringBuilder();
+
+			sb.Append("Queryable.");
+			sb.Append(m.Name);
+			
+			var typeArgs = m.GetGenericArguments();
+
+			if(typeArgs.Any()) {
+				sb.Append("<");
+				sb.Append(string.Join(", ", typeArgs.Select(t => "object")));
+				sb.Append(">");
+            }
+
+			sb.Append("(");
+
+			var paramParts = m.GetParameters()
+								.Select(p => {
+									var t = p.ParameterType;
+
+									if(t.IsValueType) {
+										return Activator.CreateInstance(t).ToString();
+                                    }
+
+									var cast = Regex.Replace(GetNiceTypeName(t), @"(T[A-Za-z]+)" , @"object");
+
+									return "(" + cast + ")null";
+								}); 
+
+			sb.Append(string.Join(", ", paramParts));
+
+			sb.Append(")");
+
+			return sb.ToString();
+        }
+
+
+
+
+		string BuildDescription() {
+			var typeArgs = Method.GetGenericArguments();			
+			var pars = Method.GetParameters().Skip(1);
+
+			return string.Format(
+							"{0} qy.{1}<{2}>({3})",
+							GetNiceTypeName(Method.ReturnType),
+							Method.Name,
+							string.Join(", ", typeArgs.Select(t => GetNiceTypeName(t))),
+							string.Join(", ", pars.Select(p => string.Format("{0} {1}", GetNiceTypeName(p.ParameterType), p.Name)))
+							);
+        }
+
+
+
+		public override string ToString() {
+			return Description;
+        }
+	}
+
+
+		
+	static string IndividuateName(ISet<string> names,  string baseName) 
+	{	
+		for(int i = 1; true; i++) {
+			var name = baseName + (i > 1 ? i.ToString() : "");
+
+			if(!names.Contains(name)) {
+				names.Add(name);
+				return name;
+            }
+        }
+    }
+
+
+
+    
+    static string GetNiceTypeName(Type type) 
+    {
+        if(type.IsGenericType) {
+            var baseName = Regex.Match(type.Name, "(.*)`").Groups[1].Value;
+
+            var sb = new StringBuilder(baseName);
+            sb.Append("<");
+
+            bool successor = false;
+
+            foreach(var typeArg in type.GetGenericArguments()) {
+                if(successor) {
+                    sb.Append(", ");
+                }
+
+                sb.Append(GetNiceTypeName(typeArg));
+
+                successor = true;
+            }
+
+            sb.Append(">");
+
+            return sb.ToString();
+        }
+        else if(type.IsGenericTypeDefinition) {
+            throw new NotImplementedException();
+        }
+        else {
+            return type.Name;
+        }
+    }
+	
+#>
