@@ -1,742 +1,611 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using Materialize.Types;
+﻿using System.Reflection;
 
 internal static partial class QyMethods 
 {
 	///<summary>
-	///TSource qy.Aggregate&lt;TSource&gt;(Expression&lt;Func&lt;TSource, TSource, TSource&gt;&gt; func)
+	///TSource Aggregate&lt;TSource&gt;(Expression&lt;Func&lt;TSource, TSource, TSource&gt;&gt; func)
 	///</summary>
-	public static readonly MethodInfo Aggregate;
+	public static readonly MethodInfo Aggregate = SeqMethods.Aggregate.Qy;
 
 	///<summary>
-	///TAccumulate qy.Aggregate&lt;TSource, TAccumulate&gt;(TAccumulate seed, Expression&lt;Func&lt;TAccumulate, TSource, TAccumulate&gt;&gt; func)
+	///TAccumulate Aggregate&lt;TSource, TAccumulate&gt;(TAccumulate seed, Expression&lt;Func&lt;TAccumulate, TSource, TAccumulate&gt;&gt; func)
 	///</summary>
-	public static readonly MethodInfo Aggregate2;
+	public static readonly MethodInfo Aggregate2 = SeqMethods.Aggregate2.Qy;
 
 	///<summary>
-	///TResult qy.Aggregate&lt;TSource, TAccumulate, TResult&gt;(TAccumulate seed, Expression&lt;Func&lt;TAccumulate, TSource, TAccumulate&gt;&gt; func, Expression&lt;Func&lt;TAccumulate, TResult&gt;&gt; selector)
+	///TResult Aggregate&lt;TSource, TAccumulate, TResult&gt;(TAccumulate seed, Expression&lt;Func&lt;TAccumulate, TSource, TAccumulate&gt;&gt; func, Expression&lt;Func&lt;TAccumulate, TResult&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo Aggregate3;
+	public static readonly MethodInfo Aggregate3 = SeqMethods.Aggregate3.Qy;
 
 	///<summary>
-	///Boolean qy.All&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Boolean&gt;&gt; predicate)
+	///bool All&lt;TSource&gt;(Expression&lt;Func&lt;TSource, bool&gt;&gt; predicate)
 	///</summary>
-	public static readonly MethodInfo All;
+	public static readonly MethodInfo All = SeqMethods.All.Qy;
 
 	///<summary>
-	///Boolean qy.Any&lt;TSource&gt;()
+	///bool Any&lt;TSource&gt;()
 	///</summary>
-	public static readonly MethodInfo Any;
+	public static readonly MethodInfo Any = SeqMethods.Any.Qy;
 
 	///<summary>
-	///Boolean qy.Any&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Boolean&gt;&gt; predicate)
+	///bool Any&lt;TSource&gt;(Expression&lt;Func&lt;TSource, bool&gt;&gt; predicate)
 	///</summary>
-	public static readonly MethodInfo Any2;
+	public static readonly MethodInfo Any2 = SeqMethods.Any2.Qy;
 
 	///<summary>
-	///Double qy.Average&lt;&gt;()
+	///double Average()
 	///</summary>
-	public static readonly MethodInfo Average;
+	public static readonly MethodInfo Average = SeqMethods.Average.Qy;
 
 	///<summary>
-	///Nullable&lt;Double&gt; qy.Average&lt;&gt;()
+	///decimal? Average()
 	///</summary>
-	public static readonly MethodInfo Average2;
+	public static readonly MethodInfo Average10 = SeqMethods.Average10.Qy;
 
 	///<summary>
-	///Double qy.Average&lt;&gt;()
+	///double Average&lt;TSource&gt;(Expression&lt;Func&lt;TSource, int&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo Average3;
+	public static readonly MethodInfo Average11 = SeqMethods.Average11.Qy;
 
 	///<summary>
-	///Nullable&lt;Double&gt; qy.Average&lt;&gt;()
+	///double? Average&lt;TSource&gt;(Expression&lt;Func&lt;TSource, int?&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo Average4;
+	public static readonly MethodInfo Average12 = SeqMethods.Average12.Qy;
 
 	///<summary>
-	///Single qy.Average&lt;&gt;()
+	///float Average&lt;TSource&gt;(Expression&lt;Func&lt;TSource, float&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo Average5;
+	public static readonly MethodInfo Average13 = SeqMethods.Average13.Qy;
 
 	///<summary>
-	///Nullable&lt;Single&gt; qy.Average&lt;&gt;()
+	///float? Average&lt;TSource&gt;(Expression&lt;Func&lt;TSource, float?&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo Average6;
+	public static readonly MethodInfo Average14 = SeqMethods.Average14.Qy;
 
 	///<summary>
-	///Double qy.Average&lt;&gt;()
+	///double Average&lt;TSource&gt;(Expression&lt;Func&lt;TSource, long&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo Average7;
+	public static readonly MethodInfo Average15 = SeqMethods.Average15.Qy;
 
 	///<summary>
-	///Nullable&lt;Double&gt; qy.Average&lt;&gt;()
+	///double? Average&lt;TSource&gt;(Expression&lt;Func&lt;TSource, long?&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo Average8;
+	public static readonly MethodInfo Average16 = SeqMethods.Average16.Qy;
 
 	///<summary>
-	///Decimal qy.Average&lt;&gt;()
+	///double Average&lt;TSource&gt;(Expression&lt;Func&lt;TSource, double&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo Average9;
+	public static readonly MethodInfo Average17 = SeqMethods.Average17.Qy;
 
 	///<summary>
-	///Nullable&lt;Decimal&gt; qy.Average&lt;&gt;()
+	///double? Average&lt;TSource&gt;(Expression&lt;Func&lt;TSource, double?&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo Average10;
+	public static readonly MethodInfo Average18 = SeqMethods.Average18.Qy;
 
 	///<summary>
-	///Double qy.Average&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Int32&gt;&gt; selector)
+	///decimal Average&lt;TSource&gt;(Expression&lt;Func&lt;TSource, decimal&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo Average11;
+	public static readonly MethodInfo Average19 = SeqMethods.Average19.Qy;
 
 	///<summary>
-	///Nullable&lt;Double&gt; qy.Average&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Nullable&lt;Int32&gt;&gt;&gt; selector)
+	///double? Average()
 	///</summary>
-	public static readonly MethodInfo Average12;
+	public static readonly MethodInfo Average2 = SeqMethods.Average2.Qy;
 
 	///<summary>
-	///Single qy.Average&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Single&gt;&gt; selector)
+	///decimal? Average&lt;TSource&gt;(Expression&lt;Func&lt;TSource, decimal?&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo Average13;
+	public static readonly MethodInfo Average20 = SeqMethods.Average20.Qy;
 
 	///<summary>
-	///Nullable&lt;Single&gt; qy.Average&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Nullable&lt;Single&gt;&gt;&gt; selector)
+	///double Average()
 	///</summary>
-	public static readonly MethodInfo Average14;
+	public static readonly MethodInfo Average3 = SeqMethods.Average3.Qy;
 
 	///<summary>
-	///Double qy.Average&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Int64&gt;&gt; selector)
+	///double? Average()
 	///</summary>
-	public static readonly MethodInfo Average15;
+	public static readonly MethodInfo Average4 = SeqMethods.Average4.Qy;
 
 	///<summary>
-	///Nullable&lt;Double&gt; qy.Average&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Nullable&lt;Int64&gt;&gt;&gt; selector)
+	///float Average()
 	///</summary>
-	public static readonly MethodInfo Average16;
+	public static readonly MethodInfo Average5 = SeqMethods.Average5.Qy;
 
 	///<summary>
-	///Double qy.Average&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Double&gt;&gt; selector)
+	///float? Average()
 	///</summary>
-	public static readonly MethodInfo Average17;
+	public static readonly MethodInfo Average6 = SeqMethods.Average6.Qy;
 
 	///<summary>
-	///Nullable&lt;Double&gt; qy.Average&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Nullable&lt;Double&gt;&gt;&gt; selector)
+	///double Average()
 	///</summary>
-	public static readonly MethodInfo Average18;
+	public static readonly MethodInfo Average7 = SeqMethods.Average7.Qy;
 
 	///<summary>
-	///Decimal qy.Average&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Decimal&gt;&gt; selector)
+	///double? Average()
 	///</summary>
-	public static readonly MethodInfo Average19;
+	public static readonly MethodInfo Average8 = SeqMethods.Average8.Qy;
 
 	///<summary>
-	///Nullable&lt;Decimal&gt; qy.Average&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Nullable&lt;Decimal&gt;&gt;&gt; selector)
+	///decimal Average()
 	///</summary>
-	public static readonly MethodInfo Average20;
+	public static readonly MethodInfo Average9 = SeqMethods.Average9.Qy;
 
 	///<summary>
-	///IQueryable&lt;TResult&gt; qy.Cast&lt;TResult&gt;()
+	///IQueryable&lt;TResult&gt; Cast&lt;TResult&gt;()
 	///</summary>
-	public static readonly MethodInfo Cast;
+	public static readonly MethodInfo Cast = SeqMethods.Cast.Qy;
 
 	///<summary>
-	///IQueryable&lt;TSource&gt; qy.Concat&lt;TSource&gt;(IEnumerable&lt;TSource&gt; source2)
+	///IQueryable&lt;TSource&gt; Concat&lt;TSource&gt;(IEnumerable&lt;TSource&gt; source2)
 	///</summary>
-	public static readonly MethodInfo Concat;
+	public static readonly MethodInfo Concat = SeqMethods.Concat.Qy;
 
 	///<summary>
-	///Boolean qy.Contains&lt;TSource&gt;(TSource item)
+	///bool Contains&lt;TSource&gt;(TSource item)
 	///</summary>
-	public static readonly MethodInfo Contains;
+	public static readonly MethodInfo Contains = SeqMethods.Contains.Qy;
 
 	///<summary>
-	///Boolean qy.Contains&lt;TSource&gt;(TSource item, IEqualityComparer&lt;TSource&gt; comparer)
+	///bool Contains&lt;TSource&gt;(TSource item, IEqualityComparer&lt;TSource&gt; comparer)
 	///</summary>
-	public static readonly MethodInfo Contains2;
+	public static readonly MethodInfo Contains2 = SeqMethods.Contains2.Qy;
 
 	///<summary>
-	///Int32 qy.Count&lt;TSource&gt;()
+	///int Count&lt;TSource&gt;()
 	///</summary>
-	public static readonly MethodInfo Count;
+	public static readonly MethodInfo Count = SeqMethods.Count.Qy;
 
 	///<summary>
-	///Int32 qy.Count&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Boolean&gt;&gt; predicate)
+	///int Count&lt;TSource&gt;(Expression&lt;Func&lt;TSource, bool&gt;&gt; predicate)
 	///</summary>
-	public static readonly MethodInfo Count2;
+	public static readonly MethodInfo Count2 = SeqMethods.Count2.Qy;
 
 	///<summary>
-	///IQueryable&lt;TSource&gt; qy.DefaultIfEmpty&lt;TSource&gt;()
+	///IQueryable&lt;TSource&gt; DefaultIfEmpty&lt;TSource&gt;()
 	///</summary>
-	public static readonly MethodInfo DefaultIfEmpty;
+	public static readonly MethodInfo DefaultIfEmpty = SeqMethods.DefaultIfEmpty.Qy;
 
 	///<summary>
-	///IQueryable&lt;TSource&gt; qy.DefaultIfEmpty&lt;TSource&gt;(TSource defaultValue)
+	///IQueryable&lt;TSource&gt; DefaultIfEmpty&lt;TSource&gt;(TSource defaultValue)
 	///</summary>
-	public static readonly MethodInfo DefaultIfEmpty2;
+	public static readonly MethodInfo DefaultIfEmpty2 = SeqMethods.DefaultIfEmpty2.Qy;
 
 	///<summary>
-	///IQueryable&lt;TSource&gt; qy.Distinct&lt;TSource&gt;()
+	///IQueryable&lt;TSource&gt; Distinct&lt;TSource&gt;()
 	///</summary>
-	public static readonly MethodInfo Distinct;
+	public static readonly MethodInfo Distinct = SeqMethods.Distinct.Qy;
 
 	///<summary>
-	///IQueryable&lt;TSource&gt; qy.Distinct&lt;TSource&gt;(IEqualityComparer&lt;TSource&gt; comparer)
+	///IQueryable&lt;TSource&gt; Distinct&lt;TSource&gt;(IEqualityComparer&lt;TSource&gt; comparer)
 	///</summary>
-	public static readonly MethodInfo Distinct2;
+	public static readonly MethodInfo Distinct2 = SeqMethods.Distinct2.Qy;
 
 	///<summary>
-	///TSource qy.ElementAt&lt;TSource&gt;(Int32 index)
+	///TSource ElementAt&lt;TSource&gt;(int index)
 	///</summary>
-	public static readonly MethodInfo ElementAt;
+	public static readonly MethodInfo ElementAt = SeqMethods.ElementAt.Qy;
 
 	///<summary>
-	///TSource qy.ElementAtOrDefault&lt;TSource&gt;(Int32 index)
+	///TSource ElementAtOrDefault&lt;TSource&gt;(int index)
 	///</summary>
-	public static readonly MethodInfo ElementAtOrDefault;
+	public static readonly MethodInfo ElementAtOrDefault = SeqMethods.ElementAtOrDefault.Qy;
 
 	///<summary>
-	///IQueryable&lt;TSource&gt; qy.Except&lt;TSource&gt;(IEnumerable&lt;TSource&gt; source2)
+	///IQueryable&lt;TSource&gt; Except&lt;TSource&gt;(IEnumerable&lt;TSource&gt; source2)
 	///</summary>
-	public static readonly MethodInfo Except;
+	public static readonly MethodInfo Except = SeqMethods.Except.Qy;
 
 	///<summary>
-	///IQueryable&lt;TSource&gt; qy.Except&lt;TSource&gt;(IEnumerable&lt;TSource&gt; source2, IEqualityComparer&lt;TSource&gt; comparer)
+	///IQueryable&lt;TSource&gt; Except&lt;TSource&gt;(IEnumerable&lt;TSource&gt; source2, IEqualityComparer&lt;TSource&gt; comparer)
 	///</summary>
-	public static readonly MethodInfo Except2;
+	public static readonly MethodInfo Except2 = SeqMethods.Except2.Qy;
 
 	///<summary>
-	///TSource qy.First&lt;TSource&gt;()
+	///TSource First&lt;TSource&gt;()
 	///</summary>
-	public static readonly MethodInfo First;
+	public static readonly MethodInfo First = SeqMethods.First.Qy;
 
 	///<summary>
-	///TSource qy.First&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Boolean&gt;&gt; predicate)
+	///TSource First&lt;TSource&gt;(Expression&lt;Func&lt;TSource, bool&gt;&gt; predicate)
 	///</summary>
-	public static readonly MethodInfo First2;
+	public static readonly MethodInfo First2 = SeqMethods.First2.Qy;
 
 	///<summary>
-	///TSource qy.FirstOrDefault&lt;TSource&gt;()
+	///TSource FirstOrDefault&lt;TSource&gt;()
 	///</summary>
-	public static readonly MethodInfo FirstOrDefault;
+	public static readonly MethodInfo FirstOrDefault = SeqMethods.FirstOrDefault.Qy;
 
 	///<summary>
-	///TSource qy.FirstOrDefault&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Boolean&gt;&gt; predicate)
+	///TSource FirstOrDefault&lt;TSource&gt;(Expression&lt;Func&lt;TSource, bool&gt;&gt; predicate)
 	///</summary>
-	public static readonly MethodInfo FirstOrDefault2;
+	public static readonly MethodInfo FirstOrDefault2 = SeqMethods.FirstOrDefault2.Qy;
 
 	///<summary>
-	///IQueryable&lt;IGrouping&lt;TKey, TSource&gt;&gt; qy.GroupBy&lt;TSource, TKey&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector)
+	///IQueryable&lt;IGrouping&lt;TKey, TSource&gt;&gt; GroupBy&lt;TSource, TKey&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector)
 	///</summary>
-	public static readonly MethodInfo GroupBy;
+	public static readonly MethodInfo GroupBy = SeqMethods.GroupBy.Qy;
 
 	///<summary>
-	///IQueryable&lt;IGrouping&lt;TKey, TElement&gt;&gt; qy.GroupBy&lt;TSource, TKey, TElement&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector, Expression&lt;Func&lt;TSource, TElement&gt;&gt; elementSelector)
+	///IQueryable&lt;IGrouping&lt;TKey, TElement&gt;&gt; GroupBy&lt;TSource, TKey, TElement&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector, Expression&lt;Func&lt;TSource, TElement&gt;&gt; elementSelector)
 	///</summary>
-	public static readonly MethodInfo GroupBy2;
+	public static readonly MethodInfo GroupBy2 = SeqMethods.GroupBy2.Qy;
 
 	///<summary>
-	///IQueryable&lt;IGrouping&lt;TKey, TSource&gt;&gt; qy.GroupBy&lt;TSource, TKey&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector, IEqualityComparer&lt;TKey&gt; comparer)
+	///IQueryable&lt;IGrouping&lt;TKey, TSource&gt;&gt; GroupBy&lt;TSource, TKey&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector, IEqualityComparer&lt;TKey&gt; comparer)
 	///</summary>
-	public static readonly MethodInfo GroupBy3;
+	public static readonly MethodInfo GroupBy3 = SeqMethods.GroupBy3.Qy;
 
 	///<summary>
-	///IQueryable&lt;IGrouping&lt;TKey, TElement&gt;&gt; qy.GroupBy&lt;TSource, TKey, TElement&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector, Expression&lt;Func&lt;TSource, TElement&gt;&gt; elementSelector, IEqualityComparer&lt;TKey&gt; comparer)
+	///IQueryable&lt;IGrouping&lt;TKey, TElement&gt;&gt; GroupBy&lt;TSource, TKey, TElement&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector, Expression&lt;Func&lt;TSource, TElement&gt;&gt; elementSelector, IEqualityComparer&lt;TKey&gt; comparer)
 	///</summary>
-	public static readonly MethodInfo GroupBy4;
+	public static readonly MethodInfo GroupBy4 = SeqMethods.GroupBy4.Qy;
 
 	///<summary>
-	///IQueryable&lt;TResult&gt; qy.GroupBy&lt;TSource, TKey, TElement, TResult&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector, Expression&lt;Func&lt;TSource, TElement&gt;&gt; elementSelector, Expression&lt;Func&lt;TKey, IEnumerable&lt;TElement&gt;, TResult&gt;&gt; resultSelector)
+	///IQueryable&lt;TResult&gt; GroupBy&lt;TSource, TKey, TElement, TResult&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector, Expression&lt;Func&lt;TSource, TElement&gt;&gt; elementSelector, Expression&lt;Func&lt;TKey, IEnumerable&lt;TElement&gt;, TResult&gt;&gt; resultSelector)
 	///</summary>
-	public static readonly MethodInfo GroupBy5;
+	public static readonly MethodInfo GroupBy5 = SeqMethods.GroupBy5.Qy;
 
 	///<summary>
-	///IQueryable&lt;TResult&gt; qy.GroupBy&lt;TSource, TKey, TResult&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector, Expression&lt;Func&lt;TKey, IEnumerable&lt;TSource&gt;, TResult&gt;&gt; resultSelector)
+	///IQueryable&lt;TResult&gt; GroupBy&lt;TSource, TKey, TResult&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector, Expression&lt;Func&lt;TKey, IEnumerable&lt;TSource&gt;, TResult&gt;&gt; resultSelector)
 	///</summary>
-	public static readonly MethodInfo GroupBy6;
+	public static readonly MethodInfo GroupBy6 = SeqMethods.GroupBy6.Qy;
 
 	///<summary>
-	///IQueryable&lt;TResult&gt; qy.GroupBy&lt;TSource, TKey, TResult&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector, Expression&lt;Func&lt;TKey, IEnumerable&lt;TSource&gt;, TResult&gt;&gt; resultSelector, IEqualityComparer&lt;TKey&gt; comparer)
+	///IQueryable&lt;TResult&gt; GroupBy&lt;TSource, TKey, TResult&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector, Expression&lt;Func&lt;TKey, IEnumerable&lt;TSource&gt;, TResult&gt;&gt; resultSelector, IEqualityComparer&lt;TKey&gt; comparer)
 	///</summary>
-	public static readonly MethodInfo GroupBy7;
+	public static readonly MethodInfo GroupBy7 = SeqMethods.GroupBy7.Qy;
 
 	///<summary>
-	///IQueryable&lt;TResult&gt; qy.GroupBy&lt;TSource, TKey, TElement, TResult&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector, Expression&lt;Func&lt;TSource, TElement&gt;&gt; elementSelector, Expression&lt;Func&lt;TKey, IEnumerable&lt;TElement&gt;, TResult&gt;&gt; resultSelector, IEqualityComparer&lt;TKey&gt; comparer)
+	///IQueryable&lt;TResult&gt; GroupBy&lt;TSource, TKey, TElement, TResult&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector, Expression&lt;Func&lt;TSource, TElement&gt;&gt; elementSelector, Expression&lt;Func&lt;TKey, IEnumerable&lt;TElement&gt;, TResult&gt;&gt; resultSelector, IEqualityComparer&lt;TKey&gt; comparer)
 	///</summary>
-	public static readonly MethodInfo GroupBy8;
+	public static readonly MethodInfo GroupBy8 = SeqMethods.GroupBy8.Qy;
 
 	///<summary>
-	///IQueryable&lt;TResult&gt; qy.GroupJoin&lt;TOuter, TInner, TKey, TResult&gt;(IEnumerable&lt;TInner&gt; inner, Expression&lt;Func&lt;TOuter, TKey&gt;&gt; outerKeySelector, Expression&lt;Func&lt;TInner, TKey&gt;&gt; innerKeySelector, Expression&lt;Func&lt;TOuter, IEnumerable&lt;TInner&gt;, TResult&gt;&gt; resultSelector)
+	///IQueryable&lt;TResult&gt; GroupJoin&lt;TOuter, TInner, TKey, TResult&gt;(IEnumerable&lt;TInner&gt; inner, Expression&lt;Func&lt;TOuter, TKey&gt;&gt; outerKeySelector, Expression&lt;Func&lt;TInner, TKey&gt;&gt; innerKeySelector, Expression&lt;Func&lt;TOuter, IEnumerable&lt;TInner&gt;, TResult&gt;&gt; resultSelector)
 	///</summary>
-	public static readonly MethodInfo GroupJoin;
+	public static readonly MethodInfo GroupJoin = SeqMethods.GroupJoin.Qy;
 
 	///<summary>
-	///IQueryable&lt;TResult&gt; qy.GroupJoin&lt;TOuter, TInner, TKey, TResult&gt;(IEnumerable&lt;TInner&gt; inner, Expression&lt;Func&lt;TOuter, TKey&gt;&gt; outerKeySelector, Expression&lt;Func&lt;TInner, TKey&gt;&gt; innerKeySelector, Expression&lt;Func&lt;TOuter, IEnumerable&lt;TInner&gt;, TResult&gt;&gt; resultSelector, IEqualityComparer&lt;TKey&gt; comparer)
+	///IQueryable&lt;TResult&gt; GroupJoin&lt;TOuter, TInner, TKey, TResult&gt;(IEnumerable&lt;TInner&gt; inner, Expression&lt;Func&lt;TOuter, TKey&gt;&gt; outerKeySelector, Expression&lt;Func&lt;TInner, TKey&gt;&gt; innerKeySelector, Expression&lt;Func&lt;TOuter, IEnumerable&lt;TInner&gt;, TResult&gt;&gt; resultSelector, IEqualityComparer&lt;TKey&gt; comparer)
 	///</summary>
-	public static readonly MethodInfo GroupJoin2;
+	public static readonly MethodInfo GroupJoin2 = SeqMethods.GroupJoin2.Qy;
 
 	///<summary>
-	///IQueryable&lt;TSource&gt; qy.Intersect&lt;TSource&gt;(IEnumerable&lt;TSource&gt; source2)
+	///IQueryable&lt;TSource&gt; Intersect&lt;TSource&gt;(IEnumerable&lt;TSource&gt; source2)
 	///</summary>
-	public static readonly MethodInfo Intersect;
+	public static readonly MethodInfo Intersect = SeqMethods.Intersect.Qy;
 
 	///<summary>
-	///IQueryable&lt;TSource&gt; qy.Intersect&lt;TSource&gt;(IEnumerable&lt;TSource&gt; source2, IEqualityComparer&lt;TSource&gt; comparer)
+	///IQueryable&lt;TSource&gt; Intersect&lt;TSource&gt;(IEnumerable&lt;TSource&gt; source2, IEqualityComparer&lt;TSource&gt; comparer)
 	///</summary>
-	public static readonly MethodInfo Intersect2;
+	public static readonly MethodInfo Intersect2 = SeqMethods.Intersect2.Qy;
 
 	///<summary>
-	///IQueryable&lt;TResult&gt; qy.Join&lt;TOuter, TInner, TKey, TResult&gt;(IEnumerable&lt;TInner&gt; inner, Expression&lt;Func&lt;TOuter, TKey&gt;&gt; outerKeySelector, Expression&lt;Func&lt;TInner, TKey&gt;&gt; innerKeySelector, Expression&lt;Func&lt;TOuter, TInner, TResult&gt;&gt; resultSelector)
+	///IQueryable&lt;TResult&gt; Join&lt;TOuter, TInner, TKey, TResult&gt;(IEnumerable&lt;TInner&gt; inner, Expression&lt;Func&lt;TOuter, TKey&gt;&gt; outerKeySelector, Expression&lt;Func&lt;TInner, TKey&gt;&gt; innerKeySelector, Expression&lt;Func&lt;TOuter, TInner, TResult&gt;&gt; resultSelector)
 	///</summary>
-	public static readonly MethodInfo Join;
+	public static readonly MethodInfo Join = SeqMethods.Join.Qy;
 
 	///<summary>
-	///IQueryable&lt;TResult&gt; qy.Join&lt;TOuter, TInner, TKey, TResult&gt;(IEnumerable&lt;TInner&gt; inner, Expression&lt;Func&lt;TOuter, TKey&gt;&gt; outerKeySelector, Expression&lt;Func&lt;TInner, TKey&gt;&gt; innerKeySelector, Expression&lt;Func&lt;TOuter, TInner, TResult&gt;&gt; resultSelector, IEqualityComparer&lt;TKey&gt; comparer)
+	///IQueryable&lt;TResult&gt; Join&lt;TOuter, TInner, TKey, TResult&gt;(IEnumerable&lt;TInner&gt; inner, Expression&lt;Func&lt;TOuter, TKey&gt;&gt; outerKeySelector, Expression&lt;Func&lt;TInner, TKey&gt;&gt; innerKeySelector, Expression&lt;Func&lt;TOuter, TInner, TResult&gt;&gt; resultSelector, IEqualityComparer&lt;TKey&gt; comparer)
 	///</summary>
-	public static readonly MethodInfo Join2;
+	public static readonly MethodInfo Join2 = SeqMethods.Join2.Qy;
 
 	///<summary>
-	///TSource qy.Last&lt;TSource&gt;()
+	///TSource Last&lt;TSource&gt;()
 	///</summary>
-	public static readonly MethodInfo Last;
+	public static readonly MethodInfo Last = SeqMethods.Last.Qy;
 
 	///<summary>
-	///TSource qy.Last&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Boolean&gt;&gt; predicate)
+	///TSource Last&lt;TSource&gt;(Expression&lt;Func&lt;TSource, bool&gt;&gt; predicate)
 	///</summary>
-	public static readonly MethodInfo Last2;
+	public static readonly MethodInfo Last2 = SeqMethods.Last2.Qy;
 
 	///<summary>
-	///TSource qy.LastOrDefault&lt;TSource&gt;()
+	///TSource LastOrDefault&lt;TSource&gt;()
 	///</summary>
-	public static readonly MethodInfo LastOrDefault;
+	public static readonly MethodInfo LastOrDefault = SeqMethods.LastOrDefault.Qy;
 
 	///<summary>
-	///TSource qy.LastOrDefault&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Boolean&gt;&gt; predicate)
+	///TSource LastOrDefault&lt;TSource&gt;(Expression&lt;Func&lt;TSource, bool&gt;&gt; predicate)
 	///</summary>
-	public static readonly MethodInfo LastOrDefault2;
+	public static readonly MethodInfo LastOrDefault2 = SeqMethods.LastOrDefault2.Qy;
 
 	///<summary>
-	///Int64 qy.LongCount&lt;TSource&gt;()
+	///long LongCount&lt;TSource&gt;()
 	///</summary>
-	public static readonly MethodInfo LongCount;
+	public static readonly MethodInfo LongCount = SeqMethods.LongCount.Qy;
 
 	///<summary>
-	///Int64 qy.LongCount&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Boolean&gt;&gt; predicate)
+	///long LongCount&lt;TSource&gt;(Expression&lt;Func&lt;TSource, bool&gt;&gt; predicate)
 	///</summary>
-	public static readonly MethodInfo LongCount2;
+	public static readonly MethodInfo LongCount2 = SeqMethods.LongCount2.Qy;
 
 	///<summary>
-	///TSource qy.Max&lt;TSource&gt;()
+	///TSource Max&lt;TSource&gt;()
 	///</summary>
-	public static readonly MethodInfo Max;
+	public static readonly MethodInfo Max = SeqMethods.Max.Qy;
 
 	///<summary>
-	///TResult qy.Max&lt;TSource, TResult&gt;(Expression&lt;Func&lt;TSource, TResult&gt;&gt; selector)
+	///TResult Max&lt;TSource, TResult&gt;(Expression&lt;Func&lt;TSource, TResult&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo Max2;
+	public static readonly MethodInfo Max2 = SeqMethods.Max2.Qy;
 
 	///<summary>
-	///TSource qy.Min&lt;TSource&gt;()
+	///TSource Min&lt;TSource&gt;()
 	///</summary>
-	public static readonly MethodInfo Min;
+	public static readonly MethodInfo Min = SeqMethods.Min.Qy;
 
 	///<summary>
-	///TResult qy.Min&lt;TSource, TResult&gt;(Expression&lt;Func&lt;TSource, TResult&gt;&gt; selector)
+	///TResult Min&lt;TSource, TResult&gt;(Expression&lt;Func&lt;TSource, TResult&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo Min2;
+	public static readonly MethodInfo Min2 = SeqMethods.Min2.Qy;
 
 	///<summary>
-	///IQueryable&lt;TResult&gt; qy.OfType&lt;TResult&gt;()
+	///IQueryable&lt;TResult&gt; OfType&lt;TResult&gt;()
 	///</summary>
-	public static readonly MethodInfo OfType;
+	public static readonly MethodInfo OfType = SeqMethods.OfType.Qy;
 
 	///<summary>
-	///IOrderedQueryable&lt;TSource&gt; qy.OrderBy&lt;TSource, TKey&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector)
+	///IOrderedQueryable&lt;TSource&gt; OrderBy&lt;TSource, TKey&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector)
 	///</summary>
-	public static readonly MethodInfo OrderBy;
+	public static readonly MethodInfo OrderBy = SeqMethods.OrderBy.Qy;
 
 	///<summary>
-	///IOrderedQueryable&lt;TSource&gt; qy.OrderBy&lt;TSource, TKey&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector, IComparer&lt;TKey&gt; comparer)
+	///IOrderedQueryable&lt;TSource&gt; OrderBy&lt;TSource, TKey&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector, IComparer&lt;TKey&gt; comparer)
 	///</summary>
-	public static readonly MethodInfo OrderBy2;
+	public static readonly MethodInfo OrderBy2 = SeqMethods.OrderBy2.Qy;
 
 	///<summary>
-	///IOrderedQueryable&lt;TSource&gt; qy.OrderByDescending&lt;TSource, TKey&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector)
+	///IOrderedQueryable&lt;TSource&gt; OrderByDescending&lt;TSource, TKey&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector)
 	///</summary>
-	public static readonly MethodInfo OrderByDescending;
+	public static readonly MethodInfo OrderByDescending = SeqMethods.OrderByDescending.Qy;
 
 	///<summary>
-	///IOrderedQueryable&lt;TSource&gt; qy.OrderByDescending&lt;TSource, TKey&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector, IComparer&lt;TKey&gt; comparer)
+	///IOrderedQueryable&lt;TSource&gt; OrderByDescending&lt;TSource, TKey&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector, IComparer&lt;TKey&gt; comparer)
 	///</summary>
-	public static readonly MethodInfo OrderByDescending2;
+	public static readonly MethodInfo OrderByDescending2 = SeqMethods.OrderByDescending2.Qy;
 
 	///<summary>
-	///IQueryable&lt;TSource&gt; qy.Reverse&lt;TSource&gt;()
+	///IQueryable&lt;TSource&gt; Reverse&lt;TSource&gt;()
 	///</summary>
-	public static readonly MethodInfo Reverse;
+	public static readonly MethodInfo Reverse = SeqMethods.Reverse.Qy;
 
 	///<summary>
-	///IQueryable&lt;TResult&gt; qy.Select&lt;TSource, TResult&gt;(Expression&lt;Func&lt;TSource, TResult&gt;&gt; selector)
+	///IQueryable&lt;TResult&gt; Select&lt;TSource, TResult&gt;(Expression&lt;Func&lt;TSource, TResult&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo Select;
+	public static readonly MethodInfo Select = SeqMethods.Select.Qy;
 
 	///<summary>
-	///IQueryable&lt;TResult&gt; qy.Select&lt;TSource, TResult&gt;(Expression&lt;Func&lt;TSource, Int32, TResult&gt;&gt; selector)
+	///IQueryable&lt;TResult&gt; Select&lt;TSource, TResult&gt;(Expression&lt;Func&lt;TSource, int, TResult&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo Select2;
+	public static readonly MethodInfo Select2 = SeqMethods.Select2.Qy;
 
 	///<summary>
-	///IQueryable&lt;TResult&gt; qy.SelectMany&lt;TSource, TResult&gt;(Expression&lt;Func&lt;TSource, IEnumerable&lt;TResult&gt;&gt;&gt; selector)
+	///IQueryable&lt;TResult&gt; SelectMany&lt;TSource, TResult&gt;(Expression&lt;Func&lt;TSource, IEnumerable&lt;TResult&gt;&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo SelectMany;
+	public static readonly MethodInfo SelectMany = SeqMethods.SelectMany.Qy;
 
 	///<summary>
-	///IQueryable&lt;TResult&gt; qy.SelectMany&lt;TSource, TResult&gt;(Expression&lt;Func&lt;TSource, Int32, IEnumerable&lt;TResult&gt;&gt;&gt; selector)
+	///IQueryable&lt;TResult&gt; SelectMany&lt;TSource, TResult&gt;(Expression&lt;Func&lt;TSource, int, IEnumerable&lt;TResult&gt;&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo SelectMany2;
+	public static readonly MethodInfo SelectMany2 = SeqMethods.SelectMany2.Qy;
 
 	///<summary>
-	///IQueryable&lt;TResult&gt; qy.SelectMany&lt;TSource, TCollection, TResult&gt;(Expression&lt;Func&lt;TSource, Int32, IEnumerable&lt;TCollection&gt;&gt;&gt; collectionSelector, Expression&lt;Func&lt;TSource, TCollection, TResult&gt;&gt; resultSelector)
+	///IQueryable&lt;TResult&gt; SelectMany&lt;TSource, TCollection, TResult&gt;(Expression&lt;Func&lt;TSource, int, IEnumerable&lt;TCollection&gt;&gt;&gt; collectionSelector, Expression&lt;Func&lt;TSource, TCollection, TResult&gt;&gt; resultSelector)
 	///</summary>
-	public static readonly MethodInfo SelectMany3;
+	public static readonly MethodInfo SelectMany3 = SeqMethods.SelectMany3.Qy;
 
 	///<summary>
-	///IQueryable&lt;TResult&gt; qy.SelectMany&lt;TSource, TCollection, TResult&gt;(Expression&lt;Func&lt;TSource, IEnumerable&lt;TCollection&gt;&gt;&gt; collectionSelector, Expression&lt;Func&lt;TSource, TCollection, TResult&gt;&gt; resultSelector)
+	///IQueryable&lt;TResult&gt; SelectMany&lt;TSource, TCollection, TResult&gt;(Expression&lt;Func&lt;TSource, IEnumerable&lt;TCollection&gt;&gt;&gt; collectionSelector, Expression&lt;Func&lt;TSource, TCollection, TResult&gt;&gt; resultSelector)
 	///</summary>
-	public static readonly MethodInfo SelectMany4;
+	public static readonly MethodInfo SelectMany4 = SeqMethods.SelectMany4.Qy;
 
 	///<summary>
-	///Boolean qy.SequenceEqual&lt;TSource&gt;(IEnumerable&lt;TSource&gt; source2)
+	///bool SequenceEqual&lt;TSource&gt;(IEnumerable&lt;TSource&gt; source2)
 	///</summary>
-	public static readonly MethodInfo SequenceEqual;
+	public static readonly MethodInfo SequenceEqual = SeqMethods.SequenceEqual.Qy;
 
 	///<summary>
-	///Boolean qy.SequenceEqual&lt;TSource&gt;(IEnumerable&lt;TSource&gt; source2, IEqualityComparer&lt;TSource&gt; comparer)
+	///bool SequenceEqual&lt;TSource&gt;(IEnumerable&lt;TSource&gt; source2, IEqualityComparer&lt;TSource&gt; comparer)
 	///</summary>
-	public static readonly MethodInfo SequenceEqual2;
+	public static readonly MethodInfo SequenceEqual2 = SeqMethods.SequenceEqual2.Qy;
 
 	///<summary>
-	///TSource qy.Single&lt;TSource&gt;()
+	///TSource Single&lt;TSource&gt;()
 	///</summary>
-	public static readonly MethodInfo Single;
+	public static readonly MethodInfo Single = SeqMethods.Single.Qy;
 
 	///<summary>
-	///TSource qy.Single&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Boolean&gt;&gt; predicate)
+	///TSource Single&lt;TSource&gt;(Expression&lt;Func&lt;TSource, bool&gt;&gt; predicate)
 	///</summary>
-	public static readonly MethodInfo Single2;
+	public static readonly MethodInfo Single2 = SeqMethods.Single2.Qy;
 
 	///<summary>
-	///TSource qy.SingleOrDefault&lt;TSource&gt;()
+	///TSource SingleOrDefault&lt;TSource&gt;()
 	///</summary>
-	public static readonly MethodInfo SingleOrDefault;
+	public static readonly MethodInfo SingleOrDefault = SeqMethods.SingleOrDefault.Qy;
 
 	///<summary>
-	///TSource qy.SingleOrDefault&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Boolean&gt;&gt; predicate)
+	///TSource SingleOrDefault&lt;TSource&gt;(Expression&lt;Func&lt;TSource, bool&gt;&gt; predicate)
 	///</summary>
-	public static readonly MethodInfo SingleOrDefault2;
+	public static readonly MethodInfo SingleOrDefault2 = SeqMethods.SingleOrDefault2.Qy;
 
 	///<summary>
-	///IQueryable&lt;TSource&gt; qy.Skip&lt;TSource&gt;(Int32 count)
+	///IQueryable&lt;TSource&gt; Skip&lt;TSource&gt;(int count)
 	///</summary>
-	public static readonly MethodInfo Skip;
+	public static readonly MethodInfo Skip = SeqMethods.Skip.Qy;
 
 	///<summary>
-	///IQueryable&lt;TSource&gt; qy.SkipWhile&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Boolean&gt;&gt; predicate)
+	///IQueryable&lt;TSource&gt; SkipWhile&lt;TSource&gt;(Expression&lt;Func&lt;TSource, bool&gt;&gt; predicate)
 	///</summary>
-	public static readonly MethodInfo SkipWhile;
+	public static readonly MethodInfo SkipWhile = SeqMethods.SkipWhile.Qy;
 
 	///<summary>
-	///IQueryable&lt;TSource&gt; qy.SkipWhile&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Int32, Boolean&gt;&gt; predicate)
+	///IQueryable&lt;TSource&gt; SkipWhile&lt;TSource&gt;(Expression&lt;Func&lt;TSource, int, bool&gt;&gt; predicate)
 	///</summary>
-	public static readonly MethodInfo SkipWhile2;
+	public static readonly MethodInfo SkipWhile2 = SeqMethods.SkipWhile2.Qy;
 
 	///<summary>
-	///Nullable&lt;Decimal&gt; qy.Sum&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Nullable&lt;Decimal&gt;&gt;&gt; selector)
+	///decimal? Sum&lt;TSource&gt;(Expression&lt;Func&lt;TSource, decimal?&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo Sum;
+	public static readonly MethodInfo Sum = SeqMethods.Sum.Qy;
 
 	///<summary>
-	///Int32 qy.Sum&lt;&gt;()
+	///decimal Sum()
 	///</summary>
-	public static readonly MethodInfo Sum2;
+	public static readonly MethodInfo Sum10 = SeqMethods.Sum10.Qy;
 
 	///<summary>
-	///Nullable&lt;Int32&gt; qy.Sum&lt;&gt;()
+	///decimal? Sum()
 	///</summary>
-	public static readonly MethodInfo Sum3;
+	public static readonly MethodInfo Sum11 = SeqMethods.Sum11.Qy;
 
 	///<summary>
-	///Int64 qy.Sum&lt;&gt;()
+	///int Sum&lt;TSource&gt;(Expression&lt;Func&lt;TSource, int&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo Sum4;
+	public static readonly MethodInfo Sum12 = SeqMethods.Sum12.Qy;
 
 	///<summary>
-	///Nullable&lt;Int64&gt; qy.Sum&lt;&gt;()
+	///int? Sum&lt;TSource&gt;(Expression&lt;Func&lt;TSource, int?&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo Sum5;
+	public static readonly MethodInfo Sum13 = SeqMethods.Sum13.Qy;
 
 	///<summary>
-	///Single qy.Sum&lt;&gt;()
+	///long Sum&lt;TSource&gt;(Expression&lt;Func&lt;TSource, long&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo Sum6;
+	public static readonly MethodInfo Sum14 = SeqMethods.Sum14.Qy;
 
 	///<summary>
-	///Nullable&lt;Single&gt; qy.Sum&lt;&gt;()
+	///long? Sum&lt;TSource&gt;(Expression&lt;Func&lt;TSource, long?&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo Sum7;
+	public static readonly MethodInfo Sum15 = SeqMethods.Sum15.Qy;
 
 	///<summary>
-	///Double qy.Sum&lt;&gt;()
+	///float Sum&lt;TSource&gt;(Expression&lt;Func&lt;TSource, float&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo Sum8;
+	public static readonly MethodInfo Sum16 = SeqMethods.Sum16.Qy;
 
 	///<summary>
-	///Nullable&lt;Double&gt; qy.Sum&lt;&gt;()
+	///float? Sum&lt;TSource&gt;(Expression&lt;Func&lt;TSource, float?&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo Sum9;
+	public static readonly MethodInfo Sum17 = SeqMethods.Sum17.Qy;
 
 	///<summary>
-	///Decimal qy.Sum&lt;&gt;()
+	///double Sum&lt;TSource&gt;(Expression&lt;Func&lt;TSource, double&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo Sum10;
+	public static readonly MethodInfo Sum18 = SeqMethods.Sum18.Qy;
 
 	///<summary>
-	///Nullable&lt;Decimal&gt; qy.Sum&lt;&gt;()
+	///double? Sum&lt;TSource&gt;(Expression&lt;Func&lt;TSource, double?&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo Sum11;
+	public static readonly MethodInfo Sum19 = SeqMethods.Sum19.Qy;
 
 	///<summary>
-	///Int32 qy.Sum&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Int32&gt;&gt; selector)
+	///int Sum()
 	///</summary>
-	public static readonly MethodInfo Sum12;
+	public static readonly MethodInfo Sum2 = SeqMethods.Sum2.Qy;
 
 	///<summary>
-	///Nullable&lt;Int32&gt; qy.Sum&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Nullable&lt;Int32&gt;&gt;&gt; selector)
+	///decimal Sum&lt;TSource&gt;(Expression&lt;Func&lt;TSource, decimal&gt;&gt; selector)
 	///</summary>
-	public static readonly MethodInfo Sum13;
+	public static readonly MethodInfo Sum20 = SeqMethods.Sum20.Qy;
 
 	///<summary>
-	///Int64 qy.Sum&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Int64&gt;&gt; selector)
+	///int? Sum()
 	///</summary>
-	public static readonly MethodInfo Sum14;
+	public static readonly MethodInfo Sum3 = SeqMethods.Sum3.Qy;
 
 	///<summary>
-	///Nullable&lt;Int64&gt; qy.Sum&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Nullable&lt;Int64&gt;&gt;&gt; selector)
+	///long Sum()
 	///</summary>
-	public static readonly MethodInfo Sum15;
+	public static readonly MethodInfo Sum4 = SeqMethods.Sum4.Qy;
 
 	///<summary>
-	///Single qy.Sum&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Single&gt;&gt; selector)
+	///long? Sum()
 	///</summary>
-	public static readonly MethodInfo Sum16;
+	public static readonly MethodInfo Sum5 = SeqMethods.Sum5.Qy;
 
 	///<summary>
-	///Nullable&lt;Single&gt; qy.Sum&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Nullable&lt;Single&gt;&gt;&gt; selector)
+	///float Sum()
 	///</summary>
-	public static readonly MethodInfo Sum17;
+	public static readonly MethodInfo Sum6 = SeqMethods.Sum6.Qy;
 
 	///<summary>
-	///Double qy.Sum&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Double&gt;&gt; selector)
+	///float? Sum()
 	///</summary>
-	public static readonly MethodInfo Sum18;
+	public static readonly MethodInfo Sum7 = SeqMethods.Sum7.Qy;
 
 	///<summary>
-	///Nullable&lt;Double&gt; qy.Sum&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Nullable&lt;Double&gt;&gt;&gt; selector)
+	///double Sum()
 	///</summary>
-	public static readonly MethodInfo Sum19;
+	public static readonly MethodInfo Sum8 = SeqMethods.Sum8.Qy;
 
 	///<summary>
-	///Decimal qy.Sum&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Decimal&gt;&gt; selector)
+	///double? Sum()
 	///</summary>
-	public static readonly MethodInfo Sum20;
+	public static readonly MethodInfo Sum9 = SeqMethods.Sum9.Qy;
 
 	///<summary>
-	///IQueryable&lt;TSource&gt; qy.Take&lt;TSource&gt;(Int32 count)
+	///IQueryable&lt;TSource&gt; Take&lt;TSource&gt;(int count)
 	///</summary>
-	public static readonly MethodInfo Take;
+	public static readonly MethodInfo Take = SeqMethods.Take.Qy;
 
 	///<summary>
-	///IQueryable&lt;TSource&gt; qy.TakeWhile&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Boolean&gt;&gt; predicate)
+	///IQueryable&lt;TSource&gt; TakeWhile&lt;TSource&gt;(Expression&lt;Func&lt;TSource, bool&gt;&gt; predicate)
 	///</summary>
-	public static readonly MethodInfo TakeWhile;
+	public static readonly MethodInfo TakeWhile = SeqMethods.TakeWhile.Qy;
 
 	///<summary>
-	///IQueryable&lt;TSource&gt; qy.TakeWhile&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Int32, Boolean&gt;&gt; predicate)
+	///IQueryable&lt;TSource&gt; TakeWhile&lt;TSource&gt;(Expression&lt;Func&lt;TSource, int, bool&gt;&gt; predicate)
 	///</summary>
-	public static readonly MethodInfo TakeWhile2;
+	public static readonly MethodInfo TakeWhile2 = SeqMethods.TakeWhile2.Qy;
 
 	///<summary>
-	///IOrderedQueryable&lt;TSource&gt; qy.ThenBy&lt;TSource, TKey&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector)
+	///IOrderedQueryable&lt;TSource&gt; ThenBy&lt;TSource, TKey&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector)
 	///</summary>
-	public static readonly MethodInfo ThenBy;
+	public static readonly MethodInfo ThenBy = SeqMethods.ThenBy.Qy;
 
 	///<summary>
-	///IOrderedQueryable&lt;TSource&gt; qy.ThenBy&lt;TSource, TKey&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector, IComparer&lt;TKey&gt; comparer)
+	///IOrderedQueryable&lt;TSource&gt; ThenBy&lt;TSource, TKey&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector, IComparer&lt;TKey&gt; comparer)
 	///</summary>
-	public static readonly MethodInfo ThenBy2;
+	public static readonly MethodInfo ThenBy2 = SeqMethods.ThenBy2.Qy;
 
 	///<summary>
-	///IOrderedQueryable&lt;TSource&gt; qy.ThenByDescending&lt;TSource, TKey&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector)
+	///IOrderedQueryable&lt;TSource&gt; ThenByDescending&lt;TSource, TKey&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector)
 	///</summary>
-	public static readonly MethodInfo ThenByDescending;
+	public static readonly MethodInfo ThenByDescending = SeqMethods.ThenByDescending.Qy;
 
 	///<summary>
-	///IOrderedQueryable&lt;TSource&gt; qy.ThenByDescending&lt;TSource, TKey&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector, IComparer&lt;TKey&gt; comparer)
+	///IOrderedQueryable&lt;TSource&gt; ThenByDescending&lt;TSource, TKey&gt;(Expression&lt;Func&lt;TSource, TKey&gt;&gt; keySelector, IComparer&lt;TKey&gt; comparer)
 	///</summary>
-	public static readonly MethodInfo ThenByDescending2;
+	public static readonly MethodInfo ThenByDescending2 = SeqMethods.ThenByDescending2.Qy;
 
 	///<summary>
-	///IQueryable&lt;TSource&gt; qy.Union&lt;TSource&gt;(IEnumerable&lt;TSource&gt; source2)
+	///IQueryable&lt;TSource&gt; Union&lt;TSource&gt;(IEnumerable&lt;TSource&gt; source2)
 	///</summary>
-	public static readonly MethodInfo Union;
+	public static readonly MethodInfo Union = SeqMethods.Union.Qy;
 
 	///<summary>
-	///IQueryable&lt;TSource&gt; qy.Union&lt;TSource&gt;(IEnumerable&lt;TSource&gt; source2, IEqualityComparer&lt;TSource&gt; comparer)
+	///IQueryable&lt;TSource&gt; Union&lt;TSource&gt;(IEnumerable&lt;TSource&gt; source2, IEqualityComparer&lt;TSource&gt; comparer)
 	///</summary>
-	public static readonly MethodInfo Union2;
+	public static readonly MethodInfo Union2 = SeqMethods.Union2.Qy;
 
 	///<summary>
-	///IQueryable&lt;TSource&gt; qy.Where&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Boolean&gt;&gt; predicate)
+	///IQueryable&lt;TSource&gt; Where&lt;TSource&gt;(Expression&lt;Func&lt;TSource, bool&gt;&gt; predicate)
 	///</summary>
-	public static readonly MethodInfo Where;
+	public static readonly MethodInfo Where = SeqMethods.Where.Qy;
 
 	///<summary>
-	///IQueryable&lt;TSource&gt; qy.Where&lt;TSource&gt;(Expression&lt;Func&lt;TSource, Int32, Boolean&gt;&gt; predicate)
+	///IQueryable&lt;TSource&gt; Where&lt;TSource&gt;(Expression&lt;Func&lt;TSource, int, bool&gt;&gt; predicate)
 	///</summary>
-	public static readonly MethodInfo Where2;
+	public static readonly MethodInfo Where2 = SeqMethods.Where2.Qy;
 
 	///<summary>
-	///IQueryable&lt;TResult&gt; qy.Zip&lt;TFirst, TSecond, TResult&gt;(IEnumerable&lt;TSecond&gt; source2, Expression&lt;Func&lt;TFirst, TSecond, TResult&gt;&gt; resultSelector)
+	///IQueryable&lt;TResult&gt; Zip&lt;TFirst, TSecond, TResult&gt;(IEnumerable&lt;TSecond&gt; source2, Expression&lt;Func&lt;TFirst, TSecond, TResult&gt;&gt; resultSelector)
 	///</summary>
-	public static readonly MethodInfo Zip;
+	public static readonly MethodInfo Zip = SeqMethods.Zip.Qy;
 
 	
-	static QyMethods() 
-	{
-		Aggregate = Refl.GetGenMethod(() => Queryable.Aggregate<object>((IQueryable<object>)null, (Expression<Func<object, object, object>>)null));
-		Aggregate2 = Refl.GetGenMethod(() => Queryable.Aggregate<object, object>((IQueryable<object>)null, (object)null, (Expression<Func<object, object, object>>)null));
-		Aggregate3 = Refl.GetGenMethod(() => Queryable.Aggregate<object, object, object>((IQueryable<object>)null, (object)null, (Expression<Func<object, object, object>>)null, (Expression<Func<object, object>>)null));
-		All = Refl.GetGenMethod(() => Queryable.All<object>((IQueryable<object>)null, (Expression<Func<object, Boolean>>)null));
-		Any = Refl.GetGenMethod(() => Queryable.Any<object>((IQueryable<object>)null));
-		Any2 = Refl.GetGenMethod(() => Queryable.Any<object>((IQueryable<object>)null, (Expression<Func<object, Boolean>>)null));
-		Average = Refl.GetMethod(() => Queryable.Average((IQueryable<Int32>)null));
-		Average2 = Refl.GetMethod(() => Queryable.Average((IQueryable<Nullable<Int32>>)null));
-		Average3 = Refl.GetMethod(() => Queryable.Average((IQueryable<Int64>)null));
-		Average4 = Refl.GetMethod(() => Queryable.Average((IQueryable<Nullable<Int64>>)null));
-		Average5 = Refl.GetMethod(() => Queryable.Average((IQueryable<Single>)null));
-		Average6 = Refl.GetMethod(() => Queryable.Average((IQueryable<Nullable<Single>>)null));
-		Average7 = Refl.GetMethod(() => Queryable.Average((IQueryable<Double>)null));
-		Average8 = Refl.GetMethod(() => Queryable.Average((IQueryable<Nullable<Double>>)null));
-		Average9 = Refl.GetMethod(() => Queryable.Average((IQueryable<Decimal>)null));
-		Average10 = Refl.GetMethod(() => Queryable.Average((IQueryable<Nullable<Decimal>>)null));
-		Average11 = Refl.GetGenMethod(() => Queryable.Average<object>((IQueryable<object>)null, (Expression<Func<object, Int32>>)null));
-		Average12 = Refl.GetGenMethod(() => Queryable.Average<object>((IQueryable<object>)null, (Expression<Func<object, Nullable<Int32>>>)null));
-		Average13 = Refl.GetGenMethod(() => Queryable.Average<object>((IQueryable<object>)null, (Expression<Func<object, Single>>)null));
-		Average14 = Refl.GetGenMethod(() => Queryable.Average<object>((IQueryable<object>)null, (Expression<Func<object, Nullable<Single>>>)null));
-		Average15 = Refl.GetGenMethod(() => Queryable.Average<object>((IQueryable<object>)null, (Expression<Func<object, Int64>>)null));
-		Average16 = Refl.GetGenMethod(() => Queryable.Average<object>((IQueryable<object>)null, (Expression<Func<object, Nullable<Int64>>>)null));
-		Average17 = Refl.GetGenMethod(() => Queryable.Average<object>((IQueryable<object>)null, (Expression<Func<object, Double>>)null));
-		Average18 = Refl.GetGenMethod(() => Queryable.Average<object>((IQueryable<object>)null, (Expression<Func<object, Nullable<Double>>>)null));
-		Average19 = Refl.GetGenMethod(() => Queryable.Average<object>((IQueryable<object>)null, (Expression<Func<object, Decimal>>)null));
-		Average20 = Refl.GetGenMethod(() => Queryable.Average<object>((IQueryable<object>)null, (Expression<Func<object, Nullable<Decimal>>>)null));
-		Cast = Refl.GetGenMethod(() => Queryable.Cast<object>((IQueryable)null));
-		Concat = Refl.GetGenMethod(() => Queryable.Concat<object>((IQueryable<object>)null, (IEnumerable<object>)null));
-		Contains = Refl.GetGenMethod(() => Queryable.Contains<object>((IQueryable<object>)null, (object)null));
-		Contains2 = Refl.GetGenMethod(() => Queryable.Contains<object>((IQueryable<object>)null, (object)null, (IEqualityComparer<object>)null));
-		Count = Refl.GetGenMethod(() => Queryable.Count<object>((IQueryable<object>)null));
-		Count2 = Refl.GetGenMethod(() => Queryable.Count<object>((IQueryable<object>)null, (Expression<Func<object, Boolean>>)null));
-		DefaultIfEmpty = Refl.GetGenMethod(() => Queryable.DefaultIfEmpty<object>((IQueryable<object>)null));
-		DefaultIfEmpty2 = Refl.GetGenMethod(() => Queryable.DefaultIfEmpty<object>((IQueryable<object>)null, (object)null));
-		Distinct = Refl.GetGenMethod(() => Queryable.Distinct<object>((IQueryable<object>)null));
-		Distinct2 = Refl.GetGenMethod(() => Queryable.Distinct<object>((IQueryable<object>)null, (IEqualityComparer<object>)null));
-		ElementAt = Refl.GetGenMethod(() => Queryable.ElementAt<object>((IQueryable<object>)null, 0));
-		ElementAtOrDefault = Refl.GetGenMethod(() => Queryable.ElementAtOrDefault<object>((IQueryable<object>)null, 0));
-		Except = Refl.GetGenMethod(() => Queryable.Except<object>((IQueryable<object>)null, (IEnumerable<object>)null));
-		Except2 = Refl.GetGenMethod(() => Queryable.Except<object>((IQueryable<object>)null, (IEnumerable<object>)null, (IEqualityComparer<object>)null));
-		First = Refl.GetGenMethod(() => Queryable.First<object>((IQueryable<object>)null));
-		First2 = Refl.GetGenMethod(() => Queryable.First<object>((IQueryable<object>)null, (Expression<Func<object, Boolean>>)null));
-		FirstOrDefault = Refl.GetGenMethod(() => Queryable.FirstOrDefault<object>((IQueryable<object>)null));
-		FirstOrDefault2 = Refl.GetGenMethod(() => Queryable.FirstOrDefault<object>((IQueryable<object>)null, (Expression<Func<object, Boolean>>)null));
-		GroupBy = Refl.GetGenMethod(() => Queryable.GroupBy<object, object>((IQueryable<object>)null, (Expression<Func<object, object>>)null));
-		GroupBy2 = Refl.GetGenMethod(() => Queryable.GroupBy<object, object, object>((IQueryable<object>)null, (Expression<Func<object, object>>)null, (Expression<Func<object, object>>)null));
-		GroupBy3 = Refl.GetGenMethod(() => Queryable.GroupBy<object, object>((IQueryable<object>)null, (Expression<Func<object, object>>)null, (IEqualityComparer<object>)null));
-		GroupBy4 = Refl.GetGenMethod(() => Queryable.GroupBy<object, object, object>((IQueryable<object>)null, (Expression<Func<object, object>>)null, (Expression<Func<object, object>>)null, (IEqualityComparer<object>)null));
-		GroupBy5 = Refl.GetGenMethod(() => Queryable.GroupBy<object, object, object, object>((IQueryable<object>)null, (Expression<Func<object, object>>)null, (Expression<Func<object, object>>)null, (Expression<Func<object, IEnumerable<object>, object>>)null));
-		GroupBy6 = Refl.GetGenMethod(() => Queryable.GroupBy<object, object, object>((IQueryable<object>)null, (Expression<Func<object, object>>)null, (Expression<Func<object, IEnumerable<object>, object>>)null));
-		GroupBy7 = Refl.GetGenMethod(() => Queryable.GroupBy<object, object, object>((IQueryable<object>)null, (Expression<Func<object, object>>)null, (Expression<Func<object, IEnumerable<object>, object>>)null, (IEqualityComparer<object>)null));
-		GroupBy8 = Refl.GetGenMethod(() => Queryable.GroupBy<object, object, object, object>((IQueryable<object>)null, (Expression<Func<object, object>>)null, (Expression<Func<object, object>>)null, (Expression<Func<object, IEnumerable<object>, object>>)null, (IEqualityComparer<object>)null));
-		GroupJoin = Refl.GetGenMethod(() => Queryable.GroupJoin<object, object, object, object>((IQueryable<object>)null, (IEnumerable<object>)null, (Expression<Func<object, object>>)null, (Expression<Func<object, object>>)null, (Expression<Func<object, IEnumerable<object>, object>>)null));
-		GroupJoin2 = Refl.GetGenMethod(() => Queryable.GroupJoin<object, object, object, object>((IQueryable<object>)null, (IEnumerable<object>)null, (Expression<Func<object, object>>)null, (Expression<Func<object, object>>)null, (Expression<Func<object, IEnumerable<object>, object>>)null, (IEqualityComparer<object>)null));
-		Intersect = Refl.GetGenMethod(() => Queryable.Intersect<object>((IQueryable<object>)null, (IEnumerable<object>)null));
-		Intersect2 = Refl.GetGenMethod(() => Queryable.Intersect<object>((IQueryable<object>)null, (IEnumerable<object>)null, (IEqualityComparer<object>)null));
-		Join = Refl.GetGenMethod(() => Queryable.Join<object, object, object, object>((IQueryable<object>)null, (IEnumerable<object>)null, (Expression<Func<object, object>>)null, (Expression<Func<object, object>>)null, (Expression<Func<object, object, object>>)null));
-		Join2 = Refl.GetGenMethod(() => Queryable.Join<object, object, object, object>((IQueryable<object>)null, (IEnumerable<object>)null, (Expression<Func<object, object>>)null, (Expression<Func<object, object>>)null, (Expression<Func<object, object, object>>)null, (IEqualityComparer<object>)null));
-		Last = Refl.GetGenMethod(() => Queryable.Last<object>((IQueryable<object>)null));
-		Last2 = Refl.GetGenMethod(() => Queryable.Last<object>((IQueryable<object>)null, (Expression<Func<object, Boolean>>)null));
-		LastOrDefault = Refl.GetGenMethod(() => Queryable.LastOrDefault<object>((IQueryable<object>)null));
-		LastOrDefault2 = Refl.GetGenMethod(() => Queryable.LastOrDefault<object>((IQueryable<object>)null, (Expression<Func<object, Boolean>>)null));
-		LongCount = Refl.GetGenMethod(() => Queryable.LongCount<object>((IQueryable<object>)null));
-		LongCount2 = Refl.GetGenMethod(() => Queryable.LongCount<object>((IQueryable<object>)null, (Expression<Func<object, Boolean>>)null));
-		Max = Refl.GetGenMethod(() => Queryable.Max<object>((IQueryable<object>)null));
-		Max2 = Refl.GetGenMethod(() => Queryable.Max<object, object>((IQueryable<object>)null, (Expression<Func<object, object>>)null));
-		Min = Refl.GetGenMethod(() => Queryable.Min<object>((IQueryable<object>)null));
-		Min2 = Refl.GetGenMethod(() => Queryable.Min<object, object>((IQueryable<object>)null, (Expression<Func<object, object>>)null));
-		OfType = Refl.GetGenMethod(() => Queryable.OfType<object>((IQueryable)null));
-		OrderBy = Refl.GetGenMethod(() => Queryable.OrderBy<object, object>((IQueryable<object>)null, (Expression<Func<object, object>>)null));
-		OrderBy2 = Refl.GetGenMethod(() => Queryable.OrderBy<object, object>((IQueryable<object>)null, (Expression<Func<object, object>>)null, (IComparer<object>)null));
-		OrderByDescending = Refl.GetGenMethod(() => Queryable.OrderByDescending<object, object>((IQueryable<object>)null, (Expression<Func<object, object>>)null));
-		OrderByDescending2 = Refl.GetGenMethod(() => Queryable.OrderByDescending<object, object>((IQueryable<object>)null, (Expression<Func<object, object>>)null, (IComparer<object>)null));
-		Reverse = Refl.GetGenMethod(() => Queryable.Reverse<object>((IQueryable<object>)null));
-		Select = Refl.GetGenMethod(() => Queryable.Select<object, object>((IQueryable<object>)null, (Expression<Func<object, object>>)null));
-		Select2 = Refl.GetGenMethod(() => Queryable.Select<object, object>((IQueryable<object>)null, (Expression<Func<object, Int32, object>>)null));
-		SelectMany = Refl.GetGenMethod(() => Queryable.SelectMany<object, object>((IQueryable<object>)null, (Expression<Func<object, IEnumerable<object>>>)null));
-		SelectMany2 = Refl.GetGenMethod(() => Queryable.SelectMany<object, object>((IQueryable<object>)null, (Expression<Func<object, Int32, IEnumerable<object>>>)null));
-		SelectMany3 = Refl.GetGenMethod(() => Queryable.SelectMany<object, object, object>((IQueryable<object>)null, (Expression<Func<object, Int32, IEnumerable<object>>>)null, (Expression<Func<object, object, object>>)null));
-		SelectMany4 = Refl.GetGenMethod(() => Queryable.SelectMany<object, object, object>((IQueryable<object>)null, (Expression<Func<object, IEnumerable<object>>>)null, (Expression<Func<object, object, object>>)null));
-		SequenceEqual = Refl.GetGenMethod(() => Queryable.SequenceEqual<object>((IQueryable<object>)null, (IEnumerable<object>)null));
-		SequenceEqual2 = Refl.GetGenMethod(() => Queryable.SequenceEqual<object>((IQueryable<object>)null, (IEnumerable<object>)null, (IEqualityComparer<object>)null));
-		Single = Refl.GetGenMethod(() => Queryable.Single<object>((IQueryable<object>)null));
-		Single2 = Refl.GetGenMethod(() => Queryable.Single<object>((IQueryable<object>)null, (Expression<Func<object, Boolean>>)null));
-		SingleOrDefault = Refl.GetGenMethod(() => Queryable.SingleOrDefault<object>((IQueryable<object>)null));
-		SingleOrDefault2 = Refl.GetGenMethod(() => Queryable.SingleOrDefault<object>((IQueryable<object>)null, (Expression<Func<object, Boolean>>)null));
-		Skip = Refl.GetGenMethod(() => Queryable.Skip<object>((IQueryable<object>)null, 0));
-		SkipWhile = Refl.GetGenMethod(() => Queryable.SkipWhile<object>((IQueryable<object>)null, (Expression<Func<object, Boolean>>)null));
-		SkipWhile2 = Refl.GetGenMethod(() => Queryable.SkipWhile<object>((IQueryable<object>)null, (Expression<Func<object, Int32, Boolean>>)null));
-		Sum = Refl.GetGenMethod(() => Queryable.Sum<object>((IQueryable<object>)null, (Expression<Func<object, Nullable<Decimal>>>)null));
-		Sum2 = Refl.GetMethod(() => Queryable.Sum((IQueryable<Int32>)null));
-		Sum3 = Refl.GetMethod(() => Queryable.Sum((IQueryable<Nullable<Int32>>)null));
-		Sum4 = Refl.GetMethod(() => Queryable.Sum((IQueryable<Int64>)null));
-		Sum5 = Refl.GetMethod(() => Queryable.Sum((IQueryable<Nullable<Int64>>)null));
-		Sum6 = Refl.GetMethod(() => Queryable.Sum((IQueryable<Single>)null));
-		Sum7 = Refl.GetMethod(() => Queryable.Sum((IQueryable<Nullable<Single>>)null));
-		Sum8 = Refl.GetMethod(() => Queryable.Sum((IQueryable<Double>)null));
-		Sum9 = Refl.GetMethod(() => Queryable.Sum((IQueryable<Nullable<Double>>)null));
-		Sum10 = Refl.GetMethod(() => Queryable.Sum((IQueryable<Decimal>)null));
-		Sum11 = Refl.GetMethod(() => Queryable.Sum((IQueryable<Nullable<Decimal>>)null));
-		Sum12 = Refl.GetGenMethod(() => Queryable.Sum<object>((IQueryable<object>)null, (Expression<Func<object, Int32>>)null));
-		Sum13 = Refl.GetGenMethod(() => Queryable.Sum<object>((IQueryable<object>)null, (Expression<Func<object, Nullable<Int32>>>)null));
-		Sum14 = Refl.GetGenMethod(() => Queryable.Sum<object>((IQueryable<object>)null, (Expression<Func<object, Int64>>)null));
-		Sum15 = Refl.GetGenMethod(() => Queryable.Sum<object>((IQueryable<object>)null, (Expression<Func<object, Nullable<Int64>>>)null));
-		Sum16 = Refl.GetGenMethod(() => Queryable.Sum<object>((IQueryable<object>)null, (Expression<Func<object, Single>>)null));
-		Sum17 = Refl.GetGenMethod(() => Queryable.Sum<object>((IQueryable<object>)null, (Expression<Func<object, Nullable<Single>>>)null));
-		Sum18 = Refl.GetGenMethod(() => Queryable.Sum<object>((IQueryable<object>)null, (Expression<Func<object, Double>>)null));
-		Sum19 = Refl.GetGenMethod(() => Queryable.Sum<object>((IQueryable<object>)null, (Expression<Func<object, Nullable<Double>>>)null));
-		Sum20 = Refl.GetGenMethod(() => Queryable.Sum<object>((IQueryable<object>)null, (Expression<Func<object, Decimal>>)null));
-		Take = Refl.GetGenMethod(() => Queryable.Take<object>((IQueryable<object>)null, 0));
-		TakeWhile = Refl.GetGenMethod(() => Queryable.TakeWhile<object>((IQueryable<object>)null, (Expression<Func<object, Boolean>>)null));
-		TakeWhile2 = Refl.GetGenMethod(() => Queryable.TakeWhile<object>((IQueryable<object>)null, (Expression<Func<object, Int32, Boolean>>)null));
-		ThenBy = Refl.GetGenMethod(() => Queryable.ThenBy<object, object>((IOrderedQueryable<object>)null, (Expression<Func<object, object>>)null));
-		ThenBy2 = Refl.GetGenMethod(() => Queryable.ThenBy<object, object>((IOrderedQueryable<object>)null, (Expression<Func<object, object>>)null, (IComparer<object>)null));
-		ThenByDescending = Refl.GetGenMethod(() => Queryable.ThenByDescending<object, object>((IOrderedQueryable<object>)null, (Expression<Func<object, object>>)null));
-		ThenByDescending2 = Refl.GetGenMethod(() => Queryable.ThenByDescending<object, object>((IOrderedQueryable<object>)null, (Expression<Func<object, object>>)null, (IComparer<object>)null));
-		Union = Refl.GetGenMethod(() => Queryable.Union<object>((IQueryable<object>)null, (IEnumerable<object>)null));
-		Union2 = Refl.GetGenMethod(() => Queryable.Union<object>((IQueryable<object>)null, (IEnumerable<object>)null, (IEqualityComparer<object>)null));
-		Where = Refl.GetGenMethod(() => Queryable.Where<object>((IQueryable<object>)null, (Expression<Func<object, Boolean>>)null));
-		Where2 = Refl.GetGenMethod(() => Queryable.Where<object>((IQueryable<object>)null, (Expression<Func<object, Int32, Boolean>>)null));
-		Zip = Refl.GetGenMethod(() => Queryable.Zip<object, object, object>((IQueryable<object>)null, (IEnumerable<object>)null, (Expression<Func<object, object, object>>)null));
-	}
 } 
-

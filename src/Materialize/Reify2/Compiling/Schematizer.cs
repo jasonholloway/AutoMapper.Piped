@@ -25,12 +25,8 @@ namespace Materialize.Reify2.Compiling
 
         class BlankScheme : Scheme
         {
-            public override Type OutType {
-                get { return typeof(void); }
-            }
-
             public override ReifyExecutor Compile() {
-                return (_, __) => null;
+                throw new InvalidOperationException();
             }
         }
 
@@ -39,7 +35,7 @@ namespace Materialize.Reify2.Compiling
         static Scheme Schematize(Scheme prevScheme, SourceTransition trans) 
         {
             return new QueryScheme() {
-                            Query = trans.CanonicalExpression,
+                            Exp = trans.CanonicalExpression,
                             ParamMap = prevScheme.ParamMap
                         };
         }
@@ -55,15 +51,15 @@ namespace Materialize.Reify2.Compiling
         {         
             var lzUpstreamExecutor = new Lazy<ReifyExecutor>(() => prevScheme.Compile());
             
-            var castType = prevScheme.OutType.IsQueryable()
-                            ? typeof(IEnumerable<>).MakeGenericType(prevScheme.OutType.GetEnumerableElementType())
-                            : prevScheme.OutType;
+            var castType = prevScheme.IsQueryable
+                                ? typeof(IEnumerable<>).MakeGenericType(prevScheme.OutType.GetEnumerableElementType())
+                                : prevScheme.OutType;
 
             var scheme = new ClientScheme();
 
             scheme.ParamMap = prevScheme.ParamMap;
 
-            scheme.Body = Expression.Convert(
+            scheme.Exp = Expression.Convert(
                                 Expression.Call(
                                         Expression.MakeMemberAccess(
                                                 Expression.Constant(lzUpstreamExecutor), 
@@ -80,189 +76,121 @@ namespace Materialize.Reify2.Compiling
 
 
 
-        static Scheme Schematize(QueryScheme scheme, ProjectionTransition trans) 
+
+
+
+
+        static Scheme Schematize(Scheme scheme, ProjectionTransition trans) 
         {
-            scheme.Query = Expression.Call(
-                                QyMethods.Select.MakeGenericMethod(trans.InElemType, trans.OutElemType),
-                                scheme.Query,
+            var method = scheme.IsQueryable 
+                            ? QyMethods.Select 
+                            : EnMethods.Select;
+
+            scheme.Exp = Expression.Call(
+                                method.MakeGenericMethod(trans.InElemType, trans.OutElemType),
+                                scheme.Exp,
                                 trans.Projection
                                 );
             
             return scheme;
         }
 
-
-
-
-
-
-        
-        static Scheme Schematize(ClientScheme scheme, ProjectionTransition trans) 
-        {
-            scheme.Body = Expression.Call(
-                                EnMethods.Select.MakeGenericMethod(trans.InElemType, trans.OutElemType),
-                                scheme.Body,
-                                InjectIncidentalFetchers(scheme, trans.Projection)
-                                );
-            
-            return scheme;
-        }
-
+                
 
 
         
 
 
 
-        static Scheme Schematize(QueryScheme scheme, FilterTransition trans) 
+        static Scheme Schematize(Scheme scheme, FilterTransition trans) 
         {
-            scheme.Query = Expression.Call(
-                                QyMethods.Where.MakeGenericMethod(trans.ElemType),
-                                scheme.Query,
+            var method = scheme.IsQueryable 
+                            ? QyMethods.Where 
+                            : EnMethods.Where;
+
+            scheme.Exp = Expression.Call(
+                                method.MakeGenericMethod(trans.ElemType),
+                                scheme.Exp,
                                 trans.Predicate);
 
             return scheme;
         }
+        
 
 
 
 
-
-        static Scheme Schematize(ClientScheme scheme, FilterTransition trans) 
-        {
-            scheme.Body = Expression.Call(
-                                EnMethods.Where.MakeGenericMethod(trans.ElemType),
-                                scheme.Body,
-                                InjectIncidentalFetchers(scheme, trans.Predicate)
-                                );
-
-            return scheme;
-        }
-
-
-
-
-
-
-        static Scheme Schematize(QueryScheme scheme, PartitionTransition trans) 
+        static Scheme Schematize(Scheme scheme, PartitionTransition trans) 
         {
             MethodInfo mPartition = null;
 
             switch(trans.PartitionType) {
                 case PartitionType.Skip:
-                    mPartition = QyMethods.Skip;
+                    mPartition = scheme.IsQueryable ? QyMethods.Skip : EnMethods.Skip;
                     break;
                 case PartitionType.Take:
-                    mPartition = QyMethods.Take;
+                    mPartition = scheme.IsQueryable ? QyMethods.Take : EnMethods.Take;
                     break;
             }
             
-            scheme.Query = Expression.Call(
+            scheme.Exp = Expression.Call(
                                     mPartition.MakeGenericMethod(scheme.OutType.GetEnumerableElementType()),
-                                    scheme.Query,
+                                    scheme.Exp,
                                     trans.CountExpression);
 
             return scheme;
         }
+        
 
 
 
-
-        static Scheme Schematize(ClientScheme scheme, PartitionTransition trans) 
-        {
-            MethodInfo mPartition = null;
-
-            switch(trans.PartitionType) {
-                case PartitionType.Skip:
-                    mPartition = EnMethods.Skip;
-                    break;
-                case PartitionType.Take:
-                    mPartition = EnMethods.Take;
-                    break;
-            }
-
-            scheme.Body = Expression.Call(
-                                    mPartition.MakeGenericMethod(scheme.OutType.GetEnumerableElementType()),
-                                    scheme.Body,
-                                    InjectIncidentalFetchers(scheme, trans.CountExpression));
-
-            return scheme;
-        }
-
-
-
-
-        static Scheme Schematize(QueryScheme scheme, ElementTransition trans) 
+        static Scheme Schematize(Scheme scheme, ElementTransition trans) 
         {
             MethodInfo method = null;
 
             switch(trans.ElementTransitionType) {
                 case ElementTransitionType.ElementAt:
-                    method = trans.ReturnsDefault ? QyMethods.ElementAtOrDefault : QyMethods.ElementAt;
+                    method = scheme.IsQueryable
+                                ? (trans.ReturnsDefault ? QyMethods.ElementAtOrDefault : QyMethods.ElementAt)
+                                : (trans.ReturnsDefault ? EnMethods.ElementAtOrDefault : EnMethods.ElementAt);
 
                     method = method.MakeGenericMethod(scheme.OutType.GetEnumerableElementType());
 
-                    scheme.Query = Expression.Call(
+                    scheme.Exp = Expression.Call(
                                             method,
-                                            scheme.Query,
+                                            scheme.Exp,
                                             trans.IndexExpression);
                     return scheme;
 
                 case ElementTransitionType.First:
-                    method = trans.ReturnsDefault ? QyMethods.FirstOrDefault : QyMethods.First;
+                    method = scheme.IsQueryable
+                                ? (trans.ReturnsDefault ? QyMethods.FirstOrDefault : QyMethods.First)
+                                : (trans.ReturnsDefault ? EnMethods.FirstOrDefault : EnMethods.First);
                     break;
 
                 case ElementTransitionType.Last:
-                    method = trans.ReturnsDefault ? QyMethods.LastOrDefault : QyMethods.Last;
+                    method = scheme.IsQueryable
+                                ? (trans.ReturnsDefault ? QyMethods.LastOrDefault : QyMethods.Last)
+                                : (trans.ReturnsDefault ? EnMethods.LastOrDefault : EnMethods.Last);
                     break;
 
                 case ElementTransitionType.Single:
-                    method = trans.ReturnsDefault ? QyMethods.SingleOrDefault : QyMethods.Single;
+                    method = scheme.IsQueryable
+                                ? (trans.ReturnsDefault ? QyMethods.SingleOrDefault : QyMethods.Single)
+                                : (trans.ReturnsDefault ? EnMethods.SingleOrDefault : EnMethods.Single);
                     break;
             }
 
             method = method.MakeGenericMethod(scheme.OutType.GetEnumerableElementType());
 
-            scheme.Query = Expression.Call(
+            scheme.Exp = Expression.Call(
                                     method,
-                                    scheme.Query);
+                                    scheme.Exp);
 
             return scheme;
-        } 
-
-
-
-
-
-
-
-        static MethodInfo _mGetValueWith = Refl.GetMethod<ArgMap>(m => m.GetValueWith(_ => null));
-
-
-        //replace all constant-parameters with fetching code, to acquire incidental values from the passed ArgMap
-        static Expression InjectIncidentalFetchers(ClientScheme scheme, Expression exSubject) 
-        {
-            return exSubject.Replace(
-                        x => x is ConstantExpression,
-                        x => {
-                            var accessor = scheme.ParamMap.TryGetAccessor(x);
-                            
-                            if(accessor == null) {
-                                return x; //not all constants are parameterized - some are produced by the mapping layer, and should be left in place
-                            }
-
-                            return Expression.Convert(
-                                        Expression.Call(
-                                                scheme.ArgMapParam,
-                                                _mGetValueWith,
-                                                Expression.Constant(accessor)),
-                                        x.Type
-                                        );
-                        });
         }
 
         
-
 
     }
 

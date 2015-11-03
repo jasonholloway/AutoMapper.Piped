@@ -4,9 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Materialize.Types;
+using System.Reflection;
 
 namespace Materialize.Reify2.Compiling
 {
@@ -17,25 +16,26 @@ namespace Materialize.Reify2.Compiling
     internal abstract class Scheme
     {
         public ParamMap ParamMap { get; set; }
-
-        public abstract Type OutType { get; }
-
+        public Expression Exp { get; set; }
+        
         public abstract ReifyExecutor Compile();
+
+        public Type OutType {
+            get { return Exp?.Type; }
+        }
+
+        public bool IsQueryable {
+            get { return OutType.IsQueryable(); }
+        }
     }
 
 
 
     class QueryScheme : Scheme
     {
-        public Expression Query { get; set; }
-
-        public override Type OutType {
-            get { return Query.Type; }
-        }
-
         public override ReifyExecutor Compile() {
             return (prov, args) => {             
-                var ex = Query.Replace(
+                var ex = Exp.Replace(
                             x => x is ConstantExpression,
                             x => args.GetIncidentalFor(x));
 
@@ -49,8 +49,6 @@ namespace Materialize.Reify2.Compiling
 
     class ClientScheme : Scheme
     {
-        public Expression Body { get; set; }
-
         public ParameterExpression ProviderParam { get; private set; }
         public ParameterExpression ArgMapParam { get; private set; }
 
@@ -60,22 +58,48 @@ namespace Materialize.Reify2.Compiling
             ArgMapParam = Expression.Parameter(typeof(ArgMap));
         }
 
+        public override ReifyExecutor Compile() 
+        {
+            var exBody = InjectIncidentalFetchers(Exp);
 
-        public override Type OutType {
-            get { return Body.Type; }
-        }
-
-
-        public override ReifyExecutor Compile() {
             var exLambda = Expression.Lambda<ReifyExecutor>(
-                                        Body.Type.IsValueType 
-                                            ? Expression.Convert(Body, typeof(object)) //boxing needed???
-                                            : Body,
+                                        exBody.Type.IsValueType 
+                                            ? Expression.Convert(exBody, typeof(object))
+                                            : exBody,
                                         ProviderParam,
                                         ArgMapParam);
 
             return exLambda.Compile();
         }
+
+        
+
+
+        static MethodInfo _mGetValueWith = Refl.GetMethod<ArgMap>(m => m.GetValueWith(_ => null));
+
+
+        Expression InjectIncidentalFetchers(Expression exSubject) {
+            return exSubject.Replace(
+                        x => x is ConstantExpression,
+                        x => {
+                            var accessor = ParamMap.TryGetAccessor(x);
+
+                            if(accessor == null) {
+                                return x; //not all constants are parameterized - some are produced by the mapping layer, and should be left in place
+                            }
+
+                            return Expression.Convert(
+                                        Expression.Call(
+                                            ArgMapParam,
+                                            _mGetValueWith,
+                                            Expression.Constant(accessor)),
+                                        x.Type
+                                        );
+                        });
+        }
+
+
+
     }
 
 

@@ -87,6 +87,10 @@
       <Project>{8c955148-fa96-4f0d-880d-abb6770f54e9}</Project>
       <Name>AutoMapper.Net4</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Materialize.SequenceMethods\Materialize.SequenceMethods.csproj">
+      <Project>{6d339926-99f4-4d32-a151-45a2052896a9}</Project>
+      <Name>Materialize.SequenceMethods</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Materialize\Materialize.csproj">
       <Project>{f8a1b543-0b7f-40aa-907d-775cdb36ce7f}</Project>
       <Name>Materialize</Name>

@@ -2,6 +2,7 @@
 using Materialize.Reify2.Compiling;
 using Materialize.Reify2.Parameterize;
 using Materialize.Reify2.Transitions;
+using Materialize.SequenceMethods;
 using Materialize.SourceRegimes;
 using Materialize.Tests.Inner.Fakes;
 using NSubstitute;
@@ -45,7 +46,10 @@ namespace Materialize.Tests.Inner
                             new SourceTransition(new TolerantRegime(), Expression.Constant(qy)),
                             new FetchTransition(new TolerantRegime()));
 
-            var scheme = Schematizer.Schematize(trans, new ParamMapFake());
+            var paramMap = Substitute.For<ParamMapFake>();
+            paramMap.TryGetAccessor(Arg.Any<Expression>()).Returns((NodeAccessor)null);
+
+            var scheme = Schematizer.Schematize(trans, paramMap);
             var fnExec = scheme.Compile();
 
             var results = fnExec(qy.Provider, new ArgMapFake(qy));
@@ -65,7 +69,10 @@ namespace Materialize.Tests.Inner
                             new ProjectionTransition(Lambda((int i) => i + i + 4F)),
                             new FetchTransition(new TolerantRegime()));
 
-            var scheme = Schematizer.Schematize(trans, new ParamMapFake());
+            var paramMap = Substitute.For<ParamMapFake>();
+            paramMap.TryGetAccessor(Arg.Any<Expression>()).Returns(null, e => e);
+
+            var scheme = Schematizer.Schematize(trans, paramMap);
             var fnExec = scheme.Compile();
 
             var results = fnExec(qy.Provider, new ArgMapFake(qy));
@@ -86,16 +93,19 @@ namespace Materialize.Tests.Inner
                             new FetchTransition(new TolerantRegime()),
                             new ProjectionTransition(Lambda((int i) => i + i + 7F)));
 
-            var scheme = Schematizer.Schematize(trans, new ParamMapFake());
+            var paramMap = Substitute.For<ParamMapFake>();
+            paramMap.TryGetAccessor(Arg.Any<Expression>()).Returns(null, ex => ex);
+            
+            var scheme = Schematizer.Schematize(trans, paramMap);
             var fnExec = scheme.Compile();
 
             var argMap = Substitute.ForPartsOf<ArgMapFake>(qy); //slow, this!
-            argMap.GetValueWith(Arg.Any<NodeAccessor>()).Returns(default(float));
+            argMap.GetValueWith(Arg.Any<NodeAccessor>()).Returns(5F);
 
             var results = fnExec(qy.Provider, argMap);
 
             Assert.That(results, Is.InstanceOf<IEnumerable<float>>());
-            Assert.That((IEnumerable<float>)results, Is.EquivalentTo(qy.Select(i => i + i + 0F))); //constant will be replaced with default if parameterization working!
+            Assert.That((IEnumerable<float>)results, Is.EquivalentTo(qy.Select(i => i + i + 5F))); //constant will be replaced with default if parameterization working!
         }
 
 
@@ -109,7 +119,10 @@ namespace Materialize.Tests.Inner
                             new FilterTransition(Lambda((int i) => i > 40)),
                             new FetchTransition(new TolerantRegime()));
 
-            var scheme = Schematizer.Schematize(trans, new ParamMapFake());
+            var paramMap = Substitute.ForPartsOf<ParamMapFake>();
+            paramMap.TryGetAccessor(Arg.Any<Expression>()).Returns(null, e => e);
+
+            var scheme = Schematizer.Schematize(trans, paramMap);
             var fnExec = scheme.Compile();
             
             var results = fnExec(qy.Provider, new ArgMapFake(qy));
@@ -128,7 +141,10 @@ namespace Materialize.Tests.Inner
                             new FetchTransition(new TolerantRegime()),
                             new FilterTransition(Lambda((int i) => i > 40)));
 
-            var scheme = Schematizer.Schematize(trans, new ParamMapFake());
+            var paramMap = Substitute.For<ParamMapFake>();
+            paramMap.TryGetAccessor(Arg.Any<Expression>()).Returns(null, ex => ex);
+
+            var scheme = Schematizer.Schematize(trans, paramMap);
             var fnExec = scheme.Compile();
             
             var argMap = Substitute.ForPartsOf<ArgMapFake>(qy); //slow, this!
@@ -155,7 +171,10 @@ namespace Materialize.Tests.Inner
                             new PartitionTransition(PartitionType.Take, Expression.Constant(10)),
                             new FetchTransition(new TolerantRegime()));
 
-            var scheme = Schematizer.Schematize(trans, new ParamMapFake());
+            var paramMap = Substitute.For<ParamMapFake>();
+            paramMap.TryGetAccessor(Arg.Any<Expression>()).Returns(null, e => e, e => e);
+
+            var scheme = Schematizer.Schematize(trans, paramMap);
             var fnExec = scheme.Compile();
 
             var argMap = Substitute.ForPartsOf<ArgMapFake>(qy); //slow, this!
@@ -180,7 +199,10 @@ namespace Materialize.Tests.Inner
                             new PartitionTransition(PartitionType.Skip, Expression.Constant(10)),
                             new PartitionTransition(PartitionType.Take, Expression.Constant(10)));
 
-            var scheme = Schematizer.Schematize(trans, new ParamMapFake());
+            var paramMap = Substitute.For<ParamMapFake>();
+            paramMap.TryGetAccessor(Arg.Any<Expression>()).Returns(null, e => e, e => e);
+
+            var scheme = Schematizer.Schematize(trans, paramMap);
             var fnExec = scheme.Compile();
 
             var argMap = Substitute.ForPartsOf<ArgMapFake>(qy);            

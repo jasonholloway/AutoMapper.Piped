@@ -1,0 +1,17 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="$(ProjectDir)..\Materialize.SequenceMethods\bin\$(Configuration)\Materialize.SequenceMethods.dll" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="Materialize.SequenceMethods" #>
+<#@ output extension="cs" #>
+using Materialize.SequenceMethods;
+
+internal static class SeqMethods 
+{
+<#	foreach(var r in SeqMethodMap.Methods.Values) {
+#>	public static readonly SeqMethodRecord <#=r.Name#> = SeqMethodMap.Methods["<#=r.Name#>"];
+<#}#>
+}
+

@@ -1,4 +1,4 @@
-﻿ 
+﻿
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,6 +11,7 @@ using Materialize;
 using Materialize.Reify2.Parsing2;
 using Materialize.Reify2;
 using Materialize.SourceRegimes;
+using Materialize.SequenceMethods;
 
 [TestFixture]
 class DirectPipelineTests
@@ -58,6 +59,8 @@ class DirectPipelineTests
 	[Test]
 	public void Aggregate2Test() 
 	{
+        var s = SeqMethods.Aggregate.Qy.Describe();
+
 		IQueryable<Item> qySource = Enumerable.Range(10, 40).Select(i => new Item(i)).AsQueryable();			
 		
         var reifiable = _reifiableFac.CreateReifiable(qySource, new MaterializeOptions());
