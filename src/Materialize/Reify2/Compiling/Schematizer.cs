@@ -8,6 +8,7 @@ using Materialize.Reify2.Parameterize;
 using System.Reflection;
 using Materialize.Types;
 using Materialize.Expressions;
+using Materialize.SequenceMethods;
 
 namespace Materialize.Reify2.Compiling
 {   
@@ -76,18 +77,14 @@ namespace Materialize.Reify2.Compiling
 
 
 
-
-
-
+        
 
         static Scheme Schematize(Scheme scheme, ProjectionTransition trans) 
         {
-            var method = scheme.IsQueryable 
-                            ? QyMethods.Select 
-                            : EnMethods.Select;
-
+            var m = SeqMethods.Select;
+            
             scheme.Exp = Expression.Call(
-                                method.MakeGenericMethod(trans.InElemType, trans.OutElemType),
+                                (scheme.IsQueryable ? m.Qy : m.En).MakeGenericMethod(trans.InElemType, trans.OutElemType),
                                 scheme.Exp,
                                 trans.Projection
                                 );
@@ -104,12 +101,10 @@ namespace Materialize.Reify2.Compiling
 
         static Scheme Schematize(Scheme scheme, FilterTransition trans) 
         {
-            var method = scheme.IsQueryable 
-                            ? QyMethods.Where 
-                            : EnMethods.Where;
-
+            var m = SeqMethods.Where;
+            
             scheme.Exp = Expression.Call(
-                                method.MakeGenericMethod(trans.ElemType),
+                                (scheme.IsQueryable ? m.Qy : m.En).MakeGenericMethod(trans.ElemType),
                                 scheme.Exp,
                                 trans.Predicate);
 
@@ -122,21 +117,22 @@ namespace Materialize.Reify2.Compiling
 
         static Scheme Schematize(Scheme scheme, PartitionTransition trans) 
         {
-            MethodInfo mPartition = null;
+            SeqMethod m = null;
 
             switch(trans.PartitionType) {
                 case PartitionType.Skip:
-                    mPartition = scheme.IsQueryable ? QyMethods.Skip : EnMethods.Skip;
+                    m = SeqMethods.Skip;
                     break;
+
                 case PartitionType.Take:
-                    mPartition = scheme.IsQueryable ? QyMethods.Take : EnMethods.Take;
+                    m = SeqMethods.Take;
                     break;
             }
             
             scheme.Exp = Expression.Call(
-                                    mPartition.MakeGenericMethod(scheme.OutType.GetEnumerableElementType()),
-                                    scheme.Exp,
-                                    trans.CountExpression);
+                            (scheme.IsQueryable ? m.Qy : m.En).MakeGenericMethod(scheme.OutType.GetEnumerableElementType()),
+                            scheme.Exp,
+                            trans.CountExpression);
 
             return scheme;
         }
@@ -146,46 +142,33 @@ namespace Materialize.Reify2.Compiling
 
         static Scheme Schematize(Scheme scheme, ElementTransition trans) 
         {
-            MethodInfo method = null;
+            SeqMethod m = null;
+
+            var args = new List<Expression>(2);
+            args.Add(scheme.Exp);
 
             switch(trans.ElementTransitionType) {
                 case ElementTransitionType.ElementAt:
-                    method = scheme.IsQueryable
-                                ? (trans.ReturnsDefault ? QyMethods.ElementAtOrDefault : QyMethods.ElementAt)
-                                : (trans.ReturnsDefault ? EnMethods.ElementAtOrDefault : EnMethods.ElementAt);
-
-                    method = method.MakeGenericMethod(scheme.OutType.GetEnumerableElementType());
-
-                    scheme.Exp = Expression.Call(
-                                            method,
-                                            scheme.Exp,
-                                            trans.IndexExpression);
-                    return scheme;
+                    m = trans.ReturnsDefault ? SeqMethods.ElementAtOrDefault : SeqMethods.ElementAt;
+                    args.Add(trans.IndexExpression);
+                    break;
 
                 case ElementTransitionType.First:
-                    method = scheme.IsQueryable
-                                ? (trans.ReturnsDefault ? QyMethods.FirstOrDefault : QyMethods.First)
-                                : (trans.ReturnsDefault ? EnMethods.FirstOrDefault : EnMethods.First);
+                    m = trans.ReturnsDefault ? SeqMethods.FirstOrDefault : SeqMethods.First;
                     break;
 
                 case ElementTransitionType.Last:
-                    method = scheme.IsQueryable
-                                ? (trans.ReturnsDefault ? QyMethods.LastOrDefault : QyMethods.Last)
-                                : (trans.ReturnsDefault ? EnMethods.LastOrDefault : EnMethods.Last);
+                    m = trans.ReturnsDefault ? SeqMethods.LastOrDefault : SeqMethods.Last;
                     break;
 
                 case ElementTransitionType.Single:
-                    method = scheme.IsQueryable
-                                ? (trans.ReturnsDefault ? QyMethods.SingleOrDefault : QyMethods.Single)
-                                : (trans.ReturnsDefault ? EnMethods.SingleOrDefault : EnMethods.Single);
+                    m = trans.ReturnsDefault ? SeqMethods.SingleOrDefault : SeqMethods.Single;
                     break;
             }
-
-            method = method.MakeGenericMethod(scheme.OutType.GetEnumerableElementType());
-
+            
             scheme.Exp = Expression.Call(
-                                    method,
-                                    scheme.Exp);
+                            (scheme.IsQueryable ? m.Qy : m.En).MakeGenericMethod(scheme.OutType.GetEnumerableElementType()),                                    
+                            args.ToArray());
 
             return scheme;
         }

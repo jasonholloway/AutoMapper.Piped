@@ -9,13 +9,13 @@ using System.Reflection;
 namespace Materialize.SequenceMethods
 {
     
-    public struct SeqMethodRecord
+    public class SeqMethod
     {
         public readonly string Name;
         public readonly MethodInfo Qy;
         public readonly MethodInfo En;
 
-        public SeqMethodRecord(string name, MethodInfo mQy, MethodInfo mEn) {
+        public SeqMethod(string name, MethodInfo mQy, MethodInfo mEn) {
             Name = name;
             Qy = mQy;
             En = mEn;
@@ -26,14 +26,14 @@ namespace Materialize.SequenceMethods
 
     public static class SeqMethodMap
     {
-        public static readonly IReadOnlyDictionary<string, SeqMethodRecord> Methods;
+        public static readonly IReadOnlyDictionary<string, SeqMethod> Methods;
         
         static SeqMethodMap() {
-            Methods = new ReadOnlyDictionary<string, SeqMethodRecord>(Build());
+            Methods = new ReadOnlyDictionary<string, SeqMethod>(Build());
         }
                         
 
-        static IDictionary<string, SeqMethodRecord> Build() 
+        static IDictionary<string, SeqMethod> Build() 
         {
             var qyMethods = typeof(Queryable).GetMethods()
                                         .Where(m => m.DeclaringType == typeof(Queryable))
@@ -49,7 +49,7 @@ namespace Materialize.SequenceMethods
                                 enMethods, 
                                 m => m, 
                                 m => m, 
-                                (mQy, mEn) => new SeqMethodRecord(IndividuateName(nameHash, mQy.Name), mQy, mEn), 
+                                (mQy, mEn) => new SeqMethod(IndividuateName(nameHash, mQy.Name), mQy, mEn), 
                                 new MethodEqualityComparer());
 
             var d = records.OrderBy(s => s.Name)
