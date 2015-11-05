@@ -6,7 +6,7 @@ using Materialize.SequenceMethods;
 
 namespace Materialize.Reify2.Transitions
 {
-    abstract class TransitionBase : ITransition
+    abstract class Transition : ITransition
     {
         public ISourceRegime OutRegime { get; protected set; }        
 

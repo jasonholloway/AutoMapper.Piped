@@ -1,0 +1,80 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="$(ProjectDir)..\Materialize.SequenceMethods\bin\$(Configuration)\Materialize.SequenceMethods.dll" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="Materialize.SequenceMethods" #>
+<#@ output extension=".cs" #>
+using Materialize.SequenceMethods;
+using Materialize.Types;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+
+namespace Materialize.Reify2.Transitions 
+{
+<#foreach(var m in SeqMethodMap.Methods.Values)
+{#>
+	  partial class <#=m.Name#>Transition : SeqTransition 
+	  { 
+			static readonly SeqMethod _seqMethod;
+			static readonly Type[] _paramTypes;
+			static readonly Type[] _typeParams;
+
+<#foreach(var p in m.Qy.GetParameters())
+{#>			readonly Arg _<#=p.Name#>Arg;
+<#}#>
+			
+<#foreach(var p in m.Qy.GetParameters())
+{#>			public Expression <#=CapitalizeFirst(p.Name)#> {
+				get { return _<#=p.Name#>Arg.Expression; }
+				set { _<#=p.Name#>Arg.Expression = value; }
+			}
+
+<#}#>		
+			static <#=m.Name#>Transition() {
+				_seqMethod = SeqMethods.<#=m.Name#>;
+				_paramTypes = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
+				_typeParams = _seqMethod.Qy.GetGenericArguments();
+			}
+
+
+			public <#=m.Name#>Transition()
+			{
+				SeqMethod = _seqMethod;
+
+				_typeArgHub = new TypeArgHub(_typeParams);
+								
+<#foreach(var p in m.Qy.GetParameters()) {
+#>				_<#=p.Name#>Arg = new Arg(_paramTypes[<#=p.Position#>], _typeArgHub);
+<#}#>
+
+				Args = new[] { <#=(string.Join(", ", m.Qy.GetParameters().Select(p => "_" + p.Name + "Arg")))#> }.Select(a => a.Expression);
+			}
+			
+			public <#=m.Name#>Transition(MethodCallExpression ex) 
+				: this()
+			{
+				var origTypeArgs = _typeParams.Zip(ex.Method.GetGenericArguments(), 
+															(p, a) => new TypeArg(p, a));
+				foreach(var typeArg in origTypeArgs) {
+					_typeArgHub.Register(typeArg, null);
+				}
+
+<#foreach(var p in m.Qy.GetParameters().Skip(1)) {
+#>				_<#=p.Name#>Arg.Expression = ex.Arguments[<#=p.Position#>];
+<#}#>			}
+	  }
+
+
+<#  }#>
+}
+
+<#+
+
+	static string CapitalizeFirst(string s) {
+		return new string(s.ToArray().Select((c, i) => i == 0 ? char.ToUpperInvariant(c) : c).ToArray());
+    }
+
+#>

@@ -24,7 +24,7 @@ namespace Materialize.Reify2.Parsing2.SeqMethods
 		static IDictionary<MethodInfo, Handler> _dHandlers 
 			= new Dictionary<MethodInfo, Handler>() {
 <#foreach(var m in SeqMethodMap.Methods.Values) {#>
-				{ QyMethods.<#=m.Name#>, <#=m.Name#>Transition.Create },
+				{ QyMethods.<#=m.Name#>, ex => new <#=m.Name#>Transition(ex) },
 <#}#>
 			};
 

@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 
 namespace Materialize.Reify2.Transitions
 {
-    internal class SourceTransition : TransitionBase
+    internal class SourceTransition : Transition
     {
         public Expression CanonicalExpression { get; private set; }        
         public Type ElemType { get; private set; }

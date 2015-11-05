@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Materialize.Reify2.Transitions
 {
-    class FetchTransition : TransitionBase
+    class FetchTransition : Transition
     {
         public FetchTransition(ISourceRegime outRegime) 
         {

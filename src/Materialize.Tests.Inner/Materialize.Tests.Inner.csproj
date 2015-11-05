@@ -79,7 +79,8 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="ReifiableTests.cs" />
-    <Compile Include="TypeArgMatchingTests.cs" />
+    <Compile Include="SeqTransitionTests.cs" />
+    <Compile Include="TypeMatchingTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AutoMapper.Net4\AutoMapper.Net4.csproj">

@@ -86,6 +86,13 @@ namespace Materialize.Types
 
 
 
+        public static TypeMatcher.Result MatchAgainst(this Type t, Type pattern) {
+            return TypeMatcher.Match(pattern, t);
+        }
+
+
+
+
 
         static Regex _reGetBaseTypeName = new Regex("(.*)`");
 

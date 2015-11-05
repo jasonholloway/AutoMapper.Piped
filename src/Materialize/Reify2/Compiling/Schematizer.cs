@@ -76,34 +76,16 @@ namespace Materialize.Reify2.Compiling
 
 
 
-        static Scheme Schematize(Scheme scheme, QyTransitionBase t) 
+        static Scheme Schematize(Scheme scheme, SeqTransition t) 
         {
-            //How the arseing hell are we to infer typeargs?
-            //arg types are to be combined with original typeargs, that's how
-            //cos sometimes (in the case of Cast<T>(), for instance) they are explicit
-
-            //routine here would be to get all args in an array (including TSource)
-            //and, combined with array of original typeargs,
-            //the generic method will be specified
-
-            //So each QyTransition will need TypeArgs fitting
-
-            //though, it is true, encapsulation would suggest getting the transactions themselves to change their types
-            //given new args. They would thereby become more like expressions.
-
-            //So, each arg property's setter would fix types
-            //doesn't circumvent the problem of type-resolution, however
-
-            //kind of interesting though, as always
-
-            //TypeExtractor
-            //
+            //QyTransitions to have original TypeParams against TypeArgs
+            //Each matched typearg of each argument to overwrite these
+            //...
 
 
+            //Again, the idea comes to us that args should affect typeargs on update, that is by the setter
 
-
-
-
+            //...
 
 
 
