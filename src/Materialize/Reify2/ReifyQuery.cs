@@ -36,4 +36,14 @@ namespace Materialize.Reify2
         }
     }
 
+
+
+    class OrderedReifyQuery<TElem> : ReifyQuery<TElem>, IOrderedQueryable<TElem>
+    {
+        public OrderedReifyQuery(IQueryProvider prov, Expression exp)
+            : base(prov, exp) { }
+    }
+
+
+
 }

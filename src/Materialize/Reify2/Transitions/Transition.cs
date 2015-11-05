@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Materialize.SourceRegimes;
-using Materialize.SequenceMethods;
 
 namespace Materialize.Reify2.Transitions
 {
@@ -20,8 +19,6 @@ namespace Materialize.Reify2.Transitions
         public ITransition Next {
             get { return Site.Next?.Value; }
         }
-
-
-
+        
     }
 }

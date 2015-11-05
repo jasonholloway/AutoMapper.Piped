@@ -37,12 +37,16 @@ using Materialize.SourceRegimes;
 class DirectPipelineTests
 {
 
-	class Item {
+	class Item : IComparable {
 		public int Int;
 
 		public Item(int i) {
 			Int = i;
 		}
+		
+        public int CompareTo(object obj) {
+            return Comparer<int>.Default.Compare(Int, ((Item)obj).Int);
+        }
 	}
 	
 	class ItemComparer : IEqualityComparer<Item> {
@@ -57,6 +61,14 @@ class DirectPipelineTests
 		}
 	}
 
+	
+    class GroupingComparer : IComparer<IGrouping<string, Item>>
+    {
+        public int Compare(IGrouping<string, Item> x, IGrouping<string, Item> y) {
+            return Comparer<string>.Default.Compare(x.Key, y.Key);
+        }
+    }
+
 
 	ReifiableFactory _reifiableFac = MaterializeServices.Resolve<ReifiableFactory>();
 
@@ -67,16 +79,28 @@ foreach(var m in qyMethods) {
 #>	[Test]
 	public void <#=m.Name#>Test() 
 	{
-		IQueryable<<#=invocation.SourceElemTypeString#>> qySource = Enumerable.Range(10, 40).Select(<#=invocation.SourceElemProjection#>).AsQueryable();			
+		var qySource 
+			= Enumerable.Range(10, 40)
+				.Select(<#=invocation.SourceElemProjection#>)
+<#		if(m.Name.Contains("Single")) {
+#>				.Skip(33).Take(1)
+<#}
+#>
+				.AsQueryable();			
 		
         var reifiable = _reifiableFac.CreateReifiable(qySource, new MaterializeOptions());
 
         var result = reifiable.CreateQuery<<#=invocation.SourceElemTypeString#>>(qySource.Expression)
-                                .<#=invocation.Statement#>;
+<#							if(m.Name.Contains("ThenBy")) {#>
+								.OrderByDescending(i => i.Int)
+<#}#>								.<#=invocation.Statement#>;
 
         Assert.That(
 				result, 
-				Is.<#=invocation.ReturnsQueryable ? "Equivalent" : "Equal"#>To(qySource.<#=invocation.Statement#>));
+				Is.<#=invocation.ReturnsQueryable ? "Equivalent" : "Equal"#>To(qySource<#=(m.Name.Contains("ThenBy") ? ".OrderByDescending(i => i.Int)" : "")#>.<#=invocation.Statement#>)<#
+		if(m.Name.Contains("Group")) {#>
+
+					.Using(new GroupingComparer())<#}#>);
 	}
 
 <#

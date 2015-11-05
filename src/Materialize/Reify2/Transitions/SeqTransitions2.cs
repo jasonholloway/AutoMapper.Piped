@@ -1,14 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace Materialize.Reify2.Transitions
 {
 
+    internal interface IHasSource
+    {
+        Expression Source { get; set; }
+    }
+
+
+
     internal interface IPowerOblivious { }
     internal interface ITypeOblivious { }
+
+
+
+
 
 
     partial class SelectTransition : IPowerOblivious

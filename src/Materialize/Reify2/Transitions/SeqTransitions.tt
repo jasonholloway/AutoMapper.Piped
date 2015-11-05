@@ -9,6 +9,7 @@
 using Materialize.SequenceMethods;
 using Materialize.Types;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -16,45 +17,39 @@ namespace Materialize.Reify2.Transitions
 {
 <#foreach(var m in SeqMethodMap.Methods.Values)
 {#>
-	  partial class <#=m.Name#>Transition : SeqTransition 
+	  partial class <#=m.Name#>Transition : SeqTransition, IHasSource
 	  { 
-			static readonly SeqMethod _seqMethod;
-			static readonly Type[] _paramTypes;
-			static readonly Type[] _typeParams;
-
-<#foreach(var p in m.Qy.GetParameters())
-{#>			readonly Arg _<#=p.Name#>Arg;
-<#}#>
+			static readonly SeqMethod _seqMethod = SeqMethods.<#=m.Name#>;
+			static readonly Type[] _paramTypes = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
+			static readonly Type[] _typeParams = _seqMethod.Qy.GetGenericArguments();
 			
 <#foreach(var p in m.Qy.GetParameters())
-{#>			public Expression <#=CapitalizeFirst(p.Name)#> {
+{#>			readonly Arg _<#=p.Name#>Arg;
+<#}
+foreach(var p in m.Qy.GetParameters())
+{#>			
+			public Expression <#=CapitalizeFirst(p.Name)#> {
 				get { return _<#=p.Name#>Arg.Expression; }
 				set { _<#=p.Name#>Arg.Expression = value; }
 			}
-
 <#}#>		
-			static <#=m.Name#>Transition() {
-				_seqMethod = SeqMethods.<#=m.Name#>;
-				_paramTypes = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
-				_typeParams = _seqMethod.Qy.GetGenericArguments();
+			public override SeqMethod SeqMethod { 
+				get { return _seqMethod; }
 			}
 
-
+			public override IEnumerable<Expression> Args {
+				get { return new[] { <#=(string.Join(", ", m.Qy.GetParameters().Select(p => "_" + p.Name + "Arg")))#> }.Select(a => a.Expression); }
+			}
+			
 			public <#=m.Name#>Transition()
 			{
-				SeqMethod = _seqMethod;
-
-				_typeArgHub = new TypeArgHub(_typeParams);
-								
+				_typeArgHub = new TypeArgHub(_typeParams);								
 <#foreach(var p in m.Qy.GetParameters()) {
 #>				_<#=p.Name#>Arg = new Arg(_paramTypes[<#=p.Position#>], _typeArgHub);
 <#}#>
-
-				Args = new[] { <#=(string.Join(", ", m.Qy.GetParameters().Select(p => "_" + p.Name + "Arg")))#> }.Select(a => a.Expression);
 			}
 			
-			public <#=m.Name#>Transition(MethodCallExpression ex) 
-				: this()
+			public <#=m.Name#>Transition(MethodCallExpression ex) : this()
 			{
 				var origTypeArgs = _typeParams.Zip(ex.Method.GetGenericArguments(), 
 															(p, a) => new TypeArg(p, a));
@@ -65,6 +60,11 @@ namespace Materialize.Reify2.Transitions
 <#foreach(var p in m.Qy.GetParameters().Skip(1)) {
 #>				_<#=p.Name#>Arg.Expression = ex.Arguments[<#=p.Position#>];
 <#}#>			}
+
+			Expression IHasSource.Source {
+				get { return _<#=m.Qy.GetParameters()[0].Name#>Arg.Expression; }
+				set { _<#=m.Qy.GetParameters()[0].Name#>Arg.Expression = value; }
+			}
 	  }
 
 

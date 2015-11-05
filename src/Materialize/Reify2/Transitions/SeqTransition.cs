@@ -9,12 +9,17 @@ namespace Materialize.Reify2.Transitions
     {
         protected TypeArgHub _typeArgHub;
 
-        public SeqMethod SeqMethod { get; protected set; }
-        public IEnumerable<Expression> Args { get; protected set; }
+
+        public abstract SeqMethod SeqMethod { get; }
+
+        public abstract IEnumerable<Expression> Args { get; }
+        
 
         public IEnumerable<TypeArg> GetTypeArgs() {
             return _typeArgHub.GetTypeArgs();
         }
         
     }        
+       
+
 }

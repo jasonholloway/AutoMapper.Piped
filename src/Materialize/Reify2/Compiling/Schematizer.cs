@@ -78,26 +78,16 @@ namespace Materialize.Reify2.Compiling
 
         static Scheme Schematize(Scheme scheme, SeqTransition t) 
         {
-            //QyTransitions to have original TypeParams against TypeArgs
-            //Each matched typearg of each argument to overwrite these
-            //...
+            ((IHasSource)t).Source = scheme.Exp;
 
+            var method = (scheme.IsQueryable ? t.SeqMethod.Qy : t.SeqMethod.En);
 
-            //Again, the idea comes to us that args should affect typeargs on update, that is by the setter
+            if(method.IsGenericMethodDefinition) {
+                method = method.MakeGenericMethod(t.GetTypeArgs().Select(a => a.ArgType).ToArray());
+            }
 
-            //...
-
-
-
-
-            throw new NotImplementedException();
-
-
-
-            //scheme.Exp = Expression.Call(
-            //                    (scheme.IsQueryable ? t.SeqMethod.Qy : t.SeqMethod.En),
-
-            //                    );
+            scheme.Exp = Expression.Call(method,
+                                        t.Args.ToArray());
 
             return scheme;
         }

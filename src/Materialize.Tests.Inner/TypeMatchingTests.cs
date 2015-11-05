@@ -182,5 +182,15 @@ namespace Materialize.Tests.Inner
 
             Assert.That(r.Success, Is.False);
         }
+
+
+        [Test]
+        public void NonGenericAncestorsMatched() {
+            var r = TypeMatcher.Match(
+                            typeof(IQueryable), typeof(EnumerableQuery<float>));
+
+            Assert.That(r.Success, Is.True);
+        }
+
     }
 }

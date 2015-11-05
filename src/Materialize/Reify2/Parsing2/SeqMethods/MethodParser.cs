@@ -12,7 +12,7 @@ namespace Materialize.Reify2.Parsing2.SeqMethods
         public static IEnumerable<ITransition> Parse(ParseSubject s) 
         {
             Debug.Assert(s.SubjectExp is MethodCallExpression);
-            Debug.Assert(s.MethodDef.IsStatic);
+            Debug.Assert(s.Method.IsStatic);
             Debug.Assert(s.Method.GetParameters().First().ParameterType.IsQueryable());
 
             //pass upwards 

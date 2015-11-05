@@ -67,6 +67,10 @@ namespace Materialize.Types
                 }
             }
 
+            if(tSubject.GetAllBasesAndInterfaces().Contains(tPattern)) {
+                return Enumerable.Empty<TypeArg>();
+            }
+
             return null;
         }
 
