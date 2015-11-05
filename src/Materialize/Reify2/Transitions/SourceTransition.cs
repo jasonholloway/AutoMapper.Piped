@@ -15,7 +15,6 @@ namespace Materialize.Reify2.Transitions
         public Type ElemType { get; private set; }
 
         public SourceTransition(ISourceRegime regime, Expression exCanonical)
-            : base(TransitionType.Source) 
         {
             Debug.Assert(exCanonical.Type.IsQueryable());
             

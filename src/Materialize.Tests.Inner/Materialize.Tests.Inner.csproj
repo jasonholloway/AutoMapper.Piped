@@ -64,7 +64,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CompilationTests.cs" />
     <Compile Include="Fakes\ParamMapFake.cs" />
     <Compile Include="Fakes\ArgMapFake.cs" />
     <Compile Include="Fakes\MapperWriterFake.cs" />
@@ -72,7 +71,6 @@
     <Compile Include="Fakes\MapStrategySourceFake.cs" />
     <Compile Include="MappingTests.cs" />
     <Compile Include="ParameterizingTests.cs" />
-    <Compile Include="QueryWritingTests.cs" />
     <Compile Include="ParsingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DirectPipelineTests.cs">
@@ -81,6 +79,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="ReifiableTests.cs" />
+    <Compile Include="TypeArgMatchingTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AutoMapper.Net4\AutoMapper.Net4.csproj">

@@ -11,20 +11,25 @@ namespace Materialize.Reify2.Parsing2.SeqMethods
 {
     static class MapAsParser
     {        
-        public static IEnumerable<ITransition> Parse(MethodParseSubject s) 
+        public static IEnumerable<ITransition> Parse(ParseSubject s) 
         {
-            var tInElem = s.Args[0].Type.GetEnumerableElementType();
-            var tOutElem = s.TypeArgs.Single();
+            var tInElem = s.CallExp.Arguments[0].Type.GetEnumerableElementType();
+            var tOutElem = s.MethodTypeArgs.Single();
 
             var mapper = s.ReifyContext.MapperSource.GetMapper(
                                                         s.ReifyContext, 
                                                         new TypeVector(tInElem, tOutElem));
-            
-            yield return new ProjectionTransition(GetServerProjection(mapper));
+
+            throw new NotImplementedException();
+
+            //would have to insert two Select transitions...
+
+
+            //yield return new ProjectionTransition(GetServerProjection(mapper));
             
             yield return new FetchTransition(new TolerantRegime());
             
-            yield return new ProjectionTransition(GetClientProjection(mapper));            
+            //yield return new ProjectionTransition(GetClientProjection(mapper));            
         }
         
         

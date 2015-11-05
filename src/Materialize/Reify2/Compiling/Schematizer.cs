@@ -76,21 +76,67 @@ namespace Materialize.Reify2.Compiling
 
 
 
+        static Scheme Schematize(Scheme scheme, QyTransitionBase t) 
+        {
+            //How the arseing hell are we to infer typeargs?
+            //arg types are to be combined with original typeargs, that's how
+            //cos sometimes (in the case of Cast<T>(), for instance) they are explicit
+
+            //routine here would be to get all args in an array (including TSource)
+            //and, combined with array of original typeargs,
+            //the generic method will be specified
+
+            //So each QyTransition will need TypeArgs fitting
+
+            //though, it is true, encapsulation would suggest getting the transactions themselves to change their types
+            //given new args. They would thereby become more like expressions.
+
+            //So, each arg property's setter would fix types
+            //doesn't circumvent the problem of type-resolution, however
+
+            //kind of interesting though, as always
+
+            //TypeExtractor
+            //
+
+
+
+
+
+
+
+
+
+
+            throw new NotImplementedException();
+
+
+
+            //scheme.Exp = Expression.Call(
+            //                    (scheme.IsQueryable ? t.SeqMethod.Qy : t.SeqMethod.En),
+
+            //                    );
+
+            return scheme;
+        }
+
+
+
 
         
 
-        static Scheme Schematize(Scheme scheme, ProjectionTransition trans) 
-        {
-            var m = SeqMethods.Select;
+        //static Scheme Schematize(Scheme scheme, ProjectionTransition trans) 
+        //{
+        //    var m = SeqMethods.Select;
             
-            scheme.Exp = Expression.Call(
-                                (scheme.IsQueryable ? m.Qy : m.En).MakeGenericMethod(trans.InElemType, trans.OutElemType),
-                                scheme.Exp,
-                                trans.Projection
-                                );
+        //    scheme.Exp = Expression.Call(
+        //                        (scheme.IsQueryable ? m.Qy : m.En).MakeGenericMethod(trans.InElemType, trans.OutElemType),
+        //                        scheme.Exp,
+        //                        trans.Projection
+        //                        );
             
-            return scheme;
-        }
+        //    return scheme;
+        //}
 
                 
 
@@ -99,107 +145,107 @@ namespace Materialize.Reify2.Compiling
 
 
 
-        static Scheme Schematize(Scheme scheme, FilterTransition trans) 
-        {
-            var m = SeqMethods.Where;
+        //static Scheme Schematize(Scheme scheme, FilterTransition trans) 
+        //{
+        //    var m = SeqMethods.Where;
             
-            scheme.Exp = Expression.Call(
-                                (scheme.IsQueryable ? m.Qy : m.En).MakeGenericMethod(trans.ElemType),
-                                scheme.Exp,
-                                trans.Predicate);
+        //    scheme.Exp = Expression.Call(
+        //                        (scheme.IsQueryable ? m.Qy : m.En).MakeGenericMethod(trans.ElemType),
+        //                        scheme.Exp,
+        //                        trans.Predicate);
 
-            return scheme;
-        }
+        //    return scheme;
+        //}
         
 
 
 
 
-        static Scheme Schematize(Scheme scheme, PartitionTransition trans) 
-        {
-            SeqMethod m = null;
+        //static Scheme Schematize(Scheme scheme, PartitionTransition trans) 
+        //{
+        //    SeqMethod m = null;
 
-            switch(trans.PartitionType) {
-                case PartitionType.Skip:
-                    m = SeqMethods.Skip;
-                    break;
+        //    switch(trans.PartitionType) {
+        //        case PartitionType.Skip:
+        //            m = SeqMethods.Skip;
+        //            break;
 
-                case PartitionType.Take:
-                    m = SeqMethods.Take;
-                    break;
-            }
+        //        case PartitionType.Take:
+        //            m = SeqMethods.Take;
+        //            break;
+        //    }
             
-            scheme.Exp = Expression.Call(
-                            (scheme.IsQueryable ? m.Qy : m.En).MakeGenericMethod(scheme.OutType.GetEnumerableElementType()),
-                            scheme.Exp,
-                            trans.CountExpression);
+        //    scheme.Exp = Expression.Call(
+        //                    (scheme.IsQueryable ? m.Qy : m.En).MakeGenericMethod(scheme.OutType.GetEnumerableElementType()),
+        //                    scheme.Exp,
+        //                    trans.CountExpression);
 
-            return scheme;
-        }
+        //    return scheme;
+        //}
         
 
 
 
-        static Scheme Schematize(Scheme scheme, ElementTransition trans) 
-        {
-            SeqMethod m = null;
+        //static Scheme Schematize(Scheme scheme, ElementTransition trans) 
+        //{
+        //    SeqMethod m = null;
 
-            var args = new List<Expression>(2);
-            args.Add(scheme.Exp);
+        //    var args = new List<Expression>(2);
+        //    args.Add(scheme.Exp);
 
-            switch(trans.ElementTransitionType) {
-                case ElementTransitionType.ElementAt:
-                    m = trans.ReturnsDefault ? SeqMethods.ElementAtOrDefault : SeqMethods.ElementAt;
-                    args.Add(trans.IndexExpression);
-                    break;
+        //    switch(trans.ElementTransitionType) {
+        //        case ElementTransitionType.ElementAt:
+        //            m = trans.ReturnsDefault ? SeqMethods.ElementAtOrDefault : SeqMethods.ElementAt;
+        //            args.Add(trans.IndexExpression);
+        //            break;
 
-                case ElementTransitionType.First:
-                    m = trans.ReturnsDefault ? SeqMethods.FirstOrDefault : SeqMethods.First;
-                    break;
+        //        case ElementTransitionType.First:
+        //            m = trans.ReturnsDefault ? SeqMethods.FirstOrDefault : SeqMethods.First;
+        //            break;
 
-                case ElementTransitionType.Last:
-                    m = trans.ReturnsDefault ? SeqMethods.LastOrDefault : SeqMethods.Last;
-                    break;
+        //        case ElementTransitionType.Last:
+        //            m = trans.ReturnsDefault ? SeqMethods.LastOrDefault : SeqMethods.Last;
+        //            break;
 
-                case ElementTransitionType.Single:
-                    m = trans.ReturnsDefault ? SeqMethods.SingleOrDefault : SeqMethods.Single;
-                    break;
-            }
+        //        case ElementTransitionType.Single:
+        //            m = trans.ReturnsDefault ? SeqMethods.SingleOrDefault : SeqMethods.Single;
+        //            break;
+        //    }
             
-            scheme.Exp = Expression.Call(
-                            (scheme.IsQueryable ? m.Qy : m.En).MakeGenericMethod(scheme.OutType.GetEnumerableElementType()),                                    
-                            args.ToArray());
+        //    scheme.Exp = Expression.Call(
+        //                    (scheme.IsQueryable ? m.Qy : m.En).MakeGenericMethod(scheme.OutType.GetEnumerableElementType()),                                    
+        //                    args.ToArray());
 
-            return scheme;
-        }
+        //    return scheme;
+        //}
 
         
-        static Scheme Schematize(Scheme scheme, QuantifierTransition trans) 
-        {
-            SeqMethod m = null;
-            var args = new List<Expression>(2);
-            args.Add(scheme.Exp);
+        //static Scheme Schematize(Scheme scheme, QuantifierTransition trans) 
+        //{
+        //    SeqMethod m = null;
+        //    var args = new List<Expression>(2);
+        //    args.Add(scheme.Exp);
 
-            switch(trans.QuantifierTransitionType) {
-                case QuantifierTransitionType.Any:
-                    m = SeqMethods.Any;
-                    break;
+        //    switch(trans.QuantifierTransitionType) {
+        //        case QuantifierTransitionType.Any:
+        //            m = SeqMethods.Any;
+        //            break;
 
-                case QuantifierTransitionType.All:
-                    m = SeqMethods.All;
-                    args.Add(trans.Predicate);
-                    break;
+        //        case QuantifierTransitionType.All:
+        //            m = SeqMethods.All;
+        //            args.Add(trans.Predicate);
+        //            break;
 
-                default:
-                    throw new NotImplementedException();
-            }
+        //        default:
+        //            throw new NotImplementedException();
+        //    }
 
-            scheme.Exp = Expression.Call(
-                                (scheme.IsQueryable ? m.Qy : m.En).MakeGenericMethod(scheme.OutType.GetEnumerableElementType()),
-                                args);
+        //    scheme.Exp = Expression.Call(
+        //                        (scheme.IsQueryable ? m.Qy : m.En).MakeGenericMethod(scheme.OutType.GetEnumerableElementType()),
+        //                        args);
 
-            return scheme;
-        }
+        //    return scheme;
+        //}
 
     }
 

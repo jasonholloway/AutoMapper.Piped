@@ -11,38 +11,23 @@
 <#@ output extension=".cs" #>
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Reflection;
+using Materialize.Reify2.Transitions;
 
 namespace Materialize.Reify2.Parsing2.SeqMethods 
 {
-	abstract class QyMethodParserBase 
+	static partial class QyParser 
 	{
-		protected delegate IEnumerable<ITransition> SubParser(MethodParseSubject s);
-
-
-		protected IDictionary<MethodInfo, Func<QyMethodParserBase, SubParser>> _dSubParsers 
-			= new Dictionary<MethodInfo, Func<QyMethodParserBase, SubParser>>() {
+		delegate ITransition Handler(MethodCallExpression ex);
+		
+		static IDictionary<MethodInfo, Handler> _dHandlers 
+			= new Dictionary<MethodInfo, Handler>() {
 <#foreach(var m in SeqMethodMap.Methods.Values) {#>
-				{ QyMethods.<#=m.Name#>, @this => @this.Parse<#=m.Name#> },
+				{ QyMethods.<#=m.Name#>, <#=m.Name#>Transition.Create },
 <#}#>
 			};
 
-
-
-
-	<#
-	foreach(var m in SeqMethodMap.Methods.Values) {
-	#>	///<summary>
-		///<#=SecurityElement.Escape(m.Qy.Describe())#>
-		///</summary>
-		protected virtual IEnumerable<ITransition> Parse<#=m.Name#>(MethodParseSubject s) {
-			throw new NotImplementedException("No method subparser supplied for Queryable method <#=m.Qy.Describe()#>");
-		}
-
-	<#
-	}
-		#>
-	
 	} 
 
 }

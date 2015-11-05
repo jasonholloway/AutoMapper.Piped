@@ -51,7 +51,8 @@ namespace Materialize.Types
         /// <summary>
         /// Resolves the lowest base class of a type, excluding the universal object type
         /// </summary>
-        public static Type GetLowestBaseClass(this Type @this) {
+        public static Type GetLowestBaseClass(this Type @this) 
+        {
             var t = @this;
 
             while(t.BaseType != null && t.BaseType != typeof(object)) {
@@ -59,6 +60,27 @@ namespace Materialize.Types
             }
 
             return t;
+        }
+
+
+
+
+
+        public static IEnumerable<Type> GetAllBases(this Type t) 
+        {
+            if(t.BaseType != null) {
+                yield return t.BaseType;
+
+                foreach(var t2 in t.BaseType.GetAllBases()) {
+                    yield return t2;
+                }
+            }
+        }
+
+
+        public static IEnumerable<Type> GetAllBasesAndInterfaces(this Type t) 
+        {
+            return t.GetAllBases().Concat(t.GetInterfaces());
         }
 
 

@@ -8,7 +8,6 @@ namespace Materialize.Reify2.Transitions
     class FetchTransition : TransitionBase
     {
         public FetchTransition(ISourceRegime outRegime) 
-            : base(TransitionType.RegimeBoundary) 
         {
             OutRegime = outRegime;
         }

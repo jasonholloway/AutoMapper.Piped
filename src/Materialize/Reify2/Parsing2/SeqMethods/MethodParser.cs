@@ -22,10 +22,10 @@ namespace Materialize.Reify2.Parsing2.SeqMethods
             IEnumerable<ITransition> result;
 
             if(s.Method.DeclaringType == typeof(Queryable)) {
-                result = QyMethodParser.Parse(s);
+                result = QyParser.Parse(s);
             }
             else if(s.MethodDef == QyMethods.MapAs) {
-                result = MapAsParser.Parse(new MethodParseSubject(s));
+                result = MapAsParser.Parse(s);
             }
             else {
                 throw new InvalidOperationException();

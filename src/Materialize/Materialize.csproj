@@ -49,27 +49,20 @@
     <Compile Include="Expressions\ExpressionHasher.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Reify2\Compiling\Schematizer.cs" />
-    <Compile Include="Reify2\Compiling\QueryWriter.cs" />
     <Compile Include="Reify2\Compiling\ReifyRoutine.cs" />
     <Compile Include="Reify2\Compiling\Scheme.cs" />
     <Compile Include="Reify2\Compiling\StageCompiler.cs" />
-    <Compile Include="Reify2\Compiling\TransformWriter.cs" />
-    <Compile Include="Reify2\Parsing2\SeqMethods\MethodParseSubject.cs" />
-    <Compile Include="Reify2\Parsing2\SeqMethods\QyMethodParser.cs" />
-    <Compile Include="Reify2\Parsing2\SeqMethods\QyMethodParserBase.cs">
-      <DependentUpon>QyMethodParserBase.tt</DependentUpon>
+    <Compile Include="Reify2\Parsing2\SeqMethods\QyParser.cs">
+      <DependentUpon>QyParser.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Reify2\Parsing2\SeqMethods\QyParser2.cs" />
     <Compile Include="Reify2\Parsing2\Source\SourceParser.cs" />
-    <Compile Include="Reify2\Transitions\QuantifierTransition.cs" />
     <Compile Include="Reify2\Transitions\FetchTransition.cs" />
-    <Compile Include="Reify2\Transitions\ElementTransition.cs" />
-    <Compile Include="Reify2\Transitions\PartitionTransition.cs" />
+    <Compile Include="Reify2\Transitions\QyTransitionBase.cs" />
     <Compile Include="Reify2\Transitions\TransitionBase.cs" />
     <Compile Include="Reify2\Transitions\SourceTransition.cs" />
-    <Compile Include="Reify2\Transitions\ProjectionTransition.cs" />
-    <Compile Include="Reify2\Transitions\FilterTransition.cs" />
     <Compile Include="Reify2\ITransition.cs" />
     <Compile Include="Reify2\Mapping\Collections\CollectionRule.cs" />
     <Compile Include="Reify2\Mapping\Collections\CollectionStrategy.cs" />
@@ -136,6 +129,12 @@
     <Compile Include="Expressions\ExpressionComparer.cs" />
     <Compile Include="Expressions\VoidExpressionVisitor.cs" />
     <Compile Include="Dependencies\LightInject\LightInject.cs" />
+    <Compile Include="Reify2\Transitions\QyTransitions.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>QyTransitions.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Reify2\Transitions\QyTransitions2.cs" />
     <Compile Include="SourceRegimes\ISourceRegimeProvider.cs" />
     <Compile Include="SourceRegimes\TolerantRegime.cs" />
     <Compile Include="Structures\LinkList.cs" />
@@ -183,6 +182,7 @@
     <Compile Include="Types\TypeExtensions.cs" />
     <Compile Include="TypeMaps\CachedTypeMapProvider.cs" />
     <Compile Include="TypeMaps\ITypeMapProvider.cs" />
+    <Compile Include="Types\TypeArgMatcher.cs" />
     <Compile Include="Types\TypeVector.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -200,11 +200,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="notes.txt" />
-    <Content Include="Reify2\Parsing2\SeqMethods\QyMethodParserBase.tt">
+    <Content Include="Reify2\Parsing2\SeqMethods\QyParser.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>QyMethodParserBase.cs</LastGenOutput>
+      <LastGenOutput>QyParser.cs</LastGenOutput>
     </Content>
     <Content Include="Reify2\Rebasing\about.txt" />
+    <Content Include="Reify2\Transitions\QyTransitions.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>QyTransitions.cs</LastGenOutput>
+    </Content>
     <Content Include="todo.txt" />
     <Content Include="Types\EnMethods.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
