@@ -44,8 +44,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vFunc = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vFunc = new ArgValue("Func", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public AggregateTransition(MethodCallExpression ex) : this()
@@ -80,16 +80,14 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
 			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
-		
-        	
+			
 			readonly ArgValue _vSource;
 
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
 			} 
-		
-        	
+			
 			readonly ArgValue _vSeed;
 
 			public Expression Seed {
@@ -97,7 +95,6 @@ namespace Materialize.Reify2.Transitions
 				set { _vSeed.Expression = value; }
 			} 
 			
-
 			readonly ArgValue _vFunc;
 
 			public Expression Func {
@@ -105,7 +102,6 @@ namespace Materialize.Reify2.Transitions
 				set { _vFunc.Expression = value; }
 			} 
 		
-
 			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
@@ -121,9 +117,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSeed = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_vFunc = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSeed = new ArgValue("Seed", new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vFunc = new ArgValue("Func", new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public Aggregate2Transition(MethodCallExpression ex) : this()
@@ -203,10 +199,10 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSeed = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_vFunc = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
-				_vResultSelector = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSeed = new ArgValue("Seed", new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vFunc = new ArgValue("Func", new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vResultSelector = new ArgValue("ResultSelector", new[] { _modes[0].Args[3], _modes[1].Args[3] });
 			}
 			
 			public Aggregate3Transition(MethodCallExpression ex) : this()
@@ -273,8 +269,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue("Predicate", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public AllTransition(MethodCallExpression ex) : this()
@@ -332,7 +328,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public AnyTransition(MethodCallExpression ex) : this()
@@ -396,8 +392,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue("Predicate", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Any2Transition(MethodCallExpression ex) : this()
@@ -455,7 +451,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public AverageTransition(MethodCallExpression ex) : this()
@@ -512,7 +508,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Average10Transition(MethodCallExpression ex) : this()
@@ -576,8 +572,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Average11Transition(MethodCallExpression ex) : this()
@@ -642,8 +638,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Average12Transition(MethodCallExpression ex) : this()
@@ -708,8 +704,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Average13Transition(MethodCallExpression ex) : this()
@@ -774,8 +770,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Average14Transition(MethodCallExpression ex) : this()
@@ -840,8 +836,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Average15Transition(MethodCallExpression ex) : this()
@@ -906,8 +902,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Average16Transition(MethodCallExpression ex) : this()
@@ -972,8 +968,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Average17Transition(MethodCallExpression ex) : this()
@@ -1038,8 +1034,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Average18Transition(MethodCallExpression ex) : this()
@@ -1104,8 +1100,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Average19Transition(MethodCallExpression ex) : this()
@@ -1163,7 +1159,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Average2Transition(MethodCallExpression ex) : this()
@@ -1227,8 +1223,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Average20Transition(MethodCallExpression ex) : this()
@@ -1286,7 +1282,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Average3Transition(MethodCallExpression ex) : this()
@@ -1343,7 +1339,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Average4Transition(MethodCallExpression ex) : this()
@@ -1400,7 +1396,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Average5Transition(MethodCallExpression ex) : this()
@@ -1457,7 +1453,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Average6Transition(MethodCallExpression ex) : this()
@@ -1514,7 +1510,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Average7Transition(MethodCallExpression ex) : this()
@@ -1571,7 +1567,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Average8Transition(MethodCallExpression ex) : this()
@@ -1628,7 +1624,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Average9Transition(MethodCallExpression ex) : this()
@@ -1685,7 +1681,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public CastTransition(MethodCallExpression ex) : this()
@@ -1749,8 +1745,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vFirst = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSecond = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vFirst = new ArgValue("First", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSecond = new ArgValue("Second", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public ConcatTransition(MethodCallExpression ex) : this()
@@ -1815,8 +1811,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vValue = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vValue = new ArgValue("Value", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public ContainsTransition(MethodCallExpression ex) : this()
@@ -1888,9 +1884,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vValue = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_vComparer = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vValue = new ArgValue("Value", new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vComparer = new ArgValue("Comparer", new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public Contains2Transition(MethodCallExpression ex) : this()
@@ -1949,7 +1945,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public CountTransition(MethodCallExpression ex) : this()
@@ -2013,8 +2009,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue("Predicate", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Count2Transition(MethodCallExpression ex) : this()
@@ -2072,7 +2068,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public DefaultIfEmptyTransition(MethodCallExpression ex) : this()
@@ -2136,8 +2132,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vDefaultValue = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vDefaultValue = new ArgValue("DefaultValue", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public DefaultIfEmpty2Transition(MethodCallExpression ex) : this()
@@ -2195,7 +2191,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public DistinctTransition(MethodCallExpression ex) : this()
@@ -2259,8 +2255,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vComparer = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vComparer = new ArgValue("Comparer", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Distinct2Transition(MethodCallExpression ex) : this()
@@ -2325,8 +2321,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vIndex = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vIndex = new ArgValue("Index", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public ElementAtTransition(MethodCallExpression ex) : this()
@@ -2391,8 +2387,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vIndex = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vIndex = new ArgValue("Index", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public ElementAtOrDefaultTransition(MethodCallExpression ex) : this()
@@ -2457,8 +2453,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vFirst = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSecond = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vFirst = new ArgValue("First", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSecond = new ArgValue("Second", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public ExceptTransition(MethodCallExpression ex) : this()
@@ -2530,9 +2526,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vFirst = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSecond = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_vComparer = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vFirst = new ArgValue("First", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSecond = new ArgValue("Second", new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vComparer = new ArgValue("Comparer", new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public Except2Transition(MethodCallExpression ex) : this()
@@ -2591,7 +2587,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public FirstTransition(MethodCallExpression ex) : this()
@@ -2655,8 +2651,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue("Predicate", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public First2Transition(MethodCallExpression ex) : this()
@@ -2714,7 +2710,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public FirstOrDefaultTransition(MethodCallExpression ex) : this()
@@ -2778,8 +2774,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue("Predicate", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public FirstOrDefault2Transition(MethodCallExpression ex) : this()
@@ -2844,8 +2840,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue("KeySelector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public GroupByTransition(MethodCallExpression ex) : this()
@@ -2917,9 +2913,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_vElementSelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue("KeySelector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vElementSelector = new ArgValue("ElementSelector", new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public GroupBy2Transition(MethodCallExpression ex) : this()
@@ -2992,9 +2988,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_vComparer = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue("KeySelector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vComparer = new ArgValue("Comparer", new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public GroupBy3Transition(MethodCallExpression ex) : this()
@@ -3074,10 +3070,10 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_vElementSelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
-				_vComparer = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue("KeySelector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vElementSelector = new ArgValue("ElementSelector", new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vComparer = new ArgValue("Comparer", new[] { _modes[0].Args[3], _modes[1].Args[3] });
 			}
 			
 			public GroupBy4Transition(MethodCallExpression ex) : this()
@@ -3158,10 +3154,10 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_vElementSelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
-				_vResultSelector = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue("KeySelector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vElementSelector = new ArgValue("ElementSelector", new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vResultSelector = new ArgValue("ResultSelector", new[] { _modes[0].Args[3], _modes[1].Args[3] });
 			}
 			
 			public GroupBy5Transition(MethodCallExpression ex) : this()
@@ -3235,9 +3231,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_vResultSelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue("KeySelector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vResultSelector = new ArgValue("ResultSelector", new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public GroupBy6Transition(MethodCallExpression ex) : this()
@@ -3317,10 +3313,10 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_vResultSelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
-				_vComparer = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue("KeySelector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vResultSelector = new ArgValue("ResultSelector", new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vComparer = new ArgValue("Comparer", new[] { _modes[0].Args[3], _modes[1].Args[3] });
 			}
 			
 			public GroupBy7Transition(MethodCallExpression ex) : this()
@@ -3408,11 +3404,11 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_vElementSelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
-				_vResultSelector = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
-				_vComparer = new ArgValue(new[] { _modes[0].Args[4], _modes[1].Args[4] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue("KeySelector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vElementSelector = new ArgValue("ElementSelector", new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vResultSelector = new ArgValue("ResultSelector", new[] { _modes[0].Args[3], _modes[1].Args[3] });
+				_vComparer = new ArgValue("Comparer", new[] { _modes[0].Args[4], _modes[1].Args[4] });
 			}
 			
 			public GroupBy8Transition(MethodCallExpression ex) : this()
@@ -3501,11 +3497,11 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vOuter = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vInner = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_vOuterKeySelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
-				_vInnerKeySelector = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
-				_vResultSelector = new ArgValue(new[] { _modes[0].Args[4], _modes[1].Args[4] });
+				_vOuter = new ArgValue("Outer", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vInner = new ArgValue("Inner", new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vOuterKeySelector = new ArgValue("OuterKeySelector", new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vInnerKeySelector = new ArgValue("InnerKeySelector", new[] { _modes[0].Args[3], _modes[1].Args[3] });
+				_vResultSelector = new ArgValue("ResultSelector", new[] { _modes[0].Args[4], _modes[1].Args[4] });
 			}
 			
 			public GroupJoinTransition(MethodCallExpression ex) : this()
@@ -3601,12 +3597,12 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vOuter = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vInner = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_vOuterKeySelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
-				_vInnerKeySelector = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
-				_vResultSelector = new ArgValue(new[] { _modes[0].Args[4], _modes[1].Args[4] });
-				_vComparer = new ArgValue(new[] { _modes[0].Args[5], _modes[1].Args[5] });
+				_vOuter = new ArgValue("Outer", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vInner = new ArgValue("Inner", new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vOuterKeySelector = new ArgValue("OuterKeySelector", new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vInnerKeySelector = new ArgValue("InnerKeySelector", new[] { _modes[0].Args[3], _modes[1].Args[3] });
+				_vResultSelector = new ArgValue("ResultSelector", new[] { _modes[0].Args[4], _modes[1].Args[4] });
+				_vComparer = new ArgValue("Comparer", new[] { _modes[0].Args[5], _modes[1].Args[5] });
 			}
 			
 			public GroupJoin2Transition(MethodCallExpression ex) : this()
@@ -3675,8 +3671,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vFirst = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSecond = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vFirst = new ArgValue("First", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSecond = new ArgValue("Second", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public IntersectTransition(MethodCallExpression ex) : this()
@@ -3748,9 +3744,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vFirst = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSecond = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_vComparer = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vFirst = new ArgValue("First", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSecond = new ArgValue("Second", new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vComparer = new ArgValue("Comparer", new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public Intersect2Transition(MethodCallExpression ex) : this()
@@ -3837,11 +3833,11 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vOuter = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vInner = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_vOuterKeySelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
-				_vInnerKeySelector = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
-				_vResultSelector = new ArgValue(new[] { _modes[0].Args[4], _modes[1].Args[4] });
+				_vOuter = new ArgValue("Outer", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vInner = new ArgValue("Inner", new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vOuterKeySelector = new ArgValue("OuterKeySelector", new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vInnerKeySelector = new ArgValue("InnerKeySelector", new[] { _modes[0].Args[3], _modes[1].Args[3] });
+				_vResultSelector = new ArgValue("ResultSelector", new[] { _modes[0].Args[4], _modes[1].Args[4] });
 			}
 			
 			public JoinTransition(MethodCallExpression ex) : this()
@@ -3937,12 +3933,12 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vOuter = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vInner = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_vOuterKeySelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
-				_vInnerKeySelector = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
-				_vResultSelector = new ArgValue(new[] { _modes[0].Args[4], _modes[1].Args[4] });
-				_vComparer = new ArgValue(new[] { _modes[0].Args[5], _modes[1].Args[5] });
+				_vOuter = new ArgValue("Outer", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vInner = new ArgValue("Inner", new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vOuterKeySelector = new ArgValue("OuterKeySelector", new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vInnerKeySelector = new ArgValue("InnerKeySelector", new[] { _modes[0].Args[3], _modes[1].Args[3] });
+				_vResultSelector = new ArgValue("ResultSelector", new[] { _modes[0].Args[4], _modes[1].Args[4] });
+				_vComparer = new ArgValue("Comparer", new[] { _modes[0].Args[5], _modes[1].Args[5] });
 			}
 			
 			public Join2Transition(MethodCallExpression ex) : this()
@@ -4004,7 +4000,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public LastTransition(MethodCallExpression ex) : this()
@@ -4068,8 +4064,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue("Predicate", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Last2Transition(MethodCallExpression ex) : this()
@@ -4127,7 +4123,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public LastOrDefaultTransition(MethodCallExpression ex) : this()
@@ -4191,8 +4187,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue("Predicate", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public LastOrDefault2Transition(MethodCallExpression ex) : this()
@@ -4250,7 +4246,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public LongCountTransition(MethodCallExpression ex) : this()
@@ -4314,8 +4310,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue("Predicate", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public LongCount2Transition(MethodCallExpression ex) : this()
@@ -4373,7 +4369,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public MaxTransition(MethodCallExpression ex) : this()
@@ -4437,8 +4433,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Max2Transition(MethodCallExpression ex) : this()
@@ -4496,7 +4492,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public MinTransition(MethodCallExpression ex) : this()
@@ -4560,8 +4556,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Min2Transition(MethodCallExpression ex) : this()
@@ -4619,7 +4615,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public OfTypeTransition(MethodCallExpression ex) : this()
@@ -4683,8 +4679,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue("KeySelector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public OrderByTransition(MethodCallExpression ex) : this()
@@ -4756,9 +4752,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_vComparer = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue("KeySelector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vComparer = new ArgValue("Comparer", new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public OrderBy2Transition(MethodCallExpression ex) : this()
@@ -4824,8 +4820,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue("KeySelector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public OrderByDescendingTransition(MethodCallExpression ex) : this()
@@ -4897,9 +4893,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_vComparer = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue("KeySelector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vComparer = new ArgValue("Comparer", new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public OrderByDescending2Transition(MethodCallExpression ex) : this()
@@ -4958,7 +4954,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public ReverseTransition(MethodCallExpression ex) : this()
@@ -5022,8 +5018,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public SelectTransition(MethodCallExpression ex) : this()
@@ -5088,8 +5084,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Select2Transition(MethodCallExpression ex) : this()
@@ -5154,8 +5150,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public SelectManyTransition(MethodCallExpression ex) : this()
@@ -5220,8 +5216,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public SelectMany2Transition(MethodCallExpression ex) : this()
@@ -5293,9 +5289,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vCollectionSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_vResultSelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vCollectionSelector = new ArgValue("CollectionSelector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vResultSelector = new ArgValue("ResultSelector", new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public SelectMany3Transition(MethodCallExpression ex) : this()
@@ -5368,9 +5364,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vCollectionSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_vResultSelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vCollectionSelector = new ArgValue("CollectionSelector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vResultSelector = new ArgValue("ResultSelector", new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public SelectMany4Transition(MethodCallExpression ex) : this()
@@ -5436,8 +5432,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vFirst = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSecond = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vFirst = new ArgValue("First", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSecond = new ArgValue("Second", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public SequenceEqualTransition(MethodCallExpression ex) : this()
@@ -5509,9 +5505,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vFirst = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSecond = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_vComparer = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vFirst = new ArgValue("First", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSecond = new ArgValue("Second", new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vComparer = new ArgValue("Comparer", new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public SequenceEqual2Transition(MethodCallExpression ex) : this()
@@ -5570,7 +5566,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public SingleTransition(MethodCallExpression ex) : this()
@@ -5634,8 +5630,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue("Predicate", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Single2Transition(MethodCallExpression ex) : this()
@@ -5693,7 +5689,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public SingleOrDefaultTransition(MethodCallExpression ex) : this()
@@ -5757,8 +5753,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue("Predicate", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public SingleOrDefault2Transition(MethodCallExpression ex) : this()
@@ -5823,8 +5819,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vCount = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vCount = new ArgValue("Count", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public SkipTransition(MethodCallExpression ex) : this()
@@ -5889,8 +5885,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue("Predicate", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public SkipWhileTransition(MethodCallExpression ex) : this()
@@ -5955,8 +5951,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue("Predicate", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public SkipWhile2Transition(MethodCallExpression ex) : this()
@@ -6021,8 +6017,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public SumTransition(MethodCallExpression ex) : this()
@@ -6080,7 +6076,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Sum10Transition(MethodCallExpression ex) : this()
@@ -6137,7 +6133,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Sum11Transition(MethodCallExpression ex) : this()
@@ -6201,8 +6197,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Sum12Transition(MethodCallExpression ex) : this()
@@ -6267,8 +6263,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Sum13Transition(MethodCallExpression ex) : this()
@@ -6333,8 +6329,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Sum14Transition(MethodCallExpression ex) : this()
@@ -6399,8 +6395,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Sum15Transition(MethodCallExpression ex) : this()
@@ -6465,8 +6461,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Sum16Transition(MethodCallExpression ex) : this()
@@ -6531,8 +6527,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Sum17Transition(MethodCallExpression ex) : this()
@@ -6597,8 +6593,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Sum18Transition(MethodCallExpression ex) : this()
@@ -6663,8 +6659,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Sum19Transition(MethodCallExpression ex) : this()
@@ -6722,7 +6718,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Sum2Transition(MethodCallExpression ex) : this()
@@ -6786,8 +6782,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue("Selector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Sum20Transition(MethodCallExpression ex) : this()
@@ -6845,7 +6841,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Sum3Transition(MethodCallExpression ex) : this()
@@ -6902,7 +6898,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Sum4Transition(MethodCallExpression ex) : this()
@@ -6959,7 +6955,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Sum5Transition(MethodCallExpression ex) : this()
@@ -7016,7 +7012,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Sum6Transition(MethodCallExpression ex) : this()
@@ -7073,7 +7069,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Sum7Transition(MethodCallExpression ex) : this()
@@ -7130,7 +7126,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Sum8Transition(MethodCallExpression ex) : this()
@@ -7187,7 +7183,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Sum9Transition(MethodCallExpression ex) : this()
@@ -7251,8 +7247,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vCount = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vCount = new ArgValue("Count", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public TakeTransition(MethodCallExpression ex) : this()
@@ -7317,8 +7313,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue("Predicate", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public TakeWhileTransition(MethodCallExpression ex) : this()
@@ -7383,8 +7379,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue("Predicate", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public TakeWhile2Transition(MethodCallExpression ex) : this()
@@ -7449,8 +7445,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue("KeySelector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public ThenByTransition(MethodCallExpression ex) : this()
@@ -7522,9 +7518,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_vComparer = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue("KeySelector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vComparer = new ArgValue("Comparer", new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public ThenBy2Transition(MethodCallExpression ex) : this()
@@ -7590,8 +7586,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue("KeySelector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public ThenByDescendingTransition(MethodCallExpression ex) : this()
@@ -7663,9 +7659,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_vComparer = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue("KeySelector", new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vComparer = new ArgValue("Comparer", new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public ThenByDescending2Transition(MethodCallExpression ex) : this()
@@ -7731,8 +7727,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vFirst = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSecond = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vFirst = new ArgValue("First", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSecond = new ArgValue("Second", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public UnionTransition(MethodCallExpression ex) : this()
@@ -7804,9 +7800,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vFirst = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSecond = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_vComparer = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vFirst = new ArgValue("First", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSecond = new ArgValue("Second", new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vComparer = new ArgValue("Comparer", new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public Union2Transition(MethodCallExpression ex) : this()
@@ -7872,8 +7868,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue("Predicate", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public WhereTransition(MethodCallExpression ex) : this()
@@ -7938,8 +7934,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue("Source", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue("Predicate", new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Where2Transition(MethodCallExpression ex) : this()
@@ -8011,9 +8007,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_vFirst = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_vSecond = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_vResultSelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vFirst = new ArgValue("First", new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSecond = new ArgValue("Second", new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vResultSelector = new ArgValue("ResultSelector", new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public ZipTransition(MethodCallExpression ex) : this()

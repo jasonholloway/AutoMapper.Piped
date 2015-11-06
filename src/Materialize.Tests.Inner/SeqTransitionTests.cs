@@ -62,7 +62,7 @@ namespace Materialize.Tests.Inner
 
             tran.Source = Expression.Default(typeof(IQueryable<int>));
 
-            var m = tran.GetMethod();
+            var m = tran.GetCallExpression().Method;
 
             Assert.That(m.IsGenericMethod);
             Assert.That(m.GetGenericMethodDefinition(), Is.EqualTo(QyMethods.Select));
@@ -97,7 +97,7 @@ namespace Materialize.Tests.Inner
 
             tran.Source = Expression.Default(typeof(IQueryable<int?>));
 
-            var m = tran.GetMethod();
+            var m = tran.GetCallExpression().Method;
 
             Assert.That(m.IsGenericMethod);
             Assert.That(m.GetGenericMethodDefinition(), Is.EqualTo(QyMethods.Select));

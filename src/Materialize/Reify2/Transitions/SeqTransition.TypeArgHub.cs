@@ -11,13 +11,16 @@ namespace Materialize.Reify2.Transitions
 
         protected class TypeArgHub
         {
+            Mode _mode;
             ISet<Type> _typeParamHash;
             List<Entry> _reg;
 
             public IEnumerable<Type> TypeParams { get; private set; }
 
 
-            public TypeArgHub(IEnumerable<Type> typeParams) {
+            public TypeArgHub(Mode mode, IEnumerable<Type> typeParams) 
+            {
+                _mode = mode;
                 TypeParams = typeParams.ToArray();
                 _typeParamHash = new HashSet<Type>(typeParams);
                 _reg = new List<Entry>();
@@ -34,12 +37,16 @@ namespace Materialize.Reify2.Transitions
                 Debug.Assert(
                         _reg.Where(e => e.Owner != null).Select(e => e.TypeArg).GroupBy(a => a.ParamType).All(g => g.Distinct().Count() == 1),
                         $"A {nameof(TypeArg)} conflict has arisen in {nameof(TypeArgHub)}!");
+
+                _mode.InvalidateStatus();
             }
 
 
             public void Revoke(TypeArg typeArg, object owner) {
                 var entry = new Entry(owner, typeArg);
                 _reg.RemoveAll(e => e.Equals(entry));
+
+                _mode.InvalidateStatus();
             }
 
 

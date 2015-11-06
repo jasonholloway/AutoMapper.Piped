@@ -81,11 +81,8 @@ namespace Materialize.Reify2.Compiling
         {
             ((ITakesSource)t).Source = scheme.Exp;
 
-            var method = t.GetMethod();
+            scheme.Exp = t.GetCallExpression();
             
-            scheme.Exp = Expression.Call(method,
-                                        t.Args.ToArray());
-
             return scheme;
         }
 

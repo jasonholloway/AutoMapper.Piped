@@ -49,7 +49,7 @@ namespace Materialize.Reify2.Transitions
 				};
 					
 <#foreach(var p in m.Params) {
-#>				_v<#=p.Name#> = new ArgValue(new[] { _modes[0].Args[<#=p.Position#>], _modes[1].Args[<#=p.Position#>] });
+#>				_v<#=p.Name#> = new ArgValue("<#=p.Name#>", new[] { _modes[0].Args[<#=p.Position#>], _modes[1].Args[<#=p.Position#>] });
 <#}#>
 			}
 			

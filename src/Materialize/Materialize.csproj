@@ -49,9 +49,7 @@
     <Compile Include="Expressions\ExpressionHasher.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Reify2\Compiling\Schematizer.cs" />
-    <Compile Include="Reify2\Compiling\ReifyRoutine.cs" />
     <Compile Include="Reify2\Compiling\Scheme.cs" />
-    <Compile Include="Reify2\Compiling\StageCompiler.cs" />
     <Compile Include="Reify2\Parsing2\SeqMethods\QyParser.cs">
       <DependentUpon>QyParser.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -60,6 +58,8 @@
     <Compile Include="Reify2\Parsing2\SeqMethods\QyParser2.cs" />
     <Compile Include="Reify2\Parsing2\Source\SourceParser.cs" />
     <Compile Include="Reify2\Transitions\FetchTransition.cs" />
+    <Compile Include="Reify2\Transitions\SeqTransition.Mode.cs" />
+    <Compile Include="Reify2\Transitions\SeqTransition.Arg.cs" />
     <Compile Include="Reify2\Transitions\SeqTransition.TypeArgHub.cs" />
     <Compile Include="Reify2\Transitions\SeqTransition.cs" />
     <Compile Include="Reify2\Transitions\Transition.cs" />
