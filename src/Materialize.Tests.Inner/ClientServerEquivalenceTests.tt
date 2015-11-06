@@ -1,0 +1,278 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="$(ProjectDir)..\Materialize.SequenceMethods\bin\$(Configuration)\Materialize.SequenceMethods.dll" #>
+<#@ assembly name="$(ProjectDir)..\Materialize\bin\Debug\Materialize.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Linq.Expressions" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections" #> 
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="Materialize.SequenceMethods" #>
+<#@ import namespace="Materialize.Types" #>
+<#@ output extension="cs" #>
+using Materialize.Reify2;
+using Materialize.Reify2.Compiling;
+using Materialize.Reify2.Parameterize;
+using Materialize.Reify2.Transitions;
+using Materialize.SourceRegimes;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+
+[TestFixture]
+public class ClientServerEquivalenceTests 
+{
+
+	class Item : IEquatable<Item> {
+		public int Int { get; private set; }
+
+		public Item(int i) {
+			Int = i;
+		}
+
+        public bool Equals(Item other) {
+            return other != null && Int == other.Int;
+        }
+    }
+
+	class ItemComparer : IComparer<Item> {
+		public int Compare(Item a, Item b) {
+			return Comparer<int>.Default.Compare(a.Int, b.Int);
+		}
+	}
+
+	static IQueryable<Item> Items { get; } = Enumerable.Range(25, 50).Select(i => new Item(i)).AsQueryable();
+		
+    static ParamMap _emptyParamMap = new ParamMap(Enumerable.Empty<ParamMap.Param>());
+    static Expression _exBlank = Expression.Constant(0);
+	static ISourceRegime _regime = new TolerantRegime();
+			
+    static Expression GetQuoted<T, T2>(Expression<Func<T, T2>> exFn) {
+        return Expression.Quote(exFn);
+    }
+
+    static Expression GetQuoted<T, T2, T3>(Expression<Func<T, T2, T3>> exFn) {
+        return Expression.Quote(exFn);
+    }
+
+    static Expression GetQuoted<T, T2, T3, T4>(Expression<Func<T, T2, T3, T4>> exFn) {
+        return Expression.Quote(exFn);
+    }
+
+
+	
+
+    static object ReifyOnClient(Transition t) 
+    {
+        var trans = new Transition[] {
+            new SourceTransition(_regime, Items.Expression),
+            new FetchTransition(_regime),
+            t
+        };
+
+        var scheme = Schematizer.Schematize(trans, _emptyParamMap);
+        var reifier = new Reifier(_exBlank, _emptyParamMap, scheme.Compile());
+
+        return reifier.Execute(Items.Provider, _exBlank);
+    }
+
+    static object ReifyOnServer(Transition t) 
+    {
+        var trans = new Transition[] {
+            new SourceTransition(_regime, Items.Expression),
+            t
+        };
+
+        var scheme = Schematizer.Schematize(trans, _emptyParamMap);
+        var reifier = new Reifier(_exBlank, _emptyParamMap, scheme.Compile());
+
+        return reifier.Execute(Items.Provider, _exBlank);
+    }
+
+
+
+
+
+<#foreach(var test in Tests) {#>
+	[Test]
+	public void <#=test.Name#>() 
+	{
+		var t = new <#=test.TransitionName#>() {
+			<#foreach(var a in test.GetTransArgs()) {#>
+				<#=a.Name#> = <#=a.PopulationExpression#>,
+			<#}#>
+		};
+
+		var serverResult = <#=(test.ReturnsEnumerable ? "(IEnumerable<Item>)" : "")#>ReifyOnServer(t);
+		var clientResult = <#=(test.ReturnsEnumerable ? "(IEnumerable<Item>)" : "")#>ReifyOnClient(t);
+
+		Assert.That(
+				clientResult,
+				<#=(test.ReturnsEnumerable ? "Is.EquivalentTo(serverResult).Using(new ItemComparer())" : "Is.EqualTo(serverResult)")#>);
+	}
+
+
+<#}#>
+}
+
+
+
+
+<#+
+
+static IEnumerable<Test> Tests = SeqMethodMap.Methods.Values.Select(m => new Test(m));
+
+
+class Test {
+	public string Name;
+	public string Source;
+	public string Statement;
+	public string TransitionName;	
+
+	public bool ReturnsEnumerable;
+
+
+	SeqMethod _method;
+
+    public Test(SeqMethod method) {
+		_method = method;
+
+		Name = method.Name + "Test";
+			 
+		TransitionName = method.Name + "Transition";
+
+		Statement = "." + method.En.Name;		
+	
+		ReturnsEnumerable = typeof(IEnumerable).IsAssignableFrom(method.Qy.ReturnType); 
+    }
+
+
+	public IEnumerable<TransitionArg> GetTransArgs() {
+		return _method.Params.Skip(1).Select(p => new TransitionArg(p));
+    }
+
+
+
+	public class TransitionArg {
+		public readonly string Name; 
+		public readonly string PopulationExpression;
+		
+		public TransitionArg(SeqMethod.Param p) {
+			Name = p.Name;
+			PopulationExpression = WriteArgValue(p.QyParam.ParameterType);
+        }
+    }
+	
+}
+
+
+
+
+static string WriteArgValue(Type t) {	
+	switch(t.GetNiceName()) {
+		case "int":
+			return "Expression.Constant(17)";
+
+		case "TSource":
+		case "TAccumulate":
+			return "Expression.Constant(Items.ElementAt(13))";
+													
+		case "Expression<Func<TSource, TSource, TSource>>":
+		case "Expression<Func<TAccumulate, TSource, TAccumulate>>":
+			return "GetQuoted((Item i, Item j) => new Item(i.Int + j.Int))";
+
+		case "Expression<Func<TAccumulate, TResult>>":
+			return "GetQuoted((Item i) => i)";
+
+		case "Expression<Func<TSource, bool>>":
+			return "GetQuoted((Item i) => i.Int % 2 == 1)";
+
+		case "Expression<Func<TSource, int>>":		
+		case "Expression<Func<TSource, int?>>":
+			return "GetQuoted((Item i) => i.Int * 3)";
+														
+		case "Expression<Func<TSource, float>>":
+		case "Expression<Func<TSource, float?>>":
+			return "GetQuoted((Item i) => i.Int * 3.5F)";
+														
+		case "Expression<Func<TSource, long>>":		
+		case "Expression<Func<TSource, long?>>":
+			return "GetQuoted((Item i) => i.Int * 13)";
+														
+		case "Expression<Func<TSource, decimal>>":		
+		case "Expression<Func<TSource, decimal?>>":
+			return "GetQuoted((Item i) => i.Int * 3.67)";
+																												
+		case "Expression<Func<TSource, double>>":		
+		case "Expression<Func<TSource, double?>>":
+			return "GetQuoted((Item i) => i.Int * 0.73)";
+
+		case "Expression<Func<TSource, TKey>>":
+		case "Expression<Func<TOuter, TKey>>":
+		case "Expression<Func<TInner, TKey>>":
+			return "GetQuoted((Item i) => i.Int.ToString())";
+
+		case "Expression<Func<TKey, IEnumerable<TElement>, TResult>>":
+		case "Expression<Func<TKey, IEnumerable<TSource>, TResult>>":
+			return "GetQuoted((string k, IEnumerable<Item> r) => r.Last())";
+
+		case "Expression<Func<TOuter, IEnumerable<TInner>, TResult>>":
+			return "GetQuoted((Item o, IEnumerable<Item> r) => new Item(r.Last().Int + o.Int))";
+
+		case "Expression<Func<TOuter, TInner, TResult>>":
+			return "GetQuoted((Item o, Item i) => new Item(o.Int - i.Int * 3))";
+
+		case "Expression<Func<TSource, TElement>>":
+		case "Expression<Func<TSource, TResult>>":
+			return "GetQuoted((Item i) => new Item(i.Int - 1))";
+
+		case "Expression<Func<TSource, int, TResult>>":
+			return "GetQuoted((Item s, int i) => new Item(s.Int * i))";
+
+		case "Expression<Func<TSource, IEnumerable<TResult>>>":
+			return "GetQuoted((Item i) => Enumerable.Repeat(i, i.Int + 30))";
+
+		case "Expression<Func<TSource, int, IEnumerable<TResult>>>":
+			return "GetQuoted((Item s, int i) => Enumerable.Repeat(s, i * 2))";
+
+		case "Expression<Func<TSource, int, bool>>":
+			return "GetQuoted((Item s, int i) => s.Int + i < 10)";
+			 
+		case "Expression<Func<TFirst, TSecond, TResult>>":
+			return "GetQuoted((Item a, Item b) => new Item(a.Int * b.Int))";
+
+		case "Expression<Func<TSource, IEnumerable<TCollection>>>":
+		case "Expression<Func<TSource, int, IEnumerable<TCollection>>>":
+			return "GetQuoted((Item s) => new[] { new List<Item>() })";
+
+		case "Expression<Func<TSource, TCollection, TResult>>":
+			return "GetQuoted((Item s, List<Item> c) => s)";
+			 
+		case "IQueryable<TSource>":
+		case "IEnumerable<TSource>":
+		case "IEnumerable<TInner>":
+		case "IEnumerable<TSecond>":
+			return "Expression.Constant(Items.Reverse())";
+
+		case "IEqualityComparer<TSource>":
+			return "Expression.Constant(new ItemComparer())";
+
+		case "IEqualityComparer<TKey>":
+			return "Expression.Constant(EqualityComparer<string>.Default)";
+
+		case "IComparer<TKey>":
+			return "Expression.Constant(StringComparer.Ordinal)";
+
+		default:
+			return "GAH! //" + t.GetNiceName();
+    }
+
+}
+
+
+
+
+#>

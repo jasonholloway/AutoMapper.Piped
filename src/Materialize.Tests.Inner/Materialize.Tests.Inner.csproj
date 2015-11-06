@@ -64,10 +64,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClientsideTransitionTests.cs">
+    <Compile Include="ClientServerEquivalenceTests.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ClientsideTransitionTests.tt</DependentUpon>
+      <DependentUpon>ClientServerEquivalenceTests.tt</DependentUpon>
     </Compile>
     <Compile Include="Fakes\ParamMapFake.cs" />
     <Compile Include="Fakes\ArgMapFake.cs" />
@@ -109,9 +109,9 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ClientsideTransitionTests.tt">
+    <Content Include="ClientServerEquivalenceTests.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ClientsideTransitionTests.cs</LastGenOutput>
+      <LastGenOutput>ClientServerEquivalenceTests.cs</LastGenOutput>
     </Content>
     <Content Include="DirectPipelineTests.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

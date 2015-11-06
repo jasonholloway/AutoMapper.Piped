@@ -5,10 +5,11 @@ using Materialize.Types;
 using System.Reflection;
 using System;
 using System.Linq;
-using System.Diagnostics;
 
 namespace Materialize.Reify2.Transitions
 {
+       
+
     internal abstract partial class SeqTransition : Transition
     {
         protected Mode[] _modes;

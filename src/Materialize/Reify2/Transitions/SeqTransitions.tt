@@ -23,24 +23,22 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
-			
-<#foreach(var p in m.Qy.GetParameters())
-{#>			readonly ArgValue _<#=p.Name#>Arg;
-<#}
-foreach(var p in m.Qy.GetParameters())
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
+<#foreach(var p in m.Params)
 {#>			
+			readonly ArgValue _v<#=p.Name#>;
+
 			public Expression <#=CapitalizeFirst(p.Name)#> {
-				get { return _<#=p.Name#>Arg.Expression; }
-				set { _<#=p.Name#>Arg.Expression = value; }
-			}
+				get { return _v<#=p.Name#>.Expression; }
+				set { _v<#=p.Name#>.Expression = value; }
+			} 
 <#}#>		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { <#=(string.Join(", ", m.Qy.GetParameters().Select(p => "_" + p.Name + "Arg.Expression")))#> }; }
+				get { return new[] { <#=(string.Join(", ", m.Params.Select(p => "_v" + p.Name + ".Expression")))#> }; }
 			}
 			
 			public <#=m.Name#>Transition()
@@ -50,8 +48,8 @@ foreach(var p in m.Qy.GetParameters())
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-<#foreach(var p in m.Qy.GetParameters()) {
-#>				_<#=p.Name#>Arg = new ArgValue(new[] { _modes[0].Args[<#=p.Position#>], _modes[1].Args[<#=p.Position#>] });
+<#foreach(var p in m.Params) {
+#>				_v<#=p.Name#> = new ArgValue(new[] { _modes[0].Args[<#=p.Position#>], _modes[1].Args[<#=p.Position#>] });
 <#}#>
 			}
 			
@@ -70,15 +68,15 @@ foreach(var p in m.Qy.GetParameters())
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-<#foreach(var p in m.Qy.GetParameters().Skip(1)) {
-#>				_<#=p.Name#>Arg.Expression = ex.Arguments[<#=p.Position#>];
+<#foreach(var p in m.Params.Skip(1)) {
+#>				_v<#=p.Name#>.Expression = ex.Arguments[<#=p.Position#>];
 <#}#>			}
 
 			Expression ITakesSource.Source {
-				get { return _<#=m.Qy.GetParameters()[0].Name#>Arg.Expression; }
-				set { _<#=m.Qy.GetParameters()[0].Name#>Arg.Expression = value; }
+				get { return _v<#=m.Params[0].Name#>.Expression; }
+				set { _v<#=m.Params[0].Name#>.Expression = value; }
 			}
-	  }
+	  } 
 
 
 <#  }#>

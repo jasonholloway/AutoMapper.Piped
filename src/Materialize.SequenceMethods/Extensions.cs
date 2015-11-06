@@ -88,5 +88,15 @@ namespace Materialize.SequenceMethods
 
 
 
+
+
+
+        public static string Capitalize(this string s) {
+            return new string(s.ToArray().Select((c, i) => i == 0 ? char.ToUpperInvariant(c) : c).ToArray());
+        }
+
+
+
+
     }
 }

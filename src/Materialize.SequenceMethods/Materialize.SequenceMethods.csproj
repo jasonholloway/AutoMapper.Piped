@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExpWriter.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="SeqMethodMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

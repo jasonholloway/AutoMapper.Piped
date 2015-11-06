@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -19,7 +20,41 @@ namespace Materialize.SequenceMethods
             Name = name;
             Qy = mQy;
             En = mEn;
+
+            _lzParams = new Lazy<Param[]>(() => En.GetParameters()
+                                                    .Zip(Qy.GetParameters(), 
+                                                             (pEn, pQy) => new Param(pEn, pQy))
+                                                    .ToArray());  
         }
+
+
+
+
+        Lazy<Param[]> _lzParams;
+
+        public IReadOnlyList<Param> Params {
+            get { return _lzParams.Value; }
+        }
+
+
+
+        public class Param
+        {
+            public readonly string Name;
+            public readonly int Position;
+            public readonly ParameterInfo EnParam;
+            public readonly ParameterInfo QyParam;
+
+            public Param(ParameterInfo pEn, ParameterInfo pQy) {
+                Debug.Assert(pEn.Position == pQy.Position, "En and Qy params not at same positions!");
+
+                Name = pEn.Name.Capitalize();
+                Position = pEn.Position;
+                EnParam = pEn;
+                QyParam = pQy;
+            }
+        }
+
     }
 
 

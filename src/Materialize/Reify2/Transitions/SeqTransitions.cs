@@ -13,27 +13,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _funcArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vFunc;
+
 			public Expression Func {
-				get { return _funcArg.Expression; }
-				set { _funcArg.Expression = value; }
-			}
+				get { return _vFunc.Expression; }
+				set { _vFunc.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _funcArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vFunc.Expression }; }
 			}
 			
 			public AggregateTransition()
@@ -43,8 +44,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_funcArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vFunc = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public AggregateTransition(MethodCallExpression ex) : this()
@@ -62,14 +63,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_funcArg.Expression = ex.Arguments[1];
+				_vFunc.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Aggregate2Transition : SeqTransition, ITakesSource
@@ -78,33 +79,39 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
-			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _seedArg;
-			readonly ArgValue _funcArg;
-			
-			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
-			
-			public Expression Seed {
-				get { return _seedArg.Expression; }
-				set { _seedArg.Expression = value; }
-			}
-			
-			public Expression Func {
-				get { return _funcArg.Expression; }
-				set { _funcArg.Expression = value; }
-			}
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 		
-			public override SeqMethod SeqMethod { 
+        	
+			readonly ArgValue _vSource;
+
+			public Expression Source {
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
+		
+        	
+			readonly ArgValue _vSeed;
+
+			public Expression Seed {
+				get { return _vSeed.Expression; }
+				set { _vSeed.Expression = value; }
+			} 
+			
+
+			readonly ArgValue _vFunc;
+
+			public Expression Func {
+				get { return _vFunc.Expression; }
+				set { _vFunc.Expression = value; }
+			} 
+		
+
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _seedArg.Expression, _funcArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSeed.Expression, _vFunc.Expression }; }
 			}
 			
 			public Aggregate2Transition()
@@ -114,9 +121,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_seedArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_funcArg = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSeed = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vFunc = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public Aggregate2Transition(MethodCallExpression ex) : this()
@@ -134,15 +141,15 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_seedArg.Expression = ex.Arguments[1];
-				_funcArg.Expression = ex.Arguments[2];
+				_vSeed.Expression = ex.Arguments[1];
+				_vFunc.Expression = ex.Arguments[2];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Aggregate3Transition : SeqTransition, ITakesSource
@@ -151,39 +158,42 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _seedArg;
-			readonly ArgValue _funcArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSeed;
+
 			public Expression Seed {
-				get { return _seedArg.Expression; }
-				set { _seedArg.Expression = value; }
-			}
+				get { return _vSeed.Expression; }
+				set { _vSeed.Expression = value; }
+			} 
 			
+			readonly ArgValue _vFunc;
+
 			public Expression Func {
-				get { return _funcArg.Expression; }
-				set { _funcArg.Expression = value; }
-			}
+				get { return _vFunc.Expression; }
+				set { _vFunc.Expression = value; }
+			} 
 			
-			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+			readonly ArgValue _vResultSelector;
+
+			public Expression ResultSelector {
+				get { return _vResultSelector.Expression; }
+				set { _vResultSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _seedArg.Expression, _funcArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSeed.Expression, _vFunc.Expression, _vResultSelector.Expression }; }
 			}
 			
 			public Aggregate3Transition()
@@ -193,10 +203,10 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_seedArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_funcArg = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSeed = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vFunc = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vResultSelector = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
 			}
 			
 			public Aggregate3Transition(MethodCallExpression ex) : this()
@@ -214,16 +224,16 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_seedArg.Expression = ex.Arguments[1];
-				_funcArg.Expression = ex.Arguments[2];
-				_selectorArg.Expression = ex.Arguments[3];
+				_vSeed.Expression = ex.Arguments[1];
+				_vFunc.Expression = ex.Arguments[2];
+				_vResultSelector.Expression = ex.Arguments[3];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class AllTransition : SeqTransition, ITakesSource
@@ -232,27 +242,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _predicateArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vPredicate;
+
 			public Expression Predicate {
-				get { return _predicateArg.Expression; }
-				set { _predicateArg.Expression = value; }
-			}
+				get { return _vPredicate.Expression; }
+				set { _vPredicate.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _predicateArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vPredicate.Expression }; }
 			}
 			
 			public AllTransition()
@@ -262,8 +273,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_predicateArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public AllTransition(MethodCallExpression ex) : this()
@@ -281,14 +292,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_predicateArg.Expression = ex.Arguments[1];
+				_vPredicate.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class AnyTransition : SeqTransition, ITakesSource
@@ -297,21 +308,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public AnyTransition()
@@ -321,7 +332,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public AnyTransition(MethodCallExpression ex) : this()
@@ -342,10 +353,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Any2Transition : SeqTransition, ITakesSource
@@ -354,27 +365,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _predicateArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vPredicate;
+
 			public Expression Predicate {
-				get { return _predicateArg.Expression; }
-				set { _predicateArg.Expression = value; }
-			}
+				get { return _vPredicate.Expression; }
+				set { _vPredicate.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _predicateArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vPredicate.Expression }; }
 			}
 			
 			public Any2Transition()
@@ -384,8 +396,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_predicateArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Any2Transition(MethodCallExpression ex) : this()
@@ -403,14 +415,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_predicateArg.Expression = ex.Arguments[1];
+				_vPredicate.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class AverageTransition : SeqTransition, ITakesSource
@@ -419,21 +431,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public AverageTransition()
@@ -443,7 +455,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public AverageTransition(MethodCallExpression ex) : this()
@@ -464,10 +476,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Average10Transition : SeqTransition, ITakesSource
@@ -476,21 +488,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public Average10Transition()
@@ -500,7 +512,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Average10Transition(MethodCallExpression ex) : this()
@@ -521,10 +533,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Average11Transition : SeqTransition, ITakesSource
@@ -533,27 +545,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public Average11Transition()
@@ -563,8 +576,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Average11Transition(MethodCallExpression ex) : this()
@@ -582,14 +595,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Average12Transition : SeqTransition, ITakesSource
@@ -598,27 +611,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public Average12Transition()
@@ -628,8 +642,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Average12Transition(MethodCallExpression ex) : this()
@@ -647,14 +661,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Average13Transition : SeqTransition, ITakesSource
@@ -663,27 +677,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public Average13Transition()
@@ -693,8 +708,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Average13Transition(MethodCallExpression ex) : this()
@@ -712,14 +727,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Average14Transition : SeqTransition, ITakesSource
@@ -728,27 +743,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public Average14Transition()
@@ -758,8 +774,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Average14Transition(MethodCallExpression ex) : this()
@@ -777,14 +793,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Average15Transition : SeqTransition, ITakesSource
@@ -793,27 +809,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public Average15Transition()
@@ -823,8 +840,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Average15Transition(MethodCallExpression ex) : this()
@@ -842,14 +859,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Average16Transition : SeqTransition, ITakesSource
@@ -858,27 +875,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public Average16Transition()
@@ -888,8 +906,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Average16Transition(MethodCallExpression ex) : this()
@@ -907,14 +925,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Average17Transition : SeqTransition, ITakesSource
@@ -923,27 +941,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public Average17Transition()
@@ -953,8 +972,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Average17Transition(MethodCallExpression ex) : this()
@@ -972,14 +991,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Average18Transition : SeqTransition, ITakesSource
@@ -988,27 +1007,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public Average18Transition()
@@ -1018,8 +1038,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Average18Transition(MethodCallExpression ex) : this()
@@ -1037,14 +1057,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Average19Transition : SeqTransition, ITakesSource
@@ -1053,27 +1073,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public Average19Transition()
@@ -1083,8 +1104,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Average19Transition(MethodCallExpression ex) : this()
@@ -1102,14 +1123,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Average2Transition : SeqTransition, ITakesSource
@@ -1118,21 +1139,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public Average2Transition()
@@ -1142,7 +1163,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Average2Transition(MethodCallExpression ex) : this()
@@ -1163,10 +1184,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Average20Transition : SeqTransition, ITakesSource
@@ -1175,27 +1196,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public Average20Transition()
@@ -1205,8 +1227,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Average20Transition(MethodCallExpression ex) : this()
@@ -1224,14 +1246,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Average3Transition : SeqTransition, ITakesSource
@@ -1240,21 +1262,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public Average3Transition()
@@ -1264,7 +1286,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Average3Transition(MethodCallExpression ex) : this()
@@ -1285,10 +1307,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Average4Transition : SeqTransition, ITakesSource
@@ -1297,21 +1319,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public Average4Transition()
@@ -1321,7 +1343,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Average4Transition(MethodCallExpression ex) : this()
@@ -1342,10 +1364,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Average5Transition : SeqTransition, ITakesSource
@@ -1354,21 +1376,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public Average5Transition()
@@ -1378,7 +1400,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Average5Transition(MethodCallExpression ex) : this()
@@ -1399,10 +1421,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Average6Transition : SeqTransition, ITakesSource
@@ -1411,21 +1433,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public Average6Transition()
@@ -1435,7 +1457,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Average6Transition(MethodCallExpression ex) : this()
@@ -1456,10 +1478,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Average7Transition : SeqTransition, ITakesSource
@@ -1468,21 +1490,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public Average7Transition()
@@ -1492,7 +1514,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Average7Transition(MethodCallExpression ex) : this()
@@ -1513,10 +1535,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Average8Transition : SeqTransition, ITakesSource
@@ -1525,21 +1547,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public Average8Transition()
@@ -1549,7 +1571,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Average8Transition(MethodCallExpression ex) : this()
@@ -1570,10 +1592,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Average9Transition : SeqTransition, ITakesSource
@@ -1582,21 +1604,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public Average9Transition()
@@ -1606,7 +1628,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Average9Transition(MethodCallExpression ex) : this()
@@ -1627,10 +1649,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class CastTransition : SeqTransition, ITakesSource
@@ -1639,21 +1661,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public CastTransition()
@@ -1663,7 +1685,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public CastTransition(MethodCallExpression ex) : this()
@@ -1684,10 +1706,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class ConcatTransition : SeqTransition, ITakesSource
@@ -1696,27 +1718,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _source1Arg;
-			readonly ArgValue _source2Arg;
+			readonly ArgValue _vFirst;
+
+			public Expression First {
+				get { return _vFirst.Expression; }
+				set { _vFirst.Expression = value; }
+			} 
 			
-			public Expression Source1 {
-				get { return _source1Arg.Expression; }
-				set { _source1Arg.Expression = value; }
-			}
-			
-			public Expression Source2 {
-				get { return _source2Arg.Expression; }
-				set { _source2Arg.Expression = value; }
-			}
+			readonly ArgValue _vSecond;
+
+			public Expression Second {
+				get { return _vSecond.Expression; }
+				set { _vSecond.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _source1Arg.Expression, _source2Arg.Expression }; }
+				get { return new[] { _vFirst.Expression, _vSecond.Expression }; }
 			}
 			
 			public ConcatTransition()
@@ -1726,8 +1749,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_source1Arg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_source2Arg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vFirst = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSecond = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public ConcatTransition(MethodCallExpression ex) : this()
@@ -1745,14 +1768,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_source2Arg.Expression = ex.Arguments[1];
+				_vSecond.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _source1Arg.Expression; }
-				set { _source1Arg.Expression = value; }
+				get { return _vFirst.Expression; }
+				set { _vFirst.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class ContainsTransition : SeqTransition, ITakesSource
@@ -1761,27 +1784,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _itemArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
-			public Expression Item {
-				get { return _itemArg.Expression; }
-				set { _itemArg.Expression = value; }
-			}
+			readonly ArgValue _vValue;
+
+			public Expression Value {
+				get { return _vValue.Expression; }
+				set { _vValue.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _itemArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vValue.Expression }; }
 			}
 			
 			public ContainsTransition()
@@ -1791,8 +1815,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_itemArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vValue = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public ContainsTransition(MethodCallExpression ex) : this()
@@ -1810,14 +1834,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_itemArg.Expression = ex.Arguments[1];
+				_vValue.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Contains2Transition : SeqTransition, ITakesSource
@@ -1826,33 +1850,35 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _itemArg;
-			readonly ArgValue _comparerArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
-			public Expression Item {
-				get { return _itemArg.Expression; }
-				set { _itemArg.Expression = value; }
-			}
+			readonly ArgValue _vValue;
+
+			public Expression Value {
+				get { return _vValue.Expression; }
+				set { _vValue.Expression = value; }
+			} 
 			
+			readonly ArgValue _vComparer;
+
 			public Expression Comparer {
-				get { return _comparerArg.Expression; }
-				set { _comparerArg.Expression = value; }
-			}
+				get { return _vComparer.Expression; }
+				set { _vComparer.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _itemArg.Expression, _comparerArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vValue.Expression, _vComparer.Expression }; }
 			}
 			
 			public Contains2Transition()
@@ -1862,9 +1888,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_itemArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_comparerArg = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vValue = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vComparer = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public Contains2Transition(MethodCallExpression ex) : this()
@@ -1882,15 +1908,15 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_itemArg.Expression = ex.Arguments[1];
-				_comparerArg.Expression = ex.Arguments[2];
+				_vValue.Expression = ex.Arguments[1];
+				_vComparer.Expression = ex.Arguments[2];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class CountTransition : SeqTransition, ITakesSource
@@ -1899,21 +1925,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public CountTransition()
@@ -1923,7 +1949,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public CountTransition(MethodCallExpression ex) : this()
@@ -1944,10 +1970,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Count2Transition : SeqTransition, ITakesSource
@@ -1956,27 +1982,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _predicateArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vPredicate;
+
 			public Expression Predicate {
-				get { return _predicateArg.Expression; }
-				set { _predicateArg.Expression = value; }
-			}
+				get { return _vPredicate.Expression; }
+				set { _vPredicate.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _predicateArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vPredicate.Expression }; }
 			}
 			
 			public Count2Transition()
@@ -1986,8 +2013,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_predicateArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Count2Transition(MethodCallExpression ex) : this()
@@ -2005,14 +2032,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_predicateArg.Expression = ex.Arguments[1];
+				_vPredicate.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class DefaultIfEmptyTransition : SeqTransition, ITakesSource
@@ -2021,21 +2048,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public DefaultIfEmptyTransition()
@@ -2045,7 +2072,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public DefaultIfEmptyTransition(MethodCallExpression ex) : this()
@@ -2066,10 +2093,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class DefaultIfEmpty2Transition : SeqTransition, ITakesSource
@@ -2078,27 +2105,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _defaultValueArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vDefaultValue;
+
 			public Expression DefaultValue {
-				get { return _defaultValueArg.Expression; }
-				set { _defaultValueArg.Expression = value; }
-			}
+				get { return _vDefaultValue.Expression; }
+				set { _vDefaultValue.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _defaultValueArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vDefaultValue.Expression }; }
 			}
 			
 			public DefaultIfEmpty2Transition()
@@ -2108,8 +2136,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_defaultValueArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vDefaultValue = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public DefaultIfEmpty2Transition(MethodCallExpression ex) : this()
@@ -2127,14 +2155,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_defaultValueArg.Expression = ex.Arguments[1];
+				_vDefaultValue.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class DistinctTransition : SeqTransition, ITakesSource
@@ -2143,21 +2171,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public DistinctTransition()
@@ -2167,7 +2195,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public DistinctTransition(MethodCallExpression ex) : this()
@@ -2188,10 +2216,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Distinct2Transition : SeqTransition, ITakesSource
@@ -2200,27 +2228,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _comparerArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vComparer;
+
 			public Expression Comparer {
-				get { return _comparerArg.Expression; }
-				set { _comparerArg.Expression = value; }
-			}
+				get { return _vComparer.Expression; }
+				set { _vComparer.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _comparerArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vComparer.Expression }; }
 			}
 			
 			public Distinct2Transition()
@@ -2230,8 +2259,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_comparerArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vComparer = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Distinct2Transition(MethodCallExpression ex) : this()
@@ -2249,14 +2278,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_comparerArg.Expression = ex.Arguments[1];
+				_vComparer.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class ElementAtTransition : SeqTransition, ITakesSource
@@ -2265,27 +2294,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _indexArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vIndex;
+
 			public Expression Index {
-				get { return _indexArg.Expression; }
-				set { _indexArg.Expression = value; }
-			}
+				get { return _vIndex.Expression; }
+				set { _vIndex.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _indexArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vIndex.Expression }; }
 			}
 			
 			public ElementAtTransition()
@@ -2295,8 +2325,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_indexArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vIndex = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public ElementAtTransition(MethodCallExpression ex) : this()
@@ -2314,14 +2344,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_indexArg.Expression = ex.Arguments[1];
+				_vIndex.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class ElementAtOrDefaultTransition : SeqTransition, ITakesSource
@@ -2330,27 +2360,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _indexArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vIndex;
+
 			public Expression Index {
-				get { return _indexArg.Expression; }
-				set { _indexArg.Expression = value; }
-			}
+				get { return _vIndex.Expression; }
+				set { _vIndex.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _indexArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vIndex.Expression }; }
 			}
 			
 			public ElementAtOrDefaultTransition()
@@ -2360,8 +2391,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_indexArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vIndex = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public ElementAtOrDefaultTransition(MethodCallExpression ex) : this()
@@ -2379,14 +2410,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_indexArg.Expression = ex.Arguments[1];
+				_vIndex.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class ExceptTransition : SeqTransition, ITakesSource
@@ -2395,27 +2426,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _source1Arg;
-			readonly ArgValue _source2Arg;
+			readonly ArgValue _vFirst;
+
+			public Expression First {
+				get { return _vFirst.Expression; }
+				set { _vFirst.Expression = value; }
+			} 
 			
-			public Expression Source1 {
-				get { return _source1Arg.Expression; }
-				set { _source1Arg.Expression = value; }
-			}
-			
-			public Expression Source2 {
-				get { return _source2Arg.Expression; }
-				set { _source2Arg.Expression = value; }
-			}
+			readonly ArgValue _vSecond;
+
+			public Expression Second {
+				get { return _vSecond.Expression; }
+				set { _vSecond.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _source1Arg.Expression, _source2Arg.Expression }; }
+				get { return new[] { _vFirst.Expression, _vSecond.Expression }; }
 			}
 			
 			public ExceptTransition()
@@ -2425,8 +2457,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_source1Arg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_source2Arg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vFirst = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSecond = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public ExceptTransition(MethodCallExpression ex) : this()
@@ -2444,14 +2476,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_source2Arg.Expression = ex.Arguments[1];
+				_vSecond.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _source1Arg.Expression; }
-				set { _source1Arg.Expression = value; }
+				get { return _vFirst.Expression; }
+				set { _vFirst.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Except2Transition : SeqTransition, ITakesSource
@@ -2460,33 +2492,35 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _source1Arg;
-			readonly ArgValue _source2Arg;
-			readonly ArgValue _comparerArg;
+			readonly ArgValue _vFirst;
+
+			public Expression First {
+				get { return _vFirst.Expression; }
+				set { _vFirst.Expression = value; }
+			} 
 			
-			public Expression Source1 {
-				get { return _source1Arg.Expression; }
-				set { _source1Arg.Expression = value; }
-			}
+			readonly ArgValue _vSecond;
+
+			public Expression Second {
+				get { return _vSecond.Expression; }
+				set { _vSecond.Expression = value; }
+			} 
 			
-			public Expression Source2 {
-				get { return _source2Arg.Expression; }
-				set { _source2Arg.Expression = value; }
-			}
-			
+			readonly ArgValue _vComparer;
+
 			public Expression Comparer {
-				get { return _comparerArg.Expression; }
-				set { _comparerArg.Expression = value; }
-			}
+				get { return _vComparer.Expression; }
+				set { _vComparer.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _source1Arg.Expression, _source2Arg.Expression, _comparerArg.Expression }; }
+				get { return new[] { _vFirst.Expression, _vSecond.Expression, _vComparer.Expression }; }
 			}
 			
 			public Except2Transition()
@@ -2496,9 +2530,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_source1Arg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_source2Arg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_comparerArg = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vFirst = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSecond = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vComparer = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public Except2Transition(MethodCallExpression ex) : this()
@@ -2516,15 +2550,15 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_source2Arg.Expression = ex.Arguments[1];
-				_comparerArg.Expression = ex.Arguments[2];
+				_vSecond.Expression = ex.Arguments[1];
+				_vComparer.Expression = ex.Arguments[2];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _source1Arg.Expression; }
-				set { _source1Arg.Expression = value; }
+				get { return _vFirst.Expression; }
+				set { _vFirst.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class FirstTransition : SeqTransition, ITakesSource
@@ -2533,21 +2567,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public FirstTransition()
@@ -2557,7 +2591,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public FirstTransition(MethodCallExpression ex) : this()
@@ -2578,10 +2612,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class First2Transition : SeqTransition, ITakesSource
@@ -2590,27 +2624,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _predicateArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vPredicate;
+
 			public Expression Predicate {
-				get { return _predicateArg.Expression; }
-				set { _predicateArg.Expression = value; }
-			}
+				get { return _vPredicate.Expression; }
+				set { _vPredicate.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _predicateArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vPredicate.Expression }; }
 			}
 			
 			public First2Transition()
@@ -2620,8 +2655,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_predicateArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public First2Transition(MethodCallExpression ex) : this()
@@ -2639,14 +2674,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_predicateArg.Expression = ex.Arguments[1];
+				_vPredicate.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class FirstOrDefaultTransition : SeqTransition, ITakesSource
@@ -2655,21 +2690,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public FirstOrDefaultTransition()
@@ -2679,7 +2714,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public FirstOrDefaultTransition(MethodCallExpression ex) : this()
@@ -2700,10 +2735,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class FirstOrDefault2Transition : SeqTransition, ITakesSource
@@ -2712,27 +2747,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _predicateArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vPredicate;
+
 			public Expression Predicate {
-				get { return _predicateArg.Expression; }
-				set { _predicateArg.Expression = value; }
-			}
+				get { return _vPredicate.Expression; }
+				set { _vPredicate.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _predicateArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vPredicate.Expression }; }
 			}
 			
 			public FirstOrDefault2Transition()
@@ -2742,8 +2778,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_predicateArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public FirstOrDefault2Transition(MethodCallExpression ex) : this()
@@ -2761,14 +2797,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_predicateArg.Expression = ex.Arguments[1];
+				_vPredicate.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class GroupByTransition : SeqTransition, ITakesSource
@@ -2777,27 +2813,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _keySelectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vKeySelector;
+
 			public Expression KeySelector {
-				get { return _keySelectorArg.Expression; }
-				set { _keySelectorArg.Expression = value; }
-			}
+				get { return _vKeySelector.Expression; }
+				set { _vKeySelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _keySelectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vKeySelector.Expression }; }
 			}
 			
 			public GroupByTransition()
@@ -2807,8 +2844,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_keySelectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public GroupByTransition(MethodCallExpression ex) : this()
@@ -2826,14 +2863,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_keySelectorArg.Expression = ex.Arguments[1];
+				_vKeySelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class GroupBy2Transition : SeqTransition, ITakesSource
@@ -2842,33 +2879,35 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _keySelectorArg;
-			readonly ArgValue _elementSelectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vKeySelector;
+
 			public Expression KeySelector {
-				get { return _keySelectorArg.Expression; }
-				set { _keySelectorArg.Expression = value; }
-			}
+				get { return _vKeySelector.Expression; }
+				set { _vKeySelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vElementSelector;
+
 			public Expression ElementSelector {
-				get { return _elementSelectorArg.Expression; }
-				set { _elementSelectorArg.Expression = value; }
-			}
+				get { return _vElementSelector.Expression; }
+				set { _vElementSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _keySelectorArg.Expression, _elementSelectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vKeySelector.Expression, _vElementSelector.Expression }; }
 			}
 			
 			public GroupBy2Transition()
@@ -2878,9 +2917,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_keySelectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_elementSelectorArg = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vElementSelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public GroupBy2Transition(MethodCallExpression ex) : this()
@@ -2898,15 +2937,15 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_keySelectorArg.Expression = ex.Arguments[1];
-				_elementSelectorArg.Expression = ex.Arguments[2];
+				_vKeySelector.Expression = ex.Arguments[1];
+				_vElementSelector.Expression = ex.Arguments[2];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class GroupBy3Transition : SeqTransition, ITakesSource
@@ -2915,33 +2954,35 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _keySelectorArg;
-			readonly ArgValue _comparerArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vKeySelector;
+
 			public Expression KeySelector {
-				get { return _keySelectorArg.Expression; }
-				set { _keySelectorArg.Expression = value; }
-			}
+				get { return _vKeySelector.Expression; }
+				set { _vKeySelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vComparer;
+
 			public Expression Comparer {
-				get { return _comparerArg.Expression; }
-				set { _comparerArg.Expression = value; }
-			}
+				get { return _vComparer.Expression; }
+				set { _vComparer.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _keySelectorArg.Expression, _comparerArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vKeySelector.Expression, _vComparer.Expression }; }
 			}
 			
 			public GroupBy3Transition()
@@ -2951,9 +2992,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_keySelectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_comparerArg = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vComparer = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public GroupBy3Transition(MethodCallExpression ex) : this()
@@ -2971,15 +3012,15 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_keySelectorArg.Expression = ex.Arguments[1];
-				_comparerArg.Expression = ex.Arguments[2];
+				_vKeySelector.Expression = ex.Arguments[1];
+				_vComparer.Expression = ex.Arguments[2];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class GroupBy4Transition : SeqTransition, ITakesSource
@@ -2988,39 +3029,42 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _keySelectorArg;
-			readonly ArgValue _elementSelectorArg;
-			readonly ArgValue _comparerArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vKeySelector;
+
 			public Expression KeySelector {
-				get { return _keySelectorArg.Expression; }
-				set { _keySelectorArg.Expression = value; }
-			}
+				get { return _vKeySelector.Expression; }
+				set { _vKeySelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vElementSelector;
+
 			public Expression ElementSelector {
-				get { return _elementSelectorArg.Expression; }
-				set { _elementSelectorArg.Expression = value; }
-			}
+				get { return _vElementSelector.Expression; }
+				set { _vElementSelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vComparer;
+
 			public Expression Comparer {
-				get { return _comparerArg.Expression; }
-				set { _comparerArg.Expression = value; }
-			}
+				get { return _vComparer.Expression; }
+				set { _vComparer.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _keySelectorArg.Expression, _elementSelectorArg.Expression, _comparerArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vKeySelector.Expression, _vElementSelector.Expression, _vComparer.Expression }; }
 			}
 			
 			public GroupBy4Transition()
@@ -3030,10 +3074,10 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_keySelectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_elementSelectorArg = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
-				_comparerArg = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vElementSelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vComparer = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
 			}
 			
 			public GroupBy4Transition(MethodCallExpression ex) : this()
@@ -3051,16 +3095,16 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_keySelectorArg.Expression = ex.Arguments[1];
-				_elementSelectorArg.Expression = ex.Arguments[2];
-				_comparerArg.Expression = ex.Arguments[3];
+				_vKeySelector.Expression = ex.Arguments[1];
+				_vElementSelector.Expression = ex.Arguments[2];
+				_vComparer.Expression = ex.Arguments[3];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class GroupBy5Transition : SeqTransition, ITakesSource
@@ -3069,39 +3113,42 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _keySelectorArg;
-			readonly ArgValue _elementSelectorArg;
-			readonly ArgValue _resultSelectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vKeySelector;
+
 			public Expression KeySelector {
-				get { return _keySelectorArg.Expression; }
-				set { _keySelectorArg.Expression = value; }
-			}
+				get { return _vKeySelector.Expression; }
+				set { _vKeySelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vElementSelector;
+
 			public Expression ElementSelector {
-				get { return _elementSelectorArg.Expression; }
-				set { _elementSelectorArg.Expression = value; }
-			}
+				get { return _vElementSelector.Expression; }
+				set { _vElementSelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vResultSelector;
+
 			public Expression ResultSelector {
-				get { return _resultSelectorArg.Expression; }
-				set { _resultSelectorArg.Expression = value; }
-			}
+				get { return _vResultSelector.Expression; }
+				set { _vResultSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _keySelectorArg.Expression, _elementSelectorArg.Expression, _resultSelectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vKeySelector.Expression, _vElementSelector.Expression, _vResultSelector.Expression }; }
 			}
 			
 			public GroupBy5Transition()
@@ -3111,10 +3158,10 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_keySelectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_elementSelectorArg = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
-				_resultSelectorArg = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vElementSelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vResultSelector = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
 			}
 			
 			public GroupBy5Transition(MethodCallExpression ex) : this()
@@ -3132,16 +3179,16 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_keySelectorArg.Expression = ex.Arguments[1];
-				_elementSelectorArg.Expression = ex.Arguments[2];
-				_resultSelectorArg.Expression = ex.Arguments[3];
+				_vKeySelector.Expression = ex.Arguments[1];
+				_vElementSelector.Expression = ex.Arguments[2];
+				_vResultSelector.Expression = ex.Arguments[3];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class GroupBy6Transition : SeqTransition, ITakesSource
@@ -3150,33 +3197,35 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _keySelectorArg;
-			readonly ArgValue _resultSelectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vKeySelector;
+
 			public Expression KeySelector {
-				get { return _keySelectorArg.Expression; }
-				set { _keySelectorArg.Expression = value; }
-			}
+				get { return _vKeySelector.Expression; }
+				set { _vKeySelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vResultSelector;
+
 			public Expression ResultSelector {
-				get { return _resultSelectorArg.Expression; }
-				set { _resultSelectorArg.Expression = value; }
-			}
+				get { return _vResultSelector.Expression; }
+				set { _vResultSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _keySelectorArg.Expression, _resultSelectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vKeySelector.Expression, _vResultSelector.Expression }; }
 			}
 			
 			public GroupBy6Transition()
@@ -3186,9 +3235,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_keySelectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_resultSelectorArg = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vResultSelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public GroupBy6Transition(MethodCallExpression ex) : this()
@@ -3206,15 +3255,15 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_keySelectorArg.Expression = ex.Arguments[1];
-				_resultSelectorArg.Expression = ex.Arguments[2];
+				_vKeySelector.Expression = ex.Arguments[1];
+				_vResultSelector.Expression = ex.Arguments[2];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class GroupBy7Transition : SeqTransition, ITakesSource
@@ -3223,39 +3272,42 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _keySelectorArg;
-			readonly ArgValue _resultSelectorArg;
-			readonly ArgValue _comparerArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vKeySelector;
+
 			public Expression KeySelector {
-				get { return _keySelectorArg.Expression; }
-				set { _keySelectorArg.Expression = value; }
-			}
+				get { return _vKeySelector.Expression; }
+				set { _vKeySelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vResultSelector;
+
 			public Expression ResultSelector {
-				get { return _resultSelectorArg.Expression; }
-				set { _resultSelectorArg.Expression = value; }
-			}
+				get { return _vResultSelector.Expression; }
+				set { _vResultSelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vComparer;
+
 			public Expression Comparer {
-				get { return _comparerArg.Expression; }
-				set { _comparerArg.Expression = value; }
-			}
+				get { return _vComparer.Expression; }
+				set { _vComparer.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _keySelectorArg.Expression, _resultSelectorArg.Expression, _comparerArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vKeySelector.Expression, _vResultSelector.Expression, _vComparer.Expression }; }
 			}
 			
 			public GroupBy7Transition()
@@ -3265,10 +3317,10 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_keySelectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_resultSelectorArg = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
-				_comparerArg = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vResultSelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vComparer = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
 			}
 			
 			public GroupBy7Transition(MethodCallExpression ex) : this()
@@ -3286,16 +3338,16 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_keySelectorArg.Expression = ex.Arguments[1];
-				_resultSelectorArg.Expression = ex.Arguments[2];
-				_comparerArg.Expression = ex.Arguments[3];
+				_vKeySelector.Expression = ex.Arguments[1];
+				_vResultSelector.Expression = ex.Arguments[2];
+				_vComparer.Expression = ex.Arguments[3];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class GroupBy8Transition : SeqTransition, ITakesSource
@@ -3304,45 +3356,49 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _keySelectorArg;
-			readonly ArgValue _elementSelectorArg;
-			readonly ArgValue _resultSelectorArg;
-			readonly ArgValue _comparerArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vKeySelector;
+
 			public Expression KeySelector {
-				get { return _keySelectorArg.Expression; }
-				set { _keySelectorArg.Expression = value; }
-			}
+				get { return _vKeySelector.Expression; }
+				set { _vKeySelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vElementSelector;
+
 			public Expression ElementSelector {
-				get { return _elementSelectorArg.Expression; }
-				set { _elementSelectorArg.Expression = value; }
-			}
+				get { return _vElementSelector.Expression; }
+				set { _vElementSelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vResultSelector;
+
 			public Expression ResultSelector {
-				get { return _resultSelectorArg.Expression; }
-				set { _resultSelectorArg.Expression = value; }
-			}
+				get { return _vResultSelector.Expression; }
+				set { _vResultSelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vComparer;
+
 			public Expression Comparer {
-				get { return _comparerArg.Expression; }
-				set { _comparerArg.Expression = value; }
-			}
+				get { return _vComparer.Expression; }
+				set { _vComparer.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _keySelectorArg.Expression, _elementSelectorArg.Expression, _resultSelectorArg.Expression, _comparerArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vKeySelector.Expression, _vElementSelector.Expression, _vResultSelector.Expression, _vComparer.Expression }; }
 			}
 			
 			public GroupBy8Transition()
@@ -3352,11 +3408,11 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_keySelectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_elementSelectorArg = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
-				_resultSelectorArg = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
-				_comparerArg = new ArgValue(new[] { _modes[0].Args[4], _modes[1].Args[4] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vElementSelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vResultSelector = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
+				_vComparer = new ArgValue(new[] { _modes[0].Args[4], _modes[1].Args[4] });
 			}
 			
 			public GroupBy8Transition(MethodCallExpression ex) : this()
@@ -3374,17 +3430,17 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_keySelectorArg.Expression = ex.Arguments[1];
-				_elementSelectorArg.Expression = ex.Arguments[2];
-				_resultSelectorArg.Expression = ex.Arguments[3];
-				_comparerArg.Expression = ex.Arguments[4];
+				_vKeySelector.Expression = ex.Arguments[1];
+				_vElementSelector.Expression = ex.Arguments[2];
+				_vResultSelector.Expression = ex.Arguments[3];
+				_vComparer.Expression = ex.Arguments[4];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class GroupJoinTransition : SeqTransition, ITakesSource
@@ -3393,45 +3449,49 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _outerArg;
-			readonly ArgValue _innerArg;
-			readonly ArgValue _outerKeySelectorArg;
-			readonly ArgValue _innerKeySelectorArg;
-			readonly ArgValue _resultSelectorArg;
-			
+			readonly ArgValue _vOuter;
+
 			public Expression Outer {
-				get { return _outerArg.Expression; }
-				set { _outerArg.Expression = value; }
-			}
+				get { return _vOuter.Expression; }
+				set { _vOuter.Expression = value; }
+			} 
 			
+			readonly ArgValue _vInner;
+
 			public Expression Inner {
-				get { return _innerArg.Expression; }
-				set { _innerArg.Expression = value; }
-			}
+				get { return _vInner.Expression; }
+				set { _vInner.Expression = value; }
+			} 
 			
+			readonly ArgValue _vOuterKeySelector;
+
 			public Expression OuterKeySelector {
-				get { return _outerKeySelectorArg.Expression; }
-				set { _outerKeySelectorArg.Expression = value; }
-			}
+				get { return _vOuterKeySelector.Expression; }
+				set { _vOuterKeySelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vInnerKeySelector;
+
 			public Expression InnerKeySelector {
-				get { return _innerKeySelectorArg.Expression; }
-				set { _innerKeySelectorArg.Expression = value; }
-			}
+				get { return _vInnerKeySelector.Expression; }
+				set { _vInnerKeySelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vResultSelector;
+
 			public Expression ResultSelector {
-				get { return _resultSelectorArg.Expression; }
-				set { _resultSelectorArg.Expression = value; }
-			}
+				get { return _vResultSelector.Expression; }
+				set { _vResultSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _outerArg.Expression, _innerArg.Expression, _outerKeySelectorArg.Expression, _innerKeySelectorArg.Expression, _resultSelectorArg.Expression }; }
+				get { return new[] { _vOuter.Expression, _vInner.Expression, _vOuterKeySelector.Expression, _vInnerKeySelector.Expression, _vResultSelector.Expression }; }
 			}
 			
 			public GroupJoinTransition()
@@ -3441,11 +3501,11 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_outerArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_innerArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_outerKeySelectorArg = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
-				_innerKeySelectorArg = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
-				_resultSelectorArg = new ArgValue(new[] { _modes[0].Args[4], _modes[1].Args[4] });
+				_vOuter = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vInner = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vOuterKeySelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vInnerKeySelector = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
+				_vResultSelector = new ArgValue(new[] { _modes[0].Args[4], _modes[1].Args[4] });
 			}
 			
 			public GroupJoinTransition(MethodCallExpression ex) : this()
@@ -3463,17 +3523,17 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_innerArg.Expression = ex.Arguments[1];
-				_outerKeySelectorArg.Expression = ex.Arguments[2];
-				_innerKeySelectorArg.Expression = ex.Arguments[3];
-				_resultSelectorArg.Expression = ex.Arguments[4];
+				_vInner.Expression = ex.Arguments[1];
+				_vOuterKeySelector.Expression = ex.Arguments[2];
+				_vInnerKeySelector.Expression = ex.Arguments[3];
+				_vResultSelector.Expression = ex.Arguments[4];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _outerArg.Expression; }
-				set { _outerArg.Expression = value; }
+				get { return _vOuter.Expression; }
+				set { _vOuter.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class GroupJoin2Transition : SeqTransition, ITakesSource
@@ -3482,51 +3542,56 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _outerArg;
-			readonly ArgValue _innerArg;
-			readonly ArgValue _outerKeySelectorArg;
-			readonly ArgValue _innerKeySelectorArg;
-			readonly ArgValue _resultSelectorArg;
-			readonly ArgValue _comparerArg;
-			
+			readonly ArgValue _vOuter;
+
 			public Expression Outer {
-				get { return _outerArg.Expression; }
-				set { _outerArg.Expression = value; }
-			}
+				get { return _vOuter.Expression; }
+				set { _vOuter.Expression = value; }
+			} 
 			
+			readonly ArgValue _vInner;
+
 			public Expression Inner {
-				get { return _innerArg.Expression; }
-				set { _innerArg.Expression = value; }
-			}
+				get { return _vInner.Expression; }
+				set { _vInner.Expression = value; }
+			} 
 			
+			readonly ArgValue _vOuterKeySelector;
+
 			public Expression OuterKeySelector {
-				get { return _outerKeySelectorArg.Expression; }
-				set { _outerKeySelectorArg.Expression = value; }
-			}
+				get { return _vOuterKeySelector.Expression; }
+				set { _vOuterKeySelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vInnerKeySelector;
+
 			public Expression InnerKeySelector {
-				get { return _innerKeySelectorArg.Expression; }
-				set { _innerKeySelectorArg.Expression = value; }
-			}
+				get { return _vInnerKeySelector.Expression; }
+				set { _vInnerKeySelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vResultSelector;
+
 			public Expression ResultSelector {
-				get { return _resultSelectorArg.Expression; }
-				set { _resultSelectorArg.Expression = value; }
-			}
+				get { return _vResultSelector.Expression; }
+				set { _vResultSelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vComparer;
+
 			public Expression Comparer {
-				get { return _comparerArg.Expression; }
-				set { _comparerArg.Expression = value; }
-			}
+				get { return _vComparer.Expression; }
+				set { _vComparer.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _outerArg.Expression, _innerArg.Expression, _outerKeySelectorArg.Expression, _innerKeySelectorArg.Expression, _resultSelectorArg.Expression, _comparerArg.Expression }; }
+				get { return new[] { _vOuter.Expression, _vInner.Expression, _vOuterKeySelector.Expression, _vInnerKeySelector.Expression, _vResultSelector.Expression, _vComparer.Expression }; }
 			}
 			
 			public GroupJoin2Transition()
@@ -3536,12 +3601,12 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_outerArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_innerArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_outerKeySelectorArg = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
-				_innerKeySelectorArg = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
-				_resultSelectorArg = new ArgValue(new[] { _modes[0].Args[4], _modes[1].Args[4] });
-				_comparerArg = new ArgValue(new[] { _modes[0].Args[5], _modes[1].Args[5] });
+				_vOuter = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vInner = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vOuterKeySelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vInnerKeySelector = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
+				_vResultSelector = new ArgValue(new[] { _modes[0].Args[4], _modes[1].Args[4] });
+				_vComparer = new ArgValue(new[] { _modes[0].Args[5], _modes[1].Args[5] });
 			}
 			
 			public GroupJoin2Transition(MethodCallExpression ex) : this()
@@ -3559,18 +3624,18 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_innerArg.Expression = ex.Arguments[1];
-				_outerKeySelectorArg.Expression = ex.Arguments[2];
-				_innerKeySelectorArg.Expression = ex.Arguments[3];
-				_resultSelectorArg.Expression = ex.Arguments[4];
-				_comparerArg.Expression = ex.Arguments[5];
+				_vInner.Expression = ex.Arguments[1];
+				_vOuterKeySelector.Expression = ex.Arguments[2];
+				_vInnerKeySelector.Expression = ex.Arguments[3];
+				_vResultSelector.Expression = ex.Arguments[4];
+				_vComparer.Expression = ex.Arguments[5];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _outerArg.Expression; }
-				set { _outerArg.Expression = value; }
+				get { return _vOuter.Expression; }
+				set { _vOuter.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class IntersectTransition : SeqTransition, ITakesSource
@@ -3579,27 +3644,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _source1Arg;
-			readonly ArgValue _source2Arg;
+			readonly ArgValue _vFirst;
+
+			public Expression First {
+				get { return _vFirst.Expression; }
+				set { _vFirst.Expression = value; }
+			} 
 			
-			public Expression Source1 {
-				get { return _source1Arg.Expression; }
-				set { _source1Arg.Expression = value; }
-			}
-			
-			public Expression Source2 {
-				get { return _source2Arg.Expression; }
-				set { _source2Arg.Expression = value; }
-			}
+			readonly ArgValue _vSecond;
+
+			public Expression Second {
+				get { return _vSecond.Expression; }
+				set { _vSecond.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _source1Arg.Expression, _source2Arg.Expression }; }
+				get { return new[] { _vFirst.Expression, _vSecond.Expression }; }
 			}
 			
 			public IntersectTransition()
@@ -3609,8 +3675,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_source1Arg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_source2Arg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vFirst = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSecond = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public IntersectTransition(MethodCallExpression ex) : this()
@@ -3628,14 +3694,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_source2Arg.Expression = ex.Arguments[1];
+				_vSecond.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _source1Arg.Expression; }
-				set { _source1Arg.Expression = value; }
+				get { return _vFirst.Expression; }
+				set { _vFirst.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Intersect2Transition : SeqTransition, ITakesSource
@@ -3644,33 +3710,35 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _source1Arg;
-			readonly ArgValue _source2Arg;
-			readonly ArgValue _comparerArg;
+			readonly ArgValue _vFirst;
+
+			public Expression First {
+				get { return _vFirst.Expression; }
+				set { _vFirst.Expression = value; }
+			} 
 			
-			public Expression Source1 {
-				get { return _source1Arg.Expression; }
-				set { _source1Arg.Expression = value; }
-			}
+			readonly ArgValue _vSecond;
+
+			public Expression Second {
+				get { return _vSecond.Expression; }
+				set { _vSecond.Expression = value; }
+			} 
 			
-			public Expression Source2 {
-				get { return _source2Arg.Expression; }
-				set { _source2Arg.Expression = value; }
-			}
-			
+			readonly ArgValue _vComparer;
+
 			public Expression Comparer {
-				get { return _comparerArg.Expression; }
-				set { _comparerArg.Expression = value; }
-			}
+				get { return _vComparer.Expression; }
+				set { _vComparer.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _source1Arg.Expression, _source2Arg.Expression, _comparerArg.Expression }; }
+				get { return new[] { _vFirst.Expression, _vSecond.Expression, _vComparer.Expression }; }
 			}
 			
 			public Intersect2Transition()
@@ -3680,9 +3748,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_source1Arg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_source2Arg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_comparerArg = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vFirst = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSecond = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vComparer = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public Intersect2Transition(MethodCallExpression ex) : this()
@@ -3700,15 +3768,15 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_source2Arg.Expression = ex.Arguments[1];
-				_comparerArg.Expression = ex.Arguments[2];
+				_vSecond.Expression = ex.Arguments[1];
+				_vComparer.Expression = ex.Arguments[2];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _source1Arg.Expression; }
-				set { _source1Arg.Expression = value; }
+				get { return _vFirst.Expression; }
+				set { _vFirst.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class JoinTransition : SeqTransition, ITakesSource
@@ -3717,45 +3785,49 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _outerArg;
-			readonly ArgValue _innerArg;
-			readonly ArgValue _outerKeySelectorArg;
-			readonly ArgValue _innerKeySelectorArg;
-			readonly ArgValue _resultSelectorArg;
-			
+			readonly ArgValue _vOuter;
+
 			public Expression Outer {
-				get { return _outerArg.Expression; }
-				set { _outerArg.Expression = value; }
-			}
+				get { return _vOuter.Expression; }
+				set { _vOuter.Expression = value; }
+			} 
 			
+			readonly ArgValue _vInner;
+
 			public Expression Inner {
-				get { return _innerArg.Expression; }
-				set { _innerArg.Expression = value; }
-			}
+				get { return _vInner.Expression; }
+				set { _vInner.Expression = value; }
+			} 
 			
+			readonly ArgValue _vOuterKeySelector;
+
 			public Expression OuterKeySelector {
-				get { return _outerKeySelectorArg.Expression; }
-				set { _outerKeySelectorArg.Expression = value; }
-			}
+				get { return _vOuterKeySelector.Expression; }
+				set { _vOuterKeySelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vInnerKeySelector;
+
 			public Expression InnerKeySelector {
-				get { return _innerKeySelectorArg.Expression; }
-				set { _innerKeySelectorArg.Expression = value; }
-			}
+				get { return _vInnerKeySelector.Expression; }
+				set { _vInnerKeySelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vResultSelector;
+
 			public Expression ResultSelector {
-				get { return _resultSelectorArg.Expression; }
-				set { _resultSelectorArg.Expression = value; }
-			}
+				get { return _vResultSelector.Expression; }
+				set { _vResultSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _outerArg.Expression, _innerArg.Expression, _outerKeySelectorArg.Expression, _innerKeySelectorArg.Expression, _resultSelectorArg.Expression }; }
+				get { return new[] { _vOuter.Expression, _vInner.Expression, _vOuterKeySelector.Expression, _vInnerKeySelector.Expression, _vResultSelector.Expression }; }
 			}
 			
 			public JoinTransition()
@@ -3765,11 +3837,11 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_outerArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_innerArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_outerKeySelectorArg = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
-				_innerKeySelectorArg = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
-				_resultSelectorArg = new ArgValue(new[] { _modes[0].Args[4], _modes[1].Args[4] });
+				_vOuter = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vInner = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vOuterKeySelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vInnerKeySelector = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
+				_vResultSelector = new ArgValue(new[] { _modes[0].Args[4], _modes[1].Args[4] });
 			}
 			
 			public JoinTransition(MethodCallExpression ex) : this()
@@ -3787,17 +3859,17 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_innerArg.Expression = ex.Arguments[1];
-				_outerKeySelectorArg.Expression = ex.Arguments[2];
-				_innerKeySelectorArg.Expression = ex.Arguments[3];
-				_resultSelectorArg.Expression = ex.Arguments[4];
+				_vInner.Expression = ex.Arguments[1];
+				_vOuterKeySelector.Expression = ex.Arguments[2];
+				_vInnerKeySelector.Expression = ex.Arguments[3];
+				_vResultSelector.Expression = ex.Arguments[4];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _outerArg.Expression; }
-				set { _outerArg.Expression = value; }
+				get { return _vOuter.Expression; }
+				set { _vOuter.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Join2Transition : SeqTransition, ITakesSource
@@ -3806,51 +3878,56 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _outerArg;
-			readonly ArgValue _innerArg;
-			readonly ArgValue _outerKeySelectorArg;
-			readonly ArgValue _innerKeySelectorArg;
-			readonly ArgValue _resultSelectorArg;
-			readonly ArgValue _comparerArg;
-			
+			readonly ArgValue _vOuter;
+
 			public Expression Outer {
-				get { return _outerArg.Expression; }
-				set { _outerArg.Expression = value; }
-			}
+				get { return _vOuter.Expression; }
+				set { _vOuter.Expression = value; }
+			} 
 			
+			readonly ArgValue _vInner;
+
 			public Expression Inner {
-				get { return _innerArg.Expression; }
-				set { _innerArg.Expression = value; }
-			}
+				get { return _vInner.Expression; }
+				set { _vInner.Expression = value; }
+			} 
 			
+			readonly ArgValue _vOuterKeySelector;
+
 			public Expression OuterKeySelector {
-				get { return _outerKeySelectorArg.Expression; }
-				set { _outerKeySelectorArg.Expression = value; }
-			}
+				get { return _vOuterKeySelector.Expression; }
+				set { _vOuterKeySelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vInnerKeySelector;
+
 			public Expression InnerKeySelector {
-				get { return _innerKeySelectorArg.Expression; }
-				set { _innerKeySelectorArg.Expression = value; }
-			}
+				get { return _vInnerKeySelector.Expression; }
+				set { _vInnerKeySelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vResultSelector;
+
 			public Expression ResultSelector {
-				get { return _resultSelectorArg.Expression; }
-				set { _resultSelectorArg.Expression = value; }
-			}
+				get { return _vResultSelector.Expression; }
+				set { _vResultSelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vComparer;
+
 			public Expression Comparer {
-				get { return _comparerArg.Expression; }
-				set { _comparerArg.Expression = value; }
-			}
+				get { return _vComparer.Expression; }
+				set { _vComparer.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _outerArg.Expression, _innerArg.Expression, _outerKeySelectorArg.Expression, _innerKeySelectorArg.Expression, _resultSelectorArg.Expression, _comparerArg.Expression }; }
+				get { return new[] { _vOuter.Expression, _vInner.Expression, _vOuterKeySelector.Expression, _vInnerKeySelector.Expression, _vResultSelector.Expression, _vComparer.Expression }; }
 			}
 			
 			public Join2Transition()
@@ -3860,12 +3937,12 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_outerArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_innerArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_outerKeySelectorArg = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
-				_innerKeySelectorArg = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
-				_resultSelectorArg = new ArgValue(new[] { _modes[0].Args[4], _modes[1].Args[4] });
-				_comparerArg = new ArgValue(new[] { _modes[0].Args[5], _modes[1].Args[5] });
+				_vOuter = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vInner = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vOuterKeySelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vInnerKeySelector = new ArgValue(new[] { _modes[0].Args[3], _modes[1].Args[3] });
+				_vResultSelector = new ArgValue(new[] { _modes[0].Args[4], _modes[1].Args[4] });
+				_vComparer = new ArgValue(new[] { _modes[0].Args[5], _modes[1].Args[5] });
 			}
 			
 			public Join2Transition(MethodCallExpression ex) : this()
@@ -3883,18 +3960,18 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_innerArg.Expression = ex.Arguments[1];
-				_outerKeySelectorArg.Expression = ex.Arguments[2];
-				_innerKeySelectorArg.Expression = ex.Arguments[3];
-				_resultSelectorArg.Expression = ex.Arguments[4];
-				_comparerArg.Expression = ex.Arguments[5];
+				_vInner.Expression = ex.Arguments[1];
+				_vOuterKeySelector.Expression = ex.Arguments[2];
+				_vInnerKeySelector.Expression = ex.Arguments[3];
+				_vResultSelector.Expression = ex.Arguments[4];
+				_vComparer.Expression = ex.Arguments[5];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _outerArg.Expression; }
-				set { _outerArg.Expression = value; }
+				get { return _vOuter.Expression; }
+				set { _vOuter.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class LastTransition : SeqTransition, ITakesSource
@@ -3903,21 +3980,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public LastTransition()
@@ -3927,7 +4004,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public LastTransition(MethodCallExpression ex) : this()
@@ -3948,10 +4025,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Last2Transition : SeqTransition, ITakesSource
@@ -3960,27 +4037,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _predicateArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vPredicate;
+
 			public Expression Predicate {
-				get { return _predicateArg.Expression; }
-				set { _predicateArg.Expression = value; }
-			}
+				get { return _vPredicate.Expression; }
+				set { _vPredicate.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _predicateArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vPredicate.Expression }; }
 			}
 			
 			public Last2Transition()
@@ -3990,8 +4068,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_predicateArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Last2Transition(MethodCallExpression ex) : this()
@@ -4009,14 +4087,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_predicateArg.Expression = ex.Arguments[1];
+				_vPredicate.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class LastOrDefaultTransition : SeqTransition, ITakesSource
@@ -4025,21 +4103,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public LastOrDefaultTransition()
@@ -4049,7 +4127,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public LastOrDefaultTransition(MethodCallExpression ex) : this()
@@ -4070,10 +4148,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class LastOrDefault2Transition : SeqTransition, ITakesSource
@@ -4082,27 +4160,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _predicateArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vPredicate;
+
 			public Expression Predicate {
-				get { return _predicateArg.Expression; }
-				set { _predicateArg.Expression = value; }
-			}
+				get { return _vPredicate.Expression; }
+				set { _vPredicate.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _predicateArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vPredicate.Expression }; }
 			}
 			
 			public LastOrDefault2Transition()
@@ -4112,8 +4191,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_predicateArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public LastOrDefault2Transition(MethodCallExpression ex) : this()
@@ -4131,14 +4210,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_predicateArg.Expression = ex.Arguments[1];
+				_vPredicate.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class LongCountTransition : SeqTransition, ITakesSource
@@ -4147,21 +4226,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public LongCountTransition()
@@ -4171,7 +4250,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public LongCountTransition(MethodCallExpression ex) : this()
@@ -4192,10 +4271,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class LongCount2Transition : SeqTransition, ITakesSource
@@ -4204,27 +4283,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _predicateArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vPredicate;
+
 			public Expression Predicate {
-				get { return _predicateArg.Expression; }
-				set { _predicateArg.Expression = value; }
-			}
+				get { return _vPredicate.Expression; }
+				set { _vPredicate.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _predicateArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vPredicate.Expression }; }
 			}
 			
 			public LongCount2Transition()
@@ -4234,8 +4314,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_predicateArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public LongCount2Transition(MethodCallExpression ex) : this()
@@ -4253,14 +4333,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_predicateArg.Expression = ex.Arguments[1];
+				_vPredicate.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class MaxTransition : SeqTransition, ITakesSource
@@ -4269,21 +4349,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public MaxTransition()
@@ -4293,7 +4373,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public MaxTransition(MethodCallExpression ex) : this()
@@ -4314,10 +4394,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Max2Transition : SeqTransition, ITakesSource
@@ -4326,27 +4406,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public Max2Transition()
@@ -4356,8 +4437,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Max2Transition(MethodCallExpression ex) : this()
@@ -4375,14 +4456,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class MinTransition : SeqTransition, ITakesSource
@@ -4391,21 +4472,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public MinTransition()
@@ -4415,7 +4496,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public MinTransition(MethodCallExpression ex) : this()
@@ -4436,10 +4517,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Min2Transition : SeqTransition, ITakesSource
@@ -4448,27 +4529,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public Min2Transition()
@@ -4478,8 +4560,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Min2Transition(MethodCallExpression ex) : this()
@@ -4497,14 +4579,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class OfTypeTransition : SeqTransition, ITakesSource
@@ -4513,21 +4595,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public OfTypeTransition()
@@ -4537,7 +4619,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public OfTypeTransition(MethodCallExpression ex) : this()
@@ -4558,10 +4640,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class OrderByTransition : SeqTransition, ITakesSource
@@ -4570,27 +4652,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _keySelectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vKeySelector;
+
 			public Expression KeySelector {
-				get { return _keySelectorArg.Expression; }
-				set { _keySelectorArg.Expression = value; }
-			}
+				get { return _vKeySelector.Expression; }
+				set { _vKeySelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _keySelectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vKeySelector.Expression }; }
 			}
 			
 			public OrderByTransition()
@@ -4600,8 +4683,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_keySelectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public OrderByTransition(MethodCallExpression ex) : this()
@@ -4619,14 +4702,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_keySelectorArg.Expression = ex.Arguments[1];
+				_vKeySelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class OrderBy2Transition : SeqTransition, ITakesSource
@@ -4635,33 +4718,35 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _keySelectorArg;
-			readonly ArgValue _comparerArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vKeySelector;
+
 			public Expression KeySelector {
-				get { return _keySelectorArg.Expression; }
-				set { _keySelectorArg.Expression = value; }
-			}
+				get { return _vKeySelector.Expression; }
+				set { _vKeySelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vComparer;
+
 			public Expression Comparer {
-				get { return _comparerArg.Expression; }
-				set { _comparerArg.Expression = value; }
-			}
+				get { return _vComparer.Expression; }
+				set { _vComparer.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _keySelectorArg.Expression, _comparerArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vKeySelector.Expression, _vComparer.Expression }; }
 			}
 			
 			public OrderBy2Transition()
@@ -4671,9 +4756,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_keySelectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_comparerArg = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vComparer = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public OrderBy2Transition(MethodCallExpression ex) : this()
@@ -4691,15 +4776,15 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_keySelectorArg.Expression = ex.Arguments[1];
-				_comparerArg.Expression = ex.Arguments[2];
+				_vKeySelector.Expression = ex.Arguments[1];
+				_vComparer.Expression = ex.Arguments[2];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class OrderByDescendingTransition : SeqTransition, ITakesSource
@@ -4708,27 +4793,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _keySelectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vKeySelector;
+
 			public Expression KeySelector {
-				get { return _keySelectorArg.Expression; }
-				set { _keySelectorArg.Expression = value; }
-			}
+				get { return _vKeySelector.Expression; }
+				set { _vKeySelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _keySelectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vKeySelector.Expression }; }
 			}
 			
 			public OrderByDescendingTransition()
@@ -4738,8 +4824,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_keySelectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public OrderByDescendingTransition(MethodCallExpression ex) : this()
@@ -4757,14 +4843,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_keySelectorArg.Expression = ex.Arguments[1];
+				_vKeySelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class OrderByDescending2Transition : SeqTransition, ITakesSource
@@ -4773,33 +4859,35 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _keySelectorArg;
-			readonly ArgValue _comparerArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vKeySelector;
+
 			public Expression KeySelector {
-				get { return _keySelectorArg.Expression; }
-				set { _keySelectorArg.Expression = value; }
-			}
+				get { return _vKeySelector.Expression; }
+				set { _vKeySelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vComparer;
+
 			public Expression Comparer {
-				get { return _comparerArg.Expression; }
-				set { _comparerArg.Expression = value; }
-			}
+				get { return _vComparer.Expression; }
+				set { _vComparer.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _keySelectorArg.Expression, _comparerArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vKeySelector.Expression, _vComparer.Expression }; }
 			}
 			
 			public OrderByDescending2Transition()
@@ -4809,9 +4897,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_keySelectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_comparerArg = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vComparer = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public OrderByDescending2Transition(MethodCallExpression ex) : this()
@@ -4829,15 +4917,15 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_keySelectorArg.Expression = ex.Arguments[1];
-				_comparerArg.Expression = ex.Arguments[2];
+				_vKeySelector.Expression = ex.Arguments[1];
+				_vComparer.Expression = ex.Arguments[2];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class ReverseTransition : SeqTransition, ITakesSource
@@ -4846,21 +4934,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public ReverseTransition()
@@ -4870,7 +4958,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public ReverseTransition(MethodCallExpression ex) : this()
@@ -4891,10 +4979,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class SelectTransition : SeqTransition, ITakesSource
@@ -4903,27 +4991,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public SelectTransition()
@@ -4933,8 +5022,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public SelectTransition(MethodCallExpression ex) : this()
@@ -4952,14 +5041,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Select2Transition : SeqTransition, ITakesSource
@@ -4968,27 +5057,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public Select2Transition()
@@ -4998,8 +5088,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Select2Transition(MethodCallExpression ex) : this()
@@ -5017,14 +5107,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class SelectManyTransition : SeqTransition, ITakesSource
@@ -5033,27 +5123,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public SelectManyTransition()
@@ -5063,8 +5154,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public SelectManyTransition(MethodCallExpression ex) : this()
@@ -5082,14 +5173,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class SelectMany2Transition : SeqTransition, ITakesSource
@@ -5098,27 +5189,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public SelectMany2Transition()
@@ -5128,8 +5220,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public SelectMany2Transition(MethodCallExpression ex) : this()
@@ -5147,14 +5239,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class SelectMany3Transition : SeqTransition, ITakesSource
@@ -5163,33 +5255,35 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _collectionSelectorArg;
-			readonly ArgValue _resultSelectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vCollectionSelector;
+
 			public Expression CollectionSelector {
-				get { return _collectionSelectorArg.Expression; }
-				set { _collectionSelectorArg.Expression = value; }
-			}
+				get { return _vCollectionSelector.Expression; }
+				set { _vCollectionSelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vResultSelector;
+
 			public Expression ResultSelector {
-				get { return _resultSelectorArg.Expression; }
-				set { _resultSelectorArg.Expression = value; }
-			}
+				get { return _vResultSelector.Expression; }
+				set { _vResultSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _collectionSelectorArg.Expression, _resultSelectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vCollectionSelector.Expression, _vResultSelector.Expression }; }
 			}
 			
 			public SelectMany3Transition()
@@ -5199,9 +5293,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_collectionSelectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_resultSelectorArg = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vCollectionSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vResultSelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public SelectMany3Transition(MethodCallExpression ex) : this()
@@ -5219,15 +5313,15 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_collectionSelectorArg.Expression = ex.Arguments[1];
-				_resultSelectorArg.Expression = ex.Arguments[2];
+				_vCollectionSelector.Expression = ex.Arguments[1];
+				_vResultSelector.Expression = ex.Arguments[2];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class SelectMany4Transition : SeqTransition, ITakesSource
@@ -5236,33 +5330,35 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _collectionSelectorArg;
-			readonly ArgValue _resultSelectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vCollectionSelector;
+
 			public Expression CollectionSelector {
-				get { return _collectionSelectorArg.Expression; }
-				set { _collectionSelectorArg.Expression = value; }
-			}
+				get { return _vCollectionSelector.Expression; }
+				set { _vCollectionSelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vResultSelector;
+
 			public Expression ResultSelector {
-				get { return _resultSelectorArg.Expression; }
-				set { _resultSelectorArg.Expression = value; }
-			}
+				get { return _vResultSelector.Expression; }
+				set { _vResultSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _collectionSelectorArg.Expression, _resultSelectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vCollectionSelector.Expression, _vResultSelector.Expression }; }
 			}
 			
 			public SelectMany4Transition()
@@ -5272,9 +5368,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_collectionSelectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_resultSelectorArg = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vCollectionSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vResultSelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public SelectMany4Transition(MethodCallExpression ex) : this()
@@ -5292,15 +5388,15 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_collectionSelectorArg.Expression = ex.Arguments[1];
-				_resultSelectorArg.Expression = ex.Arguments[2];
+				_vCollectionSelector.Expression = ex.Arguments[1];
+				_vResultSelector.Expression = ex.Arguments[2];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class SequenceEqualTransition : SeqTransition, ITakesSource
@@ -5309,27 +5405,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _source1Arg;
-			readonly ArgValue _source2Arg;
+			readonly ArgValue _vFirst;
+
+			public Expression First {
+				get { return _vFirst.Expression; }
+				set { _vFirst.Expression = value; }
+			} 
 			
-			public Expression Source1 {
-				get { return _source1Arg.Expression; }
-				set { _source1Arg.Expression = value; }
-			}
-			
-			public Expression Source2 {
-				get { return _source2Arg.Expression; }
-				set { _source2Arg.Expression = value; }
-			}
+			readonly ArgValue _vSecond;
+
+			public Expression Second {
+				get { return _vSecond.Expression; }
+				set { _vSecond.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _source1Arg.Expression, _source2Arg.Expression }; }
+				get { return new[] { _vFirst.Expression, _vSecond.Expression }; }
 			}
 			
 			public SequenceEqualTransition()
@@ -5339,8 +5436,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_source1Arg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_source2Arg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vFirst = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSecond = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public SequenceEqualTransition(MethodCallExpression ex) : this()
@@ -5358,14 +5455,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_source2Arg.Expression = ex.Arguments[1];
+				_vSecond.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _source1Arg.Expression; }
-				set { _source1Arg.Expression = value; }
+				get { return _vFirst.Expression; }
+				set { _vFirst.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class SequenceEqual2Transition : SeqTransition, ITakesSource
@@ -5374,33 +5471,35 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _source1Arg;
-			readonly ArgValue _source2Arg;
-			readonly ArgValue _comparerArg;
+			readonly ArgValue _vFirst;
+
+			public Expression First {
+				get { return _vFirst.Expression; }
+				set { _vFirst.Expression = value; }
+			} 
 			
-			public Expression Source1 {
-				get { return _source1Arg.Expression; }
-				set { _source1Arg.Expression = value; }
-			}
+			readonly ArgValue _vSecond;
+
+			public Expression Second {
+				get { return _vSecond.Expression; }
+				set { _vSecond.Expression = value; }
+			} 
 			
-			public Expression Source2 {
-				get { return _source2Arg.Expression; }
-				set { _source2Arg.Expression = value; }
-			}
-			
+			readonly ArgValue _vComparer;
+
 			public Expression Comparer {
-				get { return _comparerArg.Expression; }
-				set { _comparerArg.Expression = value; }
-			}
+				get { return _vComparer.Expression; }
+				set { _vComparer.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _source1Arg.Expression, _source2Arg.Expression, _comparerArg.Expression }; }
+				get { return new[] { _vFirst.Expression, _vSecond.Expression, _vComparer.Expression }; }
 			}
 			
 			public SequenceEqual2Transition()
@@ -5410,9 +5509,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_source1Arg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_source2Arg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_comparerArg = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vFirst = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSecond = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vComparer = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public SequenceEqual2Transition(MethodCallExpression ex) : this()
@@ -5430,15 +5529,15 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_source2Arg.Expression = ex.Arguments[1];
-				_comparerArg.Expression = ex.Arguments[2];
+				_vSecond.Expression = ex.Arguments[1];
+				_vComparer.Expression = ex.Arguments[2];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _source1Arg.Expression; }
-				set { _source1Arg.Expression = value; }
+				get { return _vFirst.Expression; }
+				set { _vFirst.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class SingleTransition : SeqTransition, ITakesSource
@@ -5447,21 +5546,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public SingleTransition()
@@ -5471,7 +5570,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public SingleTransition(MethodCallExpression ex) : this()
@@ -5492,10 +5591,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Single2Transition : SeqTransition, ITakesSource
@@ -5504,27 +5603,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _predicateArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vPredicate;
+
 			public Expression Predicate {
-				get { return _predicateArg.Expression; }
-				set { _predicateArg.Expression = value; }
-			}
+				get { return _vPredicate.Expression; }
+				set { _vPredicate.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _predicateArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vPredicate.Expression }; }
 			}
 			
 			public Single2Transition()
@@ -5534,8 +5634,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_predicateArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Single2Transition(MethodCallExpression ex) : this()
@@ -5553,14 +5653,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_predicateArg.Expression = ex.Arguments[1];
+				_vPredicate.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class SingleOrDefaultTransition : SeqTransition, ITakesSource
@@ -5569,21 +5669,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public SingleOrDefaultTransition()
@@ -5593,7 +5693,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public SingleOrDefaultTransition(MethodCallExpression ex) : this()
@@ -5614,10 +5714,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class SingleOrDefault2Transition : SeqTransition, ITakesSource
@@ -5626,27 +5726,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _predicateArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vPredicate;
+
 			public Expression Predicate {
-				get { return _predicateArg.Expression; }
-				set { _predicateArg.Expression = value; }
-			}
+				get { return _vPredicate.Expression; }
+				set { _vPredicate.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _predicateArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vPredicate.Expression }; }
 			}
 			
 			public SingleOrDefault2Transition()
@@ -5656,8 +5757,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_predicateArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public SingleOrDefault2Transition(MethodCallExpression ex) : this()
@@ -5675,14 +5776,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_predicateArg.Expression = ex.Arguments[1];
+				_vPredicate.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class SkipTransition : SeqTransition, ITakesSource
@@ -5691,27 +5792,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _countArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vCount;
+
 			public Expression Count {
-				get { return _countArg.Expression; }
-				set { _countArg.Expression = value; }
-			}
+				get { return _vCount.Expression; }
+				set { _vCount.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _countArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vCount.Expression }; }
 			}
 			
 			public SkipTransition()
@@ -5721,8 +5823,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_countArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vCount = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public SkipTransition(MethodCallExpression ex) : this()
@@ -5740,14 +5842,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_countArg.Expression = ex.Arguments[1];
+				_vCount.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class SkipWhileTransition : SeqTransition, ITakesSource
@@ -5756,27 +5858,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _predicateArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vPredicate;
+
 			public Expression Predicate {
-				get { return _predicateArg.Expression; }
-				set { _predicateArg.Expression = value; }
-			}
+				get { return _vPredicate.Expression; }
+				set { _vPredicate.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _predicateArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vPredicate.Expression }; }
 			}
 			
 			public SkipWhileTransition()
@@ -5786,8 +5889,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_predicateArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public SkipWhileTransition(MethodCallExpression ex) : this()
@@ -5805,14 +5908,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_predicateArg.Expression = ex.Arguments[1];
+				_vPredicate.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class SkipWhile2Transition : SeqTransition, ITakesSource
@@ -5821,27 +5924,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _predicateArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vPredicate;
+
 			public Expression Predicate {
-				get { return _predicateArg.Expression; }
-				set { _predicateArg.Expression = value; }
-			}
+				get { return _vPredicate.Expression; }
+				set { _vPredicate.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _predicateArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vPredicate.Expression }; }
 			}
 			
 			public SkipWhile2Transition()
@@ -5851,8 +5955,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_predicateArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public SkipWhile2Transition(MethodCallExpression ex) : this()
@@ -5870,14 +5974,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_predicateArg.Expression = ex.Arguments[1];
+				_vPredicate.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class SumTransition : SeqTransition, ITakesSource
@@ -5886,27 +5990,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public SumTransition()
@@ -5916,8 +6021,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public SumTransition(MethodCallExpression ex) : this()
@@ -5935,14 +6040,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Sum10Transition : SeqTransition, ITakesSource
@@ -5951,21 +6056,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public Sum10Transition()
@@ -5975,7 +6080,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Sum10Transition(MethodCallExpression ex) : this()
@@ -5996,10 +6101,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Sum11Transition : SeqTransition, ITakesSource
@@ -6008,21 +6113,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public Sum11Transition()
@@ -6032,7 +6137,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Sum11Transition(MethodCallExpression ex) : this()
@@ -6053,10 +6158,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Sum12Transition : SeqTransition, ITakesSource
@@ -6065,27 +6170,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public Sum12Transition()
@@ -6095,8 +6201,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Sum12Transition(MethodCallExpression ex) : this()
@@ -6114,14 +6220,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Sum13Transition : SeqTransition, ITakesSource
@@ -6130,27 +6236,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public Sum13Transition()
@@ -6160,8 +6267,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Sum13Transition(MethodCallExpression ex) : this()
@@ -6179,14 +6286,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Sum14Transition : SeqTransition, ITakesSource
@@ -6195,27 +6302,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public Sum14Transition()
@@ -6225,8 +6333,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Sum14Transition(MethodCallExpression ex) : this()
@@ -6244,14 +6352,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Sum15Transition : SeqTransition, ITakesSource
@@ -6260,27 +6368,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public Sum15Transition()
@@ -6290,8 +6399,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Sum15Transition(MethodCallExpression ex) : this()
@@ -6309,14 +6418,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Sum16Transition : SeqTransition, ITakesSource
@@ -6325,27 +6434,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public Sum16Transition()
@@ -6355,8 +6465,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Sum16Transition(MethodCallExpression ex) : this()
@@ -6374,14 +6484,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Sum17Transition : SeqTransition, ITakesSource
@@ -6390,27 +6500,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public Sum17Transition()
@@ -6420,8 +6531,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Sum17Transition(MethodCallExpression ex) : this()
@@ -6439,14 +6550,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Sum18Transition : SeqTransition, ITakesSource
@@ -6455,27 +6566,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public Sum18Transition()
@@ -6485,8 +6597,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Sum18Transition(MethodCallExpression ex) : this()
@@ -6504,14 +6616,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Sum19Transition : SeqTransition, ITakesSource
@@ -6520,27 +6632,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public Sum19Transition()
@@ -6550,8 +6663,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Sum19Transition(MethodCallExpression ex) : this()
@@ -6569,14 +6682,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Sum2Transition : SeqTransition, ITakesSource
@@ -6585,21 +6698,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public Sum2Transition()
@@ -6609,7 +6722,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Sum2Transition(MethodCallExpression ex) : this()
@@ -6630,10 +6743,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Sum20Transition : SeqTransition, ITakesSource
@@ -6642,27 +6755,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _selectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vSelector;
+
 			public Expression Selector {
-				get { return _selectorArg.Expression; }
-				set { _selectorArg.Expression = value; }
-			}
+				get { return _vSelector.Expression; }
+				set { _vSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _selectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vSelector.Expression }; }
 			}
 			
 			public Sum20Transition()
@@ -6672,8 +6786,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_selectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Sum20Transition(MethodCallExpression ex) : this()
@@ -6691,14 +6805,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_selectorArg.Expression = ex.Arguments[1];
+				_vSelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Sum3Transition : SeqTransition, ITakesSource
@@ -6707,21 +6821,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public Sum3Transition()
@@ -6731,7 +6845,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Sum3Transition(MethodCallExpression ex) : this()
@@ -6752,10 +6866,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Sum4Transition : SeqTransition, ITakesSource
@@ -6764,21 +6878,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public Sum4Transition()
@@ -6788,7 +6902,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Sum4Transition(MethodCallExpression ex) : this()
@@ -6809,10 +6923,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Sum5Transition : SeqTransition, ITakesSource
@@ -6821,21 +6935,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public Sum5Transition()
@@ -6845,7 +6959,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Sum5Transition(MethodCallExpression ex) : this()
@@ -6866,10 +6980,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Sum6Transition : SeqTransition, ITakesSource
@@ -6878,21 +6992,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public Sum6Transition()
@@ -6902,7 +7016,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Sum6Transition(MethodCallExpression ex) : this()
@@ -6923,10 +7037,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Sum7Transition : SeqTransition, ITakesSource
@@ -6935,21 +7049,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public Sum7Transition()
@@ -6959,7 +7073,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Sum7Transition(MethodCallExpression ex) : this()
@@ -6980,10 +7094,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Sum8Transition : SeqTransition, ITakesSource
@@ -6992,21 +7106,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public Sum8Transition()
@@ -7016,7 +7130,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Sum8Transition(MethodCallExpression ex) : this()
@@ -7037,10 +7151,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Sum9Transition : SeqTransition, ITakesSource
@@ -7049,21 +7163,21 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression }; }
+				get { return new[] { _vSource.Expression }; }
 			}
 			
 			public Sum9Transition()
@@ -7073,7 +7187,7 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
 			}
 			
 			public Sum9Transition(MethodCallExpression ex) : this()
@@ -7094,10 +7208,10 @@ namespace Materialize.Reify2.Transitions
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class TakeTransition : SeqTransition, ITakesSource
@@ -7106,27 +7220,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _countArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vCount;
+
 			public Expression Count {
-				get { return _countArg.Expression; }
-				set { _countArg.Expression = value; }
-			}
+				get { return _vCount.Expression; }
+				set { _vCount.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _countArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vCount.Expression }; }
 			}
 			
 			public TakeTransition()
@@ -7136,8 +7251,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_countArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vCount = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public TakeTransition(MethodCallExpression ex) : this()
@@ -7155,14 +7270,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_countArg.Expression = ex.Arguments[1];
+				_vCount.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class TakeWhileTransition : SeqTransition, ITakesSource
@@ -7171,27 +7286,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _predicateArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vPredicate;
+
 			public Expression Predicate {
-				get { return _predicateArg.Expression; }
-				set { _predicateArg.Expression = value; }
-			}
+				get { return _vPredicate.Expression; }
+				set { _vPredicate.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _predicateArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vPredicate.Expression }; }
 			}
 			
 			public TakeWhileTransition()
@@ -7201,8 +7317,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_predicateArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public TakeWhileTransition(MethodCallExpression ex) : this()
@@ -7220,14 +7336,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_predicateArg.Expression = ex.Arguments[1];
+				_vPredicate.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class TakeWhile2Transition : SeqTransition, ITakesSource
@@ -7236,27 +7352,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _predicateArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vPredicate;
+
 			public Expression Predicate {
-				get { return _predicateArg.Expression; }
-				set { _predicateArg.Expression = value; }
-			}
+				get { return _vPredicate.Expression; }
+				set { _vPredicate.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _predicateArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vPredicate.Expression }; }
 			}
 			
 			public TakeWhile2Transition()
@@ -7266,8 +7383,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_predicateArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public TakeWhile2Transition(MethodCallExpression ex) : this()
@@ -7285,14 +7402,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_predicateArg.Expression = ex.Arguments[1];
+				_vPredicate.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class ThenByTransition : SeqTransition, ITakesSource
@@ -7301,27 +7418,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _keySelectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vKeySelector;
+
 			public Expression KeySelector {
-				get { return _keySelectorArg.Expression; }
-				set { _keySelectorArg.Expression = value; }
-			}
+				get { return _vKeySelector.Expression; }
+				set { _vKeySelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _keySelectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vKeySelector.Expression }; }
 			}
 			
 			public ThenByTransition()
@@ -7331,8 +7449,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_keySelectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public ThenByTransition(MethodCallExpression ex) : this()
@@ -7350,14 +7468,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_keySelectorArg.Expression = ex.Arguments[1];
+				_vKeySelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class ThenBy2Transition : SeqTransition, ITakesSource
@@ -7366,33 +7484,35 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _keySelectorArg;
-			readonly ArgValue _comparerArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vKeySelector;
+
 			public Expression KeySelector {
-				get { return _keySelectorArg.Expression; }
-				set { _keySelectorArg.Expression = value; }
-			}
+				get { return _vKeySelector.Expression; }
+				set { _vKeySelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vComparer;
+
 			public Expression Comparer {
-				get { return _comparerArg.Expression; }
-				set { _comparerArg.Expression = value; }
-			}
+				get { return _vComparer.Expression; }
+				set { _vComparer.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _keySelectorArg.Expression, _comparerArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vKeySelector.Expression, _vComparer.Expression }; }
 			}
 			
 			public ThenBy2Transition()
@@ -7402,9 +7522,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_keySelectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_comparerArg = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vComparer = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public ThenBy2Transition(MethodCallExpression ex) : this()
@@ -7422,15 +7542,15 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_keySelectorArg.Expression = ex.Arguments[1];
-				_comparerArg.Expression = ex.Arguments[2];
+				_vKeySelector.Expression = ex.Arguments[1];
+				_vComparer.Expression = ex.Arguments[2];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class ThenByDescendingTransition : SeqTransition, ITakesSource
@@ -7439,27 +7559,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _keySelectorArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vKeySelector;
+
 			public Expression KeySelector {
-				get { return _keySelectorArg.Expression; }
-				set { _keySelectorArg.Expression = value; }
-			}
+				get { return _vKeySelector.Expression; }
+				set { _vKeySelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _keySelectorArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vKeySelector.Expression }; }
 			}
 			
 			public ThenByDescendingTransition()
@@ -7469,8 +7590,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_keySelectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public ThenByDescendingTransition(MethodCallExpression ex) : this()
@@ -7488,14 +7609,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_keySelectorArg.Expression = ex.Arguments[1];
+				_vKeySelector.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class ThenByDescending2Transition : SeqTransition, ITakesSource
@@ -7504,33 +7625,35 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _keySelectorArg;
-			readonly ArgValue _comparerArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vKeySelector;
+
 			public Expression KeySelector {
-				get { return _keySelectorArg.Expression; }
-				set { _keySelectorArg.Expression = value; }
-			}
+				get { return _vKeySelector.Expression; }
+				set { _vKeySelector.Expression = value; }
+			} 
 			
+			readonly ArgValue _vComparer;
+
 			public Expression Comparer {
-				get { return _comparerArg.Expression; }
-				set { _comparerArg.Expression = value; }
-			}
+				get { return _vComparer.Expression; }
+				set { _vComparer.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _keySelectorArg.Expression, _comparerArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vKeySelector.Expression, _vComparer.Expression }; }
 			}
 			
 			public ThenByDescending2Transition()
@@ -7540,9 +7663,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_keySelectorArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_comparerArg = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vKeySelector = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vComparer = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public ThenByDescending2Transition(MethodCallExpression ex) : this()
@@ -7560,15 +7683,15 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_keySelectorArg.Expression = ex.Arguments[1];
-				_comparerArg.Expression = ex.Arguments[2];
+				_vKeySelector.Expression = ex.Arguments[1];
+				_vComparer.Expression = ex.Arguments[2];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class UnionTransition : SeqTransition, ITakesSource
@@ -7577,27 +7700,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _source1Arg;
-			readonly ArgValue _source2Arg;
+			readonly ArgValue _vFirst;
+
+			public Expression First {
+				get { return _vFirst.Expression; }
+				set { _vFirst.Expression = value; }
+			} 
 			
-			public Expression Source1 {
-				get { return _source1Arg.Expression; }
-				set { _source1Arg.Expression = value; }
-			}
-			
-			public Expression Source2 {
-				get { return _source2Arg.Expression; }
-				set { _source2Arg.Expression = value; }
-			}
+			readonly ArgValue _vSecond;
+
+			public Expression Second {
+				get { return _vSecond.Expression; }
+				set { _vSecond.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _source1Arg.Expression, _source2Arg.Expression }; }
+				get { return new[] { _vFirst.Expression, _vSecond.Expression }; }
 			}
 			
 			public UnionTransition()
@@ -7607,8 +7731,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_source1Arg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_source2Arg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vFirst = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSecond = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public UnionTransition(MethodCallExpression ex) : this()
@@ -7626,14 +7750,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_source2Arg.Expression = ex.Arguments[1];
+				_vSecond.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _source1Arg.Expression; }
-				set { _source1Arg.Expression = value; }
+				get { return _vFirst.Expression; }
+				set { _vFirst.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Union2Transition : SeqTransition, ITakesSource
@@ -7642,33 +7766,35 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _source1Arg;
-			readonly ArgValue _source2Arg;
-			readonly ArgValue _comparerArg;
+			readonly ArgValue _vFirst;
+
+			public Expression First {
+				get { return _vFirst.Expression; }
+				set { _vFirst.Expression = value; }
+			} 
 			
-			public Expression Source1 {
-				get { return _source1Arg.Expression; }
-				set { _source1Arg.Expression = value; }
-			}
+			readonly ArgValue _vSecond;
+
+			public Expression Second {
+				get { return _vSecond.Expression; }
+				set { _vSecond.Expression = value; }
+			} 
 			
-			public Expression Source2 {
-				get { return _source2Arg.Expression; }
-				set { _source2Arg.Expression = value; }
-			}
-			
+			readonly ArgValue _vComparer;
+
 			public Expression Comparer {
-				get { return _comparerArg.Expression; }
-				set { _comparerArg.Expression = value; }
-			}
+				get { return _vComparer.Expression; }
+				set { _vComparer.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _source1Arg.Expression, _source2Arg.Expression, _comparerArg.Expression }; }
+				get { return new[] { _vFirst.Expression, _vSecond.Expression, _vComparer.Expression }; }
 			}
 			
 			public Union2Transition()
@@ -7678,9 +7804,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_source1Arg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_source2Arg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_comparerArg = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vFirst = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSecond = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vComparer = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public Union2Transition(MethodCallExpression ex) : this()
@@ -7698,15 +7824,15 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_source2Arg.Expression = ex.Arguments[1];
-				_comparerArg.Expression = ex.Arguments[2];
+				_vSecond.Expression = ex.Arguments[1];
+				_vComparer.Expression = ex.Arguments[2];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _source1Arg.Expression; }
-				set { _source1Arg.Expression = value; }
+				get { return _vFirst.Expression; }
+				set { _vFirst.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class WhereTransition : SeqTransition, ITakesSource
@@ -7715,27 +7841,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _predicateArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vPredicate;
+
 			public Expression Predicate {
-				get { return _predicateArg.Expression; }
-				set { _predicateArg.Expression = value; }
-			}
+				get { return _vPredicate.Expression; }
+				set { _vPredicate.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _predicateArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vPredicate.Expression }; }
 			}
 			
 			public WhereTransition()
@@ -7745,8 +7872,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_predicateArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public WhereTransition(MethodCallExpression ex) : this()
@@ -7764,14 +7891,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_predicateArg.Expression = ex.Arguments[1];
+				_vPredicate.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class Where2Transition : SeqTransition, ITakesSource
@@ -7780,27 +7907,28 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _sourceArg;
-			readonly ArgValue _predicateArg;
-			
+			readonly ArgValue _vSource;
+
 			public Expression Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
-			}
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
+			} 
 			
+			readonly ArgValue _vPredicate;
+
 			public Expression Predicate {
-				get { return _predicateArg.Expression; }
-				set { _predicateArg.Expression = value; }
-			}
+				get { return _vPredicate.Expression; }
+				set { _vPredicate.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _sourceArg.Expression, _predicateArg.Expression }; }
+				get { return new[] { _vSource.Expression, _vPredicate.Expression }; }
 			}
 			
 			public Where2Transition()
@@ -7810,8 +7938,8 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_sourceArg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_predicateArg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vSource = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vPredicate = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
 			}
 			
 			public Where2Transition(MethodCallExpression ex) : this()
@@ -7829,14 +7957,14 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_predicateArg.Expression = ex.Arguments[1];
+				_vPredicate.Expression = ex.Arguments[1];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _sourceArg.Expression; }
-				set { _sourceArg.Expression = value; }
+				get { return _vSource.Expression; }
+				set { _vSource.Expression = value; }
 			}
-	  }
+	  } 
 
 
 	  partial class ZipTransition : SeqTransition, ITakesSource
@@ -7845,33 +7973,35 @@ namespace Materialize.Reify2.Transitions
 			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
 			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
-			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();			
 			
-			readonly ArgValue _source1Arg;
-			readonly ArgValue _source2Arg;
-			readonly ArgValue _resultSelectorArg;
+			readonly ArgValue _vFirst;
+
+			public Expression First {
+				get { return _vFirst.Expression; }
+				set { _vFirst.Expression = value; }
+			} 
 			
-			public Expression Source1 {
-				get { return _source1Arg.Expression; }
-				set { _source1Arg.Expression = value; }
-			}
+			readonly ArgValue _vSecond;
+
+			public Expression Second {
+				get { return _vSecond.Expression; }
+				set { _vSecond.Expression = value; }
+			} 
 			
-			public Expression Source2 {
-				get { return _source2Arg.Expression; }
-				set { _source2Arg.Expression = value; }
-			}
-			
+			readonly ArgValue _vResultSelector;
+
 			public Expression ResultSelector {
-				get { return _resultSelectorArg.Expression; }
-				set { _resultSelectorArg.Expression = value; }
-			}
+				get { return _vResultSelector.Expression; }
+				set { _vResultSelector.Expression = value; }
+			} 
 		
-			public override SeqMethod SeqMethod { 
+			public override SeqMethod SeqMethod {  
 				get { return _seqMethod; }
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { _source1Arg.Expression, _source2Arg.Expression, _resultSelectorArg.Expression }; }
+				get { return new[] { _vFirst.Expression, _vSecond.Expression, _vResultSelector.Expression }; }
 			}
 			
 			public ZipTransition()
@@ -7881,9 +8011,9 @@ namespace Materialize.Reify2.Transitions
 					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
 				};
 					
-				_source1Arg = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
-				_source2Arg = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
-				_resultSelectorArg = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
+				_vFirst = new ArgValue(new[] { _modes[0].Args[0], _modes[1].Args[0] });
+				_vSecond = new ArgValue(new[] { _modes[0].Args[1], _modes[1].Args[1] });
+				_vResultSelector = new ArgValue(new[] { _modes[0].Args[2], _modes[1].Args[2] });
 			}
 			
 			public ZipTransition(MethodCallExpression ex) : this()
@@ -7901,15 +8031,15 @@ namespace Materialize.Reify2.Transitions
 					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
-				_source2Arg.Expression = ex.Arguments[1];
-				_resultSelectorArg.Expression = ex.Arguments[2];
+				_vSecond.Expression = ex.Arguments[1];
+				_vResultSelector.Expression = ex.Arguments[2];
 			}
 
 			Expression ITakesSource.Source {
-				get { return _source1Arg.Expression; }
-				set { _source1Arg.Expression = value; }
+				get { return _vFirst.Expression; }
+				set { _vFirst.Expression = value; }
 			}
-	  }
+	  } 
 
 
 }
