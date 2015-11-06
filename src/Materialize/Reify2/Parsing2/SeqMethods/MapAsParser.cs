@@ -20,38 +20,45 @@ namespace Materialize.Reify2.Parsing2.SeqMethods
                                                         s.ReifyContext, 
                                                         new TypeVector(tInElem, tOutElem));
 
-            throw new NotImplementedException();
-
             //would have to insert two Select transitions...
 
+
+
+            yield return new SelectTransition() { Selector = GetServerProjection(mapper) };
 
             //yield return new ProjectionTransition(GetServerProjection(mapper));
             
             yield return new FetchTransition(new TolerantRegime());
-            
+
+
+            yield return new SelectTransition() { Selector = GetClientProjection(mapper) };
+
+
             //yield return new ProjectionTransition(GetClientProjection(mapper));            
         }
-        
-        
 
-        static LambdaExpression GetServerProjection(IMapper mapper) 
+
+
+        static Expression GetServerProjection(IMapper mapper) 
         {
             var exParam = Expression.Parameter(mapper.SourceType, "x");
 
-            return Expression.Lambda(
+            return Expression.Quote(
+                        Expression.Lambda(
                             mapper.ServerRewrite(exParam),
-                            exParam);
+                            exParam));
 
         }
 
 
-        static LambdaExpression GetClientProjection(IMapper mapper) 
+        static Expression GetClientProjection(IMapper mapper) 
         {
             var exParam = Expression.Parameter(mapper.FetchType, "x");
 
-            return Expression.Lambda(
+            return Expression.Quote(
+                        Expression.Lambda(
                             mapper.ClientRewrite(exParam),
-                            exParam);
+                            exParam));
         }
 
     }

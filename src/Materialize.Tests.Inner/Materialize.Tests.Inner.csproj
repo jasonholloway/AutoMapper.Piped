@@ -64,6 +64,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientsideTransitionTests.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ClientsideTransitionTests.tt</DependentUpon>
+    </Compile>
     <Compile Include="Fakes\ParamMapFake.cs" />
     <Compile Include="Fakes\ArgMapFake.cs" />
     <Compile Include="Fakes\MapperWriterFake.cs" />
@@ -104,6 +109,10 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ClientsideTransitionTests.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ClientsideTransitionTests.cs</LastGenOutput>
+    </Content>
     <Content Include="DirectPipelineTests.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DirectPipelineTests.cs</LastGenOutput>

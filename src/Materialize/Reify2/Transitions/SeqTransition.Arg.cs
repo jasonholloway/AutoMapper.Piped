@@ -43,7 +43,7 @@ namespace Materialize.Reify2.Transitions
                         var match = value.Type.MatchAgainst(TypePattern);
 
                         Debug.Assert(match.Success,
-                                        $"Attempted to set {nameof(Arg)} to {nameof(Expression)} of incorrectly-formed type!");
+                                        $"Attempted to set {nameof(Arg)} of type-pattern {TypePattern.GetNiceName()} with {nameof(Expression)} of incorrectly-formed type {value.Type.GetNiceName()}!");
 
                         foreach(var ownedTypeArg in _ownedTypeArgs) {
                             _typeArgHub.Revoke(ownedTypeArg, this);

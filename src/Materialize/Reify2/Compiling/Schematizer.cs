@@ -76,6 +76,7 @@ namespace Materialize.Reify2.Compiling
 
 
 
+
         static Scheme Schematize(Scheme scheme, SeqTransition t) 
         {
             ((IHasSource)t).Source = scheme.Exp;
