@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 namespace Materialize.Reify2.Transitions
 {
 
-    internal interface IHasSource
+    internal interface ITakesSource
     {
         Expression Source { get; set; }
     }

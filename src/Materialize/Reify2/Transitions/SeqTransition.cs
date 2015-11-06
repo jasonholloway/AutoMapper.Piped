@@ -5,42 +5,55 @@ using Materialize.Types;
 using System.Reflection;
 using System;
 using System.Linq;
+using System.Diagnostics;
 
 namespace Materialize.Reify2.Transitions
 {
     internal abstract partial class SeqTransition : Transition
     {
-        protected TypeArgHub _typeArgHub;
-
+        protected Mode[] _modes;
 
         public abstract SeqMethod SeqMethod { get; }
-
         public abstract IEnumerable<Expression> Args { get; }
         
+        public MethodInfo GetMethod() {
+            var method = _modes.Select(m => m.GetMethod())
+                                .FirstOrDefault(m => m != null);
 
-        public IEnumerable<TypeArg> GetTypeArgs() {
-            return _typeArgHub.GetTypeArgs();
+            if(method == null) {
+                throw new InvalidOperationException("No valid method could be summoned given the current arguments and type-arguments!");
+            }
+
+            return method;
         }
+                       
 
-
-        protected Mode[] _modes;
-        
-        Mode GetCurrentMode() {
-            return _modes.FirstOrDefault(m => m.Args.All(a => a.Status == ArgStatus.Matched));
-        }
-
-        
 
         protected class Mode
         {
-            public MethodInfo MethodDef { get; private set; }
+            public MethodInfo Method { get; private set; }
             public TypeArgHub TypeArgHub { get; private set; }
-            public ArgSpec[] Args { get; private set; }
+            public Arg[] Args { get; private set; }
 
-            public Mode(MethodInfo methodDef, Type[] typeParams, ArgSpec[] args) {
-                MethodDef = methodDef;
-                TypeArgHub = new TypeArgHub(typeParams);    //typeParams passed separately to allow static cacheing
-                Args = args;
+            public Mode(MethodInfo method, Type[] typeParams, Type[] paramTypes) {
+                Method = method;
+                TypeArgHub = new TypeArgHub(typeParams);
+                Args = paramTypes.Select(t => new Arg(TypeArgHub, t)).ToArray();
+            }
+
+            public MethodInfo GetMethod() {
+                var typeArgs = TypeArgHub.GetTypeArgs();
+
+                bool allArgsMatched = Args.All(a => a.Status == ArgStatus.Matched);
+                bool allTypeArgsGiven = typeArgs.Select(a => a.ParamType).SequenceEqual(TypeArgHub.TypeParams);
+
+                if(allArgsMatched && allTypeArgsGiven) {
+                    return Method.IsGenericMethodDefinition
+                            ? Method.MakeGenericMethod(TypeArgHub.GetTypeArgs().Select(a => a.ArgType).ToArray())
+                            : Method;
+                }
+
+                return null;
             }
         }
 
@@ -57,7 +70,7 @@ namespace Materialize.Reify2.Transitions
         }
 
 
-        protected class ArgSpec
+        protected class Arg
         {
             static TypeArg[] _emptyTypeArgs = new TypeArg[0];
 
@@ -68,7 +81,7 @@ namespace Materialize.Reify2.Transitions
             public Type TypePattern { get; private set; }
             public ArgStatus Status { get; private set; } = ArgStatus.Empty;
             
-            public ArgSpec(TypeArgHub typeArgHub, Type pattern) {
+            public Arg(TypeArgHub typeArgHub, Type pattern) {
                 _typeArgHub = typeArgHub;
                 TypePattern = pattern;
             }
@@ -109,32 +122,27 @@ namespace Materialize.Reify2.Transitions
 
         protected class ArgValue
         {
-            public ArgSpec[] ArgSpecs { get; private set; }
-
+            Arg[] _argSpecs;
             Expression _exp;
 
+            public ArgValue(Arg[] argSpecs) {
+                _argSpecs = argSpecs;
+            }
+            
             public Expression Expression {
-                get {
-                    return _exp;
-                }
+                get { return _exp; }
                 set {
                     if(value != _exp) {
                         _exp = value;
 
-                        foreach(var argSpec in ArgSpecs) {
+                        foreach(var argSpec in _argSpecs) {
                             argSpec.ArgType = _exp?.Type;
                         }
                     }
                 }
-            }
-
-
-            public ArgValue(ArgSpec[] argSpecs) {
-                ArgSpecs = argSpecs;
-            }
+            }            
         }
-
-
+        
         
     }        
        

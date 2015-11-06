@@ -60,7 +60,6 @@
     <Compile Include="Reify2\Parsing2\SeqMethods\QyParser2.cs" />
     <Compile Include="Reify2\Parsing2\Source\SourceParser.cs" />
     <Compile Include="Reify2\Transitions\FetchTransition.cs" />
-    <Compile Include="Reify2\Transitions\SeqTransition.Arg.cs" />
     <Compile Include="Reify2\Transitions\SeqTransition.TypeArgHub.cs" />
     <Compile Include="Reify2\Transitions\SeqTransition.cs" />
     <Compile Include="Reify2\Transitions\Transition.cs" />

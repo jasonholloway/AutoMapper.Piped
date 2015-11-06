@@ -11,16 +11,19 @@ namespace Materialize.Reify2.Transitions
 
         protected class TypeArgHub
         {
-            Type[] _typeParams;
             ISet<Type> _typeParamHash;
             List<Entry> _reg;
-            
+
+            public IEnumerable<Type> TypeParams { get; private set; }
+
+
             public TypeArgHub(IEnumerable<Type> typeParams) {
-                _typeParams = typeParams.ToArray();
+                TypeParams = typeParams.ToArray();
                 _typeParamHash = new HashSet<Type>(typeParams);
                 _reg = new List<Entry>();
             }
-            
+
+           
             public void Register(TypeArg typeArg, object owner) {
                 Debug.Assert(
                         _typeParamHash.Contains(typeArg.ParamType),
@@ -45,7 +48,7 @@ namespace Materialize.Reify2.Transitions
                                 .GroupBy(a => a.ParamType)
                                 .ToDictionary(g => g.Key, g => g.Last());
 
-                foreach(var typeParam in _typeParams) {
+                foreach(var typeParam in TypeParams) {
                     TypeArg typeArg;
 
                     if(d.TryGetValue(typeParam, out typeArg)) {

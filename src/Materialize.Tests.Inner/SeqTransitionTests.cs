@@ -59,16 +59,14 @@ namespace Materialize.Tests.Inner
                                 );
             
             var tran = new SelectTransition(exCall);
-            
-            var typeArgs = tran.GetTypeArgs();
-            
-            Assert.That(
-                    typeArgs.Select(a => a.ParamType), 
-                    Is.EquivalentTo(QyMethods.Select.GetGenericArguments()));
 
-            Assert.That(
-                    typeArgs.Select(a => a.ArgType), 
-                    Is.EquivalentTo(exCall.Method.GetGenericArguments()));
+            tran.Source = Expression.Default(typeof(IQueryable<int>));
+
+            var m = tran.GetMethod();
+
+            Assert.That(m.IsGenericMethod);
+            Assert.That(m.GetGenericMethodDefinition(), Is.EqualTo(QyMethods.Select));
+            Assert.That(m.GetGenericArguments(), Is.EquivalentTo(exCall.Method.GetGenericArguments()));            
         }
 
 
@@ -87,7 +85,7 @@ namespace Materialize.Tests.Inner
 
             var tran = new SelectTransition(exCall);
 
-
+            
             var exProjParam2 = Expression.Parameter(typeof(int?));
 
             tran.Selector = Expression.Quote(
@@ -95,10 +93,15 @@ namespace Materialize.Tests.Inner
                                     Expression.Convert(exProjParam2, typeof(double)),
                                     exProjParam2)
                                 );
-            
-            Assert.That(
-                    tran.GetTypeArgs().Select(a => a.ArgType),
-                    Is.EquivalentTo(new[] { typeof(int?), typeof(double) }));
+
+
+            tran.Source = Expression.Default(typeof(IQueryable<int?>));
+
+            var m = tran.GetMethod();
+
+            Assert.That(m.IsGenericMethod);
+            Assert.That(m.GetGenericMethodDefinition(), Is.EqualTo(QyMethods.Select));
+            Assert.That(m.GetGenericArguments(), Is.EquivalentTo(new[] { typeof(int?), typeof(double) }));
         }
 
         

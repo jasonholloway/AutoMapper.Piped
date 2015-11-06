@@ -17,14 +17,16 @@ namespace Materialize.Reify2.Transitions
 {
 <#foreach(var m in SeqMethodMap.Methods.Values)
 {#>
-	  partial class <#=m.Name#>Transition : SeqTransition, IHasSource
+	  partial class <#=m.Name#>Transition : SeqTransition, ITakesSource
 	  { 
 			static readonly SeqMethod _seqMethod = SeqMethods.<#=m.Name#>;
-			static readonly Type[] _paramTypes = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
-			static readonly Type[] _typeParams = _seqMethod.Qy.GetGenericArguments();
+			static readonly Type[] _paramTypesQy = _seqMethod.Qy.GetParameters().Select(p => p.ParameterType).ToArray();
+			static readonly Type[] _paramTypesEn = _seqMethod.En.GetParameters().Select(p => p.ParameterType).ToArray();
+			static readonly Type[] _typeParamsQy = _seqMethod.Qy.GetGenericArguments();
+			static readonly Type[] _typeParamsEn = _seqMethod.En.GetGenericArguments();
 			
 <#foreach(var p in m.Qy.GetParameters())
-{#>			readonly Arg _<#=p.Name#>Arg;
+{#>			readonly ArgValue _<#=p.Name#>Arg;
 <#}
 foreach(var p in m.Qy.GetParameters())
 {#>			
@@ -38,30 +40,41 @@ foreach(var p in m.Qy.GetParameters())
 			}
 
 			public override IEnumerable<Expression> Args {
-				get { return new[] { <#=(string.Join(", ", m.Qy.GetParameters().Select(p => "_" + p.Name + "Arg")))#> }.Select(a => a.Expression); }
+				get { return new[] { <#=(string.Join(", ", m.Qy.GetParameters().Select(p => "_" + p.Name + "Arg.Expression")))#> }; }
 			}
 			
 			public <#=m.Name#>Transition()
 			{
-				_typeArgHub = new TypeArgHub(_typeParams);								
+				_modes = new Mode[] {
+					new Mode(_seqMethod.Qy, _typeParamsQy, _paramTypesQy),
+					new Mode(_seqMethod.En, _typeParamsEn, _paramTypesEn)
+				};
+					
 <#foreach(var p in m.Qy.GetParameters()) {
-#>				_<#=p.Name#>Arg = new Arg(_paramTypes[<#=p.Position#>], _typeArgHub);
+#>				_<#=p.Name#>Arg = new ArgValue(new[] { _modes[0].Args[<#=p.Position#>], _modes[1].Args[<#=p.Position#>] });
 <#}#>
 			}
 			
 			public <#=m.Name#>Transition(MethodCallExpression ex) : this()
 			{
-				var origTypeArgs = _typeParams.Zip(ex.Method.GetGenericArguments(), 
-															(p, a) => new TypeArg(p, a));
-				foreach(var typeArg in origTypeArgs) {
-					_typeArgHub.Register(typeArg, null);
+				var typeArgTypes = ex.Method.GetGenericArguments();
+
+				var origTypeArgsQy = _typeParamsQy.Zip(typeArgTypes, (p, a) => new TypeArg(p, a));															
+				var origTypeArgsEn = _typeParamsEn.Zip(typeArgTypes, (p, a) => new TypeArg(p, a));
+
+				foreach(var typeArg in origTypeArgsQy) {
+					_modes[0].TypeArgHub.Register(typeArg, null);
+				}
+				
+				foreach(var typeArg in origTypeArgsEn) {
+					_modes[1].TypeArgHub.Register(typeArg, null);
 				}
 
 <#foreach(var p in m.Qy.GetParameters().Skip(1)) {
 #>				_<#=p.Name#>Arg.Expression = ex.Arguments[<#=p.Position#>];
 <#}#>			}
 
-			Expression IHasSource.Source {
+			Expression ITakesSource.Source {
 				get { return _<#=m.Qy.GetParameters()[0].Name#>Arg.Expression; }
 				set { _<#=m.Qy.GetParameters()[0].Name#>Arg.Expression = value; }
 			}

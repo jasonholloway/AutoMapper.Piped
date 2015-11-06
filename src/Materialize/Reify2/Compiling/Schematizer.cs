@@ -79,14 +79,10 @@ namespace Materialize.Reify2.Compiling
 
         static Scheme Schematize(Scheme scheme, SeqTransition t) 
         {
-            ((IHasSource)t).Source = scheme.Exp;
+            ((ITakesSource)t).Source = scheme.Exp;
 
-            var method = (scheme.IsQueryable ? t.SeqMethod.Qy : t.SeqMethod.En);
-
-            if(method.IsGenericMethodDefinition) {
-                method = method.MakeGenericMethod(t.GetTypeArgs().Select(a => a.ArgType).ToArray());
-            }
-
+            var method = t.GetMethod();
+            
             scheme.Exp = Expression.Call(method,
                                         t.Args.ToArray());
 
