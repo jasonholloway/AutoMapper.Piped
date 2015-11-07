@@ -17,6 +17,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -24,6 +27,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vFunc;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TSource, TSource&gt; or Expression&lt;Func&lt;TSource, TSource, TSource&gt;&gt;
+			/// </summary>
 			public Expression Func {
 				get { return _vFunc.Expression; }
 				set { _vFunc.Expression = value; }
@@ -83,6 +89,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -90,6 +99,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSeed;
 
+			/// <summary>
+			/// Expects TAccumulate or TAccumulate
+			/// </summary>
 			public Expression Seed {
 				get { return _vSeed.Expression; }
 				set { _vSeed.Expression = value; }
@@ -97,6 +109,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vFunc;
 
+			/// <summary>
+			/// Expects Func&lt;TAccumulate, TSource, TAccumulate&gt; or Expression&lt;Func&lt;TAccumulate, TSource, TAccumulate&gt;&gt;
+			/// </summary>
 			public Expression Func {
 				get { return _vFunc.Expression; }
 				set { _vFunc.Expression = value; }
@@ -158,6 +173,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -165,6 +183,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSeed;
 
+			/// <summary>
+			/// Expects TAccumulate or TAccumulate
+			/// </summary>
 			public Expression Seed {
 				get { return _vSeed.Expression; }
 				set { _vSeed.Expression = value; }
@@ -172,6 +193,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vFunc;
 
+			/// <summary>
+			/// Expects Func&lt;TAccumulate, TSource, TAccumulate&gt; or Expression&lt;Func&lt;TAccumulate, TSource, TAccumulate&gt;&gt;
+			/// </summary>
 			public Expression Func {
 				get { return _vFunc.Expression; }
 				set { _vFunc.Expression = value; }
@@ -179,6 +203,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vResultSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TAccumulate, TResult&gt; or Expression&lt;Func&lt;TAccumulate, TResult&gt;&gt;
+			/// </summary>
 			public Expression ResultSelector {
 				get { return _vResultSelector.Expression; }
 				set { _vResultSelector.Expression = value; }
@@ -242,6 +269,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -249,6 +279,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vPredicate;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, bool&gt; or Expression&lt;Func&lt;TSource, bool&gt;&gt;
+			/// </summary>
 			public Expression Predicate {
 				get { return _vPredicate.Expression; }
 				set { _vPredicate.Expression = value; }
@@ -308,6 +341,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -365,6 +401,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -372,6 +411,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vPredicate;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, bool&gt; or Expression&lt;Func&lt;TSource, bool&gt;&gt;
+			/// </summary>
 			public Expression Predicate {
 				get { return _vPredicate.Expression; }
 				set { _vPredicate.Expression = value; }
@@ -431,6 +473,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;int&gt; or IQueryable&lt;int&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -488,6 +533,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;decimal?&gt; or IQueryable&lt;decimal?&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -545,6 +593,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -552,6 +603,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, int&gt; or Expression&lt;Func&lt;TSource, int&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -611,6 +665,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -618,6 +675,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, int?&gt; or Expression&lt;Func&lt;TSource, int?&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -677,6 +737,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -684,6 +747,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, float&gt; or Expression&lt;Func&lt;TSource, float&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -743,6 +809,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -750,6 +819,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, float?&gt; or Expression&lt;Func&lt;TSource, float?&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -809,6 +881,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -816,6 +891,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, long&gt; or Expression&lt;Func&lt;TSource, long&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -875,6 +953,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -882,6 +963,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, long?&gt; or Expression&lt;Func&lt;TSource, long?&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -941,6 +1025,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -948,6 +1035,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, double&gt; or Expression&lt;Func&lt;TSource, double&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -1007,6 +1097,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -1014,6 +1107,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, double?&gt; or Expression&lt;Func&lt;TSource, double?&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -1073,6 +1169,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -1080,6 +1179,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, decimal&gt; or Expression&lt;Func&lt;TSource, decimal&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -1139,6 +1241,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;int?&gt; or IQueryable&lt;int?&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -1196,6 +1301,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -1203,6 +1311,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, decimal?&gt; or Expression&lt;Func&lt;TSource, decimal?&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -1262,6 +1373,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;long&gt; or IQueryable&lt;long&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -1319,6 +1433,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;long?&gt; or IQueryable&lt;long?&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -1376,6 +1493,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;float&gt; or IQueryable&lt;float&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -1433,6 +1553,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;float?&gt; or IQueryable&lt;float?&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -1490,6 +1613,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;double&gt; or IQueryable&lt;double&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -1547,6 +1673,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;double?&gt; or IQueryable&lt;double?&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -1604,6 +1733,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;decimal&gt; or IQueryable&lt;decimal&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -1661,6 +1793,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable or IQueryable
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -1718,6 +1853,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vFirst;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression First {
 				get { return _vFirst.Expression; }
 				set { _vFirst.Expression = value; }
@@ -1725,6 +1863,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSecond;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IEnumerable&lt;TSource&gt;
+			/// </summary>
 			public Expression Second {
 				get { return _vSecond.Expression; }
 				set { _vSecond.Expression = value; }
@@ -1784,6 +1925,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -1791,6 +1935,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vValue;
 
+			/// <summary>
+			/// Expects TSource or TSource
+			/// </summary>
 			public Expression Value {
 				get { return _vValue.Expression; }
 				set { _vValue.Expression = value; }
@@ -1850,6 +1997,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -1857,6 +2007,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vValue;
 
+			/// <summary>
+			/// Expects TSource or TSource
+			/// </summary>
 			public Expression Value {
 				get { return _vValue.Expression; }
 				set { _vValue.Expression = value; }
@@ -1864,6 +2017,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vComparer;
 
+			/// <summary>
+			/// Expects IEqualityComparer&lt;TSource&gt; or IEqualityComparer&lt;TSource&gt;
+			/// </summary>
 			public Expression Comparer {
 				get { return _vComparer.Expression; }
 				set { _vComparer.Expression = value; }
@@ -1925,6 +2081,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -1982,6 +2141,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -1989,6 +2151,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vPredicate;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, bool&gt; or Expression&lt;Func&lt;TSource, bool&gt;&gt;
+			/// </summary>
 			public Expression Predicate {
 				get { return _vPredicate.Expression; }
 				set { _vPredicate.Expression = value; }
@@ -2048,6 +2213,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -2105,6 +2273,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -2112,6 +2283,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vDefaultValue;
 
+			/// <summary>
+			/// Expects TSource or TSource
+			/// </summary>
 			public Expression DefaultValue {
 				get { return _vDefaultValue.Expression; }
 				set { _vDefaultValue.Expression = value; }
@@ -2171,6 +2345,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -2228,6 +2405,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -2235,6 +2415,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vComparer;
 
+			/// <summary>
+			/// Expects IEqualityComparer&lt;TSource&gt; or IEqualityComparer&lt;TSource&gt;
+			/// </summary>
 			public Expression Comparer {
 				get { return _vComparer.Expression; }
 				set { _vComparer.Expression = value; }
@@ -2294,6 +2477,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -2301,6 +2487,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vIndex;
 
+			/// <summary>
+			/// Expects int or int
+			/// </summary>
 			public Expression Index {
 				get { return _vIndex.Expression; }
 				set { _vIndex.Expression = value; }
@@ -2360,6 +2549,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -2367,6 +2559,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vIndex;
 
+			/// <summary>
+			/// Expects int or int
+			/// </summary>
 			public Expression Index {
 				get { return _vIndex.Expression; }
 				set { _vIndex.Expression = value; }
@@ -2426,6 +2621,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vFirst;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression First {
 				get { return _vFirst.Expression; }
 				set { _vFirst.Expression = value; }
@@ -2433,6 +2631,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSecond;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IEnumerable&lt;TSource&gt;
+			/// </summary>
 			public Expression Second {
 				get { return _vSecond.Expression; }
 				set { _vSecond.Expression = value; }
@@ -2492,6 +2693,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vFirst;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression First {
 				get { return _vFirst.Expression; }
 				set { _vFirst.Expression = value; }
@@ -2499,6 +2703,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSecond;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IEnumerable&lt;TSource&gt;
+			/// </summary>
 			public Expression Second {
 				get { return _vSecond.Expression; }
 				set { _vSecond.Expression = value; }
@@ -2506,6 +2713,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vComparer;
 
+			/// <summary>
+			/// Expects IEqualityComparer&lt;TSource&gt; or IEqualityComparer&lt;TSource&gt;
+			/// </summary>
 			public Expression Comparer {
 				get { return _vComparer.Expression; }
 				set { _vComparer.Expression = value; }
@@ -2567,6 +2777,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -2624,6 +2837,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -2631,6 +2847,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vPredicate;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, bool&gt; or Expression&lt;Func&lt;TSource, bool&gt;&gt;
+			/// </summary>
 			public Expression Predicate {
 				get { return _vPredicate.Expression; }
 				set { _vPredicate.Expression = value; }
@@ -2690,6 +2909,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -2747,6 +2969,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -2754,6 +2979,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vPredicate;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, bool&gt; or Expression&lt;Func&lt;TSource, bool&gt;&gt;
+			/// </summary>
 			public Expression Predicate {
 				get { return _vPredicate.Expression; }
 				set { _vPredicate.Expression = value; }
@@ -2813,6 +3041,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -2820,6 +3051,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vKeySelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TKey&gt; or Expression&lt;Func&lt;TSource, TKey&gt;&gt;
+			/// </summary>
 			public Expression KeySelector {
 				get { return _vKeySelector.Expression; }
 				set { _vKeySelector.Expression = value; }
@@ -2879,6 +3113,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -2886,6 +3123,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vKeySelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TKey&gt; or Expression&lt;Func&lt;TSource, TKey&gt;&gt;
+			/// </summary>
 			public Expression KeySelector {
 				get { return _vKeySelector.Expression; }
 				set { _vKeySelector.Expression = value; }
@@ -2893,6 +3133,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vElementSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TElement&gt; or Expression&lt;Func&lt;TSource, TElement&gt;&gt;
+			/// </summary>
 			public Expression ElementSelector {
 				get { return _vElementSelector.Expression; }
 				set { _vElementSelector.Expression = value; }
@@ -2954,6 +3197,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -2961,6 +3207,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vKeySelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TKey&gt; or Expression&lt;Func&lt;TSource, TKey&gt;&gt;
+			/// </summary>
 			public Expression KeySelector {
 				get { return _vKeySelector.Expression; }
 				set { _vKeySelector.Expression = value; }
@@ -2968,6 +3217,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vComparer;
 
+			/// <summary>
+			/// Expects IEqualityComparer&lt;TKey&gt; or IEqualityComparer&lt;TKey&gt;
+			/// </summary>
 			public Expression Comparer {
 				get { return _vComparer.Expression; }
 				set { _vComparer.Expression = value; }
@@ -3029,6 +3281,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -3036,6 +3291,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vKeySelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TKey&gt; or Expression&lt;Func&lt;TSource, TKey&gt;&gt;
+			/// </summary>
 			public Expression KeySelector {
 				get { return _vKeySelector.Expression; }
 				set { _vKeySelector.Expression = value; }
@@ -3043,6 +3301,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vElementSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TElement&gt; or Expression&lt;Func&lt;TSource, TElement&gt;&gt;
+			/// </summary>
 			public Expression ElementSelector {
 				get { return _vElementSelector.Expression; }
 				set { _vElementSelector.Expression = value; }
@@ -3050,6 +3311,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vComparer;
 
+			/// <summary>
+			/// Expects IEqualityComparer&lt;TKey&gt; or IEqualityComparer&lt;TKey&gt;
+			/// </summary>
 			public Expression Comparer {
 				get { return _vComparer.Expression; }
 				set { _vComparer.Expression = value; }
@@ -3113,6 +3377,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -3120,6 +3387,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vKeySelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TKey&gt; or Expression&lt;Func&lt;TSource, TKey&gt;&gt;
+			/// </summary>
 			public Expression KeySelector {
 				get { return _vKeySelector.Expression; }
 				set { _vKeySelector.Expression = value; }
@@ -3127,6 +3397,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vElementSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TElement&gt; or Expression&lt;Func&lt;TSource, TElement&gt;&gt;
+			/// </summary>
 			public Expression ElementSelector {
 				get { return _vElementSelector.Expression; }
 				set { _vElementSelector.Expression = value; }
@@ -3134,6 +3407,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vResultSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TKey, IEnumerable&lt;TElement&gt;, TResult&gt; or Expression&lt;Func&lt;TKey, IEnumerable&lt;TElement&gt;, TResult&gt;&gt;
+			/// </summary>
 			public Expression ResultSelector {
 				get { return _vResultSelector.Expression; }
 				set { _vResultSelector.Expression = value; }
@@ -3197,6 +3473,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -3204,6 +3483,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vKeySelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TKey&gt; or Expression&lt;Func&lt;TSource, TKey&gt;&gt;
+			/// </summary>
 			public Expression KeySelector {
 				get { return _vKeySelector.Expression; }
 				set { _vKeySelector.Expression = value; }
@@ -3211,6 +3493,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vResultSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TKey, IEnumerable&lt;TSource&gt;, TResult&gt; or Expression&lt;Func&lt;TKey, IEnumerable&lt;TSource&gt;, TResult&gt;&gt;
+			/// </summary>
 			public Expression ResultSelector {
 				get { return _vResultSelector.Expression; }
 				set { _vResultSelector.Expression = value; }
@@ -3272,6 +3557,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -3279,6 +3567,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vKeySelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TKey&gt; or Expression&lt;Func&lt;TSource, TKey&gt;&gt;
+			/// </summary>
 			public Expression KeySelector {
 				get { return _vKeySelector.Expression; }
 				set { _vKeySelector.Expression = value; }
@@ -3286,6 +3577,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vResultSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TKey, IEnumerable&lt;TSource&gt;, TResult&gt; or Expression&lt;Func&lt;TKey, IEnumerable&lt;TSource&gt;, TResult&gt;&gt;
+			/// </summary>
 			public Expression ResultSelector {
 				get { return _vResultSelector.Expression; }
 				set { _vResultSelector.Expression = value; }
@@ -3293,6 +3587,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vComparer;
 
+			/// <summary>
+			/// Expects IEqualityComparer&lt;TKey&gt; or IEqualityComparer&lt;TKey&gt;
+			/// </summary>
 			public Expression Comparer {
 				get { return _vComparer.Expression; }
 				set { _vComparer.Expression = value; }
@@ -3356,6 +3653,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -3363,6 +3663,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vKeySelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TKey&gt; or Expression&lt;Func&lt;TSource, TKey&gt;&gt;
+			/// </summary>
 			public Expression KeySelector {
 				get { return _vKeySelector.Expression; }
 				set { _vKeySelector.Expression = value; }
@@ -3370,6 +3673,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vElementSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TElement&gt; or Expression&lt;Func&lt;TSource, TElement&gt;&gt;
+			/// </summary>
 			public Expression ElementSelector {
 				get { return _vElementSelector.Expression; }
 				set { _vElementSelector.Expression = value; }
@@ -3377,6 +3683,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vResultSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TKey, IEnumerable&lt;TElement&gt;, TResult&gt; or Expression&lt;Func&lt;TKey, IEnumerable&lt;TElement&gt;, TResult&gt;&gt;
+			/// </summary>
 			public Expression ResultSelector {
 				get { return _vResultSelector.Expression; }
 				set { _vResultSelector.Expression = value; }
@@ -3384,6 +3693,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vComparer;
 
+			/// <summary>
+			/// Expects IEqualityComparer&lt;TKey&gt; or IEqualityComparer&lt;TKey&gt;
+			/// </summary>
 			public Expression Comparer {
 				get { return _vComparer.Expression; }
 				set { _vComparer.Expression = value; }
@@ -3449,6 +3761,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vOuter;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TOuter&gt; or IQueryable&lt;TOuter&gt;
+			/// </summary>
 			public Expression Outer {
 				get { return _vOuter.Expression; }
 				set { _vOuter.Expression = value; }
@@ -3456,6 +3771,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vInner;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TInner&gt; or IEnumerable&lt;TInner&gt;
+			/// </summary>
 			public Expression Inner {
 				get { return _vInner.Expression; }
 				set { _vInner.Expression = value; }
@@ -3463,6 +3781,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vOuterKeySelector;
 
+			/// <summary>
+			/// Expects Func&lt;TOuter, TKey&gt; or Expression&lt;Func&lt;TOuter, TKey&gt;&gt;
+			/// </summary>
 			public Expression OuterKeySelector {
 				get { return _vOuterKeySelector.Expression; }
 				set { _vOuterKeySelector.Expression = value; }
@@ -3470,6 +3791,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vInnerKeySelector;
 
+			/// <summary>
+			/// Expects Func&lt;TInner, TKey&gt; or Expression&lt;Func&lt;TInner, TKey&gt;&gt;
+			/// </summary>
 			public Expression InnerKeySelector {
 				get { return _vInnerKeySelector.Expression; }
 				set { _vInnerKeySelector.Expression = value; }
@@ -3477,6 +3801,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vResultSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TOuter, IEnumerable&lt;TInner&gt;, TResult&gt; or Expression&lt;Func&lt;TOuter, IEnumerable&lt;TInner&gt;, TResult&gt;&gt;
+			/// </summary>
 			public Expression ResultSelector {
 				get { return _vResultSelector.Expression; }
 				set { _vResultSelector.Expression = value; }
@@ -3542,6 +3869,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vOuter;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TOuter&gt; or IQueryable&lt;TOuter&gt;
+			/// </summary>
 			public Expression Outer {
 				get { return _vOuter.Expression; }
 				set { _vOuter.Expression = value; }
@@ -3549,6 +3879,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vInner;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TInner&gt; or IEnumerable&lt;TInner&gt;
+			/// </summary>
 			public Expression Inner {
 				get { return _vInner.Expression; }
 				set { _vInner.Expression = value; }
@@ -3556,6 +3889,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vOuterKeySelector;
 
+			/// <summary>
+			/// Expects Func&lt;TOuter, TKey&gt; or Expression&lt;Func&lt;TOuter, TKey&gt;&gt;
+			/// </summary>
 			public Expression OuterKeySelector {
 				get { return _vOuterKeySelector.Expression; }
 				set { _vOuterKeySelector.Expression = value; }
@@ -3563,6 +3899,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vInnerKeySelector;
 
+			/// <summary>
+			/// Expects Func&lt;TInner, TKey&gt; or Expression&lt;Func&lt;TInner, TKey&gt;&gt;
+			/// </summary>
 			public Expression InnerKeySelector {
 				get { return _vInnerKeySelector.Expression; }
 				set { _vInnerKeySelector.Expression = value; }
@@ -3570,6 +3909,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vResultSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TOuter, IEnumerable&lt;TInner&gt;, TResult&gt; or Expression&lt;Func&lt;TOuter, IEnumerable&lt;TInner&gt;, TResult&gt;&gt;
+			/// </summary>
 			public Expression ResultSelector {
 				get { return _vResultSelector.Expression; }
 				set { _vResultSelector.Expression = value; }
@@ -3577,6 +3919,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vComparer;
 
+			/// <summary>
+			/// Expects IEqualityComparer&lt;TKey&gt; or IEqualityComparer&lt;TKey&gt;
+			/// </summary>
 			public Expression Comparer {
 				get { return _vComparer.Expression; }
 				set { _vComparer.Expression = value; }
@@ -3644,6 +3989,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vFirst;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression First {
 				get { return _vFirst.Expression; }
 				set { _vFirst.Expression = value; }
@@ -3651,6 +3999,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSecond;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IEnumerable&lt;TSource&gt;
+			/// </summary>
 			public Expression Second {
 				get { return _vSecond.Expression; }
 				set { _vSecond.Expression = value; }
@@ -3710,6 +4061,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vFirst;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression First {
 				get { return _vFirst.Expression; }
 				set { _vFirst.Expression = value; }
@@ -3717,6 +4071,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSecond;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IEnumerable&lt;TSource&gt;
+			/// </summary>
 			public Expression Second {
 				get { return _vSecond.Expression; }
 				set { _vSecond.Expression = value; }
@@ -3724,6 +4081,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vComparer;
 
+			/// <summary>
+			/// Expects IEqualityComparer&lt;TSource&gt; or IEqualityComparer&lt;TSource&gt;
+			/// </summary>
 			public Expression Comparer {
 				get { return _vComparer.Expression; }
 				set { _vComparer.Expression = value; }
@@ -3785,6 +4145,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vOuter;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TOuter&gt; or IQueryable&lt;TOuter&gt;
+			/// </summary>
 			public Expression Outer {
 				get { return _vOuter.Expression; }
 				set { _vOuter.Expression = value; }
@@ -3792,6 +4155,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vInner;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TInner&gt; or IEnumerable&lt;TInner&gt;
+			/// </summary>
 			public Expression Inner {
 				get { return _vInner.Expression; }
 				set { _vInner.Expression = value; }
@@ -3799,6 +4165,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vOuterKeySelector;
 
+			/// <summary>
+			/// Expects Func&lt;TOuter, TKey&gt; or Expression&lt;Func&lt;TOuter, TKey&gt;&gt;
+			/// </summary>
 			public Expression OuterKeySelector {
 				get { return _vOuterKeySelector.Expression; }
 				set { _vOuterKeySelector.Expression = value; }
@@ -3806,6 +4175,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vInnerKeySelector;
 
+			/// <summary>
+			/// Expects Func&lt;TInner, TKey&gt; or Expression&lt;Func&lt;TInner, TKey&gt;&gt;
+			/// </summary>
 			public Expression InnerKeySelector {
 				get { return _vInnerKeySelector.Expression; }
 				set { _vInnerKeySelector.Expression = value; }
@@ -3813,6 +4185,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vResultSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TOuter, TInner, TResult&gt; or Expression&lt;Func&lt;TOuter, TInner, TResult&gt;&gt;
+			/// </summary>
 			public Expression ResultSelector {
 				get { return _vResultSelector.Expression; }
 				set { _vResultSelector.Expression = value; }
@@ -3878,6 +4253,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vOuter;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TOuter&gt; or IQueryable&lt;TOuter&gt;
+			/// </summary>
 			public Expression Outer {
 				get { return _vOuter.Expression; }
 				set { _vOuter.Expression = value; }
@@ -3885,6 +4263,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vInner;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TInner&gt; or IEnumerable&lt;TInner&gt;
+			/// </summary>
 			public Expression Inner {
 				get { return _vInner.Expression; }
 				set { _vInner.Expression = value; }
@@ -3892,6 +4273,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vOuterKeySelector;
 
+			/// <summary>
+			/// Expects Func&lt;TOuter, TKey&gt; or Expression&lt;Func&lt;TOuter, TKey&gt;&gt;
+			/// </summary>
 			public Expression OuterKeySelector {
 				get { return _vOuterKeySelector.Expression; }
 				set { _vOuterKeySelector.Expression = value; }
@@ -3899,6 +4283,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vInnerKeySelector;
 
+			/// <summary>
+			/// Expects Func&lt;TInner, TKey&gt; or Expression&lt;Func&lt;TInner, TKey&gt;&gt;
+			/// </summary>
 			public Expression InnerKeySelector {
 				get { return _vInnerKeySelector.Expression; }
 				set { _vInnerKeySelector.Expression = value; }
@@ -3906,6 +4293,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vResultSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TOuter, TInner, TResult&gt; or Expression&lt;Func&lt;TOuter, TInner, TResult&gt;&gt;
+			/// </summary>
 			public Expression ResultSelector {
 				get { return _vResultSelector.Expression; }
 				set { _vResultSelector.Expression = value; }
@@ -3913,6 +4303,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vComparer;
 
+			/// <summary>
+			/// Expects IEqualityComparer&lt;TKey&gt; or IEqualityComparer&lt;TKey&gt;
+			/// </summary>
 			public Expression Comparer {
 				get { return _vComparer.Expression; }
 				set { _vComparer.Expression = value; }
@@ -3980,6 +4373,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -4037,6 +4433,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -4044,6 +4443,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vPredicate;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, bool&gt; or Expression&lt;Func&lt;TSource, bool&gt;&gt;
+			/// </summary>
 			public Expression Predicate {
 				get { return _vPredicate.Expression; }
 				set { _vPredicate.Expression = value; }
@@ -4103,6 +4505,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -4160,6 +4565,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -4167,6 +4575,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vPredicate;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, bool&gt; or Expression&lt;Func&lt;TSource, bool&gt;&gt;
+			/// </summary>
 			public Expression Predicate {
 				get { return _vPredicate.Expression; }
 				set { _vPredicate.Expression = value; }
@@ -4226,6 +4637,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -4283,6 +4697,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -4290,6 +4707,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vPredicate;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, bool&gt; or Expression&lt;Func&lt;TSource, bool&gt;&gt;
+			/// </summary>
 			public Expression Predicate {
 				get { return _vPredicate.Expression; }
 				set { _vPredicate.Expression = value; }
@@ -4349,6 +4769,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -4406,6 +4829,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -4413,6 +4839,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TResult&gt; or Expression&lt;Func&lt;TSource, TResult&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -4472,6 +4901,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -4529,6 +4961,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -4536,6 +4971,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TResult&gt; or Expression&lt;Func&lt;TSource, TResult&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -4595,6 +5033,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable or IQueryable
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -4652,6 +5093,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -4659,6 +5103,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vKeySelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TKey&gt; or Expression&lt;Func&lt;TSource, TKey&gt;&gt;
+			/// </summary>
 			public Expression KeySelector {
 				get { return _vKeySelector.Expression; }
 				set { _vKeySelector.Expression = value; }
@@ -4718,6 +5165,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -4725,6 +5175,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vKeySelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TKey&gt; or Expression&lt;Func&lt;TSource, TKey&gt;&gt;
+			/// </summary>
 			public Expression KeySelector {
 				get { return _vKeySelector.Expression; }
 				set { _vKeySelector.Expression = value; }
@@ -4732,6 +5185,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vComparer;
 
+			/// <summary>
+			/// Expects IComparer&lt;TKey&gt; or IComparer&lt;TKey&gt;
+			/// </summary>
 			public Expression Comparer {
 				get { return _vComparer.Expression; }
 				set { _vComparer.Expression = value; }
@@ -4793,6 +5249,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -4800,6 +5259,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vKeySelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TKey&gt; or Expression&lt;Func&lt;TSource, TKey&gt;&gt;
+			/// </summary>
 			public Expression KeySelector {
 				get { return _vKeySelector.Expression; }
 				set { _vKeySelector.Expression = value; }
@@ -4859,6 +5321,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -4866,6 +5331,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vKeySelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TKey&gt; or Expression&lt;Func&lt;TSource, TKey&gt;&gt;
+			/// </summary>
 			public Expression KeySelector {
 				get { return _vKeySelector.Expression; }
 				set { _vKeySelector.Expression = value; }
@@ -4873,6 +5341,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vComparer;
 
+			/// <summary>
+			/// Expects IComparer&lt;TKey&gt; or IComparer&lt;TKey&gt;
+			/// </summary>
 			public Expression Comparer {
 				get { return _vComparer.Expression; }
 				set { _vComparer.Expression = value; }
@@ -4934,6 +5405,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -4991,6 +5465,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -4998,6 +5475,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TResult&gt; or Expression&lt;Func&lt;TSource, TResult&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -5057,6 +5537,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -5064,6 +5547,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, int, TResult&gt; or Expression&lt;Func&lt;TSource, int, TResult&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -5123,6 +5609,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -5130,6 +5619,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, IEnumerable&lt;TResult&gt;&gt; or Expression&lt;Func&lt;TSource, IEnumerable&lt;TResult&gt;&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -5189,6 +5681,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -5196,6 +5691,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, int, IEnumerable&lt;TResult&gt;&gt; or Expression&lt;Func&lt;TSource, int, IEnumerable&lt;TResult&gt;&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -5255,6 +5753,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -5262,6 +5763,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vCollectionSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, int, IEnumerable&lt;TCollection&gt;&gt; or Expression&lt;Func&lt;TSource, int, IEnumerable&lt;TCollection&gt;&gt;&gt;
+			/// </summary>
 			public Expression CollectionSelector {
 				get { return _vCollectionSelector.Expression; }
 				set { _vCollectionSelector.Expression = value; }
@@ -5269,6 +5773,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vResultSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TCollection, TResult&gt; or Expression&lt;Func&lt;TSource, TCollection, TResult&gt;&gt;
+			/// </summary>
 			public Expression ResultSelector {
 				get { return _vResultSelector.Expression; }
 				set { _vResultSelector.Expression = value; }
@@ -5330,6 +5837,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -5337,6 +5847,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vCollectionSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, IEnumerable&lt;TCollection&gt;&gt; or Expression&lt;Func&lt;TSource, IEnumerable&lt;TCollection&gt;&gt;&gt;
+			/// </summary>
 			public Expression CollectionSelector {
 				get { return _vCollectionSelector.Expression; }
 				set { _vCollectionSelector.Expression = value; }
@@ -5344,6 +5857,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vResultSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TCollection, TResult&gt; or Expression&lt;Func&lt;TSource, TCollection, TResult&gt;&gt;
+			/// </summary>
 			public Expression ResultSelector {
 				get { return _vResultSelector.Expression; }
 				set { _vResultSelector.Expression = value; }
@@ -5405,6 +5921,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vFirst;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression First {
 				get { return _vFirst.Expression; }
 				set { _vFirst.Expression = value; }
@@ -5412,6 +5931,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSecond;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IEnumerable&lt;TSource&gt;
+			/// </summary>
 			public Expression Second {
 				get { return _vSecond.Expression; }
 				set { _vSecond.Expression = value; }
@@ -5471,6 +5993,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vFirst;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression First {
 				get { return _vFirst.Expression; }
 				set { _vFirst.Expression = value; }
@@ -5478,6 +6003,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSecond;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IEnumerable&lt;TSource&gt;
+			/// </summary>
 			public Expression Second {
 				get { return _vSecond.Expression; }
 				set { _vSecond.Expression = value; }
@@ -5485,6 +6013,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vComparer;
 
+			/// <summary>
+			/// Expects IEqualityComparer&lt;TSource&gt; or IEqualityComparer&lt;TSource&gt;
+			/// </summary>
 			public Expression Comparer {
 				get { return _vComparer.Expression; }
 				set { _vComparer.Expression = value; }
@@ -5546,6 +6077,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -5603,6 +6137,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -5610,6 +6147,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vPredicate;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, bool&gt; or Expression&lt;Func&lt;TSource, bool&gt;&gt;
+			/// </summary>
 			public Expression Predicate {
 				get { return _vPredicate.Expression; }
 				set { _vPredicate.Expression = value; }
@@ -5669,6 +6209,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -5726,6 +6269,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -5733,6 +6279,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vPredicate;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, bool&gt; or Expression&lt;Func&lt;TSource, bool&gt;&gt;
+			/// </summary>
 			public Expression Predicate {
 				get { return _vPredicate.Expression; }
 				set { _vPredicate.Expression = value; }
@@ -5792,6 +6341,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -5799,6 +6351,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vCount;
 
+			/// <summary>
+			/// Expects int or int
+			/// </summary>
 			public Expression Count {
 				get { return _vCount.Expression; }
 				set { _vCount.Expression = value; }
@@ -5858,6 +6413,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -5865,6 +6423,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vPredicate;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, bool&gt; or Expression&lt;Func&lt;TSource, bool&gt;&gt;
+			/// </summary>
 			public Expression Predicate {
 				get { return _vPredicate.Expression; }
 				set { _vPredicate.Expression = value; }
@@ -5924,6 +6485,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -5931,6 +6495,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vPredicate;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, int, bool&gt; or Expression&lt;Func&lt;TSource, int, bool&gt;&gt;
+			/// </summary>
 			public Expression Predicate {
 				get { return _vPredicate.Expression; }
 				set { _vPredicate.Expression = value; }
@@ -5990,6 +6557,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -5997,6 +6567,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, decimal?&gt; or Expression&lt;Func&lt;TSource, decimal?&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -6056,6 +6629,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;decimal&gt; or IQueryable&lt;decimal&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -6113,6 +6689,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;decimal?&gt; or IQueryable&lt;decimal?&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -6170,6 +6749,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -6177,6 +6759,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, int&gt; or Expression&lt;Func&lt;TSource, int&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -6236,6 +6821,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -6243,6 +6831,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, int?&gt; or Expression&lt;Func&lt;TSource, int?&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -6302,6 +6893,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -6309,6 +6903,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, long&gt; or Expression&lt;Func&lt;TSource, long&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -6368,6 +6965,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -6375,6 +6975,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, long?&gt; or Expression&lt;Func&lt;TSource, long?&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -6434,6 +7037,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -6441,6 +7047,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, float&gt; or Expression&lt;Func&lt;TSource, float&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -6500,6 +7109,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -6507,6 +7119,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, float?&gt; or Expression&lt;Func&lt;TSource, float?&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -6566,6 +7181,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -6573,6 +7191,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, double&gt; or Expression&lt;Func&lt;TSource, double&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -6632,6 +7253,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -6639,6 +7263,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, double?&gt; or Expression&lt;Func&lt;TSource, double?&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -6698,6 +7325,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;int&gt; or IQueryable&lt;int&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -6755,6 +7385,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -6762,6 +7395,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, decimal&gt; or Expression&lt;Func&lt;TSource, decimal&gt;&gt;
+			/// </summary>
 			public Expression Selector {
 				get { return _vSelector.Expression; }
 				set { _vSelector.Expression = value; }
@@ -6821,6 +7457,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;int?&gt; or IQueryable&lt;int?&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -6878,6 +7517,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;long&gt; or IQueryable&lt;long&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -6935,6 +7577,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;long?&gt; or IQueryable&lt;long?&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -6992,6 +7637,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;float&gt; or IQueryable&lt;float&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -7049,6 +7697,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;float?&gt; or IQueryable&lt;float?&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -7106,6 +7757,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;double&gt; or IQueryable&lt;double&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -7163,6 +7817,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;double?&gt; or IQueryable&lt;double?&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -7220,6 +7877,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -7227,6 +7887,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vCount;
 
+			/// <summary>
+			/// Expects int or int
+			/// </summary>
 			public Expression Count {
 				get { return _vCount.Expression; }
 				set { _vCount.Expression = value; }
@@ -7286,6 +7949,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -7293,6 +7959,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vPredicate;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, bool&gt; or Expression&lt;Func&lt;TSource, bool&gt;&gt;
+			/// </summary>
 			public Expression Predicate {
 				get { return _vPredicate.Expression; }
 				set { _vPredicate.Expression = value; }
@@ -7352,6 +8021,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -7359,6 +8031,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vPredicate;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, int, bool&gt; or Expression&lt;Func&lt;TSource, int, bool&gt;&gt;
+			/// </summary>
 			public Expression Predicate {
 				get { return _vPredicate.Expression; }
 				set { _vPredicate.Expression = value; }
@@ -7418,6 +8093,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IOrderedEnumerable&lt;TSource&gt; or IOrderedQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -7425,6 +8103,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vKeySelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TKey&gt; or Expression&lt;Func&lt;TSource, TKey&gt;&gt;
+			/// </summary>
 			public Expression KeySelector {
 				get { return _vKeySelector.Expression; }
 				set { _vKeySelector.Expression = value; }
@@ -7484,6 +8165,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IOrderedEnumerable&lt;TSource&gt; or IOrderedQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -7491,6 +8175,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vKeySelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TKey&gt; or Expression&lt;Func&lt;TSource, TKey&gt;&gt;
+			/// </summary>
 			public Expression KeySelector {
 				get { return _vKeySelector.Expression; }
 				set { _vKeySelector.Expression = value; }
@@ -7498,6 +8185,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vComparer;
 
+			/// <summary>
+			/// Expects IComparer&lt;TKey&gt; or IComparer&lt;TKey&gt;
+			/// </summary>
 			public Expression Comparer {
 				get { return _vComparer.Expression; }
 				set { _vComparer.Expression = value; }
@@ -7559,6 +8249,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IOrderedEnumerable&lt;TSource&gt; or IOrderedQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -7566,6 +8259,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vKeySelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TKey&gt; or Expression&lt;Func&lt;TSource, TKey&gt;&gt;
+			/// </summary>
 			public Expression KeySelector {
 				get { return _vKeySelector.Expression; }
 				set { _vKeySelector.Expression = value; }
@@ -7625,6 +8321,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IOrderedEnumerable&lt;TSource&gt; or IOrderedQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -7632,6 +8331,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vKeySelector;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, TKey&gt; or Expression&lt;Func&lt;TSource, TKey&gt;&gt;
+			/// </summary>
 			public Expression KeySelector {
 				get { return _vKeySelector.Expression; }
 				set { _vKeySelector.Expression = value; }
@@ -7639,6 +8341,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vComparer;
 
+			/// <summary>
+			/// Expects IComparer&lt;TKey&gt; or IComparer&lt;TKey&gt;
+			/// </summary>
 			public Expression Comparer {
 				get { return _vComparer.Expression; }
 				set { _vComparer.Expression = value; }
@@ -7700,6 +8405,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vFirst;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression First {
 				get { return _vFirst.Expression; }
 				set { _vFirst.Expression = value; }
@@ -7707,6 +8415,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSecond;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IEnumerable&lt;TSource&gt;
+			/// </summary>
 			public Expression Second {
 				get { return _vSecond.Expression; }
 				set { _vSecond.Expression = value; }
@@ -7766,6 +8477,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vFirst;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression First {
 				get { return _vFirst.Expression; }
 				set { _vFirst.Expression = value; }
@@ -7773,6 +8487,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSecond;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IEnumerable&lt;TSource&gt;
+			/// </summary>
 			public Expression Second {
 				get { return _vSecond.Expression; }
 				set { _vSecond.Expression = value; }
@@ -7780,6 +8497,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vComparer;
 
+			/// <summary>
+			/// Expects IEqualityComparer&lt;TSource&gt; or IEqualityComparer&lt;TSource&gt;
+			/// </summary>
 			public Expression Comparer {
 				get { return _vComparer.Expression; }
 				set { _vComparer.Expression = value; }
@@ -7841,6 +8561,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -7848,6 +8571,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vPredicate;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, bool&gt; or Expression&lt;Func&lt;TSource, bool&gt;&gt;
+			/// </summary>
 			public Expression Predicate {
 				get { return _vPredicate.Expression; }
 				set { _vPredicate.Expression = value; }
@@ -7907,6 +8633,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSource;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSource&gt; or IQueryable&lt;TSource&gt;
+			/// </summary>
 			public Expression Source {
 				get { return _vSource.Expression; }
 				set { _vSource.Expression = value; }
@@ -7914,6 +8643,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vPredicate;
 
+			/// <summary>
+			/// Expects Func&lt;TSource, int, bool&gt; or Expression&lt;Func&lt;TSource, int, bool&gt;&gt;
+			/// </summary>
 			public Expression Predicate {
 				get { return _vPredicate.Expression; }
 				set { _vPredicate.Expression = value; }
@@ -7973,6 +8705,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vFirst;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TFirst&gt; or IQueryable&lt;TFirst&gt;
+			/// </summary>
 			public Expression First {
 				get { return _vFirst.Expression; }
 				set { _vFirst.Expression = value; }
@@ -7980,6 +8715,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vSecond;
 
+			/// <summary>
+			/// Expects IEnumerable&lt;TSecond&gt; or IEnumerable&lt;TSecond&gt;
+			/// </summary>
 			public Expression Second {
 				get { return _vSecond.Expression; }
 				set { _vSecond.Expression = value; }
@@ -7987,6 +8725,9 @@ namespace Materialize.Reify2.Transitions
 			
 			readonly ArgValue _vResultSelector;
 
+			/// <summary>
+			/// Expects Func&lt;TFirst, TSecond, TResult&gt; or Expression&lt;Func&lt;TFirst, TSecond, TResult&gt;&gt;
+			/// </summary>
 			public Expression ResultSelector {
 				get { return _vResultSelector.Expression; }
 				set { _vResultSelector.Expression = value; }

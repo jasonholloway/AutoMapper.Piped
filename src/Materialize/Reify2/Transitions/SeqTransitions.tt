@@ -4,6 +4,7 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Security" #>
 <#@ import namespace="Materialize.SequenceMethods" #>
 <#@ output extension=".cs" #>
 using Materialize.SequenceMethods;
@@ -28,6 +29,9 @@ namespace Materialize.Reify2.Transitions
 {#>			
 			readonly ArgValue _v<#=p.Name#>;
 
+			/// <summary>
+			/// Expects <#=SecurityElement.Escape(p.EnParam.ParameterType.GetNiceName())#> or <#=SecurityElement.Escape(p.QyParam.ParameterType.GetNiceName())#>
+			/// </summary>
 			public Expression <#=CapitalizeFirst(p.Name)#> {
 				get { return _v<#=p.Name#>.Expression; }
 				set { _v<#=p.Name#>.Expression = value; }

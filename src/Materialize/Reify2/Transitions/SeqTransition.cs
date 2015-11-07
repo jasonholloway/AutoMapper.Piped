@@ -7,16 +7,7 @@ using System;
 using System.Linq;
 
 namespace Materialize.Reify2.Transitions
-{
-    //can't force when requesting the method...
-    //as forcing relates to types primarily. 
-
-    //could try and force a transition to a mode...
-    //so, if no mode possible, then we try to force a mode out of the transition
-
-    //SO: we don't GetMethod from the transition, but try and get a SeqCall out of it...
-    //or even better, a callexpression!
-    
+{   
        
     internal abstract partial class SeqTransition : Transition
     {
@@ -26,10 +17,23 @@ namespace Materialize.Reify2.Transitions
         public abstract IEnumerable<Expression> Args { get; }
         
 
+        public void SetTypeArg(int position, Type type) {
+            foreach(var mode in _modes) {
+                mode.TypeArgHub.Register(
+                                new TypeArg(
+                                        mode.TypeArgHub.TypeParams.ElementAt(position),
+                                        type),
+                                null);
+            }
+        }
+
+
+
+
         public MethodCallExpression GetCallExpression() 
         {
-            var mode = _modes.FirstOrDefault(m => m.GetStatus() == ModeStatus.Matched)
-                            ?? _modes.FirstOrDefault(m => m.GetStatus() == ModeStatus.Forced);
+            var mode = _modes.FirstOrDefault(m => m.Status == ModeStatus.Matched)
+                            ?? _modes.FirstOrDefault(m => m.Status == ModeStatus.Forced);
 
             if(mode == null) {
                 throw new InvalidOperationException("No acceptible mode found!");

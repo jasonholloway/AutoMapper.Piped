@@ -42,7 +42,7 @@ namespace Materialize.Reify2.Transitions
                                 Args.Select(a => a.Value).ToArray());
             }
 
-            public MethodInfo GetMethod() {
+            public MethodInfo GetMethod() {                
                 return Method.IsGenericMethodDefinition
                         ? Method.MakeGenericMethod(TypeArgHub.GetTypeArgs().Select(a => a.ArgType).ToArray())
                         : Method;
@@ -51,37 +51,39 @@ namespace Materialize.Reify2.Transitions
 
             ModeStatus? _currentStatus = null;
 
-            public ModeStatus GetStatus() {
-                if(_currentStatus == null) {
-                    var s = ModeStatus.Matched;
+            public ModeStatus Status {
+                get {
+                    if(_currentStatus == null) {
+                        var s = ModeStatus.Matched;
 
-                    foreach(var a in Args) {
-                        switch(a.Status) {
-                            case ArgStatus.Errored:
-                                return ModeStatus.Errored;
+                        foreach(var a in Args) {
+                            switch(a.Status) {
+                                case ArgStatus.Errored:
+                                    return ModeStatus.Errored;
 
-                            case ArgStatus.Empty:
-                                s = ModeStatus.Incomplete;
-                                break;
+                                case ArgStatus.Empty:
+                                    s = ModeStatus.Incomplete;
+                                    break;
 
-                            case ArgStatus.Forced:
-                                if(s == ModeStatus.Matched) {
-                                    s = ModeStatus.Forced;
-                                }
-                                break;
+                                case ArgStatus.Forced:
+                                    if(s == ModeStatus.Matched) {
+                                        s = ModeStatus.Forced;
+                                    }
+                                    break;
+                            }
                         }
+
+                        if(s == ModeStatus.Matched) {
+                            s = TypeArgHub.GetTypeArgs().Select(a => a.ParamType).SequenceEqual(TypeArgHub.TypeParams)
+                                    ? ModeStatus.Matched
+                                    : ModeStatus.Incomplete;
+                        }
+
+                        _currentStatus = s;
                     }
 
-                    if(s == ModeStatus.Matched) {
-                        s = TypeArgHub.GetTypeArgs().Select(a => a.ParamType).SequenceEqual(TypeArgHub.TypeParams)
-                                ? ModeStatus.Matched
-                                : ModeStatus.Incomplete;
-                    }
-
-                    _currentStatus = s;
+                    return (ModeStatus)_currentStatus;
                 }
-
-                return (ModeStatus)_currentStatus;
             }
 
 

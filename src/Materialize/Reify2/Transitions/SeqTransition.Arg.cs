@@ -63,6 +63,7 @@ namespace Materialize.Reify2.Transitions
 
                             if(forcedMatch.Success) {
                                 Value = forced;
+                                match = forcedMatch;
                                 Status = ArgStatus.Forced;
                             }
                             else {
