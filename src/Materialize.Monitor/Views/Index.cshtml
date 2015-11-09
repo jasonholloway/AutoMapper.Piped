@@ -19,19 +19,12 @@
                 var sessionElemId = 'session_' + sessionGuid;
                 
                 var sessionElem = document.querySelector('#' + sessionElemId)
-                                    || $('<div id=\'' + sessionElemId + '\' \>').appendTo('body');
+                                    || $('<article id=\'' + sessionElemId + '\' class=\'session\' \>').prependTo('body');
                                 
-                var reportDiv = $('<div\>', { id: 'report_' + sessionGuid + '_' + reportId })
+                var reportDiv = $('<div\>', { id: 'report_' + sessionGuid + '_' + reportId, class: 'report' })
                                     .appendTo(sessionElem);
                 
                 $(reportDiv).load('/report/' + sessionGuid + '/' + reportId);
-
-                
-                //$('#report').load(
-                //                '/report/' + sessionGuid + '/' + reportId,
-                //                function () {
-                //                    //CollapsibleLists.apply();
-                //                });
             }
             
             $(document).ready(function () {

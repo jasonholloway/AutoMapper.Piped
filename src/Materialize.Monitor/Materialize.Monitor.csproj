@@ -250,6 +250,7 @@
     <Content Include="Views\Index.cshtml" />
     <Content Include="Scripts\jquery-2.1.4.min.map" />
     <Content Include="Views\Report.cshtml" />
+    <Content Include="Views\ExpressionReport.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

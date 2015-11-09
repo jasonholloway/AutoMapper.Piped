@@ -1,0 +1,12 @@
+﻿@using Materialize.Monitor.Reporting
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<ExpressionReport>
+
+<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?skin=desert"></script>
+
+<div>
+    <h2>@Model.Name</h2>
+</div>
+
+<div>
+    <pre class="prettyprint language-cs">@Model.ExpressionString</pre>
+</div>

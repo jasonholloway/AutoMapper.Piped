@@ -14,11 +14,11 @@ namespace Materialize.Reify2.Compiling
 {   
     internal static class Schematizer {
 
-        public static Scheme Schematize(IEnumerable<ITransition> trans, ParamMap paramMap) {
+        public static Scheme Schematize(ReifyContext ctx, IEnumerable<ITransition> trans, ParamMap paramMap) {
             Debug.Assert(trans.Any());
 
             return trans.Aggregate(
-                            (Scheme)new BlankScheme() { ParamMap = paramMap }, 
+                            (Scheme)new BlankScheme() { Ctx = ctx, ParamMap = paramMap }, 
                             (scheme, transition) => Schematize((dynamic)scheme, (dynamic)transition));
         }
 
@@ -37,7 +37,8 @@ namespace Materialize.Reify2.Compiling
         {
             return new QueryScheme() {
                             Exp = trans.CanonicalExpression,
-                            ParamMap = prevScheme.ParamMap
+                            ParamMap = prevScheme.ParamMap,
+                            Ctx = prevScheme.Ctx
                         };
         }
 
@@ -57,6 +58,8 @@ namespace Materialize.Reify2.Compiling
                                 : prevScheme.OutType;
 
             var scheme = new ClientScheme();
+
+            scheme.Ctx = prevScheme.Ctx;
 
             scheme.ParamMap = prevScheme.ParamMap;
 

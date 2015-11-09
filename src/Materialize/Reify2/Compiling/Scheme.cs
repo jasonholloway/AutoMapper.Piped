@@ -20,7 +20,8 @@ namespace Materialize.Reify2.Compiling
     {
         public ParamMap ParamMap { get; set; }
         public Expression Exp { get; set; }
-        
+        public ReifyContext Ctx { get; set; }
+
         public abstract ReifyExecutor Compile();
 
         public Type OutType {
@@ -36,7 +37,10 @@ namespace Materialize.Reify2.Compiling
 
     class QueryScheme : Scheme
     {
-        public override ReifyExecutor Compile() {
+        public override ReifyExecutor Compile() 
+        {
+            Ctx.Snooper?.Event("Server scheme", (Scheme)this);
+
             return (prov, args) => {             
                 var ex = Exp.Replace(
                             x => x is ConstantExpression,
@@ -63,6 +67,8 @@ namespace Materialize.Reify2.Compiling
 
         public override ReifyExecutor Compile() 
         {
+            Ctx.Snooper?.Event("Client scheme", (Scheme)this);
+
             var exBody = InjectIncidentalFetchers(Exp);
 
             var exLambda = Expression.Lambda<ReifyExecutor>(

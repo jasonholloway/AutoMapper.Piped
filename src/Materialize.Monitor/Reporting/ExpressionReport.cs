@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Materialize.Monitor.Reporting
 {
-    public class ExpressionReport : Report
+    internal class ExpressionReport : Report
     {
         public string ExpressionString { get; private set; }
 

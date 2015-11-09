@@ -29,7 +29,7 @@ namespace Materialize.Reify2
                                     ctx);
             
             var transitions = Parser.ParseAndPackage(subject);
-            ctx.Snooper?.Event("Transitions", transitions);
+            ctx.Snooper?.Event("Transitions", transitions); //each rearrangement stage should publish its results
 
 
             //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -37,12 +37,17 @@ namespace Materialize.Reify2
             //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
+
+
+            //snooper to be passed in as parameter...
+            //then each reification, even if served from cache, NO! Doesn't make sense, as expressions should be sloughed.
+            //but, each scheme should output to the snooper from within its compile function...
+            //so snooper needs to be made available at that point.
+
+
             var paramMap = ParamMapFactory.Build(exCanonical);
-
-
-            var scheme = Schematizer.Schematize(transitions, paramMap);
-            ctx.Snooper?.Event("Scheme", scheme);
-
+            
+            var scheme = Schematizer.Schematize(ctx, transitions, paramMap);
 
             var executor = scheme.Compile();
 

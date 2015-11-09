@@ -44,7 +44,7 @@ namespace Materialize.Monitor.QueryInfo
             _reports.OnNext(new ExpressionReport(
                                     _guid, 
                                     _idSource.GetNextID(), 
-                                    "Scheme expression", 
+                                    ev.Name, 
                                     ev.Object.Exp.Simplify().ToCSharpCode()));
         }
 

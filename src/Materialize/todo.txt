@@ -7,30 +7,9 @@ TO DO! ********************************************
 
 	The transition buffer, before and after optimization.
 
-	Any reports that the schemes feel they want to pass us - or rather, what some dynamically-invoked visitors
-	want from the schemes. The final scheme will be passed to the snooper.
-
-	Via the snooper, some outside visitor can extract what it needs here (as long as the snooping agency can read internals)
-
-	So, materialize only needs to output the transitions via Snooper, and the scheme.
-
-	THOUGH! The scheme and the transitions will not be present if cached... 
-	Reifiers only hold on to the ReifyExecutor and the ParamMap
-
-	So, I reckon that Snooper should snoop a ReifyReport object (if a snooper is in place...)
-
-	this ReifyReport could contain the Transition buffer (only one, cos it's mutable) and the scheme if compiled.
-	If served from the cache, then some other content.
-	
-	Instead of expecting, excessively, a copy of the transition data, we should really be allowing snooping by a visitor
-	at the various stages. So, not a dead report, but an opportunity to look and generate whatever to take away. 
-
-	So: ReifyReport is wrong. ****** Seems that ISnooper should be expanded! *******
 
 
-	A fresh ISnooper is to be fed into reification each time. So, should be satisfied through parammap?
-
-
+> Strings should also be parameterized - at the moment, constant strings don't appear aas constants: must be a special expression type.
 
 
 
