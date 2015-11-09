@@ -11,7 +11,7 @@ namespace Materialize.Reify2.Parsing2.SeqMethods
 {
     static class MapAsParser
     {        
-        public static IEnumerable<ITransition> Parse(ParseSubject s) 
+        public static IEnumerable<Transition> Parse(ParseSubject s) 
         {
             var tInElem = s.CallExp.Arguments[0].Type.GetEnumerableElementType();
             var tOutElem = s.MethodTypeArgs.Single();

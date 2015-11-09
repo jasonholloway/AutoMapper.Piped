@@ -5,13 +5,13 @@ using System.Linq;
 
 namespace Materialize.Reify2
 {
-    interface ITransition
+    public interface ITransition
     {  
-        ISourceRegime OutRegime { get; } 
+        //ISourceRegime OutRegime { get; } 
         
-        ITransition Previous { get; }
-        ITransition Next { get; }
-        LinkedListNode<ITransition> Site { get; set; }
+        //ITransition Previous { get; }
+        //ITransition Next { get; }
+        //LinkedListNode<ITransition> Site { get; set; }
     }
     
 }

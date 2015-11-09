@@ -1,4 +1,5 @@
-﻿using Materialize.Types;
+﻿using Materialize.Reify2.Transitions;
+using Materialize.Types;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,7 +10,7 @@ namespace Materialize.Reify2.Parsing2.SeqMethods
 {
     static class MethodParser
     {
-        public static IEnumerable<ITransition> Parse(ParseSubject s) 
+        public static IEnumerable<Transition> Parse(ParseSubject s) 
         {
             Debug.Assert(s.SubjectExp is MethodCallExpression);
             Debug.Assert(s.Method.IsStatic);
@@ -19,7 +20,7 @@ namespace Materialize.Reify2.Parsing2.SeqMethods
             var upstreamSubject = s.Spawn(s.CallExp.Arguments[0]);
             var upstreamTrans = Parser.Parse(upstreamSubject);
 
-            IEnumerable<ITransition> result;
+            IEnumerable<Transition> result;
 
             if(s.Method.DeclaringType == typeof(Queryable)) {
                 result = QyParser.Parse(s);

@@ -33,9 +33,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Materialize.EF6", "Material
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Materialize.Demo", "Materialize.Demo\Materialize.Demo.csproj", "{94DB1717-DC89-487F-816F-CE3A6E39DCB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Materialize.Demo2", "Materialize.Demo2\Materialize.Demo2.csproj", "{5BE30957-9BDA-460A-8885-C2D22D103F2C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Materialize.Monitor", "Materialize.Monitor\Materialize.Monitor.csproj", "{5BE30957-9BDA-460A-8885-C2D22D103F2C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Materialize.Demo2.Client", "Materialize.Demo2.Client\Materialize.Demo2.Client.csproj", "{27F82C5D-E7AB-4200-8194-464D58CE5A16}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Materialize.Monitor.Client", "Materialize.Monitor.Client\Materialize.Monitor.Client.csproj", "{27F82C5D-E7AB-4200-8194-464D58CE5A16}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Materialize.Tests.Outer", "Materialize.Tests.Outer\Materialize.Tests.Outer.csproj", "{1A4B6831-DCE2-4A5F-A966-DB3EE81400BC}"
 EndProject

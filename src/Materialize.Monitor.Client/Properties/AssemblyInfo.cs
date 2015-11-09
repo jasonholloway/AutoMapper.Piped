@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Materialize")]
+[assembly: AssemblyTitle("Materialize.Monitor.Client")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Materialize")]
+[assembly: AssemblyProduct("Materialize.Monitor.Client")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("f8a1b543-0b7f-40aa-907d-775cdb36ce7f")]
+[assembly: Guid("27f82c5d-e7ab-4200-8194-464d58ce5a16")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -34,11 +34,3 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
-
-[assembly: InternalsVisibleTo("Materialize.EF6")]
-[assembly: InternalsVisibleTo("Materialize.Tests.Inner")]
-[assembly: InternalsVisibleTo("Materialize.Tests.Outer")]
-[assembly: InternalsVisibleTo("Materialize.Demo")]
-[assembly: InternalsVisibleTo("Materialize.Monitor")]
-[assembly: InternalsVisibleTo("Materialize.RandomQueries")]
-[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]

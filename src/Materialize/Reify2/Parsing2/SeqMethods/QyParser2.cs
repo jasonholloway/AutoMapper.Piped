@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Materialize.Reify2.Transitions;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Materialize.Reify2.Parsing2.SeqMethods
     static partial class QyParser
     {
 
-        public static IEnumerable<ITransition> Parse(ParseSubject s) {
+        public static IEnumerable<Transition> Parse(ParseSubject s) {
             Debug.Assert(s.Method.DeclaringType == typeof(Queryable));
 
             Handler fn = null;

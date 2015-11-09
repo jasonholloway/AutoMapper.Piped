@@ -8,7 +8,7 @@ namespace Materialize.Reify2.Parsing2.SeqMethods
 {
 	static partial class QyParser 
 	{
-		delegate ITransition Handler(MethodCallExpression ex);
+		delegate Transition Handler(MethodCallExpression ex);
 		
 		static IDictionary<MethodInfo, Handler> _dHandlers 
 			= new Dictionary<MethodInfo, Handler>() {

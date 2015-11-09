@@ -14,17 +14,20 @@ namespace Materialize.Reify2
         public readonly ISourceRegime SourceRegime;
         public readonly MapperSource MapperSource;
         public readonly bool AllowClientSideFiltering;
+        public readonly ISnooper Snooper;
         
         public ReifyContext(
             IMappingEngine mappingEngine, 
             ISourceRegime sourceRegime,
             MapperSource mapperSource,
-            bool allowClientFiltering) 
+            bool allowClientFiltering,
+            ISnooper snooper) 
         {
             MappingEngine = mappingEngine;
             SourceRegime = sourceRegime;
             MapperSource = mapperSource;
             AllowClientSideFiltering = allowClientFiltering;
+            Snooper = snooper;
         }
 
         public override bool Equals(object obj) {

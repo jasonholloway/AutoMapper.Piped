@@ -13,7 +13,10 @@ namespace Materialize.Reify2.Compiling
     internal delegate object ReifyExecutor(IQueryProvider provider, ArgMap argMap);
 
 
-    internal abstract class Scheme
+    public interface IScheme { }
+
+
+    internal abstract class Scheme : IScheme
     {
         public ParamMap ParamMap { get; set; }
         public Expression Exp { get; set; }

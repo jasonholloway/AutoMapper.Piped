@@ -12,10 +12,10 @@ using Materialize.Reify2.Parsing2;
 
 namespace Materialize.Reify2
 {
-    class ReifierFactory
+    static class ReifierFactory
     {
 
-        public Reifier Build(Expression exQuery, ReifyContext ctx, Expression exBase) 
+        public static Reifier Build(Expression exQuery, ReifyContext ctx, Expression exBase) 
         {
 
             var m = QyMethods.Aggregate;
@@ -29,6 +29,7 @@ namespace Materialize.Reify2
                                     ctx);
             
             var transitions = Parser.ParseAndPackage(subject);
+            ctx.Snooper?.Event("Transitions", transitions);
 
 
             //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -38,7 +39,11 @@ namespace Materialize.Reify2
 
             var paramMap = ParamMapFactory.Build(exCanonical);
 
+
             var scheme = Schematizer.Schematize(transitions, paramMap);
+            ctx.Snooper?.Event("Scheme", scheme);
+
+
             var executor = scheme.Compile();
 
             return new Reifier(exCanonical, paramMap, executor);

@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Materialize.Monitor QueryInfo</title>
+
+        <link rel="stylesheet" href="~/Content/main.css" />
+
+        <script src="~/Scripts/jquery-2.1.4.min.js"></script>
+        <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+        <script type="text/javascript" src="~/signalr/hubs"></script>
+
+        <script>       
+            var hub = $.connection.reportHub;
+
+            hub.client.announceNewReport = function (sessionGuid, reportId) {
+                //var report = hub.getReport(i);               
+
+                var sessionElemId = 'session_' + sessionGuid;
+                
+                var sessionElem = document.querySelector('#' + sessionElemId)
+                                    || $('<div id=\'' + sessionElemId + '\' \>').appendTo('body');
+                                
+                var reportDiv = $('<div\>', { id: 'report_' + sessionGuid + '_' + reportId })
+                                    .appendTo(sessionElem);
+                
+                $(reportDiv).load('/report/' + sessionGuid + '/' + reportId);
+
+                
+                //$('#report').load(
+                //                '/report/' + sessionGuid + '/' + reportId,
+                //                function () {
+                //                    //CollapsibleLists.apply();
+                //                });
+            }
+            
+            $(document).ready(function () {
+                $('#report').html('Waiting for OData requests...');
+            });
+            
+            $.connection.hub.logging = true;
+            $.connection.hub.start()
+                                .done(function () { console.log('Now connected, connection ID=' + $.connection.hub.id); })
+                                .fail(function () { console.log('Could not Connect!'); });
+
+        </script>
+
+    </head>
+    <body>
+        <div id="report">Baaaaa</div>
+    </body>
+</html>

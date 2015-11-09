@@ -10,13 +10,13 @@ namespace Materialize.Reify2.Transitions
         public ISourceRegime OutRegime { get; protected set; }        
 
 
-        public LinkedListNode<ITransition> Site { get; set; }
+        public LinkedListNode<Transition> Site { get; set; }
 
-        public ITransition Previous {
+        public Transition Previous {
             get { return Site.Previous?.Value; }
         }
 
-        public ITransition Next {
+        public Transition Next {
             get { return Site.Next?.Value; }
         }
         

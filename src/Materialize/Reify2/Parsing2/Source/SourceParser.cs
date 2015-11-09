@@ -7,7 +7,7 @@ namespace Materialize.Reify2.Parsing2.Source
 {
     static class SourceParser
     {
-        public static IEnumerable<ITransition> Parse(ParseSubject s) {
+        public static IEnumerable<Transition> Parse(ParseSubject s) {
             var regime = s.ReifyContext.SourceRegime;
             yield return new SourceTransition(regime, s.SubjectExp);
         }

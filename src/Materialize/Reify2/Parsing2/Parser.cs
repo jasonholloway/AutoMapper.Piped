@@ -1,5 +1,6 @@
 ﻿using Materialize.Reify2.Parsing2.SeqMethods;
 using Materialize.Reify2.Parsing2.Source;
+using Materialize.Reify2.Transitions;
 using Materialize.Types;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Materialize.Reify2.Parsing2
 {   
     internal static class Parser
     {             
-        public static IEnumerable<ITransition> Parse(ParseSubject subject) 
+        public static IEnumerable<Transition> Parse(ParseSubject subject) 
         {
             if(subject.SubjectExp is ConstantExpression 
                 && subject.SubjectExp.Type.IsQueryable()) 
@@ -26,15 +27,15 @@ namespace Materialize.Reify2.Parsing2
         }
                    
 
-        public static LinkedList<ITransition> ParseAndPackage(ParseSubject subject) 
+        public static LinkedList<Transition> ParseAndPackage(ParseSubject subject) 
         {
-            var llOps = new LinkedList<ITransition>(Parse(subject));
+            var llTrans = new LinkedList<Transition>(Parse(subject));
                                    
-            foreach(var node in llOps.EnumerateNodes()) {
+            foreach(var node in llTrans.EnumerateNodes()) {
                 node.Value.Site = node;
             }
 
-            return llOps;
+            return llTrans;
         }
 
     }

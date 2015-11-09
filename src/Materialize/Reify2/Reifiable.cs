@@ -69,26 +69,28 @@ namespace Materialize.Reify2
                 throw new InvalidOperationException("Bad query expression passed to Reifiable.Execute!");
             }
 
-            _snoop?.OnQuery(exQuery);
+            _snoop?.Event("Incoming query", exQuery);
             
             var ctx = new ReifyContext(
                             _options.MappingEngine,
                             _options.SourceRegime ?? _regimeSourceProv.GetRegime(_qySource),
                             _mapperWriterSource,
-                            _options.AllowClientSideFiltering ?? false);
+                            _options.AllowClientSideFiltering ?? false,
+                            _snoop);
 
 
             //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             //CACHEING HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-            var reifierFac = new ReifierFactory();
-            
-            var reifier = reifierFac.Build(exQuery, ctx, _qySource.Expression);
+                                                
+            var reifier = ReifierFactory.Build(exQuery, ctx, _qySource.Expression);
 
             
-            return (TResult)reifier.Execute(_qySource.Provider, exQuery);            
+            var result = (TResult)reifier.Execute(_qySource.Provider, exQuery);
+
+            _snoop?.Event("Result", result);
+
+            return result;
         }
 
 
