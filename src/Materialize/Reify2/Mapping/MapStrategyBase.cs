@@ -1,5 +1,5 @@
 ﻿using System;
-using Materialize.Reify2.Rebasing;
+using Materialize.Reify2.Rebase;
 using System.Collections.Generic;
 using System.Linq;
 using Materialize.Types;

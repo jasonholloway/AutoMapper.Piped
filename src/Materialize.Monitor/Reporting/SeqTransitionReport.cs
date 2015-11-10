@@ -9,15 +9,18 @@ using System.Web;
 
 namespace Materialize.Monitor.Reporting
 {
-    internal class SeqTransitionReport : Report
+    public class SeqTransitionReport : TransitionReport
     {
         public string ExpressionString { get; private set; }
 
-        public SeqTransitionReport(Guid sessionGuid, int reportID, string name, SeqTransition tran) 
-            : base(sessionGuid, reportID, name) 
+        internal SeqTransitionReport(SeqTransition tran)
+            : base(tran)
         {
-            ExpressionString = tran.GetCallExpression().Simplify().ToCSharpCode();
+            //ExpressionString = tran..GetCallExpression().Simplify().ToCSharpCode();
         }
+
+        protected SeqTransitionReport() { }
+
     }
     
 

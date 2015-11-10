@@ -7,7 +7,7 @@ using System.Reflection;
 using Materialize.Types;
 using NUnit.Framework;
 using Materialize;
-using Materialize.Reify2.Parsing2;
+using Materialize.Reify2.Parse;
 using Materialize.Reify2;
 using Materialize.SourceRegimes;
 

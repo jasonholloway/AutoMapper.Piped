@@ -3,7 +3,7 @@ using Materialize.Dependencies;
 using Materialize.Tuples;
 using Materialize.Reify2;
 using Materialize.Reify2.Mapping;
-using Materialize.Reify2.Rebasing;
+using Materialize.Reify2.Rebase;
 using Materialize.SourceRegimes;
 using Materialize.TypeMaps;
 using System;

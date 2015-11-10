@@ -1,8 +1,8 @@
 ﻿using Materialize.Expressions;
-using Materialize.Reify2.Compiling;
+using Materialize.Reify2.Compile;
 using Materialize.Reify2.Mapping;
 using Materialize.Reify2.Parameterize;
-using Materialize.Reify2.Parsing2;
+using Materialize.Reify2.Parse;
 using Materialize.SourceRegimes;
 using Materialize.Types;
 using System;
@@ -83,6 +83,13 @@ namespace Materialize.Reify2
             //CACHEING HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                                                 
+
+            //surely need to canonicalize before cacheing, as we may parameterize more than just constants - eg members of constants
+            //would make cache more effective. BUT injecting these in per-call opens up the gates of hell, so to speak: we can't
+            //trust EF to take them. EF needs to take bare constants, rather than values derived from constants. This is indeed
+            //what funcletizing does already.
+
+
             var reifier = ReifierFactory.Build(exQuery, ctx, _qySource.Expression);
 
             

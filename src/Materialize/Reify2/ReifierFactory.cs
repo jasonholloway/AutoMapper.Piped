@@ -6,9 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Materialize.Expressions;
 using Materialize.Reify2.Parameterize;
-using Materialize.Reify2.Compiling;
+using Materialize.Reify2.Compile;
 using Materialize.Types;
-using Materialize.Reify2.Parsing2;
+using Materialize.Reify2.Parse;
+using Materialize.Reify2.Transitions;
 
 namespace Materialize.Reify2
 {
@@ -17,11 +18,6 @@ namespace Materialize.Reify2
 
         public static Reifier Build(Expression exQuery, ReifyContext ctx, Expression exBase) 
         {
-
-            var m = QyMethods.Aggregate;
-
-
-
             var exCanonical = CanonicalizeQuery(exQuery, exBase);
 
             var subject = new ParseSubject(
@@ -29,20 +25,13 @@ namespace Materialize.Reify2
                                     ctx);
             
             var transitions = Parser.ParseAndPackage(subject);
-            ctx.Snooper?.Event("Transitions", transitions); //each rearrangement stage should publish its results
+            ctx.Snooper?.Event("Transitions", (IEnumerable<Transition>)transitions); //each rearrangement stage should publish its results
 
 
             //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             //OPTIMIZE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-
-
-
-            //snooper to be passed in as parameter...
-            //then each reification, even if served from cache, NO! Doesn't make sense, as expressions should be sloughed.
-            //but, each scheme should output to the snooper from within its compile function...
-            //so snooper needs to be made available at that point.
 
 
             var paramMap = ParamMapFactory.Build(exCanonical);

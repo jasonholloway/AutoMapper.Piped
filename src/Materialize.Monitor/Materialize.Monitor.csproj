@@ -234,6 +234,9 @@
     <Compile Include="DataStructures\Tree.cs" />
     <Compile Include="DataStructures\TreeExtensions.cs" />
     <Compile Include="DataStructures\TreeNode.cs" />
+    <Compile Include="Reporting\SeqTransitionReport.cs" />
+    <Compile Include="Reporting\TransitionGroupReport.cs" />
+    <Compile Include="Reporting\TransitionReport.cs" />
     <Compile Include="SignalR\ReportHub.cs" />
     <Compile Include="NancyModules\MainModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -251,6 +254,9 @@
     <Content Include="Scripts\jquery-2.1.4.min.map" />
     <Content Include="Views\Report.cshtml" />
     <Content Include="Views\ExpressionReport.cshtml" />
+    <Content Include="Views\TransitionReport.cshtml" />
+    <Content Include="Views\TransitionGroupReport.cshtml" />
+    <Content Include="Views\SeqTransitionReport.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,19 +1,25 @@
-﻿using System;
+﻿using Materialize.Expressions;
+using Mono.Linq.Expressions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web;
 
 namespace Materialize.Monitor.Reporting
 {
-    internal class ExpressionReport : Report
+    public class ExpressionReport : Report
     {
         public string ExpressionString { get; private set; }
-
-        public ExpressionReport(Guid sessionGuid, int reportID, string name, string expressionString) 
+        
+        internal ExpressionReport(Guid sessionGuid, int reportID, string name, Expression ex) 
             : base(sessionGuid, reportID, name) 
         {
-            ExpressionString = expressionString;
+            ExpressionString = ex.Simplify().ToCSharpCode();            
         }
+
+        protected ExpressionReport() { }
+
     }
 
 }

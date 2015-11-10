@@ -12,7 +12,7 @@ namespace Materialize.Monitor.NancyModules
         {
             Get[""] = _ => View["Index.cshtml"];
 
-            Get[@"/report/(?<sessionGuid>[A-Za-z0-9\-]+)/(?<reportID>[\d+])"] 
+            Get[@"/report/(?<sessionGuid>[A-Za-z0-9\-]+)/(?<reportID>[\d+])"]
                 = p => View[reportRegistry.GetReport(Guid.Parse(p.sessionGuid), p.reportID)];
         }
     }

@@ -9,12 +9,14 @@ namespace Materialize.Monitor.Reporting
         public int ReportID { get; private set; }
         public string Name { get; private set; }
 
-        public Report(Guid sessionGuid, int reportID, string name) 
+        internal Report(Guid sessionGuid, int reportID, string name) 
         {
             SessionGuid = sessionGuid;
             ReportID = reportID;
             Name = name;
         }
+
+        protected Report() { }
         
     }    
 }

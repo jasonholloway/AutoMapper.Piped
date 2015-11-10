@@ -1,6 +1,6 @@
 ﻿ 
 using Materialize.Reify2;
-using Materialize.Reify2.Compiling;
+using Materialize.Reify2.Compile;
 using Materialize.Reify2.Parameterize;
 using Materialize.Reify2.Transitions;
 using Materialize.SourceRegimes;

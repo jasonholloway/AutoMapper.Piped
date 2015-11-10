@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Materialize.Reify2.Rebasing;
+using Materialize.Reify2.Rebase;
 
 namespace Materialize.Tests.Inner.Fakes
 {

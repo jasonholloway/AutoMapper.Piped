@@ -1,4 +1,4 @@
-﻿using Materialize.Reify2.Rebasing;
+﻿using Materialize.Reify2.Rebase;
 using Materialize.Types;
 using System;
 using System.Collections.Generic;

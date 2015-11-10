@@ -35,3 +35,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
 [assembly: InternalsVisibleTo("Materialize.Monitor.Client")]
+[assembly: InternalsVisibleTo("Microsoft.CodeDom.Providers.DotNetCompilerPlatform")]

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Materialize.Reify2.Rebasing;
+using Materialize.Reify2.Rebase;
 
 namespace Materialize.Reify2.Mapping.Direct
 {

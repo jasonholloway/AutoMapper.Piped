@@ -1,0 +1,16 @@
+﻿@using Materialize.Monitor.Reporting
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<TransitionGroupReport>
+
+<div>
+    <h2>@Model.Name</h2>
+</div>
+
+<div>
+    <ul>
+    @foreach(var tran in Model.Transitions) {
+        <li>
+        @Html.Partial(tran.GetType().Name, tran)
+        </li>
+    }
+    </ul>
+</div>

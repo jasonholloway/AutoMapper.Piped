@@ -2,7 +2,7 @@
 using Materialize.Monitor.Reporting;
 using Materialize.Expressions;
 using Materialize.Reify;
-using Materialize.Reify2.Compiling;
+using Materialize.Reify2.Compile;
 using Materialize.Reify2.Transitions;
 using Materialize.Types;
 using Mono.Linq.Expressions;
@@ -37,15 +37,19 @@ namespace Materialize.Monitor.QueryInfo
 
 
         void OnEvent(SnoopEvent<IEnumerable<Transition>> ev) {
-            //arrangements
+            _reports.OnNext(new TransitionGroupReport(
+                                            _guid, 
+                                            _idSource.GetNextID(), 
+                                            ev.Name, 
+                                            ev.Object));
         }
 
         void OnEvent(SnoopEvent<Scheme> ev) {
             _reports.OnNext(new ExpressionReport(
-                                    _guid, 
-                                    _idSource.GetNextID(), 
-                                    ev.Name, 
-                                    ev.Object.Exp.Simplify().ToCSharpCode()));
+                                        _guid, 
+                                        _idSource.GetNextID(), 
+                                        ev.Name, 
+                                        ev.Object.Exp));
         }
 
         void OnEvent(SnoopEvent<IEnumerable> ev) {
