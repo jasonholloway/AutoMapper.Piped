@@ -48,15 +48,15 @@
     <Compile Include="Expressions\ExpressionExtensions.cs" />
     <Compile Include="Expressions\ExpressionHasher.cs" />
     <Compile Include="Exceptions.cs" />
-    <Compile Include="Reify2\Compiling\Schematizer.cs" />
-    <Compile Include="Reify2\Compiling\Scheme.cs" />
-    <Compile Include="Reify2\Parsing2\SeqMethods\QyParser.cs">
+    <Compile Include="Reify2\Compile\Schematizer.cs" />
+    <Compile Include="Reify2\Compile\Scheme.cs" />
+    <Compile Include="Reify2\Parse\SeqMethods\QyParser.cs">
       <DependentUpon>QyParser.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Reify2\Parsing2\SeqMethods\QyParser2.cs" />
-    <Compile Include="Reify2\Parsing2\Source\SourceParser.cs" />
+    <Compile Include="Reify2\Parse\SeqMethods\QyParser2.cs" />
+    <Compile Include="Reify2\Parse\Source\SourceParser.cs" />
     <Compile Include="Reify2\Transitions\FetchTransition.cs" />
     <Compile Include="Reify2\Transitions\SeqTransition.Mode.cs" />
     <Compile Include="Reify2\Transitions\SeqTransition.Arg.cs" />
@@ -95,32 +95,32 @@
     <Compile Include="Reify2\Parameterize\ArgMap.cs" />
     <Compile Include="Reify2\Parameterize\ParamMap.cs" />
     <Compile Include="Reify2\Parameterize\ParamMapFactory.cs" />
-    <Compile Include="Reify2\Parsing2\SeqMethods\MapAsParser.cs" />
-    <Compile Include="Reify2\Parsing2\SeqMethods\MethodParser.cs" />
-    <Compile Include="Reify2\Parsing2\ParseSubject.cs" />
-    <Compile Include="Reify2\Parsing2\Parser.cs" />
-    <Compile Include="Reify2\Rebasing\IRebaseStrategy.cs" />
-    <Compile Include="Reify2\Rebasing\Methods\IMethodRebaseRule.cs" />
-    <Compile Include="Reify2\Rebasing\Methods\IParentRebaser.cs" />
-    <Compile Include="Reify2\Rebasing\Methods\LinqMethodRule.cs" />
-    <Compile Include="Reify2\Rebasing\Methods\MethodRebaser.cs" />
-    <Compile Include="Reify2\Rebasing\Methods\MethodRebaseSubject.cs" />
-    <Compile Include="Reify2\Rebasing\Methods\Rules\EnumerablePredicator.cs" />
-    <Compile Include="Reify2\Rebasing\Methods\Rules\EnumerableUnary.cs" />
-    <Compile Include="Reify2\Rebasing\Methods\Rules\QueryablePredicator.cs" />
-    <Compile Include="Reify2\Rebasing\PassiveRebaseStrategy.cs" />
-    <Compile Include="Reify2\Rebasing\Rebaser.cs" />
-    <Compile Include="Reify2\Rebasing\RebaserParts\Binary.cs" />
-    <Compile Include="Reify2\Rebasing\RebaserParts\Constant.cs" />
-    <Compile Include="Reify2\Rebasing\RebaserParts\Lambda.cs" />
-    <Compile Include="Reify2\Rebasing\RebaserParts\MemberAccess.cs" />
-    <Compile Include="Reify2\Rebasing\RebaserParts\MethodCall.cs" />
-    <Compile Include="Reify2\Rebasing\RebaserParts\Parameter.cs" />
-    <Compile Include="Reify2\Rebasing\RebaserParts\Unary.cs" />
-    <Compile Include="Reify2\Rebasing\RebaseStrategy.cs" />
-    <Compile Include="Reify2\Rebasing\RebaseSubject.cs" />
-    <Compile Include="Reify2\Rebasing\RootRebaseStrategy.cs" />
-    <Compile Include="Reify2\Rebasing\RootVector.cs" />
+    <Compile Include="Reify2\Parse\SeqMethods\MapAsParser.cs" />
+    <Compile Include="Reify2\Parse\SeqMethods\MethodParser.cs" />
+    <Compile Include="Reify2\Parse\ParseSubject.cs" />
+    <Compile Include="Reify2\Parse\Parser.cs" />
+    <Compile Include="Reify2\Rebase\IRebaseStrategy.cs" />
+    <Compile Include="Reify2\Rebase\Methods\IMethodRebaseRule.cs" />
+    <Compile Include="Reify2\Rebase\Methods\IParentRebaser.cs" />
+    <Compile Include="Reify2\Rebase\Methods\LinqMethodRule.cs" />
+    <Compile Include="Reify2\Rebase\Methods\MethodRebaser.cs" />
+    <Compile Include="Reify2\Rebase\Methods\MethodRebaseSubject.cs" />
+    <Compile Include="Reify2\Rebase\Methods\Rules\EnumerablePredicator.cs" />
+    <Compile Include="Reify2\Rebase\Methods\Rules\EnumerableUnary.cs" />
+    <Compile Include="Reify2\Rebase\Methods\Rules\QueryablePredicator.cs" />
+    <Compile Include="Reify2\Rebase\PassiveRebaseStrategy.cs" />
+    <Compile Include="Reify2\Rebase\Rebaser.cs" />
+    <Compile Include="Reify2\Rebase\RebaserParts\Binary.cs" />
+    <Compile Include="Reify2\Rebase\RebaserParts\Constant.cs" />
+    <Compile Include="Reify2\Rebase\RebaserParts\Lambda.cs" />
+    <Compile Include="Reify2\Rebase\RebaserParts\MemberAccess.cs" />
+    <Compile Include="Reify2\Rebase\RebaserParts\MethodCall.cs" />
+    <Compile Include="Reify2\Rebase\RebaserParts\Parameter.cs" />
+    <Compile Include="Reify2\Rebase\RebaserParts\Unary.cs" />
+    <Compile Include="Reify2\Rebase\RebaseStrategy.cs" />
+    <Compile Include="Reify2\Rebase\RebaseSubject.cs" />
+    <Compile Include="Reify2\Rebase\RootRebaseStrategy.cs" />
+    <Compile Include="Reify2\Rebase\RootVector.cs" />
     <Compile Include="Reify2\Reifiable.cs" />
     <Compile Include="Reify2\ReifiableFactory.cs" />
     <Compile Include="Reify2\Reifier.cs" />
@@ -202,11 +202,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="notes.txt" />
-    <Content Include="Reify2\Parsing2\SeqMethods\QyParser.tt">
+    <Content Include="Reify2\Parse\SeqMethods\QyParser.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>QyParser.cs</LastGenOutput>
     </Content>
-    <Content Include="Reify2\Rebasing\about.txt" />
+    <Content Include="Reify2\Rebase\about.txt" />
     <Content Include="Reify2\Transitions\SeqTransitions.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>SeqTransitions.cs</LastGenOutput>
@@ -227,6 +227,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Reify2\Optimize\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
