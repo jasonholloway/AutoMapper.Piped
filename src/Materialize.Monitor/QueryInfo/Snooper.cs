@@ -1,7 +1,7 @@
 ﻿using Materialize.Monitor.DataStructures;
 using Materialize.Monitor.Reporting;
 using Materialize.Expressions;
-using Materialize.Reify;
+using Materialize.Reify2;
 using Materialize.Reify2.Compile;
 using Materialize.Reify2.Transitions;
 using Materialize.Types;

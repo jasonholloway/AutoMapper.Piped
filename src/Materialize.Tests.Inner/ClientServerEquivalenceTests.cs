@@ -53,13 +53,14 @@ public class ClientServerEquivalenceTests
 
 
 	static IQueryable<Item> Items { get; } = 
-		new[] { 13, 20, 2, 22, 27, 6, 25, 7, 14, 1, 5, 26, 4, 3, 18, 21, 7, 21, 14, 8, 5, 3, 17, 14, 18, 8, 8, 12, 9, 24, 11, 16, 29, 11, 1, 7, 2, 23, 9, 28, 3, 2, 18, 2, 11, 2, 23, 5, 20, 10 }
+		new[] { 12, 9, 5, 8, 18, 16, 18, 22, 9, 24, 7, 23, 16, 17, 14, 25, 5, 5, 6, 26, 18, 13, 17, 1, 21, 5, 7, 26, 13, 21, 17, 21, 26, 24, 10, 22, 11, 5, 26, 20, 14, 29, 1, 21, 7, 19, 15, 20, 17, 17 }
 			.Select(i => new Item(i)).AsQueryable();
 		
     static ParamMap _emptyParamMap = new ParamMap(Enumerable.Empty<ParamMap.Param>());
     static Expression _exBlank = Expression.Constant(0);
-	static ISourceRegime _regime = new TolerantRegime();
-			
+	static ISourceRegime _regime = new TolerantRegime();			
+	static ReifyContext _ctx = new ReifyContext(null, _regime, null, true, null);
+
     static Expression GetQuoted<T, T2>(Expression<Func<T, T2>> exFn) {
         return Expression.Quote(exFn);
     }
@@ -82,7 +83,7 @@ public class ClientServerEquivalenceTests
             new FetchTransition(_regime)
         };
 
-        var scheme = Schematizer.Schematize(trans.Concat(newTrans), _emptyParamMap);
+        var scheme = Schematizer.Schematize(_ctx, trans.Concat(newTrans), _emptyParamMap);
         var reifier = new Reifier(_exBlank, _emptyParamMap, scheme.Compile());
 
         return reifier.Execute(qySource.Provider, _exBlank);
@@ -94,7 +95,7 @@ public class ClientServerEquivalenceTests
             new SourceTransition(_regime, qySource.Expression)
         };
 
-        var scheme = Schematizer.Schematize(trans.Concat(newTrans), _emptyParamMap);
+        var scheme = Schematizer.Schematize(_ctx, trans.Concat(newTrans), _emptyParamMap);
         var reifier = new Reifier(_exBlank, _emptyParamMap, scheme.Compile());
 
         return reifier.Execute(qySource.Provider, _exBlank);
@@ -108,7 +109,7 @@ public class ClientServerEquivalenceTests
 	public void AggregateTest() 
 	{
 		var t0 = new AggregateTransition() {
-				Func = GetQuoted((Item i, Item j) => new Item(i.Int + j.Int - 20)),
+				Func = GetQuoted((Item i, Item j) => new Item(i.Int + j.Int - 16)),
 		};		
 		
 		var serverResult = ReifyOnServer(Items, t0);
@@ -124,8 +125,8 @@ public class ClientServerEquivalenceTests
 	public void Aggregate2Test() 
 	{
 		var t0 = new Aggregate2Transition() {
-				Seed = Expression.Constant(Items.ElementAt(6)),
-				Func = GetQuoted((Item i, Item j) => new Item(i.Int + j.Int - 3)),
+				Seed = Expression.Constant(Items.ElementAt(16)),
+				Func = GetQuoted((Item i, Item j) => new Item(i.Int + j.Int - 16)),
 		};		
 		
 		var serverResult = ReifyOnServer(Items, t0);
@@ -141,9 +142,9 @@ public class ClientServerEquivalenceTests
 	public void Aggregate3Test() 
 	{
 		var t0 = new Aggregate3Transition() {
-				Seed = Expression.Constant(Items.ElementAt(10)),
-				Func = GetQuoted((Item i, Item j) => new Item(i.Int + j.Int - 16)),
-				ResultSelector = GetQuoted((Item i) => new Item(i.Int + 8)),
+				Seed = Expression.Constant(Items.ElementAt(18)),
+				Func = GetQuoted((Item i, Item j) => new Item(i.Int + j.Int - 5)),
+				ResultSelector = GetQuoted((Item i) => new Item(i.Int + 20)),
 		};		
 		
 		var serverResult = ReifyOnServer(Items, t0);
@@ -236,7 +237,7 @@ public class ClientServerEquivalenceTests
 	public void Average11Test() 
 	{
 		var t0 = new Average11Transition() {
-				Selector = GetQuoted((Item i) => (int)(i.Int * 4)),
+				Selector = GetQuoted((Item i) => (int)(i.Int * 11)),
 		};		
 		
 		var serverResult = ReifyOnServer(Items, t0);
@@ -252,7 +253,7 @@ public class ClientServerEquivalenceTests
 	public void Average12Test() 
 	{
 		var t0 = new Average12Transition() {
-				Selector = GetQuoted((Item i) => (int?)(i.Int * 14)),
+				Selector = GetQuoted((Item i) => (int?)(i.Int * 9)),
 		};		
 		
 		var serverResult = ReifyOnServer(Items, t0);
@@ -268,7 +269,7 @@ public class ClientServerEquivalenceTests
 	public void Average13Test() 
 	{
 		var t0 = new Average13Transition() {
-				Selector = GetQuoted((Item i) => (float)(i.Int * 20)),
+				Selector = GetQuoted((Item i) => (float)(i.Int * 7)),
 		};		
 		
 		var serverResult = ReifyOnServer(Items, t0);
@@ -284,7 +285,7 @@ public class ClientServerEquivalenceTests
 	public void Average14Test() 
 	{
 		var t0 = new Average14Transition() {
-				Selector = GetQuoted((Item i) => (float?)(i.Int * 10)),
+				Selector = GetQuoted((Item i) => (float?)(i.Int * 15)),
 		};		
 		
 		var serverResult = ReifyOnServer(Items, t0);
@@ -300,7 +301,7 @@ public class ClientServerEquivalenceTests
 	public void Average15Test() 
 	{
 		var t0 = new Average15Transition() {
-				Selector = GetQuoted((Item i) => (long)(i.Int * 19)),
+				Selector = GetQuoted((Item i) => (long)(i.Int * 7)),
 		};		
 		
 		var serverResult = ReifyOnServer(Items, t0);
@@ -332,7 +333,7 @@ public class ClientServerEquivalenceTests
 	public void Average17Test() 
 	{
 		var t0 = new Average17Transition() {
-				Selector = GetQuoted((Item i) => (double)(i.Int * 14)),
+				Selector = GetQuoted((Item i) => (double)(i.Int * 5)),
 		};		
 		
 		var serverResult = ReifyOnServer(Items, t0);
@@ -348,7 +349,7 @@ public class ClientServerEquivalenceTests
 	public void Average18Test() 
 	{
 		var t0 = new Average18Transition() {
-				Selector = GetQuoted((Item i) => (double?)(i.Int * 13)),
+				Selector = GetQuoted((Item i) => (double?)(i.Int * 11)),
 		};		
 		
 		var serverResult = ReifyOnServer(Items, t0);
@@ -395,7 +396,7 @@ public class ClientServerEquivalenceTests
 	public void Average20Test() 
 	{
 		var t0 = new Average20Transition() {
-				Selector = GetQuoted((Item i) => (decimal?)(i.Int * 16)),
+				Selector = GetQuoted((Item i) => (decimal?)(i.Int * 15)),
 		};		
 		
 		var serverResult = ReifyOnServer(Items, t0);
@@ -548,7 +549,7 @@ public class ClientServerEquivalenceTests
 	public void ContainsTest() 
 	{
 		var t0 = new ContainsTransition() {
-				Value = Expression.Constant(Items.ElementAt(8)),
+				Value = Expression.Constant(Items.ElementAt(15)),
 		};		
 		
 		var serverResult = ReifyOnServer(Items, t0);
@@ -564,7 +565,7 @@ public class ClientServerEquivalenceTests
 	public void Contains2Test() 
 	{
 		var t0 = new Contains2Transition() {
-				Value = Expression.Constant(Items.ElementAt(14)),
+				Value = Expression.Constant(Items.ElementAt(10)),
 				Comparer = Expression.Constant(new ItemEqualityComparer()),
 		};		
 		
@@ -674,7 +675,7 @@ public class ClientServerEquivalenceTests
 	public void ElementAtTest() 
 	{
 		var t0 = new ElementAtTransition() {
-				Index = Expression.Constant(2),
+				Index = Expression.Constant(13),
 		};		
 		
 		var serverResult = ReifyOnServer(Items, t0);
@@ -690,7 +691,7 @@ public class ClientServerEquivalenceTests
 	public void ElementAtOrDefaultTest() 
 	{
 		var t0 = new ElementAtOrDefaultTransition() {
-				Index = Expression.Constant(10),
+				Index = Expression.Constant(8),
 		};		
 		
 		var serverResult = ReifyOnServer(Items, t0);
@@ -1016,7 +1017,7 @@ public class ClientServerEquivalenceTests
 				Inner = Expression.Constant(Items.Reverse()),
 				OuterKeySelector = GetQuoted((Item i) => i.Int.ToString()),
 				InnerKeySelector = GetQuoted((Item i) => i.Int.ToString()),
-				ResultSelector = GetQuoted((Item o, Item i) => new Item(o.Int - i.Int * 20)),
+				ResultSelector = GetQuoted((Item o, Item i) => new Item(o.Int - i.Int * 10)),
 		};		
 		
 		var serverResult = (IEnumerable)ReifyOnServer(Items, t0);
@@ -1035,7 +1036,7 @@ public class ClientServerEquivalenceTests
 				Inner = Expression.Constant(Items.Reverse()),
 				OuterKeySelector = GetQuoted((Item i) => i.Int.ToString()),
 				InnerKeySelector = GetQuoted((Item i) => i.Int.ToString()),
-				ResultSelector = GetQuoted((Item o, Item i) => new Item(o.Int - i.Int * 9)),
+				ResultSelector = GetQuoted((Item o, Item i) => new Item(o.Int - i.Int * 18)),
 				Comparer = Expression.Constant(EqualityComparer<string>.Default),
 		};		
 		
@@ -1336,7 +1337,7 @@ public class ClientServerEquivalenceTests
 	public void SelectManyTest() 
 	{
 		var t0 = new SelectManyTransition() {
-				Selector = GetQuoted((Item i) => Enumerable.Repeat(i, i.Int + 1)),
+				Selector = GetQuoted((Item i) => Enumerable.Repeat(i, i.Int + 4)),
 		};		
 		
 		var serverResult = (IEnumerable)ReifyOnServer(Items, t0);
@@ -1352,7 +1353,7 @@ public class ClientServerEquivalenceTests
 	public void SelectMany2Test() 
 	{
 		var t0 = new SelectMany2Transition() {
-				Selector = GetQuoted((Item s, int i) => Enumerable.Repeat(s, i + 8)),
+				Selector = GetQuoted((Item s, int i) => Enumerable.Repeat(s, i + 10)),
 		};		
 		
 		var serverResult = (IEnumerable)ReifyOnServer(Items, t0);
@@ -1368,7 +1369,7 @@ public class ClientServerEquivalenceTests
 	public void SelectMany3Test() 
 	{
 		var t0 = new SelectMany3Transition() {
-				CollectionSelector = GetQuoted((Item s, int i) => Enumerable.Repeat(s, i + 7)),
+				CollectionSelector = GetQuoted((Item s, int i) => Enumerable.Repeat(s, i + 16)),
 				ResultSelector = GetQuoted((Item s, Item c) => new Item(s.Int - c.Int)),
 		};		
 		
@@ -1385,7 +1386,7 @@ public class ClientServerEquivalenceTests
 	public void SelectMany4Test() 
 	{
 		var t0 = new SelectMany4Transition() {
-				CollectionSelector = GetQuoted((Item i) => Enumerable.Repeat(i, i.Int + 5)),
+				CollectionSelector = GetQuoted((Item i) => Enumerable.Repeat(i, i.Int + 7)),
 				ResultSelector = GetQuoted((Item s, Item c) => new Item(s.Int - c.Int)),
 		};		
 		
@@ -1497,7 +1498,7 @@ public class ClientServerEquivalenceTests
 	public void SkipTest() 
 	{
 		var t0 = new SkipTransition() {
-				Count = Expression.Constant(1),
+				Count = Expression.Constant(3),
 		};		
 		
 		var serverResult = (IEnumerable)ReifyOnServer(Items, t0);
@@ -1529,7 +1530,7 @@ public class ClientServerEquivalenceTests
 	public void SkipWhile2Test() 
 	{
 		var t0 = new SkipWhile2Transition() {
-				Predicate = GetQuoted((Item s, int i) => s.Int + i < 3),
+				Predicate = GetQuoted((Item s, int i) => s.Int + i < 13),
 		};		
 		
 		var serverResult = (IEnumerable)ReifyOnServer(Items, t0);
@@ -1545,7 +1546,7 @@ public class ClientServerEquivalenceTests
 	public void SumTest() 
 	{
 		var t0 = new SumTransition() {
-				Selector = GetQuoted((Item i) => (decimal?)(i.Int * 17)),
+				Selector = GetQuoted((Item i) => (decimal?)(i.Int * 7)),
 		};		
 		
 		var serverResult = ReifyOnServer(Items, t0);
@@ -1607,7 +1608,7 @@ public class ClientServerEquivalenceTests
 	public void Sum13Test() 
 	{
 		var t0 = new Sum13Transition() {
-				Selector = GetQuoted((Item i) => (int?)(i.Int * 3)),
+				Selector = GetQuoted((Item i) => (int?)(i.Int * 16)),
 		};		
 		
 		var serverResult = ReifyOnServer(Items, t0);
@@ -1623,7 +1624,7 @@ public class ClientServerEquivalenceTests
 	public void Sum14Test() 
 	{
 		var t0 = new Sum14Transition() {
-				Selector = GetQuoted((Item i) => (long)(i.Int * 16)),
+				Selector = GetQuoted((Item i) => (long)(i.Int * 1)),
 		};		
 		
 		var serverResult = ReifyOnServer(Items, t0);
@@ -1639,7 +1640,7 @@ public class ClientServerEquivalenceTests
 	public void Sum15Test() 
 	{
 		var t0 = new Sum15Transition() {
-				Selector = GetQuoted((Item i) => (long?)(i.Int * 11)),
+				Selector = GetQuoted((Item i) => (long?)(i.Int * 4)),
 		};		
 		
 		var serverResult = ReifyOnServer(Items, t0);
@@ -1655,7 +1656,7 @@ public class ClientServerEquivalenceTests
 	public void Sum16Test() 
 	{
 		var t0 = new Sum16Transition() {
-				Selector = GetQuoted((Item i) => (float)(i.Int * 16)),
+				Selector = GetQuoted((Item i) => (float)(i.Int * 17)),
 		};		
 		
 		var serverResult = ReifyOnServer(Items, t0);
@@ -1671,7 +1672,7 @@ public class ClientServerEquivalenceTests
 	public void Sum17Test() 
 	{
 		var t0 = new Sum17Transition() {
-				Selector = GetQuoted((Item i) => (float?)(i.Int * 18)),
+				Selector = GetQuoted((Item i) => (float?)(i.Int * 13)),
 		};		
 		
 		var serverResult = ReifyOnServer(Items, t0);
@@ -1687,7 +1688,7 @@ public class ClientServerEquivalenceTests
 	public void Sum18Test() 
 	{
 		var t0 = new Sum18Transition() {
-				Selector = GetQuoted((Item i) => (double)(i.Int * 14)),
+				Selector = GetQuoted((Item i) => (double)(i.Int * 10)),
 		};		
 		
 		var serverResult = ReifyOnServer(Items, t0);
@@ -1703,7 +1704,7 @@ public class ClientServerEquivalenceTests
 	public void Sum19Test() 
 	{
 		var t0 = new Sum19Transition() {
-				Selector = GetQuoted((Item i) => (double?)(i.Int * 1)),
+				Selector = GetQuoted((Item i) => (double?)(i.Int * 2)),
 		};		
 		
 		var serverResult = ReifyOnServer(Items, t0);
@@ -1734,7 +1735,7 @@ public class ClientServerEquivalenceTests
 	public void Sum20Test() 
 	{
 		var t0 = new Sum20Transition() {
-				Selector = GetQuoted((Item i) => (decimal)(i.Int * 9)),
+				Selector = GetQuoted((Item i) => (decimal)(i.Int * 16)),
 		};		
 		
 		var serverResult = ReifyOnServer(Items, t0);
@@ -1855,7 +1856,7 @@ public class ClientServerEquivalenceTests
 	public void TakeTest() 
 	{
 		var t0 = new TakeTransition() {
-				Count = Expression.Constant(15),
+				Count = Expression.Constant(7),
 		};		
 		
 		var serverResult = (IEnumerable)ReifyOnServer(Items, t0);
@@ -2034,7 +2035,7 @@ public class ClientServerEquivalenceTests
 	public void Where2Test() 
 	{
 		var t0 = new Where2Transition() {
-				Predicate = GetQuoted((Item s, int i) => s.Int + i < 6),
+				Predicate = GetQuoted((Item s, int i) => s.Int + i < 4),
 		};		
 		
 		var serverResult = (IEnumerable)ReifyOnServer(Items, t0);
@@ -2051,7 +2052,7 @@ public class ClientServerEquivalenceTests
 	{
 		var t0 = new ZipTransition() {
 				Second = Expression.Constant(Items.Reverse()),
-				ResultSelector = GetQuoted((Item a, Item b) => new Item(a.Int * b.Int + 15)),
+				ResultSelector = GetQuoted((Item a, Item b) => new Item(a.Int * b.Int + 13)),
 		};		
 		
 		var serverResult = (IEnumerable)ReifyOnServer(Items, t0);

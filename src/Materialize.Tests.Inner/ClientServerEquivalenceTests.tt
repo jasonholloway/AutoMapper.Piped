@@ -13,7 +13,7 @@
 <#@ import namespace="Materialize.Types" #>
 <#@ output extension="cs" #>
 using Materialize.Reify2;
-using Materialize.Reify2.Compiling;
+using Materialize.Reify2.Compile;
 using Materialize.Reify2.Parameterize;
 using Materialize.Reify2.Transitions;
 using Materialize.SourceRegimes;
@@ -71,8 +71,9 @@ public class ClientServerEquivalenceTests
 		
     static ParamMap _emptyParamMap = new ParamMap(Enumerable.Empty<ParamMap.Param>());
     static Expression _exBlank = Expression.Constant(0);
-	static ISourceRegime _regime = new TolerantRegime();
-			
+	static ISourceRegime _regime = new TolerantRegime();			
+	static ReifyContext _ctx = new ReifyContext(null, _regime, null, true, null);
+
     static Expression GetQuoted<T, T2>(Expression<Func<T, T2>> exFn) {
         return Expression.Quote(exFn);
     }
@@ -95,7 +96,7 @@ public class ClientServerEquivalenceTests
             new FetchTransition(_regime)
         };
 
-        var scheme = Schematizer.Schematize(trans.Concat(newTrans), _emptyParamMap);
+        var scheme = Schematizer.Schematize(_ctx, trans.Concat(newTrans), _emptyParamMap);
         var reifier = new Reifier(_exBlank, _emptyParamMap, scheme.Compile());
 
         return reifier.Execute(qySource.Provider, _exBlank);
@@ -107,7 +108,7 @@ public class ClientServerEquivalenceTests
             new SourceTransition(_regime, qySource.Expression)
         };
 
-        var scheme = Schematizer.Schematize(trans.Concat(newTrans), _emptyParamMap);
+        var scheme = Schematizer.Schematize(_ctx, trans.Concat(newTrans), _emptyParamMap);
         var reifier = new Reifier(_exBlank, _emptyParamMap, scheme.Compile());
 
         return reifier.Execute(qySource.Provider, _exBlank);
